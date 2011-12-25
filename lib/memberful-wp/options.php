@@ -5,10 +5,12 @@ function memberful_wp_register_options()
 	add_option('memberful_client_id');
 	add_option('memberful_client_secret');
 	add_option('memberful_site');
+  add_option('memberful_api_key');
+  add_option('memberful_products', array());
 
 	add_settings_section(
 		'memberful_settings_general',
-		'Oauth Settings',
+		'Integration Settings',
 		'memberful_wp_options_section_text',
 		'memberful_wp_settings'
 	);
@@ -28,6 +30,11 @@ function memberful_wp_register_options()
 		'memberful_wp',
 		'memberful_site',
 		'memberful_wp_opt_sanitize_site'
+	);
+	register_setting(
+		'memberful_wp',
+		'memberful_api_key',
+		'memberful_wp_opt_sanitize'
 	);
 
 	// add_settings_field($id, $title, $callback, $page, $section, $args)
@@ -53,6 +60,13 @@ function memberful_wp_register_options()
 		'memberful_site',
 		'Memberful Site',
 		'memberful_wp_setting_site',
+		'memberful_wp_settings',
+		'memberful_settings_general'
+	);
+	add_settings_field(
+		'memberful_api_key',
+		'Memberful API Key',
+		'memberful_wp_setting_api_key',
 		'memberful_wp_settings',
 		'memberful_settings_general'
 	);
@@ -99,6 +113,10 @@ function memberful_wp_setting_site()
 {
 	echo '<input type="text" name="memberful_site" value="'.esc_attr(get_option('memberful_site')).'" />';
 }
+function memberful_wp_setting_api_key()
+{
+	echo '<input type="text" name="memberful_api_key" value="'.esc_attr(get_option('memberful_api_key')).'" />';
+}
 
 function memberful_wp_render($template, array $vars = array())
 {
@@ -109,5 +127,16 @@ function memberful_wp_render($template, array $vars = array())
 
 function memberful_wp_options_panel()
 {
-	memberful_wp_render('options');
+  $api_key = get_option('memberful_api_key');
+
+  if(isset($_POST['refresh_products']) && $api_key != NULL)
+  {
+    memberful_sync_products();
+  }
+
+  $options = array(
+    'show_products' => ($api_key != NULL),
+    'products'      => get_option('memberful_products')
+  );
+	memberful_wp_render('options', $options);
 }

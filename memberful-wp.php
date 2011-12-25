@@ -9,7 +9,9 @@ Author URI: http://thethemefoundry.com
 License: GPL
 */
 
-define('MEMBERFUL_DIR', dirname(__FILE__));
+if( ! defined('MEMBERFUL_DIR'))
+	define('MEMBERFUL_DIR', dirname(__FILE__));
+
 require_once MEMBERFUL_DIR.'/lib/memberful-wp/options.php';
 
 add_action('admin_menu', 'memberful_wp_register_options_panel');
@@ -157,10 +159,13 @@ class Memberful_Authenticator
 			if(is_wp_error($tokens))
 				return $tokens;
 
-			$member = $this->get_member_data($tokens->access_token);
-			var_dump($member);
+			$details = $this->get_member_data($tokens->access_token);
 
-			return $this->sync_user_from_memberful($member, $tokens->refresh_token);
+			$user = $this->sync_user($details->member, $tokens->refresh_token);
+
+			$this->sync_products($user, $details->products);
+
+			return $user;
 		}
 		// For some reason we got an error code.
 		elseif(isset($_GET['error']))
@@ -260,12 +265,9 @@ class Memberful_Authenticator
 	 * @param string    $refresh_token The member's refresh token for oauth
 	 * @return WP_User
 	 */
-	public function sync_user_from_memberful($details, $refresh_token)
+	public function sync_user($member, $refresh_token)
 	{
 		global $wpdb;
-
-		$member   = $details->member;
-		$products = $details->products;
 
 		$query = $wpdb->prepare(
 			'SELECT *, (`memberful_member_id` = %d) AS `exact_match` FROM `'.$wpdb->users.'` WHERE `memberful_member_id` = %d OR `user_email` = %s ORDER BY `exact_match` DESC',
@@ -343,6 +345,18 @@ class Memberful_Authenticator
 		
 		return get_userdata($user_id);
 	}
+
+	public function sync_products(WP_User $user, $products)
+	{
+		$product_ids = array_map(array($this, '_extract_product_id'), $products);
+
+		update_user_meta($user->ID, 'memberful_products', $product_ids);
+	}
+
+	protected function _extract_product_id($product_link)
+	{
+		return (int) $product_link->product_id;
+	}
 }
 
 $authenticator = new Memberful_Authenticator;
@@ -350,3 +364,40 @@ $authenticator = new Memberful_Authenticator;
 add_filter('authenticate', array($authenticator, 'init'), 10, 3);
 add_filter('authenticate', array($authenticator, 'relay_errors'), 50, 3);
 add_filter('allow_password_reset', array($authenticator, 'audit_password_reset'), 50, 2);
+
+function memberful_sync_products()
+{
+	$url = rtrim(get_option('memberful_site'),'/').'/admin/products.json';
+
+	$full_url = add_query_arg('auth_token', get_option('memberful_api_key'), $url);
+
+	$response = wp_remote_get($full_url);
+
+	if(is_wp_error($response))
+	{
+		var_dump($response, $full_url, $url);
+		die();
+	}
+
+	if($response['response']['code'] !== 200 OR ! isset($response['body']))
+	{
+		return new WP_Error('memberful_product_sync_fail', "Couldn't retrieve list of products from memberful");
+	}
+
+	$raw_products = json_decode($response['body']);
+	$products = array();
+
+	foreach($raw_products as $product)
+	{
+		$products[$product->id] = array('name' => $product->name, 'for_sale' => $product->for_sale);
+	}
+
+	update_option('memberful_products', $products);
+
+	return TRUE;
+}
+
+function memberful_product_url($product_id)
+{
+	return rtrim(get_option('memberful_site'), '/').'/admin/products/'.(int) $product_id;
+}
