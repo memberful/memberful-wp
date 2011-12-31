@@ -19,6 +19,7 @@ require_once MEMBERFUL_DIR.'/lib/memberful-wp/urls.php';
 require_once MEMBERFUL_DIR.'/lib/memberful-wp/user/map.php';
 require_once MEMBERFUL_DIR.'/lib/memberful-wp/authenticator.php';
 require_once MEMBERFUL_DIR.'/lib/memberful-wp/options.php';
+require_once MEMBERFUL_DIR.'/lib/memberful-wp/metabox.php';
 
 add_action('admin_menu', 'memberful_wp_register_options_panel');
 add_action('admin_init', 'memberful_wp_register_options');
@@ -60,4 +61,9 @@ function memberful_activate()
 	flush_rewrite_rules(true);
 }
 
+function memberful_wp_render($template, array $vars = array())
+{
+	extract($vars);
 
+	include MEMBERFUL_DIR.'/views/'.$template.'.php';
+}

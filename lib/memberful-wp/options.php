@@ -118,13 +118,6 @@ function memberful_wp_setting_api_key()
 	echo '<input type="text" name="memberful_api_key" value="'.esc_attr(get_option('memberful_api_key')).'" />';
 }
 
-function memberful_wp_render($template, array $vars = array())
-{
-	extract($vars);
-
-	include MEMBERFUL_DIR.'/views/'.$template.'.php';
-}
-
 function memberful_wp_options_panel()
 {
   $api_key = get_option('memberful_api_key');
@@ -165,7 +158,11 @@ function memberful_sync_products()
 
 	foreach($raw_products as $product)
 	{
-		$products[$product->id] = array('name' => $product->name, 'for_sale' => $product->for_sale);
+		$products[$product->id] = array(
+			'id'       => $product->id,
+			'name'     => $product->name,
+			'for_sale' => $product->for_sale,
+		);
 	}
 
 	update_option('memberful_products', $products);
