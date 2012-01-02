@@ -5,8 +5,9 @@ function memberful_wp_register_options()
 	add_option('memberful_client_id');
 	add_option('memberful_client_secret');
 	add_option('memberful_site');
-  add_option('memberful_api_key');
-  add_option('memberful_products', array());
+	add_option('memberful_api_key');
+	add_option('memberful_products', array());
+	add_option('memberful_acl', array());
 
 	add_settings_section(
 		'memberful_settings_general',

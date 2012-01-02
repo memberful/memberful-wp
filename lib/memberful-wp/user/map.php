@@ -111,7 +111,7 @@ class Memberful_User_Map
 	{
 		$product_ids = array_map(array($this, '_extract_product_id'), $products);
 
-		update_user_meta($user->ID, 'memberful_products', $product_ids);
+		update_user_meta($user->ID, 'memberful_products', array_combine($product_ids, $product_ids));
 	}
 
 	protected function _extract_product_id($product_link)
