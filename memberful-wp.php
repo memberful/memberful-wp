@@ -20,6 +20,7 @@ require_once MEMBERFUL_DIR.'/lib/memberful-wp/user/map.php';
 require_once MEMBERFUL_DIR.'/lib/memberful-wp/authenticator.php';
 require_once MEMBERFUL_DIR.'/lib/memberful-wp/options.php';
 require_once MEMBERFUL_DIR.'/lib/memberful-wp/metabox.php';
+require_once MEMBERFUL_DIR.'/lib/memberful-wp/acl.php';
 
 add_action('admin_menu', 'memberful_wp_register_options_panel');
 add_action('admin_init', 'memberful_wp_register_options');
