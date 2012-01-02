@@ -34,3 +34,8 @@ function memberful_admin_product_url($product_id, $format = MEMBERFUL_HTML)
 {
 	return memberful_url('admin/products/'.(int) $product_id, $format);
 }
+
+function memberful_signin_url()
+{
+	return add_query_arg('memberful_auth', 1, wp_login_url());
+}
