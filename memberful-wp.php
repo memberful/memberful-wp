@@ -1,11 +1,11 @@
 <?php
 /*
-Plugin Name: Memberful Wordpress Integeration
+Plugin Name: Memberful WP
 Plugin URI: http://github.com/jestro/memberful-wp
-Description: Allows your memberful users to login to wordpress
+Description: Allows Memberful users to login to WordPress using the Memberful oAuth 2.0 endpoint.
 Version: 0.1
-Author: Jestro
-Author URI: http://thethemefoundry.com
+Author: Memberful
+Author URI: http://memberful.com
 License: GPL
 */
 
