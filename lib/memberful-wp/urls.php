@@ -25,6 +25,11 @@ function memberful_member_url($format = MEMBERFUL_HTML)
 	return memberful_url('member', $format);
 }
 
+function memberful_admin_member_url($member_id, $format = MEMBERFUL_HTML)
+{
+	return memberful_url('admin/members/'.$member_id, $format);
+}
+
 function memberful_admin_products_url($format = MEMBERFUL_HTML)
 {
 	return memberful_url('admin/products', $format);
@@ -38,4 +43,9 @@ function memberful_admin_product_url($product_id, $format = MEMBERFUL_HTML)
 function memberful_signin_url()
 {
 	return add_query_arg('memberful_auth', 1, wp_login_url());
+}
+
+function memberful_wrap_api_token($url)
+{
+	return add_query_arg('auth_token', get_option('memberful_api_key'), $url);
 }

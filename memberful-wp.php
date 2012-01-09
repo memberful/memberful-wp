@@ -68,3 +68,29 @@ function memberful_wp_render($template, array $vars = array())
 
 	include MEMBERFUL_DIR.'/views/'.$template.'.php';
 }
+
+/**
+ * Get details about a specific member via the API
+ *
+ * TODO: Clean this mess up.
+ */
+function memberful_api_member($member_id)
+{
+	$url = memberful_wrap_api_token(memberful_admin_member_url($member_id, MEMBERFUL_JSON));
+
+	$response = wp_remote_get($url);
+
+	if(is_wp_error($response))
+	{
+		var_dump($response, $url);
+		die();
+	}
+
+	if($response['response']['code'] !== 200 OR ! isset($response['body']))
+	{
+		var_dump($response);
+		return new WP_Error('memberful_fail', 'Coult not get member info from api');
+	}
+
+	return json_decode($response['body']);
+}

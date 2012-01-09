@@ -9,7 +9,7 @@
  */
 class Memberful_User_Map
 {
-	public function map($user, $products, $refresh_token)
+	public function map($user, $products, $refresh_token = NULL)
 	{
 		$wp_user = $this->sync_user_and_token($user, $refresh_token);
 
@@ -26,7 +26,7 @@ class Memberful_User_Map
 	 * @param string    $refresh_token The member's refresh token for oauth
 	 * @return WP_User
 	 */
-	public function sync_user_and_token($member, $refresh_token)
+	public function sync_user_and_token($member, $refresh_token = NULL)
 	{
 		global $wpdb;
 
@@ -102,7 +102,7 @@ class Memberful_User_Map
 			wp_insert_user($data);
 		}
 
-		$wpdb->query($wpdb->prepare('UPDATE `'.$wpdb->users.'` SET `memberful_refresh_token` = %s, `memberful_member_id` = %d WHERE `ID` = %d', $refresh_token, $member->id, $user_id));
+		$this->_update_member_id($user_id, $member->id, $refresh_token);
 		
 		return get_userdata($user_id);
 	}
@@ -111,11 +111,34 @@ class Memberful_User_Map
 	{
 		$product_ids = array_map(array($this, '_extract_product_id'), $products);
 
-		update_user_meta($user->ID, 'memberful_products', array_combine($product_ids, $product_ids));
+		$new_products = empty($product_ids) 
+			? array() 
+			: array_combine($product_ids, $product_ids);
+
+		update_user_meta($user->ID, 'memberful_products', $new_products);
 	}
 
 	protected function _extract_product_id($product_link)
 	{
 		return (int) $product_link->product_id;
+	}
+
+	protected function _update_member_id($user_id, $member_id, $refresh_token = NULL)
+	{
+		global $wpdb;
+		$data = array();
+
+		$update = 'UPDATE `'.$wpdb->users.'` SET ';
+
+		if($refresh_token !== NULL)
+		{
+			$update .= '`memberful_refresh_token` = %s, ';
+			$data[] = $refresh_token;
+		}
+
+		$update .= '`memberful_member_id` = %d WHERE `ID` = %d';
+		$data += array($member_id, $user_id);
+
+		$wpdb->query($wpdb->prepare($update, $data));
 	}
 }
