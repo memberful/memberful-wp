@@ -15,6 +15,9 @@ if( ! defined('MEMBERFUL_DIR'))
 define('MEMBERFUL_HTML', NULL);
 define('MEMBERFUL_JSON', 'json');
 
+// TODO: Generate this!
+define('MEMBERFUL_TOKEN', 'aoisdn98q2h9can3r9uac98n3nhaiuhgmcznzwre98zcnh397hnizrchn87wr3chz9wrh9');
+
 require_once MEMBERFUL_DIR.'/lib/memberful-wp/urls.php';
 require_once MEMBERFUL_DIR.'/lib/memberful-wp/user/map.php';
 require_once MEMBERFUL_DIR.'/lib/memberful-wp/authenticator.php';

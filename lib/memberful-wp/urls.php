@@ -49,3 +49,8 @@ function memberful_wrap_api_token($url)
 {
 	return add_query_arg('auth_token', get_option('memberful_api_key'), $url);
 }
+
+function memberful_wp_webhook_url()
+{
+	return add_query_arg('secret', MEMBERFUL_TOKEN, get_site_url(null, 'wp-content/plugins/memberful-wp/endpoint.php'));
+}

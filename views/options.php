@@ -4,6 +4,7 @@
     <form method="POST" action="options.php">
       <?php settings_fields('memberful_wp'); ?>
       <?php do_settings_sections('memberful_wp_settings'); ?>
+      <p>Here is the webhook endpoint <input type="text" readonly="readonly" value="<?php echo memberful_wp_webhook_url(); ?>" /></p>
       <input name="submit" type="submit" value="Save Changes" class="button-primary" />
     </form>
   </div>

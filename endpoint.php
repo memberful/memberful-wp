@@ -8,9 +8,18 @@ if( $_SERVER['REQUEST_METHOD'] !== 'POST' )
 $body = file_get_contents('php://input');
 
 if( ($data = json_decode($body)) === NULL)
+{
+	var_dump($body, $data);
 	die('Could not parse JSON');
+}
+	
 
 require_once MEMBERFUL_DIR.'/../../../wp-load.php';
+
+if($_GET['secret'] !== MEMBERFUL_TOKEN)
+{
+	die('Invalid secret');
+}
 
 if(isset($data->member_id))
 {
@@ -25,6 +34,8 @@ if(isset($data->member_id))
 	$map = new Memberful_User_Map();
 
 	$map->map($data->member, $data->products);
+
+	die('{"response": "ok"}');
 }
 else
 {
