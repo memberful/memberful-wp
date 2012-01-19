@@ -116,7 +116,7 @@ class Memberful_Authenticator
 		elseif(isset($_GET['error']))
 		{
 			return $this->_error(
-				'memberful_oauth_error', 
+				'memberful_oauth_error',
 				'An error prevented you from being logged in.('.htmlentities($_GET['error']).')'
 			);
 		}
@@ -127,11 +127,11 @@ class Memberful_Authenticator
 	}
 
 	/**
-	 * For some amazingly obvious reason which I don't quite understand, 
+	 * For some amazingly obvious reason which I don't quite understand,
 	 * wp_authenticate_username_password always overrides any errors generated
 	 * by authentication hooks.
 	 *
-	 * This filter is injected after username_password and will re-set any 
+	 * This filter is injected after username_password and will re-set any
 	 * memberful errors.
 	 *
 	 * @param mixed $user
@@ -165,20 +165,20 @@ class Memberful_Authenticator
 			'code'          => $auth_code
 		);
 		$response = wp_remote_post(
-			self::oauth_member_url('token'), 
+			self::oauth_member_url('token'),
 			array(
-				'body'      => $params, 
+				'body'      => $params,
 				'sslverify' => false
 			)
 		);
 
-		$body = json_decode($response['body']); 
+		$body = json_decode($response['body']);
 		$code = $response['response']['code'];
 
-		if ($code !== 200 OR $body === NULL OR empty($body->access_token))
+		if ($code != 200 OR $body === NULL OR empty($body->access_token))
 		{
 			return $this->_error(
-				'oauth_access_fail', 
+				'oauth_access_fail',
 				'Could not get access token from Memberful'
 			);
 		}
@@ -204,9 +204,9 @@ class Memberful_Authenticator
 
 		$body = json_decode($response['body']);
 
-		if($response['response']['code'] !== 200 OR $body === NULL)
+		if($response['response']['code'] != 200 OR $body === NULL)
 		{
-			return $this->error('memberful_data_error', 'Could not fetch your data from Memberful.');
+			return $this->_error('memberful_data_error', 'Could not fetch your data from Memberful.');
 		}
 
 		return $body;
