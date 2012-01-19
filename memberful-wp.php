@@ -81,7 +81,7 @@ function memberful_api_member($member_id)
 {
 	$url = memberful_wrap_api_token(memberful_admin_member_url($member_id, MEMBERFUL_JSON));
 
-	$response = wp_remote_get($url);
+	$response = wp_remote_get($url, array('sslverify' => false));
 
 	if(is_wp_error($response))
 	{

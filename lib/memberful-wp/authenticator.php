@@ -164,8 +164,15 @@ class Memberful_Authenticator
 			'grant_type'    => 'authorization_code',
 			'code'          => $auth_code
 		);
-		$response = wp_remote_post(self::oauth_member_url('token'), array('body' => $params));
-		$body = json_decode($response['body']);
+		$response = wp_remote_post(
+			self::oauth_member_url('token'), 
+			array(
+				'body'      => $params, 
+				'sslverify' => false
+			)
+		);
+
+		$body = json_decode($response['body']); 
 		$code = $response['response']['code'];
 
 		if ($code !== 200 OR $body === NULL OR empty($body->access_token))
@@ -190,7 +197,10 @@ class Memberful_Authenticator
 	{
 		$url = memberful_member_url(MEMBERFUL_JSON);
 
-		$response = wp_remote_get(add_query_arg('access_token', $access_token, $url));
+		$response = wp_remote_get(
+			add_query_arg('access_token', $access_token, $url),
+			array('sslverify' => false)
+		);
 
 		$body = json_decode($response['body']);
 
