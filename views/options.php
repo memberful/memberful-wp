@@ -16,7 +16,7 @@
       <?php if( ! empty($products)): ?>
       <ul>
       <?php foreach((array) get_option('memberful_products') as $id => $product): ?>
-        <li><a href="<?php echo memberful_product_url($id); ?>"><?php echo $product['name']; ?></a></li>
+        <li><a href="<?php echo memberful_admin_product_url($id); ?>"><?php echo $product['name']; ?></a></li>
       <?php endforeach; ?>
       </ul>
       <?php endif; ?>
