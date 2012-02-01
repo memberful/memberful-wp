@@ -1,7 +1,5 @@
 <?php
 
-session_start();
-
 /**
  * Is OAuth authentication enabled?
  *
@@ -123,8 +121,9 @@ class Memberful_Authenticator
 			);
 		}
 
-		// Store where the user came from
-		$_SESSION['memberful_redirect'] = $_SERVER['HTTP_REFERER'];
+		// Store where the user came from in a cookie
+		$expire = time() + 30*60; // 30 minutes
+		setcookie("memberful_redirect", $_SERVER['HTTP_REFERER'], $expire, COOKIEPATH, COOKIE_DOMAIN, is_ssl(), true);
 
 
 		// Send the user to memberful
@@ -144,8 +143,8 @@ class Memberful_Authenticator
 		}
 
 		// Get redirect from session
-		$redirect_to = isset($_SESSION['memberful_redirect']) ? 
-			$_SESSION['memberful_redirect']
+		$redirect_to = isset($_COOKIE['memberful_redirect']) ? 
+			$_COOKIE['memberful_redirect']
 				: memberful_member_url();
 			
 		return $redirect_to;
