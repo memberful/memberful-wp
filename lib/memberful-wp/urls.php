@@ -25,6 +25,11 @@ function memberful_member_url($format = MEMBERFUL_HTML)
 	return memberful_url('member', $format);
 }
 
+function memberful_member_logout_url()
+{
+	return memberful_url('auth/sign_out');
+}
+
 function memberful_admin_member_url($member_id, $format = MEMBERFUL_HTML)
 {
 	return memberful_url('admin/members/'.$member_id, $format);
