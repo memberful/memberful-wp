@@ -3,14 +3,14 @@
 define('MEMBERFUL_DIR', dirname(__FILE__));
 
 if( $_SERVER['REQUEST_METHOD'] !== 'POST' )
-	die('Invalid request method');
+	die('The webhook can only be accessed via POST');
 
 $body = file_get_contents('php://input');
 
 if( ($data = json_decode($body)) === NULL)
 {
 	var_dump($body, $data);
-	die('Could not parse JSON');
+	die('Could not parse JSON payload');
 }
 
 
@@ -18,7 +18,7 @@ require_once MEMBERFUL_DIR.'/../../../wp-load.php';
 
 if($_GET['secret'] !== MEMBERFUL_TOKEN)
 {
-	die('Invalid secret');
+	die('Invalid webhook secret specified');
 }
 
 if(isset($data->member_id))
@@ -39,5 +39,5 @@ if(isset($data->member_id))
 }
 else
 {
-	die('Could not identify member ID in request');
+	die('Could not identify member ID in webhook ping');
 }
