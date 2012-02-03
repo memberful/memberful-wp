@@ -18,9 +18,22 @@ class Memberful_Authenticator
 	 * @param string $action Action to access at endpoint
 	 * @return string URL
 	 */
-	static function oauth_member_url($action = '')
+	static public function oauth_member_url($action = '')
 	{
 		return memberful_url('oauth/'.$action);
+	}
+
+	/**
+	 * Authentication for subscribers is handled by Memberful.
+	 * Prevent subscribers from requesting password resets
+	 *
+	 * @return boolean
+	 */
+	static public function audit_password_reset($allowed, $user_id)
+	{
+		$user = new WP_User($user_id);
+
+		return $user->has_cap('subscriber') ? FALSE : $allowed;
 	}
 
 	/**
@@ -55,18 +68,7 @@ class Memberful_Authenticator
 		return $this->_wp_error = new WP_Error($code, $message);
 	}
 
-	/**
-	 * Authentication for subscribers is handled by Memberful.
-	 * Prevent subscribers from requesting password resets
-	 *
-	 * @return boolean
-	 */
-	public function audit_password_reset($allowed, $user_id)
-	{
-		$user = new WP_User($user_id);
-
-		return $user->has_cap('subscriber') ? FALSE : $allowed;
-	}
+	
 
 	/**
 	 * Callback for the `authenticate` hook.
@@ -214,8 +216,5 @@ class Memberful_Authenticator
 
 }
 
-$authenticator = new Memberful_Authenticator;
-
-add_filter('authenticate', array($authenticator, 'init'), 10, 3);
-add_filter('authenticate', array($authenticator, 'relay_errors'), 50, 3);
-add_filter('allow_password_reset', array($authenticator, 'audit_password_reset'), 50, 2);
+// Backup, prevent members from resetting their password
+add_filter('allow_password_reset', array(Memberful_Authenticator, 'audit_password_reset'), 50, 2);
