@@ -102,7 +102,7 @@ class Memberful_User_Map
 			wp_insert_user($data);
 		}
 
-		$this->_update_member_id($user_id, $member->id, $refresh_token);
+		$this->_update_member_id($user_id, $member->id, $member->username, $refresh_token);
 		
 		return get_userdata($user_id);
 	}
@@ -123,7 +123,7 @@ class Memberful_User_Map
 		return (int) $product_link->product_id;
 	}
 
-	protected function _update_member_id($user_id, $member_id, $refresh_token = NULL)
+	protected function _update_member_id($user_id, $member_id, $login_name, $refresh_token = NULL)
 	{
 		global $wpdb;
 		$data = array();
@@ -137,7 +137,8 @@ class Memberful_User_Map
 		}
 
 		$update .= '`memberful_member_id` = %d WHERE `ID` = %d';
-		$data += array($member_id, $user_id);
+		$data[] = $member_id;
+		$data[] = $user_id;
 
 		$wpdb->query($wpdb->prepare($update, $data));
 	}
