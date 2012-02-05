@@ -28,8 +28,6 @@ require_once MEMBERFUL_DIR.'/lib/memberful-wp/acl.php';
 add_filter('allowed_redirect_hosts', 'memberful_allowed_hosts');
 add_action('admin_menu', 'memberful_wp_register_options_panel');
 add_action('admin_init', 'memberful_wp_register_options');
-add_action('wp_logout', 'memberful_logout');
-add_filter('allowed_redirect_hosts', 'memberful_allowed_hosts');
 
 add_action('init', 'memberful_init');
 register_activation_hook(__FILE__, 'memberful_activate');
@@ -99,14 +97,6 @@ function memberful_api_member($member_id)
 	}
 
 	return json_decode($response['body']);
-}
-
-/**
- * Action called after the member is logged out
- * Instructs wordpress to redirect the user back to memberful
- */
-function memberful_logout() {
-	$_REQUEST['redirect_to'] = memberful_member_logout_url();
 }
 
 /**

@@ -87,18 +87,6 @@ class Memberful_Authenticator
 			return $user;
 		}
 
-		// If a username or password has been posted then fallback to normal auth
-		//
-		// If GET isn't empty (e.g. a redirect_to is supplied) and the page that sent
-		// them here hasn't requested memberful authentication then chances are its
-		// some kind of admin related operation which a customer won't be able to perform,
-		// in which case we should allow them to specify a username/password to
-		// login with
-		if( ! empty($username) || ! empty($password) || ( ! empty($_GET) && ! isset($_GET['memberful_auth'])))
-		{
-			return $user;
-		}
-
 		// This is the OAuth response
 		if(isset($_GET['code']))
 		{
@@ -217,4 +205,4 @@ class Memberful_Authenticator
 }
 
 // Backup, prevent members from resetting their password
-add_filter('allow_password_reset', array(Memberful_Authenticator, 'audit_password_reset'), 50, 2);
+add_filter('allow_password_reset', array('Memberful_Authenticator', 'audit_password_reset'), 50, 2);

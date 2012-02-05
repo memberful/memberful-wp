@@ -20,6 +20,16 @@ function memberful_url($uri = '', $format = MEMBERFUL_HTML)
 	return rtrim(get_option('memberful_site'),'/').$endpoint;
 }
 
+function memberful_wp_login_url()
+{
+	return plugins_url('auth.php', dirname(dirname(__FILE__)));
+}
+
+function memberful_wp_logout_url()
+{
+	return add_query_arg('action', 'logout', memberful_wp_login_url());
+}
+
 function memberful_member_url($format = MEMBERFUL_HTML)
 {
 	return memberful_url('member', $format);
