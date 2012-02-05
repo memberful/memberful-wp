@@ -27,8 +27,8 @@ if($_GET['action'] == 'logout') {
 			is_ssl(),
 			true
 		);
-	} elseif (isset($_REQUEST['memberful_redirect'])) {
-		$redirect_to = $_REQUEST['memberful_redirect'];
+	} elseif (isset($_REQUEST['redirect_to'])) {
+		$redirect_to = $_REQUEST['redirect_to'];
 	} else {
 		$redirect_to = memberful_member_url();
 	}
