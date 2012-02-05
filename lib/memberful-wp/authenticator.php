@@ -121,9 +121,34 @@ class Memberful_Authenticator
 			);
 		}
 
+		// Store where the user came from in a cookie
+		$expire = time() + 30*60; // 30 minutes
+		setcookie("memberful_redirect", $_SERVER['HTTP_REFERER'], $expire, COOKIEPATH, COOKIE_DOMAIN, is_ssl(), true);
+
+
 		// Send the user to memberful
 		wp_redirect(self::oauth_auth_url(), 302);
 		exit();
+	}
+ 
+
+	/**
+	 * login_redirect filter
+	 * Should redirect to where the user came from before he clicked the login button
+	 */
+	public function redirect($redirect, $request_redirect, $user) {
+		// Not enabled so return default
+		if (! memberful_wp_oauth_enabled() ) {
+			return $redirect;
+		}
+
+		// Get redirect from session
+		$redirect_to = isset($_COOKIE['memberful_redirect']) ? 
+			$_COOKIE['memberful_redirect']
+				: memberful_member_url();
+			
+		return $redirect_to;
+
 	}
 
 	/**
@@ -219,3 +244,4 @@ $authenticator = new Memberful_Authenticator;
 add_filter('authenticate', array($authenticator, 'init'), 10, 3);
 add_filter('authenticate', array($authenticator, 'relay_errors'), 50, 3);
 add_filter('allow_password_reset', array($authenticator, 'audit_password_reset'), 50, 2);
+add_filter('login_redirect', array($authenticator, 'redirect'), 50, 3);
