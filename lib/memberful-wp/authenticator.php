@@ -111,9 +111,31 @@ class Memberful_Authenticator
 			);
 		}
 
+		// Store where the user came from in a cookie
+		$expire = time() + 30*60; // 30 minutes
+		setcookie("memberful_redirect", $_SERVER['HTTP_REFERER'], $expire, COOKIEPATH, COOKIE_DOMAIN, is_ssl(), true);
+
+
 		// Send the user to memberful
 		wp_redirect(self::oauth_auth_url(), 302);
 		exit();
+	}
+ 
+
+	/**
+	 * login_redirect filter
+	 * Should redirect to where the user came from before he clicked the login button
+	 */
+	public function redirect($redirect, $request_redirect, $user) {
+		// Not enabled so return default
+		if (! memberful_wp_oauth_enabled() ) {
+			return $redirect;
+		}
+
+		
+			
+		return $redirect_to;
+
 	}
 
 	/**

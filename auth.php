@@ -15,7 +15,23 @@ if($_GET['action'] == 'logout') {
 	$redirect_to = memberful_member_logout_url();
 } else {
 	wp_signon('', is_ssl());
-	$redirect_to = isset($_REQUEST['redirect_to']) ? $_REQUEST['redirect_to'] : get_bloginfo('url');
+	// Get redirect from session
+	if(isset($_COOKIE['memberful_redirect'])) {
+		$redirect_to = $_COOKIE['memberful_redirect'];
+		setcookie(
+			"memberful_redirect",
+			$_SERVER['HTTP_REFERER'],
+			time() - 3600,
+			COOKIEPATH,
+			COOKIE_DOMAIN,
+			is_ssl(),
+			true
+		);
+	} elseif (isset($_REQUEST['memberful_redirect'])) {
+		$redirect_to = $_REQUEST['memberful_redirect'];
+	} else {
+		$redirect_to = memberful_member_url();
+	}
 }
 
 wp_safe_redirect($redirect_to);
