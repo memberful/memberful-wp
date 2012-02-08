@@ -9,7 +9,7 @@ $authenticator = new Memberful_Authenticator;
 add_filter('authenticate', array($authenticator, 'init'), 10, 3);
 add_filter('authenticate', array($authenticator, 'relay_errors'), 50, 3);
 
-if($_GET['action'] == 'logout') {
+if(isset($_GET['action']) && $_GET['action'] == 'logout') {
 	wp_logout();
 	
 	$redirect_to = memberful_member_logout_url();
