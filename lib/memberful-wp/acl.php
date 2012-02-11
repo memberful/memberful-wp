@@ -52,7 +52,7 @@ function memberful_user_disallowed_post_ids()
 	$allowed    = array_unique($allowed_ids);
 	$restricted = array_unique($restricted_ids);
 
-	// Remove from the set of restricted posts the posts that the user is 
+	// Remove from the set of restricted posts the posts that the user is
 	// definitely allowed to access
 	$union = array_diff($restricted, $allowed);
 
@@ -90,3 +90,43 @@ function memberful_filter_posts($query)
 	$query->set('post__not_in', $ids);
 }
 
+/**
+ * Gets the array of products the member with $member_id owns
+ *
+ * @return array member's products
+ */
+function memberful_get_member_products( $member_id ) {
+	return get_user_meta( $member_id, 'memberful_products', TRUE);
+}
+
+/**
+ * Gets the array of products the current member
+ *
+ * @return array current member's products
+ */
+function memberful_get_current_member_products() {
+	$current_user = wp_get_current_user();
+	return memberful_get_member_products( $current_user->ID );
+}
+
+/**
+ * Determines if $member_id is considered an "active" member
+ *
+ * @return boolean true if the member owns any products
+ */
+function memberful_is_member_active( $member_id ) {
+	$products = memberful_get_member_products( $member_id );
+
+	// Member considered active if they have at least 1 product
+	return ! empty( $products );
+}
+
+/**
+ * Determines if current member is considered an "active" member
+ *
+ * @return boolean true if the current member owns any products
+ */
+function memberful_is_current_member_active() {
+	$current_user = wp_get_current_user();
+	return memberful_is_member_active( $current_user->ID );
+}
