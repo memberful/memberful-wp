@@ -68,7 +68,7 @@ class Memberful_Authenticator
 		return $this->_wp_error = new WP_Error($code, $message);
 	}
 
-	
+
 
 	/**
 	 * Callback for the `authenticate` hook.
@@ -111,16 +111,24 @@ class Memberful_Authenticator
 			);
 		}
 
+
 		// Store where the user came from in a cookie
 		$expire = time() + 30*60; // 30 minutes
-		setcookie("memberful_redirect", $_SERVER['HTTP_REFERER'], $expire, COOKIEPATH, COOKIE_DOMAIN, is_ssl(), true);
+		$referer = $_SERVER['HTTP_REFERER'];
+
+		// Allow overriding of redirect location
+		if ( isset( $_REQUEST['redirect_to'] ) ) {
+			$referer = $_REQUEST['redirect_to'];
+		}
+
+		setcookie("memberful_redirect", $referer, $expire, COOKIEPATH, COOKIE_DOMAIN, is_ssl(), true);
 
 
 		// Send the user to memberful
 		wp_redirect(self::oauth_auth_url(), 302);
 		exit();
 	}
- 
+
 
 	/**
 	 * login_redirect filter
@@ -132,8 +140,8 @@ class Memberful_Authenticator
 			return $redirect;
 		}
 
-		
-			
+
+
 		return $redirect_to;
 
 	}
@@ -183,6 +191,11 @@ class Memberful_Authenticator
 				'sslverify' => false
 			)
 		);
+
+		// if ( get_class( $response ) == 'WP_Error' ) {
+		// 	echo "Error";
+		// 	die();
+		// }
 
 		$body = json_decode($response['body']);
 		$code = $response['response']['code'];
