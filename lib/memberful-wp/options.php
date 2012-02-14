@@ -141,7 +141,7 @@ function memberful_sync_products()
 
 	$full_url = add_query_arg('auth_token', get_option('memberful_api_key'), $url);
 
-	$response = wp_remote_get($full_url, array('sslverify' => false));
+	$response = wp_remote_get($full_url, array('sslverify' => MEMBERFUL_SSL_VERIFY));
 
 	if(is_wp_error($response))
 	{
