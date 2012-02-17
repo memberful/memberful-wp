@@ -35,7 +35,7 @@ function memberful_member_url($format = MEMBERFUL_HTML)
 	return memberful_url('member', $format);
 }
 
-function memberful_member_logout_url()
+function memberful_signout_url()
 {
 	return memberful_url('auth/sign_out');
 }
@@ -57,7 +57,7 @@ function memberful_admin_product_url($product_id, $format = MEMBERFUL_HTML)
 
 function memberful_signin_url()
 {
-	return add_query_arg('memberful_auth', 1, wp_login_url());
+	return memberful_url('auth/sign_in');
 }
 
 function memberful_wrap_api_token($url)

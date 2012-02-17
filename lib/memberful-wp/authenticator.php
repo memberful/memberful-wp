@@ -125,7 +125,7 @@ class Memberful_Authenticator
 
 
 		// Send the user to memberful
-		wp_redirect(self::oauth_auth_url(), 302);
+		wp_redirect(memberful_signin_url(), 302);
 		exit();
 	}
 
