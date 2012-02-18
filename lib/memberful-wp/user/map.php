@@ -3,7 +3,7 @@
 /**
  * Maps a memberful user to a wordpress user.
  *
- * If the wordpress user does not exist then they are created from the member 
+ * If the wordpress user does not exist then they are created from the member
  * details provided.
  *
  */
@@ -45,7 +45,7 @@ class Memberful_User_Map
 			$data = array(
 				'user_pass'     => wp_generate_password(),
 				'user_login'    => $member->username,
-				'user_nicename' => $member->full_name,
+				'user_nicename' => $member->username,
 				'user_email'    => $member->email,
 				'display_name'  => $member->full_name,
 				'nickname'      => $member->full_name,
@@ -73,7 +73,7 @@ class Memberful_User_Map
 				'user_email'    => 'email',
 				'user_login'    => 'username',
 				'display_name'  => 'full_name',
-				'user_nicename' => 'full_name',
+				'user_nicename' => 'username',
 
 			);
 
@@ -103,7 +103,7 @@ class Memberful_User_Map
 		}
 
 		$this->_update_user($user_id, $member->id, $member->username, $refresh_token);
-		
+
 		return get_userdata($user_id);
 	}
 
@@ -111,8 +111,8 @@ class Memberful_User_Map
 	{
 		$product_ids = array_map(array($this, '_extract_product_id'), $products);
 
-		$new_products = empty($product_ids) 
-			? array() 
+		$new_products = empty($product_ids)
+			? array()
 			: array_combine($product_ids, $product_ids);
 
 		update_user_meta($user->ID, 'memberful_products', $new_products);
