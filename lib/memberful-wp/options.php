@@ -149,7 +149,7 @@ function memberful_sync_products()
 		die();
 	}
 
-	if($response['response']['code'] !== 200 OR ! isset($response['body']))
+	if($response['response']['code'] != 200 OR ! isset($response['body']))
 	{
 		return new WP_Error('memberful_product_sync_fail', "Couldn't retrieve list of products from memberful");
 	}
