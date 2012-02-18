@@ -125,7 +125,7 @@ class Memberful_Authenticator
 
 
 		// Send the user to memberful
-		wp_redirect(self::oauth_auth_url(), 302);
+		wp_redirect(memberful_signin_url(), 302);
 		exit();
 	}
 
@@ -188,7 +188,7 @@ class Memberful_Authenticator
 			self::oauth_member_url('token'),
 			array(
 				'body'      => $params,
-				'sslverify' => false
+				'sslverify' => MEMBERFUL_SSL_VERIFY
 			)
 		);
 
@@ -224,7 +224,7 @@ class Memberful_Authenticator
 
 		$response = wp_remote_get(
 			add_query_arg('access_token', $access_token, $url),
-			array('sslverify' => false)
+			array('sslverify' => MEMBERFUL_SSL_VERIFY)
 		);
 
 		$body = json_decode($response['body']);

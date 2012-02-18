@@ -141,7 +141,7 @@ function memberful_sync_products()
 
 	$full_url = add_query_arg('auth_token', get_option('memberful_api_key'), $url);
 
-	$response = wp_remote_get($full_url, array('sslverify' => false));
+	$response = wp_remote_get($full_url, array('sslverify' => MEMBERFUL_SSL_VERIFY));
 
 	if(is_wp_error($response))
 	{
@@ -149,7 +149,7 @@ function memberful_sync_products()
 		die();
 	}
 
-	if($response['response']['code'] !== 200 OR ! isset($response['body']))
+	if($response['response']['code'] != 200 OR ! isset($response['body']))
 	{
 		return new WP_Error('memberful_product_sync_fail', "Couldn't retrieve list of products from memberful");
 	}

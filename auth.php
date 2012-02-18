@@ -12,12 +12,20 @@ add_filter('authenticate', array($authenticator, 'relay_errors'), 50, 3);
 if(isset($_GET['action']) && $_GET['action'] == 'logout') {
 	wp_logout();
 	
-	$redirect_to = memberful_member_logout_url();
+	$redirect_to = !empty($_REQUEST['redirect_to']) ? $_REQUEST['redirect_to'] : site_url();
 } else {
 	wp_signon('', is_ssl());
 	// Get redirect from session
-	if(isset($_COOKIE['memberful_redirect'])) {
+	if (isset($_REQUEST['redirect_to'])) {
+		$redirect_to = $_REQUEST['redirect_to'];
+	} elseif(isset($_COOKIE['memberful_redirect'])) {
 		$redirect_to = $_COOKIE['memberful_redirect'];
+	} else {
+		$redirect_to = memberful_member_url();
+	}
+
+	// If redirect_to was specified but a cookie also exists
+	if(isset($_COOKIE['memberful_redirect'])) {
 		setcookie(
 			"memberful_redirect",
 			$_SERVER['HTTP_REFERER'],
@@ -27,10 +35,6 @@ if(isset($_GET['action']) && $_GET['action'] == 'logout') {
 			is_ssl(),
 			true
 		);
-	} elseif (isset($_REQUEST['redirect_to'])) {
-		$redirect_to = $_REQUEST['redirect_to'];
-	} else {
-		$redirect_to = memberful_member_url();
 	}
 }
 

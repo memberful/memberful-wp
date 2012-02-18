@@ -15,6 +15,9 @@ if( ! defined('MEMBERFUL_DIR'))
 define('MEMBERFUL_HTML', NULL);
 define('MEMBERFUL_JSON', 'json');
 
+// Should requests to memberful check the ssl certificate?
+define('MEMBERFUL_SSL_VERIFY', SITE_ENVIRONMENT == "production");
+
 // TODO: Generate this!
 define('MEMBERFUL_TOKEN', 'aoisdn98q2h9can3r9uac98n3nhaiuhgmcznzwre98zcnh397hnizrchn87wr3chz9wrh9');
 
@@ -82,7 +85,7 @@ function memberful_api_member($member_id)
 {
 	$url = memberful_wrap_api_token(memberful_admin_member_url($member_id, MEMBERFUL_JSON));
 
-	$response = wp_remote_get($url, array('sslverify' => false));
+	$response = wp_remote_get($url, array('sslverify' => MEMBERFUL_SSL_VERIFY));
 
 	if(is_wp_error($response))
 	{
@@ -90,7 +93,7 @@ function memberful_api_member($member_id)
 		die();
 	}
 
-	if($response['response']['code'] !== 200 OR ! isset($response['body']))
+	if($response['response']['code'] != 200 OR ! isset($response['body']))
 	{
 		var_dump($response);
 		return new WP_Error('memberful_fail', 'Coult not get member info from api');
