@@ -14,7 +14,10 @@ if(isset($_GET['action']) && $_GET['action'] == 'logout') {
 	
 	$redirect_to = !empty($_REQUEST['redirect_to']) ? $_REQUEST['redirect_to'] : site_url();
 } else {
-	wp_signon('', is_ssl());
+	$credentials = array('user_login' => '', 'user_password' => '', 'remember' => true);
+
+	wp_signon($credentials, is_ssl());
+	
 	// Get redirect from session
 	if (isset($_REQUEST['redirect_to'])) {
 		$redirect_to = $_REQUEST['redirect_to'];
