@@ -93,7 +93,7 @@ function memberful_api_member($member_id)
 		die();
 	}
 
-	if($response['response']['code'] !== 200 OR ! isset($response['body']))
+	if($response['response']['code'] != 200 OR ! isset($response['body']))
 	{
 		var_dump($response);
 		return new WP_Error('memberful_fail', 'Coult not get member info from api');
