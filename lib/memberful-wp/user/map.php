@@ -9,11 +9,12 @@
  */
 class Memberful_User_Map
 {
-	public function map($user, $products, $refresh_token = NULL)
+	public function map($user, $products, $subscriptions, $refresh_token = NULL)
 	{
 		$wp_user = $this->sync_user_and_token($user, $refresh_token);
 
 		$this->sync_products($wp_user, $products);
+		$this->sync_member_subscriptions($wp_user, $subscriptions);
 
 		return $wp_user;
 	}
@@ -109,7 +110,7 @@ class Memberful_User_Map
 
 	public function sync_products(WP_User $user, $products)
 	{
-		$product_ids = array_map(array($this, '_extract_product_id'), $products);
+		$product_ids = array_map(array($this, '_extract_id'), $products);
 
 		$new_products = empty($product_ids)
 			? array()
@@ -118,7 +119,25 @@ class Memberful_User_Map
 		update_user_meta($user->ID, 'memberful_products', $new_products);
 	}
 
-	protected function _extract_product_id($product_link)
+	public function sync_member_subscriptions(WP_User $user, $subscriptions)
+	{
+		$member_subscriptions = $subscription_ids = array();
+
+		foreach($subscriptions as $subscription)
+		{
+			$expires_at = strtotime($subscription->expires_at);
+
+			$member_subscriptions[$subscription->subscription_id] = array(
+				// If we couldn't parse the date then the sub never expires
+				'expires_at'             => $expires_at ? $expires_at : true,
+				'member_subscription_id' => $subscription->id,
+			);
+		}
+
+		update_user_meta($user->ID, 'memberful_subscriptions', $member_subscriptions);
+	}
+
+	protected function _extract_id($product_link)
 	{
 		return (int) $product_link->id;
 	}

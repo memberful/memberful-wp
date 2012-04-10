@@ -100,6 +100,15 @@ function memberful_get_member_products( $member_id ) {
 }
 
 /**
+ * Gets the array of subscriptions that the member with $member_id owns
+ *
+ * @return array member's subscriptions
+ */
+function memberful_get_member_subscriptions( $member_id ) {
+	return get_user_meta( $member_id, 'memberful_subscriptions', TRUE);
+}
+
+/**
  * Gets the array of products the current member
  *
  * @return array current member's products
@@ -128,5 +137,33 @@ function memberful_is_member_active( $member_id ) {
  */
 function memberful_is_current_member_active() {
 	$current_user = wp_get_current_user();
+	return memberful_is_member_active( $current_user->ID );
+}
+
+/**
+ * Check if the member has the specified subscription, and that the subscription
+ * has not expired.
+ *
+ * @return boolean
+ */
+function memberful_member_has_subscription( $member_id, $subscription_id ) {
+	$subscriptions = memberful_get_member_subscriptions( $member_id );
+
+	if (empty($subscriptions[$subscription_id]))
+		return false;
+
+	$subscription = $subscriptions[$subscription_id];
+
+	return $subscription['expires_at'] === true || $subscription['expires_at'] > time();
+}
+
+/**
+ * Check if the user who's currently logged in has the specified subscription
+ *
+ * @return boolean
+ */
+function memberful_current_member_has_subscription( $subscription_id ) {
+	$current_user = wp_get_current_user();
+
 	return memberful_is_member_active( $current_user->ID );
 }

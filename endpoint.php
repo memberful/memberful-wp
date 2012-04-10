@@ -33,7 +33,7 @@ if(isset($data->member_id))
 	}
 	$map = new Memberful_User_Map();
 
-	$map->map($data->member, $data->products);
+	$map->map($data->member, $data->products, $data->subscriptions);
 
 	die('{"response": "ok"}');
 }
