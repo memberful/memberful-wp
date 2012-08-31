@@ -1,21 +1,20 @@
 <div id="memberful-wrap" class="wrap">
 	<div id="memberful-head">
-		<h2>Memberful<a href="#" class="memberful-visit-dashboard" target="_blank"><?php _e( 'Visit Dashboard', 'memberful' ); ?></a></h2>
+		<h2>Memberful</h2>
 	</div>
 
-	<div id="memberful_registration">
-		<div class="memberful_view-plans">
-			<h1><?php _e( 'A Memberful account is required for setup.', 'memberful' ); ?></h1>
-			<p><?php _e( '<a href="#">Sign up for free</a> and start selling digital products and subscriptions the easy way.', 'memberful' ); ?></p>
+	<div id="memberful-registration">
+		<div class="memberful-sign-up">
+			<h1><?php _e( 'A Memberful account is required for setup', 'memberful' ); ?></h1>
+			<p><?php _e( '<a href="http://memberful.com">Sign up for an account</a> and start selling digital products and subscriptions the easy way.', 'memberful' ); ?></p>
 		</div>
 
-		<div class="memberful_register-plugin">
+		<div class="memberful-register-plugin">
 			<h3><?php _e( 'Already have a Memberful account?', 'memberful' ); ?></h3>
-			<p><?php _e( 'Paste your registration key below:', 'memberful' ); ?></p>
 			<form>
 				<fieldset>
-					<textarea placeholder="<?php echo esc_attr( __( 'Enter your key here...', 'memberful' ) ); ?>" name="registration_key"></textarea>
-					<button><?php _e( 'Register ', 'memberful' ); ?></button>
+					<textarea placeholder="<?php echo esc_attr( __( 'Paste your registration key here...', 'memberful' ) ); ?>" name="registration_key"></textarea>
+					<button><?php _e( 'Register this site with your Memberful account', 'memberful' ); ?></button>
 					<input type="hidden" name="action" value="register" />
 					<?php wp_nonce_field( 'memberful_register' ); ?>
 				</fieldset>

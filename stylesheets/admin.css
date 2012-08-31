@@ -1,0 +1,74 @@
+#memberful-wrap {
+	max-width: 360px;
+}
+.memberful-sign-up {
+	margin-top: 20px;
+	padding: 10px 20px;
+	background: #ececec;
+	border-radius: 3px;
+	box-shadow: 0 1px 3px rgba(0,0,0,.25);
+}
+.memberful-sign-up h1 {
+	font-size: 16px;
+	font-weight: normal;
+}
+.memberful-sign-up p {
+	color: #666;
+}
+.memberful-register-plugin {
+	margin-top: 30px;
+}
+.memberful-register-plugin h3 {
+	font-weight: normal;
+}
+.memberful-register-plugin textarea {
+	width: 100%;
+	min-height: 60px;
+}
+.memberful-register-plugin button {
+	line-height: 1;
+	padding: 12px 14px;
+	color: #fff;
+	font-size: 12px;
+	font-family: inherit;
+	text-align: center;
+	text-decoration: none;
+	border-radius: 3px;
+	color: #666;
+	cursor: pointer;
+	text-shadow: 0 1px 0 #fff;
+	border: 1px solid #cbcbcb;
+	background-color: #e1e1e1;
+	background-repeat: repeat-x;
+	background-image: -khtml-gradient(linear, left top, left bottom, from(#f9f9f9), to(#e1e1e1));
+	background-image: -moz-linear-gradient(top, #f9f9f9, #e1e1e1);
+	background-image: -ms-linear-gradient(top, #f9f9f9, #e1e1e1);
+	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #f9f9f9), color-stop(100%, #e1e1e1));
+	background-image: -webkit-linear-gradient(top, #f9f9f9, #e1e1e1);
+	background-image: -o-linear-gradient(top, #f9f9f9, #e1e1e1);
+	background-image: linear-gradient(top, #f9f9f9, #e1e1e1);
+	-webkit-box-shadow: inset 0 1px 0 0 white;
+	-moz-box-shadow: inset 0 1px 0 0 white;
+	box-shadow: inset 0 1px 0 0 white;
+}
+.memberful-register-plugin button:hover {
+  background-color: #e6e6e6;
+  background-repeat: repeat-x;
+  background-image: -khtml-gradient(linear, left top, left bottom, from(#fbfbfb), to(#e6e6e6));
+  background-image: -moz-linear-gradient(top, #fbfbfb, #e6e6e6);
+  background-image: -ms-linear-gradient(top, #fbfbfb, #e6e6e6);
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #fbfbfb), color-stop(100%, #e6e6e6));
+  background-image: -webkit-linear-gradient(top, #fbfbfb, #e6e6e6);
+  background-image: -o-linear-gradient(top, #fbfbfb, #e6e6e6);
+  background-image: linear-gradient(top, #fbfbfb, #e6e6e6);
+  -webkit-box-shadow: inset 0 1px 0 0 white;
+  -moz-box-shadow: inset 0 1px 0 0 white;
+  box-shadow: inset 0 1px 0 0 white;
+}
+.memberful-register-plugin button:active {
+  border: 1px solid #bfbfbf;
+  border-bottom: 1px solid #b3b3b3;
+  -webkit-box-shadow: inset 0 0 8px 2px #c2c2c2, 0 1px 0 0 #eeeeee;
+  -moz-box-shadow: inset 0 0 8px 2px #c2c2c2, 0 1px 0 0 #eeeeee;
+  box-shadow: inset 0 0 8px 2px #c2c2c2, 0 1px 0 0 #eeeeee;
+}
