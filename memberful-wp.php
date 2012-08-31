@@ -15,7 +15,7 @@ if( ! defined('MEMBERFUL_DIR'))
 define('MEMBERFUL_HTML', NULL);
 define('MEMBERFUL_JSON', 'json');
 
-// Should requests to memberful check the ssl certificate?
+// Should requests to memberful check the SSL certificate?
 define('MEMBERFUL_SSL_VERIFY', SITE_ENVIRONMENT == "production");
 
 // TODO: Generate this!
@@ -60,11 +60,11 @@ function memberful_activate()
 		}
 	}
 
-	// When index.php is not the endpoint the rule goes in htaccess
+	// When index.php is not the endpoint the rule goes in .htaccess
 	// This may cause problems if .htaccess is not writable
 	//
 	// Facepress gets around this by rewriting to index.php then hooking into
-	// the template redirect hook to call the oauth callback
+	// the template redirect hook to call the OAuth callback
 	add_rewrite_rule('oauth', 'wp-login.php?memberful_auth=1', 'top');
 	flush_rewrite_rules(true);
 }
@@ -103,9 +103,9 @@ function memberful_api_member($member_id)
 }
 
 /**
- * Adds the memberful domain to the list of allowed redirect hosts
+ * Adds the Memberful domain to the list of allowed redirect hosts
  * @param array $content A set of websites that can be redirected to
- * @return array The $content plus memberful domain
+ * @return array The $content plus Memberful domain
  */
 function memberful_allowed_hosts($content) {
 	$site = get_option('memberful_site');
@@ -113,10 +113,10 @@ function memberful_allowed_hosts($content) {
 	if(!empty($site))
 	{
 		$memberful_url = parse_url($site);
-		
+
 		if($memberful_url !== false)
 			$content[] = $memberful_url['host'];
 	}
-	
+
 	return $content;
 }

@@ -2,7 +2,7 @@
 
 
 /**
- * Generate a URL to the memberful site
+ * Generate a URL to the Memberful site
  *
  * @param string $uri    The URI to append
  * @param string $format The requested format

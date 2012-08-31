@@ -66,7 +66,7 @@ function myplugin_save_postdata( $post_id ) {
 	if( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE )
 	  return;
 
-	// verify this came from the our screen and with proper authorization,
+	// Verify this came from the our screen and with proper authorization,
 	// because save_post can be triggered at other times
 
 	if( ! isset($_POST['memberful_nonce']) || ! wp_verify_nonce( $_POST['memberful_nonce'], plugin_basename( __FILE__ )))
@@ -147,7 +147,7 @@ class Memberful_Post_ACL
 		{
 			unset($map[$product][$this->_id]);
 		}
-		
+
 		return $map;
 	}
 

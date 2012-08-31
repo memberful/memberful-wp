@@ -10,7 +10,7 @@ add_action('pre_get_posts', 'memberful_filter_posts');
  * If a page/post requires products a,b then the user will be granted access
  * to the content if they have bought either product a or b
  *
- * TODO: This is calculated on every pageload, maybe use a cache?
+ * TODO: This is calculated on every page load, maybe use a cache?
  *
  * @return array Map of post ID => post ID
  */

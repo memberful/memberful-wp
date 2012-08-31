@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Maps a memberful user to a wordpress user.
+ * Maps a Memberful user to a WordPress user.
  *
- * If the wordpress user does not exist then they are created from the member
+ * If the WordPress user does not exist then they are created from the member
  * details provided.
  *
  */
@@ -20,8 +20,8 @@ class Memberful_User_Map
 	}
 
 	/**
-	 * Takes a set of memberful member details and tries to associate it with the
-	 * wordpress user account.
+	 * Takes a set of Memberful member details and tries to associate it with the
+	 * WordPress user account.
 	 *
 	 * @param StdObject $details       Details about the member
 	 * @param string    $refresh_token The member's refresh token for oauth
@@ -69,7 +69,7 @@ class Memberful_User_Map
 			// Now sync the two accounts
 			$user_id = $user->ID;
 
-			// Mapping of wordpress => memberful keys
+			// Mapping of WordPress => Memberful keys
 			$mapping = array(
 				'user_email'    => 'email',
 				'user_login'    => 'username',
@@ -86,7 +86,7 @@ class Memberful_User_Map
 
 			$meta = get_user_meta($user_id, '', true);
 
-			// For some insane reason Wordpress only allows us to do a complete update of values
+			// WordPress only allows us to do a complete update of values.
 			// No partial updates allowed.
 			$data = (array) $user;
 

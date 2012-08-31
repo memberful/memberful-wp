@@ -1,10 +1,8 @@
-=== Memberful Wordpress ===
-Tags: memberful,integration,oauth
+=== Memberful WP ===
+Tags: memberful, integration, oauth
 
-Plugin for integrating WordPress with Memberful's member management
-system.
+Plugin for integrating WordPress with Memberful.
 
 == Description ==
 
-This plugin allows your Memberful users to login to WordPress using
-the Memberful oAuth 2.0 endpoint.
+Integrate Memberful with WordPress using the Memberful OAuth 2.0 endpoint.
