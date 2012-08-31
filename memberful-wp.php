@@ -1,8 +1,8 @@
 <?php
 /*
 Plugin Name: Memberful WP
-Plugin URI: http://github.com/jestro/memberful-wp
-Description: Allows Memberful users to login to WordPress using the Memberful oAuth 2.0 endpoint.
+Plugin URI: http://github.com/memberful/memberful-wp
+Description: Allows Memberful users to login to WordPress using the Memberful OAuth 2.0 endpoint.
 Version: 0.1
 Author: Memberful
 Author URI: http://memberful.com
