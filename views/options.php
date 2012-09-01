@@ -3,6 +3,7 @@
 		<h2>Memberful</h2>
 	</div>
 
+	<!-- Show when a user hasn't registered their site
 	<div id="memberful-registration">
 		<div class="memberful-sign-up">
 			<h1><?php _e( 'A Memberful account is required for setup', 'memberful' ); ?></h1>
@@ -13,28 +14,22 @@
 			<h3><?php _e( 'Already have a Memberful account?', 'memberful' ); ?></h3>
 			<form>
 				<fieldset>
-					<textarea placeholder="<?php echo esc_attr( __( 'Paste your registration key here...', 'memberful' ) ); ?>" name="registration_key"></textarea>
-					<button><?php _e( 'Register this site with your Memberful account', 'memberful' ); ?></button>
+					<textarea placeholder="<?php echo esc_attr( __( 'Paste your WordPress registration key here...', 'memberful' ) ); ?>" name="registration_key"></textarea>
+					<button class="memberful-button-grey"><?php _e( 'Register this site with your Memberful account', 'memberful' ); ?></button>
 					<input type="hidden" name="action" value="register" />
 					<?php wp_nonce_field( 'memberful_register' ); ?>
 				</fieldset>
 			</form>
 		</div>
-	</div>
+	</div>-->
 
-	<?php if($show_products): ?>
-		<div class="products" style="float:left; width: 45%; margin-left: 2%;">
-			<p>Here are the products that we've synced from Memberful</p>
-			<form method="POST">
-				<?php if( ! empty($products)): ?>
-				<ul>
-				<?php foreach((array) get_option('memberful_products') as $id => $product): ?>
-					<li><a href="<?php echo memberful_admin_product_url($id); ?>"><?php echo $product['name']; ?></a></li>
-				<?php endforeach; ?>
-				</ul>
-				<?php endif; ?>
-				<input name="refresh_products" type="submit" value="Sync products" class="button-primary" />
-			</form>
-		</div>
-	<?php endif; ?>
+	<div id="memberful-registered">
+		<h1><?php _e( 'Integration Active', 'memberful' ); ?></h1>
+		<p><?php _e( 'Last automatic sync completed 2 hours ago. Managing 8,231 members, 22 products, and 3 subscriptions.', 'memberful' ); ?></p>
+		<button class="memberful-button-grey"><?php _e( 'Memberful Dashboard', 'memberful' ); ?></button>
+		<button class="memberful-button-grey"><?php _e( 'Run Manual Sync', 'memberful' ); ?></button>
+	</div>
+	<div class="memberful-protect-help">
+		To protect individual posts and pages based on a member's products or subscriptions, edit the post or page and look for the Memberful meta box.
+	</div>
 </div>
