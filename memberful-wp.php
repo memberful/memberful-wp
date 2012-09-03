@@ -16,7 +16,7 @@ define('MEMBERFUL_HTML', NULL);
 define('MEMBERFUL_JSON', 'json');
 
 // Should requests to memberful check the SSL certificate?
-define('MEMBERFUL_SSL_VERIFY', SITE_ENVIRONMENT == "production");
+define('MEMBERFUL_SSL_VERIFY', defined('SITE_ENVIRONMENT') ? SITE_ENVIRONMENT == "production" : FALSE);
 
 // TODO: Generate this!
 define('MEMBERFUL_TOKEN', 'aoisdn98q2h9can3r9uac98n3nhaiuhgmcznzwre98zcnh397hnizrchn87wr3chz9wrh9');
