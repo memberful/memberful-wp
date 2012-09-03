@@ -73,14 +73,6 @@ function memberful_activate()
 			exit();
 		}
 	}
-
-	// When index.php is not the endpoint the rule goes in .htaccess
-	// This may cause problems if .htaccess is not writable
-	//
-	// Facepress gets around this by rewriting to index.php then hooking into
-	// the template redirect hook to call the OAuth callback
-	add_rewrite_rule('oauth', 'wp-login.php?memberful_auth=1', 'top');
-	flush_rewrite_rules(true);
 }
 
 function memberful_wp_render($template, array $vars = array())
