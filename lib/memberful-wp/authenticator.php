@@ -140,8 +140,6 @@ class Memberful_Authenticator
 			return $redirect;
 		}
 
-
-
 		return $redirect_to;
 
 	}
