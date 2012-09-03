@@ -10,6 +10,23 @@ function memberful_wp_register_options()
 	add_option('memberful_acl', array());
 }
 
+
+/**
+ * Displays the memberful options page
+ *
+ */
+function memberful_options()
+{
+	$options = array();
+
+	if ( ! get_option('memberful_client_id') ) {
+		memberful_wp_render('setup');
+	}
+	else {
+		memberful_wp_render('options');
+	}
+}
+
 function memberful_sync_products()
 {
 	$url = memberful_admin_products_url(MEMBERFUL_JSON);

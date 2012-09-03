@@ -41,14 +41,6 @@ function memberful_wp_menu()
 	add_menu_page('Memberful Integration', 'Memberful', 'install_plugins', 'memberful_options', 'memberful_options');
 }
 
-
-function memberful_options()
-{
-	$options = array();
-	memberful_wp_render('options', $options);
-}
-
-
 function memberful_init() {}
 
 function memberful_activate()
