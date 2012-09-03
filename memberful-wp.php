@@ -29,12 +29,25 @@ require_once MEMBERFUL_DIR.'/lib/memberful-wp/metabox.php';
 require_once MEMBERFUL_DIR.'/lib/memberful-wp/acl.php';
 
 add_filter('allowed_redirect_hosts', 'memberful_allowed_hosts');
-add_action('admin_menu', 'memberful_wp_register_options_panel');
+add_action('admin_menu', 'memberful_wp_menu');
 add_action('admin_init', 'memberful_wp_register_options');
 add_action('admin_enqueue_scripts', 'memberful_admin_enqueue_scripts');
 
 add_action('init', 'memberful_init');
 register_activation_hook(__FILE__, 'memberful_activate');
+
+function memberful_wp_menu()
+{
+	add_menu_page('Memberful Integration', 'Memberful', 'install_plugins', 'memberful_options', 'memberful_options');
+}
+
+
+function memberful_options()
+{
+	$options = array();
+	memberful_wp_render('options', $options);
+}
+
 
 function memberful_init() {}
 
@@ -129,7 +142,7 @@ function memberful_allowed_hosts($content) {
 function memberful_admin_enqueue_scripts() {
 	$screen = get_current_screen();
 
-	if ( $screen->id == 'settings_page_memberful_wp_settings' ) {
+	if ( strpos( 'memberful', $screen->id ) !== NULL ) {
 		wp_enqueue_style(
 			'memberful-admin',
 			plugins_url( 'stylesheets/admin.css' , __FILE__ )
