@@ -19,7 +19,7 @@ function memberful_add_metabox()
 	{
 		add_meta_box(
 			'memberful_acl',
-			'Restrict Access',
+			'Memberful: Restrict Access',
 			'memberful_metabox',
 			$type
 		);
@@ -35,7 +35,8 @@ function memberful_metabox($post)
 	memberful_wp_render(
 		'metabox',
 		array(
-			'products' => memberful_metabox_acl_list($acl->get_acl())
+			'products' => memberful_metabox_acl_list($acl->get_acl()),
+			'subscriptions' => array()
 		)
 	);
 }
