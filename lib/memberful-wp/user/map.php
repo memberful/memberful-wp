@@ -75,10 +75,6 @@ class Memberful_User_Map
 				'user_login'    => 'username',
 				'display_name'  => 'full_name',
 				'user_nicename' => 'username',
-
-			);
-
-			$metamap = array(
 				'nickname'      => 'full_name',
 				'first_name'    => 'first_name',
 				'last_name'     => 'last_name'
@@ -91,11 +87,6 @@ class Memberful_User_Map
 			$data = (array) $user;
 
 			foreach($mapping as $wp_key => $m_key)
-			{
-				$data[$wp_key] = $member->$m_key;
-			}
-
-			foreach($metamap as $wp_key => $m_key)
 			{
 				$data[$wp_key] = $member->$m_key;
 			}
