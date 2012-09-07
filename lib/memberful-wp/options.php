@@ -8,6 +8,7 @@ function memberful_wp_register_options()
 	add_option('memberful_api_key');
 	add_option('memberful_webhook_secret');
 	add_option('memberful_products', array());
+	add_option('memberful_subscriptions', array());
 	add_option('memberful_acl', array());
 }
 
@@ -26,13 +27,25 @@ function memberful_options()
 		if ( $activation === TRUE) {
 			memberful_sync_products();
 		}
+		else {
+
+		}
 	}
 
 	if ( ! get_option('memberful_client_id') ) {
 		memberful_wp_render('setup');
 	}
 	else {
-		memberful_wp_render('options');
+		$products = get_option('memberful_products', array());
+		$subs     = get_option('memberful_subscriptions', array());
+
+		memberful_wp_render(
+			'options',
+			array(
+				'products'      => $products,
+				'subscriptions' => $subs
+			)
+		);
 	}
 }
 

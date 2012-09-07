@@ -5,7 +5,7 @@
 
 	<div id="memberful-registered">
 		<h1><?php _e( 'Integration Active', 'memberful' ); ?></h1>
-		<p><?php _e( 'Last automatic sync completed 2 hours ago. Managing 8,231 members, 22 products, and 3 subscriptions.', 'memberful' ); ?></p>
+		<p><?php printf( __( 'Last automatic sync completed 2 hours ago. Managing %d products, and %d subscriptions.', 'memberful' ), count($products), count($subscriptions)); ?></p>
 		<button class="memberful-button-grey"><?php _e( 'Memberful Dashboard', 'memberful' ); ?></button>
 		<button class="memberful-button-grey"><?php _e( 'Run Manual Sync', 'memberful' ); ?></button>
 	</div>
