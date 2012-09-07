@@ -119,28 +119,6 @@ function memberful_get_current_member_products() {
 }
 
 /**
- * Determines if $member_id is considered an "active" member
- *
- * @return boolean true if the member owns any products
- */
-function memberful_is_member_active( $member_id ) {
-	$products = memberful_get_member_products( $member_id );
-
-	// Member considered active if they have at least 1 product
-	return ! empty( $products );
-}
-
-/**
- * Determines if current member is considered an "active" member
- *
- * @return boolean true if the current member owns any products
- */
-function memberful_is_current_member_active() {
-	$current_user = wp_get_current_user();
-	return memberful_is_member_active( $current_user->ID );
-}
-
-/**
  * Check if the member has the specified subscription, and that the subscription
  * has not expired.
  *
