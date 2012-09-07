@@ -32,6 +32,11 @@ function memberful_wp_logout_url()
 	return add_query_arg('action', 'logout', memberful_wp_login_url());
 }
 
+function memberful_activation_url()
+{
+	return 'http://10.0.2.2:3000/activate-app';
+}
+
 function memberful_member_url($format = MEMBERFUL_HTML)
 {
 	return memberful_url('member', $format);
@@ -71,7 +76,23 @@ function memberful_order_completed_url($order)
 {
 	return add_query_arg('id', $order, memberful_url('orders/completed'));
 }
+
+/**
+ * URL to the oauth callback
+ *
+ * @return string
+ */
+function memberful_wp_oauth_callback_url()
+{
+	return plugins_url('auth.php', MEMBERFUL_DIR);
+}
+
+/**
+ * URL to the webhook endpoint
+ *
+ * @return string
+ */
 function memberful_wp_webhook_url()
 {
-	return add_query_arg('secret', MEMBERFUL_TOKEN, get_site_url(null, 'wp-content/plugins/memberful-wp/endpoint.php'));
+	return plugins_url('endpoint.php', MEMBERFUL_DIR);
 }

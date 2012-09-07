@@ -6,6 +6,7 @@ function memberful_wp_register_options()
 	add_option('memberful_client_secret');
 	add_option('memberful_site');
 	add_option('memberful_api_key');
+	add_option('memberful_webhook_secret');
 	add_option('memberful_products', array());
 	add_option('memberful_acl', array());
 }
@@ -19,12 +20,45 @@ function memberful_options()
 {
 	$options = array();
 
+	if ( ! empty($_POST['activation_code']) ) {
+		$activation = memberful_wp_activate($_POST['activation_code']);
+
+		if ( $activation === TRUE) {
+			memberful_sync_products();
+		}
+	}
+
 	if ( ! get_option('memberful_client_id') ) {
 		memberful_wp_render('setup');
 	}
 	else {
 		memberful_wp_render('options');
 	}
+}
+
+/**
+ * Attempts to get the necessary details from memberful and set them
+ * using the wordpress settings API
+ *
+ * @param $code string The activation code
+ */
+function memberful_wp_activate($code)
+{
+	$activator = new Memberful_Activator($code, html_entity_decode(get_bloginfo('name')));
+
+	$activator
+		->requireApiKey()
+		->requireOauth(memberful_wp_oauth_callback_url())
+		->requireWebhook(memberful_wp_webhook_url());
+
+	$credentials = $activator->activate();
+
+	update_option('memberful_client_id', $credentials->oauth->identifier);
+	update_option('memberful_client_secret', $credentials->oauth->secret);
+	update_option('memberful_api_key', $credentials->api_key->key);
+	update_option('memberful_site', $credentials->site);
+
+	return TRUE;
 }
 
 function memberful_sync_products()

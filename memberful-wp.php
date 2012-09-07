@@ -27,6 +27,7 @@ require_once MEMBERFUL_DIR.'/lib/memberful-wp/authenticator.php';
 require_once MEMBERFUL_DIR.'/lib/memberful-wp/options.php';
 require_once MEMBERFUL_DIR.'/lib/memberful-wp/metabox.php';
 require_once MEMBERFUL_DIR.'/lib/memberful-wp/acl.php';
+require_once MEMBERFUL_DIR.'/lib/memberful-wp/activator.php';
 
 add_filter('allowed_redirect_hosts', 'memberful_allowed_hosts');
 add_action('admin_menu', 'memberful_wp_menu');
