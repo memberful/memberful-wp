@@ -34,7 +34,7 @@ function memberful_wp_logout_url()
 
 function memberful_activation_url()
 {
-	return 'http://10.0.2.2:3000/activate-app';
+	return MEMBERFUL_APPS_HOST.'/activate-app';
 }
 
 function memberful_member_url($format = MEMBERFUL_HTML)

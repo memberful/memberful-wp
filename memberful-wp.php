@@ -12,6 +12,9 @@ License: GPL
 if( ! defined('MEMBERFUL_DIR'))
 	define('MEMBERFUL_DIR', dirname(__FILE__));
 
+if ( ! defined('MEMBERFUL_APPS_HOST'))
+	define('MEMBERFUL_APPS_HOST', 'https://apps.memberful.com');
+
 define('MEMBERFUL_HTML', NULL);
 define('MEMBERFUL_JSON', 'json');
 
