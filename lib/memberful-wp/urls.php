@@ -84,7 +84,9 @@ function memberful_order_completed_url($order)
  */
 function memberful_wp_oauth_callback_url()
 {
-	return plugins_url('auth.php', MEMBERFUL_DIR);
+	// plugins_url calls dirname() on the second param so we need some chaf for
+	// it to cut off
+	return memberful_wp_plugin_url('auth.php');
 }
 
 /**
@@ -94,5 +96,10 @@ function memberful_wp_oauth_callback_url()
  */
 function memberful_wp_webhook_url()
 {
-	return plugins_url('endpoint.php', MEMBERFUL_DIR);
+	return memberful_wp_plugin_url('endpoint.php');
+}
+
+function memberful_wp_plugin_url($path)
+{
+	return plugins_url($path, MEMBERFUL_DIR.'/memberful-times.php');
 }
