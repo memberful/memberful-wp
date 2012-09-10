@@ -35,11 +35,22 @@ require_once MEMBERFUL_DIR.'/lib/memberful-wp/activator.php';
 add_filter('allowed_redirect_hosts', 'memberful_allowed_hosts');
 add_action('admin_menu', 'memberful_wp_menu');
 add_action('admin_init', 'memberful_wp_register_options');
+add_action('admin_init', 'memberful_wp_activation_redirect');
 add_action('admin_enqueue_scripts', 'memberful_admin_enqueue_scripts');
 
 add_action('init', 'memberful_init');
 register_activation_hook(__FILE__, 'memberful_activate');
 
+function memberful_wp_activation_redirect()
+{
+	if ( get_option( 'memberful_wp_activation_redirect', FALSE ) ) {
+		delete_option( 'memberful_wp_activation_redirect' );
+
+		if(!isset($_GET['activate-multi'])) { 
+			wp_redirect(admin_url('admin.php?page=memberful_options'));
+		}
+	}
+}
 function memberful_wp_menu()
 {
 	add_menu_page('Memberful Integration', 'Memberful', 'install_plugins', 'memberful_options', 'memberful_wp_options');
@@ -69,6 +80,8 @@ function memberful_activate()
 			exit();
 		}
 	}
+
+	add_option( 'memberful_wp_activation_redirect' , TRUE );
 }
 
 function memberful_wp_render($template, array $vars = array())
