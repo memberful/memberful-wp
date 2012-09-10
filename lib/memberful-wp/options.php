@@ -1,52 +1,90 @@
 <?php
 
+function memberful_wp_all_options()
+{
+	return array(
+		'memberful_client_id' => NULL,
+		'memberful_client_secret' => NULL,
+		'memberful_site' => NULL,
+		'memberful_api_key' => NULL,
+		'memberful_webhook_secret' => NULL,
+		'memberful_products' => array(),
+		'memberful_subscriptions' => array(),
+		'memberful_acl' => array(),
+	);
+}
+
 function memberful_wp_register_options()
 {
-	add_option('memberful_client_id');
-	add_option('memberful_client_secret');
-	add_option('memberful_site');
-	add_option('memberful_api_key');
-	add_option('memberful_webhook_secret');
-	add_option('memberful_products', array());
-	add_option('memberful_subscriptions', array());
-	add_option('memberful_acl', array());
+	foreach ( memberful_wp_all_options() as $option => $default) {
+		add_option($option, $default);
+	}
 }
 
 
 /**
- * Displays the memberful options page
- *
+ * Displays the page for registering the wordpress plugin with memberful.com
  */
-function memberful_options()
+function memberful_wp_register()
 {
-	$options = array();
+	$vars = array();
 
 	if ( ! empty($_POST['activation_code']) ) {
 		$activation = memberful_wp_activate($_POST['activation_code']);
 
 		if ( $activation === TRUE) {
 			memberful_sync_products();
+
+			wp_redirect(admin_url('admin.php?page=memberful_options'));
 		}
 		else {
-
+			$vars['error'] = $activation->get_error_message();
 		}
+	}
+
+	memberful_wp_render('setup', $vars);
+}
+
+/**
+ * Resets the plugin to its default state
+ */
+function memberful_wp_reset()
+{
+	foreach ( memberful_wp_all_options() as $option => $default ) {
+		update_option($option, $default);
+	}
+
+	wp_redirect(admin_url('admin.php?page=memberful_options'));
+}
+
+
+/**
+ * Displays the memberful options page
+ */
+function memberful_wp_options()
+{
+	if ( isset( $_POST['sync_products'] ) ) {
+		return memberful_sync_products();
+	}
+
+	if ( isset($_POST['reset_plugin']) ) {
+		return memberful_wp_reset();
 	}
 
 	if ( ! get_option('memberful_client_id') ) {
-		memberful_wp_render('setup');
+	  return memberful_wp_register();
 	}
-	else {
-		$products = get_option('memberful_products', array());
-		$subs     = get_option('memberful_subscriptions', array());
 
-		memberful_wp_render(
-			'options',
-			array(
-				'products'      => $products,
-				'subscriptions' => $subs
-			)
-		);
-	}
+	$products = get_option('memberful_products', array());
+	$subs     = get_option('memberful_subscriptions', array());
+
+	memberful_wp_render(
+		'options',
+		array(
+			'products'      => $products,
+			'subscriptions' => $subs
+		)
+	);
 }
 
 /**

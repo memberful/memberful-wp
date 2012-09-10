@@ -42,7 +42,7 @@ register_activation_hook(__FILE__, 'memberful_activate');
 
 function memberful_wp_menu()
 {
-	add_menu_page('Memberful Integration', 'Memberful', 'install_plugins', 'memberful_options', 'memberful_options');
+	add_menu_page('Memberful Integration', 'Memberful', 'install_plugins', 'memberful_options', 'memberful_wp_options');
 }
 
 function memberful_init() {}
