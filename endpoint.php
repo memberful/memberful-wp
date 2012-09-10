@@ -13,7 +13,6 @@ if( ($data = json_decode($body)) === NULL)
 	die('Could not parse JSON payload');
 }
 
-
 require_once MEMBERFUL_DIR.'/../../../wp-load.php';
 
 if($_GET['secret'] !== MEMBERFUL_TOKEN)
@@ -35,7 +34,6 @@ if(isset($data->member_id))
 
 	$map->map($data->member, $data->products, $data->subscriptions);
 
-	die('{"response": "ok"}');
 }
 else
 {
