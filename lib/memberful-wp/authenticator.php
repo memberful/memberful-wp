@@ -97,7 +97,7 @@ class Memberful_Authenticator
 
 			$details = $this->get_member_data($tokens->access_token);
 
-			$mapper = new Memberful_User_Map;
+			$mapper = new Memberful_User_Oauth_Map;
 			$user   = $mapper->map($details->member, $details->products, $details->subscriptions, $tokens->refresh_token);
 
 			return $user;

@@ -9,14 +9,11 @@
  */
 class Memberful_User_Map
 {
-	public function map($user, $products, $subscriptions, $refresh_token = NULL)
+	static public function table()
 	{
-		$wp_user = $this->sync_user_and_token($user, $refresh_token);
+		global $wpdb;
 
-		$this->sync_products($wp_user, $products);
-		$this->sync_member_subscriptions($wp_user, $subscriptions);
-
-		return $wp_user;
+		return $wpdb->prefix.'memberful_mapping';
 	}
 
 	/**
@@ -24,133 +21,114 @@ class Memberful_User_Map
 	 * WordPress user account.
 	 *
 	 * @param StdObject $details       Details about the member
-	 * @param string    $refresh_token The member's refresh token for oauth
 	 * @return WP_User
 	 */
-	public function sync_user_and_token($member, $refresh_token = NULL)
+	public function map($user, array $mapping = array())
 	{
+		$user = $this->find_user($member);
+
+		// Mapping of WordPress => Memberful keys
+		$mapping = array(
+			'user_email'    => 'email',
+			'user_login'    => 'username',
+			'display_name'  => 'full_name',
+			'user_nicename' => 'username',
+			'nickname'      => 'full_name',
+			'first_name'    => 'first_name',
+			'last_name'     => 'last_name'
+		);
+
+		$user_data = array();
+		$unmapped_user = $user === NULL;
+
+		if($unmapped_user) {
+			$this->reserve_mapping($member);
+
+			$user_data['user_pass'] = wp_generate_password();
+			$user_data['show_admin_bar_frontend'] = FALSE;
+		} else {
+			$data['ID'] = $user->ID;
+
+			if ( empty( $user->exact_match ) ) {
+				$mapping['wp_user_id'] = $user->ID;
+			}
+		}
+
+		foreach ($mapping as $key => $value) {
+			$user_data[$key] = $member->$value;
+		}
+
+		$user_id = wp_insert_user($data);
+
+		if ( $unmapped_user )
+			$mapping['wp_user_id'] = $user_id;
+
+		if ( ! empty($mapping) )
+			$this->update_mapping($member->id, $mapping);
+
+		return get_userdata($user_id);
+	}
+
+	private function find_user($member) {
 		global $wpdb;
 
+		$sql = 
+			'SELECT `wp_users`.*, (`mem`.`member_id` = %d) AS `exact_match` '.
+			'FROM `'.self::table().'` AS `mem`'.
+			'FULL OUTER JOIN `'.$wpdb->users.'` AS `wp_users` ON (`mem`.`wp_user_id` = `wp_users`.`ID`) '.
+			'WHERE `mem`.`member_id` = %d OR `wp_users`.`user_email` = %s '.
+			'ORDER BY `exact_match` DESC';
+			
 		$query = $wpdb->prepare(
-			'SELECT *, (`memberful_member_id` = %d) AS `exact_match` FROM `'.$wpdb->users.'` WHERE `memberful_member_id` = %d OR `user_email` = %s ORDER BY `exact_match` DESC',
+			$sql,
 			$member->id,
 			$member->id,
 			$member->email
 		);
 
-		$user = $wpdb->get_row($query);
-
-		// User does not exist
-		if($user === NULL)
-		{
-			$data = array(
-				'user_pass'     => wp_generate_password(),
-				'user_login'    => $member->username,
-				'user_nicename' => $member->username,
-				'user_email'    => $member->email,
-				'display_name'  => $member->full_name,
-				'nickname'      => $member->full_name,
-				'first_name'    => $member->first_name,
-				'last_name'     => $member->last_name,
-				'show_admin_bar_frontend' => FALSE,
-			);
-
-			$user_id = wp_insert_user($data);
-
-			if(is_wp_error($user_id))
-			{
-				var_dump($user_id);
-				die('ERRORR!!!');
-				return $user_id;
-			}
-		}
-		else
-		{
-			// Now sync the two accounts
-			$user_id = $user->ID;
-
-			// Mapping of WordPress => Memberful keys
-			$mapping = array(
-				'user_email'    => 'email',
-				'user_login'    => 'username',
-				'display_name'  => 'full_name',
-				'user_nicename' => 'username',
-				'nickname'      => 'full_name',
-				'first_name'    => 'first_name',
-				'last_name'     => 'last_name'
-			);
-
-			$meta = get_user_meta($user_id, '', true);
-
-			// WordPress only allows us to do a complete update of values.
-			// No partial updates allowed.
-			$data = (array) $user;
-
-			foreach($mapping as $wp_key => $m_key)
-			{
-				$data[$wp_key] = $member->$m_key;
-			}
-
-			wp_insert_user($data);
-		}
-
-		$this->_update_user($user_id, $member->id, $member->username, $refresh_token);
-
-		return get_userdata($user_id);
+		return $wpdb->get_row($query);
 	}
 
-	public function sync_products(WP_User $user, $products)
-	{
-		$product_ids = array_map(array($this, '_extract_id'), $products);
-
-		$new_products = empty($product_ids)
-			? array()
-			: array_combine($product_ids, $product_ids);
-
-		update_user_meta($user->ID, 'memberful_products', $new_products);
-	}
-
-	public function sync_member_subscriptions(WP_User $user, $subscriptions)
-	{
-		$member_subscriptions = $subscription_ids = array();
-
-		foreach($subscriptions as $subscription)
-		{
-			$expires_at = strtotime($subscription->expires_at);
-
-			$member_subscriptions[$subscription->subscription_id] = array(
-				// If we couldn't parse the date then the sub never expires
-				'expires_at'             => $expires_at ? $expires_at : true,
-				'member_subscription_id' => $subscription->id,
-			);
-		}
-
-		update_user_meta($user->ID, 'memberful_subscriptions', $member_subscriptions);
-	}
-
-	protected function _extract_id($product_link)
-	{
-		return (int) $product_link->id;
-	}
-
-	protected function _update_user($user_id, $member_id, $username, $refresh_token = NULL)
-	{
+	/**
+	 * Update information about the user in the mapping table
+	 *
+	 */
+	public function update_mapping($member_id, array $pairs) {
 		global $wpdb;
-		$data = array();
 
-		$update = 'UPDATE `'.$wpdb->users.'` SET ';
+		$data  = array();
 
-		if($refresh_token !== NULL)
-		{
-			$update .= '`memberful_refresh_token` = %s, ';
-			$data[] = $refresh_token;
+		$update = 'UPDATE `'.self::table().'` SET ';
+
+		foreach ( $pairs as $key => $value ) {
+			$update .= '`'.$key.'` = %s, ';
+			$data[]  = $value;
 		}
 
-		$update .= '`user_login` = %s, `memberful_member_id` = %d WHERE `ID` = %d';
-		$data[] = $username;
+		$update = substr($update, 0, -2);
+
+		$update .= ' WHERE `member_id` = %d';
 		$data[] = $member_id;
-		$data[] = $user_id;
 
 		$wpdb->query($wpdb->prepare($update, $data));
+	}
+
+	/**
+	 * Reserves a mapping for the member
+	 *
+	 * We do this to prevent problems where webhooks and oauth login attempt to create
+	 * a user simultaneously.
+	 */
+	private function reserve_mapping($member) {
+		global $wpdb;
+
+		$insert = 'INSERT INTO `'.self::table().'` (`member_id`) VALUES (%d)';
+
+		$result = $wpdb->query($wpdb->prepare($insert, array($member->id)));
+
+		if ( is_wp_error( $result ) ) {
+			var_dump( $result );
+			die();
+		}
 	}
 }
