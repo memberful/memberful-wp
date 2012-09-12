@@ -24,13 +24,13 @@ define( 'MEMBERFUL_SSL_VERIFY', defined( 'SITE_ENVIRONMENT' ) ? SITE_ENVIRONMENT
 // TODO: Generate this!
 define( 'MEMBERFUL_TOKEN', 'aoisdn98q2h9can3r9uac98n3nhaiuhgmcznzwre98zcnh397hnizrchn87wr3chz9wrh9' );
 
-require_once MEMBERFUL_DIR.'/lib/memberful-wp/urls.php';
-require_once MEMBERFUL_DIR.'/lib/memberful-wp/user/map.php';
-require_once MEMBERFUL_DIR.'/lib/memberful-wp/authenticator.php';
-require_once MEMBERFUL_DIR.'/lib/memberful-wp/options.php';
-require_once MEMBERFUL_DIR.'/lib/memberful-wp/metabox.php';
-require_once MEMBERFUL_DIR.'/lib/memberful-wp/acl.php';
-require_once MEMBERFUL_DIR.'/lib/memberful-wp/activator.php';
+require_once MEMBERFUL_DIR.'/src/urls.php';
+require_once MEMBERFUL_DIR.'/src/user/map.php';
+require_once MEMBERFUL_DIR.'/src/authenticator.php';
+require_once MEMBERFUL_DIR.'/src/options.php';
+require_once MEMBERFUL_DIR.'/src/metabox.php';
+require_once MEMBERFUL_DIR.'/src/acl.php';
+require_once MEMBERFUL_DIR.'/src/activator.php';
 
 add_filter( 'allowed_redirect_hosts', 'memberful_allowed_hosts' );
 add_action( 'admin_menu', 'memberful_wp_menu' );
