@@ -11,7 +11,7 @@
 		</div>
 		<div class="memberful-register-plugin">
 			<h3><?php _e( 'Already have a Memberful account?', 'memberful' ); ?></h3>
-			<form method="POST">
+			<form method="POST" action="<?php echo admin_url('admin.php?page=memberful_options&noheader=true') ?>">
 				<fieldset>
 					<textarea placeholder="<?php echo esc_attr( __( 'Paste your WordPress registration key here...', 'memberful' ) ); ?>" name="activation_code"></textarea>
 					<button class="memberful-button-grey"><?php _e( 'Register this site with your Memberful account', 'memberful' ); ?></button>
