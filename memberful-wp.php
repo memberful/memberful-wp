@@ -78,7 +78,7 @@ function memberful_activate()
 		if ( ! empty($columns) ) {
 			$wpdb->query('INSERT INTO `'.Memberful_User_Map::table().'` '.
 				'(`member_id`, `wp_user_id`, `refresh_token`, `last_sync_at`) '.
-				'SELECT `memberful_member_id`, `ID`, `memberful_refrehs_token`, UNIX_TIMESTAMP() '.
+				'SELECT `memberful_member_id`, `ID`, `memberful_refresh_token`, UNIX_TIMESTAMP() '.
 				'FROM `'.$wpdb->users.'` '.
 				'WHERE `memberful_member_id` IS NOT NULL');
 
