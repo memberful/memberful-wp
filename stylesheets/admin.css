@@ -47,6 +47,9 @@
 	font-weight: normal;
 	color: #2e922e;
 }
+#memberful-registered form {
+	display: inline;
+}
 .memberful-protect-help {
 	color: #666;
 }

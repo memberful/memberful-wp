@@ -1,7 +1,7 @@
-<p>Allow people who;</p>
+<p><?php _e( 'Restrict access by selecting from the list of products or subscriptions below.', 'memberful' ); ?></p>
 <ul class="wp-tab-bar">
-	<li><a href="#memberful-products">Products</a></li>
-	<!--<li><a href="#memberful-subscriptions">Subscriptions</a></li>-->
+  <li><a href="#memberful-subscriptions"><?php _e( 'Subscriptions', 'memberful' ); ?></a></li>
+	<li><a href="#memberful-products"><?php _e( 'Products', 'memberful' ); ?></a></li>
 </ul>
 <div id="memberful-products" class="wp-tab-panel">
 	<ul>
@@ -15,7 +15,7 @@
 	<?php endforeach; ?>
 	</ul>
 </div>
-<!--<div id="memberful-subscriptions" class="wp-tab-panel" style="display:none;">
+<div id="memberful-subscriptions" class="wp-tab-panel" style="display:none;">
 	<ul>
 	<?php foreach($subscriptions as $id => $subscription): ?>
 		<li>
@@ -26,4 +26,4 @@
 		</li>
 	<?php endforeach; ?>
 	</ul>
-</div>-->
+</div>

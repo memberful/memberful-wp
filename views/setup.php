@@ -1,6 +1,6 @@
-<?php if ( ! empty($error) ): ?>
+<?php if ( ! empty( $error ) ): ?>
 <div id="message" class="error">
-	<p><strong><?php _e($error); ?></strong></p>
+	<p><strong><?php _e( $error ); ?></strong></p>
 </div>
 <?php endif; ?>
 <div id="memberful-wrap" class="wrap">
@@ -9,7 +9,6 @@
 			<h1><?php _e( 'A Memberful account is required for setup', 'memberful' ); ?></h1>
 			<p><?php _e( '<a href="http://memberful.com">Sign up for an account</a> and start selling digital products and subscriptions the easy way.', 'memberful' ); ?></p>
 		</div>
-
 		<div class="memberful-register-plugin">
 			<h3><?php _e( 'Already have a Memberful account?', 'memberful' ); ?></h3>
 			<form method="POST">
