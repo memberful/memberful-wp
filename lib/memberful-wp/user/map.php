@@ -7,10 +7,8 @@
  * details provided.
  *
  */
-class Memberful_User_Map
-{
-	static public function table()
-	{
+class Memberful_User_Map { 
+	static public function table() { 
 		global $wpdb;
 
 		return $wpdb->prefix.'memberful_mapping';
@@ -23,9 +21,8 @@ class Memberful_User_Map
 	 * @param StdObject $details       Details about the member
 	 * @return WP_User
 	 */
-	public function map($user, array $mapping = array())
-	{
-		$user = $this->find_user($member);
+	public function map( $user, array $mapping = array() ) { 
+		$user = $this->find_user( $member );
 
 		// Mapping of WordPress => Memberful keys
 		$mapping = array(
@@ -41,35 +38,35 @@ class Memberful_User_Map
 		$user_data = array();
 		$unmapped_user = $user === NULL;
 
-		if($unmapped_user) {
-			$this->reserve_mapping($member);
+		if ( $unmapped_user ) { 
+			$this->reserve_mapping( $member );
 
 			$user_data['user_pass'] = wp_generate_password();
 			$user_data['show_admin_bar_frontend'] = FALSE;
-		} else {
+		} else { 
 			$data['ID'] = $user->ID;
 
-			if ( empty( $user->exact_match ) ) {
+			if ( empty( $user->exact_match ) ) { 
 				$mapping['wp_user_id'] = $user->ID;
 			}
 		}
 
-		foreach ($mapping as $key => $value) {
+		foreach ( $mapping as $key => $value ) { 
 			$user_data[$key] = $member->$value;
 		}
 
-		$user_id = wp_insert_user($data);
+		$user_id = wp_insert_user( $data );
 
 		if ( $unmapped_user )
 			$mapping['wp_user_id'] = $user_id;
 
-		if ( ! empty($mapping) )
-			$this->update_mapping($member->id, $mapping);
+		if ( ! empty( $mapping ) )
+			$this->update_mapping( $member->id, $mapping );
 
-		return get_userdata($user_id);
+		return get_userdata( $user_id );
 	}
 
-	private function find_user($member) {
+	private function find_user( $member ) { 
 		global $wpdb;
 
 		$sql = 
@@ -86,31 +83,31 @@ class Memberful_User_Map
 			$member->email
 		);
 
-		return $wpdb->get_row($query);
+		return $wpdb->get_row( $query );
 	}
 
 	/**
 	 * Update information about the user in the mapping table
 	 *
 	 */
-	public function update_mapping($member_id, array $pairs) {
+	public function update_mapping( $member_id, array $pairs ) { 
 		global $wpdb;
 
 		$data  = array();
 
 		$update = 'UPDATE `'.self::table().'` SET ';
 
-		foreach ( $pairs as $key => $value ) {
+		foreach ( $pairs as $key => $value ) { 
 			$update .= '`'.$key.'` = %s, ';
 			$data[]  = $value;
 		}
 
-		$update = substr($update, 0, -2);
+		$update = substr( $update, 0, -2 );
 
 		$update .= ' WHERE `member_id` = %d';
 		$data[] = $member_id;
 
-		$wpdb->query($wpdb->prepare($update, $data));
+		$wpdb->query( $wpdb->prepare( $update, $data ) );
 	}
 
 	/**
@@ -119,14 +116,14 @@ class Memberful_User_Map
 	 * We do this to prevent problems where webhooks and oauth login attempt to create
 	 * a user simultaneously.
 	 */
-	private function reserve_mapping($member) {
+	private function reserve_mapping( $member ) { 
 		global $wpdb;
 
 		$insert = 'INSERT INTO `'.self::table().'` (`member_id`) VALUES (%d)';
 
-		$result = $wpdb->query($wpdb->prepare($insert, array($member->id)));
+		$result = $wpdb->query( $wpdb->prepare( $insert, array( $member->id ) ) );
 
-		if ( is_wp_error( $result ) ) {
+		if ( is_wp_error( $result ) ) { 
 			var_dump( $result );
 			die();
 		}

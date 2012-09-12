@@ -8,73 +8,61 @@
  * @param string $format The requested format
  * @return string URL
  */
-function memberful_url($uri = '', $format = MEMBERFUL_HTML)
-{
-	$endpoint = '/'.trim($uri,'/');
+function memberful_url( $uri = '', $format = MEMBERFUL_HTML ) { 
+	$endpoint = '/'.trim( $uri,'/' );
 
-	if($format !== MEMBERFUL_HTML) {
+	if ( $format !== MEMBERFUL_HTML ) {
 		$endpoint .= '.'.$format;
 	}
 	else {
 		$endpoint .= '/';
 	}
 
-	return rtrim(get_option('memberful_site'),'/').$endpoint;
+	return rtrim( get_option( 'memberful_site' ),'/' ).$endpoint;
 }
 
-function memberful_wp_login_url()
-{
-	return plugins_url('auth.php', dirname(dirname(__FILE__)));
+function memberful_wp_login_url() { 
+	return plugins_url( 'auth.php', dirname( dirname( __FILE__ ) ) );
 }
 
-function memberful_wp_logout_url()
-{
-	return add_query_arg('action', 'logout', memberful_wp_login_url());
+function memberful_wp_logout_url() { 
+	return add_query_arg( 'action', 'logout', memberful_wp_login_url() );
 }
 
-function memberful_activation_url()
-{
+function memberful_activation_url() { 
 	return MEMBERFUL_APPS_HOST.'/activate-app';
 }
 
-function memberful_member_url($format = MEMBERFUL_HTML)
-{
-	return memberful_url('member', $format);
+function memberful_member_url( $format = MEMBERFUL_HTML ) { 
+	return memberful_url( 'member', $format );
 }
 
-function memberful_signout_url()
-{
-	return memberful_url('auth/sign_out');
+function memberful_signout_url() { 
+	return memberful_url( 'auth/sign_out' );
 }
 
-function memberful_admin_member_url($member_id, $format = MEMBERFUL_HTML)
-{
-	return memberful_url('admin/members/'.$member_id, $format);
+function memberful_admin_member_url( $member_id, $format = MEMBERFUL_HTML ) { 
+	return memberful_url( 'admin/members/'.$member_id, $format );
 }
 
-function memberful_admin_products_url($format = MEMBERFUL_HTML)
-{
-	return memberful_url('admin/products', $format);
+function memberful_admin_products_url( $format = MEMBERFUL_HTML ) { 
+	return memberful_url( 'admin/products', $format );
 }
 
-function memberful_admin_product_url($product_id, $format = MEMBERFUL_HTML)
-{
-	return memberful_url('admin/products/'.(int) $product_id, $format);
+function memberful_admin_product_url( $product_id, $format = MEMBERFUL_HTML ) { 
+	return memberful_url( 'admin/products/'.( int) $product_id, $format );
 }
 
-function memberful_signin_url()
-{
-	return memberful_url('auth/sign_in');
+function memberful_signin_url() { 
+	return memberful_url( 'auth/sign_in' );
 }
 
-function memberful_wrap_api_token($url)
-{
-	return add_query_arg('auth_token', get_option('memberful_api_key'), $url);
+function memberful_wrap_api_token( $url ) { 
+	return add_query_arg( 'auth_token', get_option( 'memberful_api_key' ), $url );
 }
 
-function memberful_order_completed_url($order)
-{
-	return add_query_arg('id', $order, memberful_url('orders/completed'));
+function memberful_order_completed_url( $order ) { 
+	return add_query_arg( 'id', $order, memberful_url( 'orders/completed' ) );
 }
 
 /**
@@ -82,11 +70,10 @@ function memberful_order_completed_url($order)
  *
  * @return string
  */
-function memberful_wp_oauth_callback_url()
-{
+function memberful_wp_oauth_callback_url() { 
 	// plugins_url calls dirname() on the second param so we need some chaf for
 	// it to cut off
-	return memberful_wp_plugin_url('auth.php');
+	return memberful_wp_plugin_url( 'auth.php' );
 }
 
 /**
@@ -94,12 +81,10 @@ function memberful_wp_oauth_callback_url()
  *
  * @return string
  */
-function memberful_wp_webhook_url()
-{
-	return memberful_wp_plugin_url('endpoint.php');
+function memberful_wp_webhook_url() { 
+	return memberful_wp_plugin_url( 'endpoint.php' );
 }
 
-function memberful_wp_plugin_url($path)
-{
-	return plugins_url($path, MEMBERFUL_DIR.'/memberful-times.php');
+function memberful_wp_plugin_url( $path ) { 
+	return plugins_url( $path, MEMBERFUL_DIR.'/memberful-times.php' );
 }

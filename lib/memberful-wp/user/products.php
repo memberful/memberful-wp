@@ -4,12 +4,11 @@
  * Interface for interacting with a user's products
  *
  */
-class Memberful_Wp_User_Products
-{
+class Memberful_Wp_User_Products { 
 	protected $products;
 	protected $user_id;
 
-	public function __construct($user_id) {
+	public function __construct( $user_id ) {
 		$this->user_id = $user_id;
 	}
 
@@ -20,7 +19,7 @@ class Memberful_Wp_User_Products
 	 */
 	public function get() {
 		if ( $this->products === NULL ) {
-			$this->products = get_user_meta($this->user_id, 'memberful_products');
+			$this->products = get_user_meta( $this->user_id, 'memberful_products' );
 		}
 
 		return $this->products;
@@ -31,14 +30,14 @@ class Memberful_Wp_User_Products
 	 *
 	 * @param array $products
 	 */
-	public function add(array $products) {
+	public function add( array $products ) {
 		$ids = array();
 
 		foreach ( $products as $product ) {
 			$ids[$product->id] = $product->id;
 		}
 
-		return $this->addIds($ids);
+		return $this->addIds( $ids );
 	}
 
 	/**
@@ -46,9 +45,9 @@ class Memberful_Wp_User_Products
 	 *
 	 * @param array $product_ids
 	 */
-	public function addIds(array $product_ids) {
-		$new_ids = array_combine($product_ids, $product_ids);
+	public function addIds( array $product_ids ) {
+		$new_ids = array_combine( $product_ids, $product_ids );
 
-		update_user_meta($this->user_id, 'memberful_products', $this->get() + $new_ids);
+		update_user_meta( $this->user_id, 'memberful_products', $this->get() + $new_ids );
 	}
 }

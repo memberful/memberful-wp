@@ -1,7 +1,7 @@
 <?php
 
-add_action('request', 'memberful_audit_request');
-add_action('pre_get_posts', 'memberful_filter_posts');
+add_action( 'request', 'memberful_audit_request' );
+add_action( 'pre_get_posts', 'memberful_filter_posts' );
 
 
 /**
@@ -18,64 +18,63 @@ function memberful_user_disallowed_post_ids()
 {
 	static $ids = NULL;;
 
-	if(is_admin())
+	if ( is_admin() )
 		return array();
 
-	if($ids !== NULL)
+	if ( $ids !== NULL )
 		return $ids;
 
-	$acl = get_option('memberful_acl', TRUE);
+	$acl = get_option( 'memberful_acl', TRUE );
 
 	// The products the user has access to
-	$user_products = get_user_meta(wp_get_current_user()->ID, 'memberful_products', TRUE);
+	$user_products = get_user_meta( wp_get_current_user()->ID, 'memberful_products', TRUE );
 
-	if(empty($user_products))
+	if ( empty( $user_products ) )
 		$user_products = array();
 
-	$allowed_products    = array_intersect_key($acl, $user_products);
-	$restricted_products = array_diff_key($acl, $user_products);
+	$allowed_products    = array_intersect_key( $acl, $user_products );
+	$restricted_products = array_diff_key( $acl, $user_products );
 
 	$allowed_ids    = array();
 	$restricted_ids = array();
 
-	foreach($allowed_products as $posts)
+	foreach ( $allowed_products as $posts )
 	{
-		$allowed_ids = array_merge($allowed_ids, $posts);
+		$allowed_ids = array_merge( $allowed_ids, $posts );
 	}
 
-	foreach($restricted_products as $posts)
+	foreach ( $restricted_products as $posts )
 	{
-		$restricted_ids = array_merge($restricted_ids, $posts);
+		$restricted_ids = array_merge( $restricted_ids, $posts );
 	}
 
 	// array_merge doesn't preserve keys
-	$allowed    = array_unique($allowed_ids);
-	$restricted = array_unique($restricted_ids);
+	$allowed    = array_unique( $allowed_ids );
+	$restricted = array_unique( $restricted_ids );
 
 	// Remove from the set of restricted posts the posts that the user is
 	// definitely allowed to access
-	$union = array_diff($restricted, $allowed);
+	$union = array_diff( $restricted, $allowed );
 
-	return empty($union) ? array() : array_combine($union, $union);
+	return empty( $union ) ? array() : array_combine( $union, $union );
 }
 
 /**
  * Prevents user from directly viewing a post
  *
  */
-function memberful_audit_request($request_args)
+function memberful_audit_request( $request_args )
 {
 	$ids = memberful_user_disallowed_post_ids();
 
-	if( ! empty($request_args['p']))
+	if ( ! empty( $request_args['p'] ) )
 	{
-		if(isset($ids[$post_id]))
-		{
+		if ( isset( $ids[$post_id] ) ) { 
 			$request_args['error'] = '404';
 		}
 	}
 	// If this isn't the homepage
-	elseif ( ! empty($request_args))
+	elseif ( ! empty( $request_args ) )
 	{
 		$request_args['post__not_in'] = $ids;
 	}
@@ -83,11 +82,11 @@ function memberful_audit_request($request_args)
 	return $request_args;
 }
 
-function memberful_filter_posts($query)
+function memberful_filter_posts( $query )
 {
 	$ids = memberful_user_disallowed_post_ids();
 
-	$query->set('post__not_in', $ids);
+	$query->set( 'post__not_in', $ids );
 }
 
 /**
@@ -96,7 +95,7 @@ function memberful_filter_posts($query)
  * @return array member's products
  */
 function memberful_get_member_products( $member_id ) {
-	return get_user_meta( $member_id, 'memberful_products', TRUE);
+	return get_user_meta( $member_id, 'memberful_products', TRUE );
 }
 
 /**
@@ -105,7 +104,7 @@ function memberful_get_member_products( $member_id ) {
  * @return array member's subscriptions
  */
 function memberful_get_member_subscriptions( $member_id ) {
-	return get_user_meta( $member_id, 'memberful_subscriptions', TRUE);
+	return get_user_meta( $member_id, 'memberful_subscriptions', TRUE );
 }
 
 /**
@@ -127,7 +126,7 @@ function memberful_get_current_member_products() {
 function memberful_member_has_subscription( $member_id, $subscription_id ) {
 	$subscriptions = memberful_get_member_subscriptions( $member_id );
 
-	if (empty($subscriptions[$subscription_id]))
+	if ( empty( $subscriptions[$subscription_id] ) )
 		return false;
 
 	$subscription = $subscriptions[$subscription_id];
