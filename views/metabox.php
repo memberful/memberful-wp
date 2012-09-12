@@ -1,4 +1,4 @@
-<?php if ( ! empty( $subscriptions ) && ! empty( $products ) ) : ?>
+<?php if ( ! empty( $subscriptions ) || ! empty( $products ) ) : ?>
 	<p><?php _e( 'Restrict access by selecting from the list of products or subscriptions below.', 'memberful' ); ?></p>
 <?php endif; ?>
 
