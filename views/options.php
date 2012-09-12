@@ -5,8 +5,8 @@
 	<div id="memberful-registered">
 		<h1><?php _e( 'Integration Active', 'memberful' ); ?></h1>
 		<p><?php printf( __( 'Last automatic sync completed 2 hours ago. Managing %d products, and %d subscriptions.', 'memberful' ), count( $products ), count( $subscriptions ) ); ?></p>
-		<button class="memberful-button-grey"><?php _e( 'Memberful Dashboard', 'memberful' ); ?></button>
-		<form method="POST" action="<?php echo admin_url('admin.php?page=memberful_options=&noheader=true'); ?>">
+		<p><?php printf( __( 'Use the <a href="%s">Memberful Admin Panel</a> to manage your members.' ), memberful_url( 'admin' ) ) ?></p>
+		<form method="POST" action="<?php echo admin_url('admin.php?page=memberful_options&noheader=true'); ?>">
 			<button type="submit" name="sync_products" class="memberful-button-grey"><?php _e( 'Run Manual Sync', 'memberful' ); ?></button>
 			<button type="submit" name="reset_plugin" class="memberful-button-grey"><?php _e( 'Reset plugin', 'memberful' ); ?></button>
 		</form>
