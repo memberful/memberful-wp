@@ -68,8 +68,6 @@ class Memberful_Authenticator
 		return $this->_wp_error = new WP_Error($code, $message);
 	}
 
-
-
 	/**
 	 * Callback for the `authenticate` hook.
 	 *
@@ -98,7 +96,7 @@ class Memberful_Authenticator
 			$details = $this->get_member_data($tokens->access_token);
 
 			$mapper = new Memberful_User_Oauth_Map;
-			$user   = $mapper->map($details->member, $details->products, $details->subscriptions, $tokens->refresh_token);
+			$user   = $mapper->map($details->member, $tokens->refresh_token);
 
 			return $user;
 		}
