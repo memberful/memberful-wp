@@ -1,5 +1,8 @@
 <?php
 
+define( 'MEMBERFUL_HTML', NULL );
+define( 'MEMBERFUL_JSON', 'json' );
+
 
 /**
  * Generate a URL to the Memberful site
