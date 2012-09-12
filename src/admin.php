@@ -87,7 +87,7 @@ function memberful_admin_enqueue_scripts() {
 	if ( strpos( 'memberful', $screen->id ) !== NULL ) { 
 		wp_enqueue_style(
 			'memberful-admin',
-			plugins_url( 'stylesheets/admin.css' , __FILE__ )
+			plugins_url( 'stylesheets/admin.css' , dirname(__FILE__) )
 		);
 	}
 }
