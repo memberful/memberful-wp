@@ -52,6 +52,10 @@ function memberful_admin_products_url( $format = MEMBERFUL_HTML ) {
 	return memberful_url( 'admin/products', $format );
 }
 
+function memberful_admin_subscriptions_url( $format = MEMBERFUL_HTML ) { 
+	return memberful_url( 'admin/subscriptions', $format );
+}
+
 function memberful_admin_product_url( $product_id, $format = MEMBERFUL_HTML ) { 
 	return memberful_url( 'admin/products/'.( int) $product_id, $format );
 }

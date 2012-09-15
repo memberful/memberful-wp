@@ -58,12 +58,15 @@ function memberful_wp_reset() {
  * Displays the memberful options page
  */
 function memberful_wp_options() { 
-	if ( isset( $_POST['sync_products'] ) ) {
-		$result = memberful_sync_products();
-
-		if ( is_wp_error($result) ) {
-			var_dump($result);
+	if ( isset( $_POST['manual_sync'] ) ) {
+		if ( is_wp_error( $error = memberful_sync_products() ) ) {
+			var_dump($error);
 			die('Could not sync products');
+		}
+
+		if ( is_wp_error( $error = memberful_sync_subscriptions() ) ) {
+			var_dump($error);
+			die('Could not sync subscriptions');
 		}
 
 		return wp_redirect( admin_url( 'admin.php?page=memberful_options' ) );
@@ -121,6 +124,21 @@ function memberful_wp_activate( $code ) {
 function memberful_sync_products() { 
 	$url = memberful_admin_products_url( MEMBERFUL_JSON );
 
+	update_option( 'memberful_products', memberful_fetch_entities( $url ) );
+
+	return TRUE;
+}
+
+function memberful_sync_subscriptions() {
+	
+	$url = memberful_admin_subscriptions_url( MEMBERFUL_JSON );
+
+	update_option( 'memberful_subscriptions', memberful_fetch_entities( $url ) );
+
+	return TRUE;
+}
+
+function memberful_fetch_entities($url) {
 	$full_url = add_query_arg( 'auth_token', get_option( 'memberful_api_key' ), $url );
 
 	$response = wp_remote_get( $full_url, array( 'sslverify' => MEMBERFUL_SSL_VERIFY ) );
@@ -131,26 +149,20 @@ function memberful_sync_products() {
 	}
 
 	if ( $response['response']['code'] != 200 OR ! isset( $response['body'] ) ) { 
-		return new WP_Error( 'memberful_product_sync_fail', "Couldn't retrieve list of products from memberful" );
+		return new WP_Error( 'memberful_sync_fail', "Couldn't retrieve list of entities from memberful. Please contact memberful " );
 	}
 
-	$raw_products = json_decode( $response['body'] );
-	$products     = array();
+	$raw_entity = json_decode( $response['body'] );
+	$entities   = array();
 
-	foreach ( $raw_products as $product ) { 
-		$products[$product->id] = array(
-			'id'       => $product->id,
-			'name'     => $product->name,
-			'slug'     => memberful_wp_product_slug($product),
-			'for_sale' => $product->for_sale,
+	foreach ( $raw_entity as $entity ) { 
+		$entities[$entity->id] = array(
+			'id'       => $entity->id,
+			'name'     => $entity->name,
+			'slug'     => $entity->slug,
+			'for_sale' => $entity->for_sale,
 		);
 	}
 
-	update_option( 'memberful_products', $products );
-
-	return TRUE;
-}
-
-function memberful_wp_product_slug($product) {
-	return $product->id.'-'.sanitize_title($product->name);
+	return $entities;
 }
