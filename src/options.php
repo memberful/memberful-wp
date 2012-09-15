@@ -152,5 +152,5 @@ function memberful_sync_products() {
 }
 
 function memberful_wp_product_slug($product) {
-	return sanitize_title($product->name);
+	return $product->id.'-'.sanitize_title($product->name);
 }
