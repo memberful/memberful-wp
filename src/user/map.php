@@ -22,7 +22,18 @@ class Memberful_User_Map {
 	 * @return WP_User
 	 */
 	public function map( $member, array $mapping = array() ) { 
-		$user = $this->find_user( $member );
+		list($user_id, $user_mapping_exists) = $this->find_user( $member );
+
+		$user_exists = $user_id !== NULL;
+
+		// We initially reserve a mapping to prevent other processes
+		// from trying to map the user at the same time as us
+		if ( ! $user_mapping_exists ) {
+			$this->reserve_mapping(
+				$member,
+				( $user_exists ? array('wp_user_id' => $user_id) : array() )
+			);
+		}
 
 		// Mapping of WordPress => Memberful keys
 		$field_map = array(
@@ -36,20 +47,12 @@ class Memberful_User_Map {
 		);
 
 		$user_data = array();
-		$mapping   = array();
-		$unmapped_user = $user === NULL;
 
-		if ( $unmapped_user ) { 
-			$this->reserve_mapping( $member );
-
+		if ( ! $user_exists ) { 
 			$user_data['user_pass'] = wp_generate_password();
 			$user_data['show_admin_bar_frontend'] = FALSE;
 		} else { 
-			$user_data['ID'] = $user->ID;
-
-			if ( empty( $user->exact_match ) ) { 
-				$mapping['wp_user_id'] = $user->ID;
-			}
+			$user_data['ID'] = $user_id;
 		}
 
 		foreach ( $field_map as $key => $value ) { 
@@ -58,40 +61,56 @@ class Memberful_User_Map {
 
 		$user_id = wp_insert_user( $user_data );
 
-		if ( $unmapped_user )
+		if ( ! $user_exists )
 			$mapping['wp_user_id'] = $user_id;
 
-		if ( ! empty( $mapping ) )
-			$this->update_mapping( $member->id, $mapping );
+		$mapping['last_sync_at'] = time();
+
+		$this->update_mapping( $member, $mapping );
 
 		return get_userdata( $user_id );
 	}
 
+	/**
+	 * Attempts to find the ID of the user who the specified member maps to in
+	 * the wordpress install
+	 *
+	 * If no such user exists then NULL is returned
+	 *
+	 * @param  StdClass $member The member to map from
+	 * @return int The ID of the wordpress user this member maps to
+	 */
 	private function find_user( $member ) { 
 		global $wpdb;
 
-		$sql = 
-			'SELECT `wp_users`.*, (`mem`.`member_id` = %d) AS `exact_match` '.
-			'FROM `'.self::table().'` AS `mem`'.
-			'INNER JOIN `'.$wpdb->users.'` AS `wp_users` ON (`mem`.`wp_user_id` = `wp_users`.`ID`) '.
-			'WHERE `mem`.`member_id` = %d OR `wp_users`.`user_email` = %s '.
-			'ORDER BY `exact_match` DESC';
-			
-		$query = $wpdb->prepare(
-			$sql,
-			$member->id,
-			$member->id,
-			$member->email
-		);
+		$user_id        = NULL;
+		$mapping_exists = FALSE;
 
-		return $wpdb->get_row( $query );
+		$sql = 
+			'SELECT `wp_users`.`ID`, `mem`.`member_id` '.
+			'FROM `'.self::table().'` AS `mem`'.
+			'LEFT OUTER JOIN `'.$wpdb->users.'` AS `wp_users` ON (`mem`.`wp_user_id` = `wp_users`.`ID`) '.
+			'WHERE `mem`.`member_id` = %d';
+			
+		$mapping = $wpdb->get_row( $wpdb->prepare( $sql, $member->id ) );
+
+		if ( ! empty( $mapping ) ) {
+			$mapping_exists = TRUE;
+			$user_id = $mapping->ID;
+		} else {
+			$user = get_user_by( 'email', $member->email );
+
+			$user_id = $user === FALSE ? NULL : $user->ID;
+		}
+
+		return array($user_id, $mapping_exists);
 	}
 
 	/**
 	 * Update information about the user in the mapping table
 	 *
 	 */
-	public function update_mapping( $member_id, array $pairs ) { 
+	public function update_mapping( $member, array $pairs ) { 
 		global $wpdb;
 
 		$data  = array();
@@ -106,7 +125,7 @@ class Memberful_User_Map {
 		$update = substr( $update, 0, -2 );
 
 		$update .= ' WHERE `member_id` = %d';
-		$data[] = $member_id;
+		$data[] = $member->id;
 
 		$wpdb->query( $wpdb->prepare( $update, $data ) );
 	}
@@ -117,12 +136,25 @@ class Memberful_User_Map {
 	 * We do this to prevent problems where webhooks and oauth login attempt to create
 	 * a user simultaneously.
 	 */
-	private function reserve_mapping( $member ) { 
+	private function reserve_mapping( $member, array $params = array() ) { 
 		global $wpdb;
 
-		$insert = 'INSERT INTO `'.self::table().'` (`member_id`) VALUES (%d)';
+		$columns = array_merge(array('member_id'), array_keys($params));
+		$column_list = '`'.implode('`, `', $columns).'`';
 
-		$result = $wpdb->query( $wpdb->prepare( $insert, array( $member->id ) ) );
+		$values         = array($member->id);
+		$value_sub_list = array('%d');
+
+		foreach ( $params as $param ) {
+			$values[]         = $param;
+			$value_sub_list[] = '%s';
+		}
+
+		$value_list = implode(', ', $values);
+
+		$insert = 'INSERT INTO `'.self::table().'` ('.$column_list.') VALUES ('.$value_list.')';
+
+		$result = $wpdb->query( $wpdb->prepare( $insert, $values) );
 
 		if ( is_wp_error( $result ) ) { 
 			echo 'Could not reserve mapping:';
