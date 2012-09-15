@@ -69,7 +69,7 @@ function memberful_audit_request( $request_args )
 
 	if ( ! empty( $request_args['p'] ) )
 	{
-		if ( isset( $ids[$post_id] ) ) { 
+		if ( isset( $ids[$request_args['p']] ) ) { 
 			$request_args['error'] = '404';
 		}
 	}
@@ -112,7 +112,7 @@ function memberful_get_member_subscriptions( $member_id ) {
  *
  * @return array current member's products
  */
-function memberful_get_current_member_products() {
+function memberful_get_current_user_products() {
 	$current_user = wp_get_current_user();
 	return memberful_get_member_products( $current_user->ID );
 }
@@ -132,6 +132,22 @@ function memberful_member_has_subscription( $member_id, $subscription_id ) {
 	$subscription = $subscriptions[$subscription_id];
 
 	return $subscription['expires_at'] === true || $subscription['expires_at'] > time();
+}
+
+/**
+ * Checks that the current user has at least one of the products in the list provided
+ *
+ * @param $product_ids array
+ */
+function memberful_current_user_has_products( array $product_ids ) {
+	$products = memberful_get_current_user_products();
+
+	foreach ( $product_ids as $product_id ) {
+		if ( ! empty( $products[$product_id] ) )
+			return TRUE;
+	}
+
+	return FALSE;
 }
 
 /**
