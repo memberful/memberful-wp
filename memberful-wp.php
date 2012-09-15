@@ -25,6 +25,7 @@ require_once MEMBERFUL_DIR.'/src/authenticator.php';
 require_once MEMBERFUL_DIR.'/src/admin.php';
 require_once MEMBERFUL_DIR.'/src/acl.php';
 require_once MEMBERFUL_DIR.'/src/activator.php';
+require_once MEMBERFUL_DIR.'/src/shortcodes.php';
 
 /**
  * Get details about a specific member via the API

@@ -71,6 +71,7 @@ class Memberful_Activator {
 		);
 
 		if ( $response['response']['code'] != 200 OR ! isset( $response['body'] ) ) {
+			var_dump($response);die();
 			return new WP_Error( 'memberful_activation_fail', 'Memberful returned an invalid response' );
 		}
 

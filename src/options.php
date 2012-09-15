@@ -59,7 +59,14 @@ function memberful_wp_reset() {
  */
 function memberful_wp_options() { 
 	if ( isset( $_POST['sync_products'] ) ) {
-		return memberful_sync_products();
+		$result = memberful_sync_products();
+
+		if ( is_wp_error($result) ) {
+			var_dump($result);
+			die('Could not sync products');
+		}
+
+		return wp_redirect( admin_url( 'admin.php?page=memberful_options' ) );
 	}
 
 	if ( isset( $_POST['reset_plugin'] ) ) {
@@ -98,6 +105,11 @@ function memberful_wp_activate( $code ) {
 
 	$credentials = $activator->activate();
 
+	if ( is_wp_error( $credentials ) ) { 
+		var_dump ( $credentials );
+		die();
+	}
+
 	update_option( 'memberful_client_id', $credentials->oauth->identifier );
 	update_option( 'memberful_client_secret', $credentials->oauth->secret );
 	update_option( 'memberful_api_key', $credentials->api_key->key );
@@ -129,6 +141,7 @@ function memberful_sync_products() {
 		$products[$product->id] = array(
 			'id'       => $product->id,
 			'name'     => $product->name,
+			'slug'     => memberful_wp_product_slug($product),
 			'for_sale' => $product->for_sale,
 		);
 	}
@@ -136,4 +149,8 @@ function memberful_sync_products() {
 	update_option( 'memberful_products', $products );
 
 	return TRUE;
+}
+
+function memberful_wp_product_slug($product) {
+	return sanitize_title($product->name);
 }
