@@ -1,4 +1,6 @@
 <?php
+require MEMBERFUL_DIR.'/src/user/oauth_map.php';
+
 
 /**
  * Is OAuth authentication enabled?
@@ -170,10 +172,11 @@ class Memberful_Authenticator {
 			)
 		);
 
-		// if ( get_class( $response ) == 'WP_Error' ) {
-		// echo "Error";
-		// die();
-		// }
+		if ( is_wp_error($response) ) {
+			echo "Error";
+			var_dump($response);
+			die();
+		}
 
 		$body = json_decode( $response['body'] );
 		$code = $response['response']['code'];
@@ -206,12 +209,12 @@ class Memberful_Authenticator {
 		$body = json_decode( $response['body'] );
 
 		if ( $response['response']['code'] != 200 OR $body === NULL ) { 
+			die('Could not fetch your data from memberful');
 			return $this->_error( 'memberful_data_error', 'Could not fetch your data from Memberful.' );
 		}
 
 		return $body;
 	}
-
 }
 
 // Backup, prevent members from resetting their password

@@ -21,11 +21,11 @@ class Memberful_User_Map {
 	 * @param StdObject $details       Details about the member
 	 * @return WP_User
 	 */
-	public function map( $user, array $mapping = array() ) { 
+	public function map( $member, array $mapping = array() ) { 
 		$user = $this->find_user( $member );
 
 		// Mapping of WordPress => Memberful keys
-		$mapping = array(
+		$field_map = array(
 			'user_email'    => 'email',
 			'user_login'    => 'username',
 			'display_name'  => 'full_name',
@@ -36,6 +36,7 @@ class Memberful_User_Map {
 		);
 
 		$user_data = array();
+		$mapping   = array();
 		$unmapped_user = $user === NULL;
 
 		if ( $unmapped_user ) { 
@@ -44,18 +45,18 @@ class Memberful_User_Map {
 			$user_data['user_pass'] = wp_generate_password();
 			$user_data['show_admin_bar_frontend'] = FALSE;
 		} else { 
-			$data['ID'] = $user->ID;
+			$user_data['ID'] = $user->ID;
 
 			if ( empty( $user->exact_match ) ) { 
 				$mapping['wp_user_id'] = $user->ID;
 			}
 		}
 
-		foreach ( $mapping as $key => $value ) { 
+		foreach ( $field_map as $key => $value ) { 
 			$user_data[$key] = $member->$value;
 		}
 
-		$user_id = wp_insert_user( $data );
+		$user_id = wp_insert_user( $user_data );
 
 		if ( $unmapped_user )
 			$mapping['wp_user_id'] = $user_id;
@@ -72,7 +73,7 @@ class Memberful_User_Map {
 		$sql = 
 			'SELECT `wp_users`.*, (`mem`.`member_id` = %d) AS `exact_match` '.
 			'FROM `'.self::table().'` AS `mem`'.
-			'FULL OUTER JOIN `'.$wpdb->users.'` AS `wp_users` ON (`mem`.`wp_user_id` = `wp_users`.`ID`) '.
+			'INNER JOIN `'.$wpdb->users.'` AS `wp_users` ON (`mem`.`wp_user_id` = `wp_users`.`ID`) '.
 			'WHERE `mem`.`member_id` = %d OR `wp_users`.`user_email` = %s '.
 			'ORDER BY `exact_match` DESC';
 			
@@ -124,6 +125,7 @@ class Memberful_User_Map {
 		$result = $wpdb->query( $wpdb->prepare( $insert, array( $member->id ) ) );
 
 		if ( is_wp_error( $result ) ) { 
+			echo 'Could not reserve mapping:';
 			var_dump( $result );
 			die();
 		}
