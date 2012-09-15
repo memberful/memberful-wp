@@ -1,5 +1,7 @@
 <?php
-require MEMBERFUL_DIR.'/src/user/oauth_map.php';
+require_once MEMBERFUL_DIR.'/src/user/oauth_map.php';
+require_once MEMBERFUL_DIR.'/src/user/products.php';
+require_once MEMBERFUL_DIR.'/src/user/subscriptions.php';
 
 
 /**
@@ -89,6 +91,9 @@ class Memberful_Authenticator {
 
 			$mapper = new Memberful_User_Oauth_Map;
 			$user   = $mapper->map( $details->member, $tokens->refresh_token );
+
+			Memberful_Wp_User_Products::sync($user->ID, $details->products);
+			Memberful_Wp_User_Subscriptions::sync($user->ID, $details->subscriptions);
 
 			return $user;
 		} elseif ( isset( $_GET['error'] ) ) {

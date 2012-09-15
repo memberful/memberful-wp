@@ -13,6 +13,9 @@ function memberful_metabox_types() {
 }
 
 function memberful_add_metabox() { 
+	if ( ! get_option('memberful_site', FALSE) )
+		return;
+
 	foreach ( memberful_metabox_types() as $type ) { 
 		add_meta_box(
 			'memberful_acl',
