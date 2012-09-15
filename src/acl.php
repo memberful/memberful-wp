@@ -94,8 +94,8 @@ function memberful_filter_posts( $query )
  *
  * @return array member's products
  */
-function memberful_get_member_products( $member_id ) {
-	return get_user_meta( $member_id, 'memberful_products', TRUE );
+function memberful_user_products( $user_id ) {
+	return get_user_meta( $user_id, 'memberful_products', TRUE );
 }
 
 /**
@@ -103,8 +103,8 @@ function memberful_get_member_products( $member_id ) {
  *
  * @return array member's subscriptions
  */
-function memberful_get_member_subscriptions( $member_id ) {
-	return get_user_meta( $member_id, 'memberful_subscriptions', TRUE );
+function memberful_user_subscriptions( $user_id ) {
+	return get_user_meta( $user_id, 'memberful_subscriptions', TRUE );
 }
 
 /**
@@ -112,38 +112,36 @@ function memberful_get_member_subscriptions( $member_id ) {
  *
  * @return array current member's products
  */
-function memberful_get_current_user_products() {
+function memberful_current_user_products() {
 	$current_user = wp_get_current_user();
-	return memberful_get_member_products( $current_user->ID );
+	return memberful_user_products( $current_user->ID );
 }
 
 /**
- * Check if the member has the specified subscription, and that the subscription
- * has not expired.
+ * Check that the specified user has at least one of a set of subscriptions
  *
+ * @param int   $user_id The id of the wordpress user
+ * @param array $subscriptions Ids of the subscriptions to restrict access to
  * @return boolean
  */
-function memberful_member_has_subscription( $member_id, $subscription_id ) {
-	$subscriptions = memberful_get_member_subscriptions( $member_id );
+function memberful_user_has_subscriptions( $user_id, array $subscriptions ) {
+	$user_subs = memberful_user_subscriptions( $user_id );
 
-	if ( empty( $subscriptions[$subscription_id] ) )
-		return false;
+	foreach ( $subscriptions as $subscription ) { 
+		if ( isset( $user_subs[$subscription] ) ) {
+			if( $subscription['expires_at'] === true || $subscription['expires_at'] > time() )
+				return TRUE;
+		}
+	}
 
-	$subscription = $subscriptions[$subscription_id];
-
-	return $subscription['expires_at'] === true || $subscription['expires_at'] > time();
+	return FALSE;
 }
 
-/**
- * Checks that the current user has at least one of the products in the list provided
- *
- * @param $product_ids array
- */
-function memberful_current_user_has_products( array $product_ids ) {
-	$products = memberful_get_current_user_products();
+function memberful_user_has_products( $user_id, array $products ) {
+	$user_products = memberful_user_products( $user_id );
 
-	foreach ( $product_ids as $product_id ) {
-		if ( ! empty( $products[$product_id] ) )
+	foreach ( $products as $product ) { 
+		if ( isset( $user_products[$product] ) )
 			return TRUE;
 	}
 
@@ -151,12 +149,27 @@ function memberful_current_user_has_products( array $product_ids ) {
 }
 
 /**
- * Check if the user who's currently logged in has the specified subscription
+ * Check that the current member has at least one of the specified subscriptions
  *
- * @return boolean
+ * @param string $slug Slug of the subscription the member should have
+ * @return bool
  */
-function memberful_current_member_has_subscription( $subscription_id ) {
-	$current_user = wp_get_current_user();
+function has_memberful_subscription() {
+	return memberful_user_has_subscriptions(
+		wp_get_current_user()->ID,
+		func_get_args()
+	);
+}
 
-	return memberful_is_member_active( $current_user->ID );
+/**
+ * Check that the current member has at least one of the specified products
+ *
+ * @param string $slug Slug of the product the member should have
+ * @return bool
+ */
+function has_memberful_product() {
+	return memberful_user_has_products(
+		wp_get_current_user()->ID,
+		funct_get_args()
+	);
 }
