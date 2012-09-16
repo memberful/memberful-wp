@@ -27,6 +27,8 @@ require_once MEMBERFUL_DIR.'/src/acl.php';
 require_once MEMBERFUL_DIR.'/src/activator.php';
 require_once MEMBERFUL_DIR.'/src/shortcodes.php';
 
+register_activation_hook( __FILE__, 'memberful_activate' );
+
 /**
  * Get details about a specific member via the API
  *

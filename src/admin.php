@@ -8,8 +8,6 @@ add_action( 'admin_init', 'memberful_wp_register_options' );
 add_action( 'admin_init', 'memberful_wp_activation_redirect' );
 add_action( 'admin_enqueue_scripts', 'memberful_admin_enqueue_scripts' );
 
-register_activation_hook( __FILE__, 'memberful_activate' );
-
 /**
  * Activates the plugin, runs DB migrations as part of the process
  */
