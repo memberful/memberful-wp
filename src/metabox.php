@@ -101,6 +101,20 @@ function myplugin_save_postdata( $post_id ) {
 /**
  * Class for managing ACLs on a post
  *
+ * Essentially this class creates two acl maps, one at the post level, and one at 
+ * the global level.
+ *
+ * The post level map is simply one of $entity_id => $entity_id (where $entity_id
+ * is the id of a product or subscription)
+ *
+ * The global lvel map is $entity_id => array($post_id => $post_id)
+ *
+ * When filtering posts on the frontend later on we simply find all the posts that the
+ * user is allowed to access (by merging all of the global maps for the entities they have)
+ * and then subtract that from the set of acl maps for products they don't own.
+ *
+ * We then use this as a post id exclusion
+ *
  */
 class Memberful_Post_ACL { 
 	const PRODUCT = 'product';
@@ -160,7 +174,7 @@ class Memberful_Post_ACL {
 
 
 	protected function _update_post_acl( $new_acl ) { 
-		$current_acl = $this->get_acl();
+		$current_acl = get_post_meta( $this->_id, 'memberful_acl', TRUE);
 		$current_acl[$this->_entity] = $new_acl;
 		update_post_meta( $this->_id, 'memberful_acl', $current_acl );
 	}

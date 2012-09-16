@@ -6,17 +6,25 @@ function memberful_wp_shortcode($atts, $content) {
 	$show_content = FALSE;
 
 	if ( ! empty($atts['has_subscription']) ) {
-		
+		$show_content = has_memberful_subscription(
+			memberful_wp_slugs_to_ids( $atts['has_subscription'] )
+		);
 	}
 
 	if ( ! empty($atts['has_product']) ) { 
-		$slugs = explode(',', $atts['has_product']);
-		$ids   = array_map('memberful_wp_extract_id_from_slug', $slugs);
+		$has_product = has_memberful_product(
+			memberful_wp_slugs_to_ids( $atts['has_product'] )
+		);
 
-		$show_content = $show_content || memberful_current_user_has_products($ids);
+		$show_content = $show_content || $has_product;
 	}
 
 	return $show_content ? $content : '';
+}
+
+function memberful_wp_slugs_to_ids($slugs) { 
+	$slugs = explode(',', $slugs);
+	return array_map('memberful_wp_extract_id_from_slug', $slugs);
 }
 
 function memberful_wp_extract_id_from_slug($slug) { 
