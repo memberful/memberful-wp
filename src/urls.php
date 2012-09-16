@@ -25,7 +25,7 @@ function memberful_url( $uri = '', $format = MEMBERFUL_HTML ) {
 }
 
 function memberful_wp_login_url() { 
-	return plugins_url( 'auth.php', dirname( dirname( __FILE__ ) ) );
+	return memberful_wp_plugin_url( 'auth.php' );
 }
 
 function memberful_wp_logout_url() { 
