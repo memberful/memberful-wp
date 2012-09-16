@@ -153,7 +153,7 @@ function memberful_user_has_subscriptions( $user_id, array $subscriptions ) {
 
 	foreach ( $subscriptions as $subscription ) { 
 		if ( isset( $user_subs[$subscription] ) ) {
-			if( $subscription['expires_at'] === true || $subscription['expires_at'] > time() )
+			if( empty($subscription['expires_at']) || $subscription['expires_at'] > time() )
 				return TRUE;
 		}
 	}
