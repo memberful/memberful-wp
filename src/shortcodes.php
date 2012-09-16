@@ -23,7 +23,9 @@ function memberful_wp_shortcode($atts, $content) {
 }
 
 function memberful_wp_slugs_to_ids($slugs) { 
-	$slugs = explode(',', $slugs);
+	if ( is_string( $slugs ) )
+		$slugs = explode( ',', $slugs );
+
 	return array_map('memberful_wp_extract_id_from_slug', $slugs);
 }
 

@@ -119,7 +119,7 @@ function memberful_filter_posts( $query )
  * @return array member's products
  */
 function memberful_user_products( $user_id ) {
-	return get_user_meta( $user_id, 'memberful_products', TRUE );
+	return get_user_meta( $user_id, 'memberful_product', TRUE );
 }
 
 /**
@@ -128,7 +128,7 @@ function memberful_user_products( $user_id ) {
  * @return array member's subscriptions
  */
 function memberful_user_subscriptions( $user_id ) {
-	return get_user_meta( $user_id, 'memberful_subscriptions', TRUE );
+	return get_user_meta( $user_id, 'memberful_subscription', TRUE );
 }
 
 /**
@@ -153,7 +153,9 @@ function memberful_user_has_subscriptions( $user_id, array $subscriptions ) {
 
 	foreach ( $subscriptions as $subscription ) { 
 		if ( isset( $user_subs[$subscription] ) ) {
-			if( empty($subscription['expires_at']) || $subscription['expires_at'] > time() )
+			$user_sub = $user_subs[$subscription];
+
+			if( empty($user_sub['expires_at']) || $user_sub['expires_at'] > time() )
 				return TRUE;
 		}
 	}
@@ -181,9 +183,11 @@ function memberful_user_has_products( $user_id, array $products ) {
 function has_memberful_subscription($slug) {
 	$slugs = is_array($slug) ? $slug : func_get_args();
 
+	$subscriptions = memberful_wp_slugs_to_ids($slugs);
+
 	return memberful_user_has_subscriptions(
 		wp_get_current_user()->ID,
-		$slugs
+		$subscriptions
 	);
 }
 
@@ -196,8 +200,10 @@ function has_memberful_subscription($slug) {
 function has_memberful_product($slug) {
 	$slugs = is_array($slug) ? $slug : func_get_args();
 
+	$products = memberful_wp_slugs_to_ids($slugs);
+
 	return memberful_user_has_products(
 		wp_get_current_user()->ID,
-		$slugs
+		$products
 	);
 }
