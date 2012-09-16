@@ -31,6 +31,7 @@ function memberful_wp_register() {
 
 		if ( $activation === TRUE ) {
 			memberful_sync_products();
+			memberful_sync_subscriptions();
 
 			wp_redirect( admin_url( 'admin.php?page=memberful_options' ) );
 		}
