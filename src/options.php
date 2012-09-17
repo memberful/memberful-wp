@@ -118,6 +118,7 @@ function memberful_wp_activate( $code ) {
 	update_option( 'memberful_client_secret', $credentials->oauth->secret );
 	update_option( 'memberful_api_key', $credentials->api_key->key );
 	update_option( 'memberful_site', $credentials->site );
+	update_option( 'memberful_webhook_secret', $credentials->webhook->secret );
 
 	return TRUE;
 }
