@@ -13,7 +13,7 @@ class Memberful_Wp_Webhook_Ping {
 	public function handle_ping( $raw_payload, $digest ) { 
 		$payload = $this->extract_payload( $raw_payload, $digest );
 
-		$event = 'memberful_'.$payload->event;
+		$event = 'memberful_event_'.$payload->event;
 
 		do_action( $event, $payload );
 	}
@@ -53,12 +53,24 @@ class Memberful_Wp_Ping_Invalid_Payload extends RuntimeException {
 
 }
 
-add_action( 'memberful_order_created', 'memberful_wp_hook_order_created' );
+add_action( 'memberful_event_order_created', 'memberful_wp_hook_order_created' );
+add_action( 'memberful_event_member_signup', 'memberful_wp_hook_member_signup' );
+add_action( 'memberful_event_member_updated', 'memberful_wp_hook_member_updated' );
 
 /**
  * Triggered when a order_created event is received via webhook ping
  */
 function memberful_wp_hook_order_created( $data ) { 
-	$mapper = new Memberful_User_Map( $data->order->member );
+	$mapper = new Memberful_User_Map();
 	$mapper->map($data->order->member);
+}
+
+function memberful_wp_hook_member_signup( $data ) { 
+	$mapper = new Memberful_User_Map();
+	$mapper->map($data->member);
+}
+
+function memberful_wp_hook_member_updated( $data ) { 
+	$mapper = new Memberful_User_Map();
+	$mapper->map($data->member);
 }
