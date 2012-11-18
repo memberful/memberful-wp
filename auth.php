@@ -20,7 +20,7 @@ if ( isset( $_GET['action'] ) && $_GET['action'] == 'logout' ) {
 	
 	// Get redirect from session
 	if ( isset( $_REQUEST['redirect_to'] ) ) {
-		$redirect_to = $_REQUEST['redirect_to'];
+		$redirect_to = urldecode($_REQUEST['redirect_to']);
 	} elseif ( isset( $_COOKIE['memberful_redirect'] ) ) {
 		$redirect_to = $_COOKIE['memberful_redirect'];
 	} else {
