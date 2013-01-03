@@ -17,9 +17,6 @@ function memberful_url( $uri = '', $format = MEMBERFUL_HTML ) {
 	if ( $format !== MEMBERFUL_HTML ) {
 		$endpoint .= '.'.$format;
 	}
-	else {
-		$endpoint .= '/';
-	}
 
 	return rtrim( get_option( 'memberful_site' ),'/' ).$endpoint;
 }
