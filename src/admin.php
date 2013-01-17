@@ -26,7 +26,7 @@ function memberful_activate() {
 			`last_sync_at` INT UNSIGNED NOT NULL DEFAULT 0)'
 		);
 
-		if ( $result === FALSE ) { 
+		if ( $result === false ) {
 			echo 'Could not create the memberful mapping table\n';
 			$wpdb->print_error();
 			exit();
@@ -51,7 +51,7 @@ function memberful_activate() {
 		update_option( 'memberful_db_version', 1 );
 	}
 
-	add_option( 'memberful_wp_activation_redirect' , TRUE );
+	add_option( 'memberful_wp_activation_redirect' , true );
 }
 
 /**
@@ -59,7 +59,7 @@ function memberful_activate() {
  * plugin
  */
 function memberful_wp_activation_redirect() { 
-	if ( get_option( 'memberful_wp_activation_redirect', FALSE ) ) { 
+	if ( get_option( 'memberful_wp_activation_redirect', false ) ) {
 		delete_option( 'memberful_wp_activation_redirect' );
 
 		if ( !isset( $_GET['activate-multi'] ) ) { 
@@ -83,7 +83,7 @@ function memberful_wp_menu() {
 function memberful_admin_enqueue_scripts() { 
 	$screen = get_current_screen();
 
-	if ( strpos( 'memberful', $screen->id ) !== NULL ) { 
+	if ( strpos( 'memberful', $screen->id ) !== null ) {
 		wp_enqueue_style(
 			'memberful-admin',
 			plugins_url( 'stylesheets/admin.css' , dirname(__FILE__) )
@@ -91,6 +91,9 @@ function memberful_admin_enqueue_scripts() {
 	}
 }
 
+/**
+ * Adds CSS that applies a menu icon to the memberful menu.
+ */
 function memberful_add_icon() {
 ?>
 	<style type="text/css" media="screen">
