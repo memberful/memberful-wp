@@ -12,6 +12,9 @@ License: GPL
 if ( ! defined( 'MEMBERFUL_DIR' ) )
 	define( 'MEMBERFUL_DIR', dirname( __FILE__ ) );
 
+if ( ! defined( 'MEMBERFUL_URL' ) )
+	define( 'MEMBERFUL_URL', plugins_url( '', __FILE__ ) );
+
 if ( ! defined( 'MEMBERFUL_APPS_HOST' ) )
 	define( 'MEMBERFUL_APPS_HOST', 'https://apps.memberful.com' );
 

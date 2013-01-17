@@ -7,6 +7,7 @@ add_action( 'admin_menu', 'memberful_wp_menu' );
 add_action( 'admin_init', 'memberful_wp_register_options' );
 add_action( 'admin_init', 'memberful_wp_activation_redirect' );
 add_action( 'admin_enqueue_scripts', 'memberful_admin_enqueue_scripts' );
+add_action( 'admin_head', 'memberful_add_icon' );
 
 /**
  * Activates the plugin, runs DB migrations as part of the process
@@ -88,4 +89,17 @@ function memberful_admin_enqueue_scripts() {
 			plugins_url( 'stylesheets/admin.css' , dirname(__FILE__) )
 		);
 	}
+}
+
+function memberful_add_icon() {
+?>
+	<style type="text/css" media="screen">
+		#toplevel_page_memberful_options .wp-menu-image {
+			background: url(<?php echo MEMBERFUL_URL; ?>/images/memberful-menu-icon.png) no-repeat 6px 6px !important;
+		}
+		#toplevel_page_memberful_options:hover .wp-menu-image, #toplevel_page_memberful_options.wp-has-current-submenu .wp-menu-image {
+			background-position:6px -18px !important;
+		}
+	</style>
+<?php
 }
