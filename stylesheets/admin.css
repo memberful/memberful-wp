@@ -40,9 +40,17 @@
 	box-shadow: 0 1px 3px rgba(0,0,0,.25);
 }
 #memberful-registered h1 {
-	font-family: Georgia, "Times New Roman", "Bitstream Charter", Times, serif;
+	margin: .67em 0 10px 0;
+	padding: 0;
 	font-weight: normal;
+	font-size: 22px;
 	color: #2e922e;
+}
+#memberful-registered h2 {
+	margin: 0;
+	padding: 0;
+	font-size: 14px;
+	line-height: 20px;
 }
 #memberful-registered form {
 	display: inline;
@@ -56,4 +64,33 @@
 .memberful-protect-help {
 	color: #666;
 	line-height: 18px;
+}
+.button.memberful-red-button {
+	float: right;
+	text-shadow: 0 -1px 0 #a23b25;
+	color: #fff;
+	background: #ef2f39;
+	background-image: -webkit-gradient(linear,left top,left bottom,from(#ff6b64),to(#ef2f39));
+	background-image: -webkit-linear-gradient(top,#ff6b64,#ef2f39);
+	background-image: -moz-linear-gradient(top,#ff6b64,#ef2f39);
+	background-image: -o-linear-gradient(top,#ff6b64,#ef2f39);
+	background-image: linear-gradient(to bottom,#ff6b64,#ef2f39);
+	border: 1px solid #ce262f;
+}
+.button.memberful-red-button:hover {
+	text-shadow: 0 -1px 0 #a23b25;
+	color: #fff;
+	background: #f4424b;
+	background-image: -webkit-gradient(linear,left top,left bottom,from(#ff7972),to(#f4424b));
+	background-image: -webkit-linear-gradient(top,#ff7972,#f4424b);
+	background-image: -moz-linear-gradient(top,#ff7972,#f4424b);
+	background-image: -o-linear-gradient(top,#ff7972,#f4424b);
+	background-image: linear-gradient(to bottom,#ff7972,#f4424b);
+	border: 1px solid #ce262f;
+}
+.button.memberful-red-button:active {
+	text-shadow: 0 -1px 0 #a23b25;
+	color: #fff;
+	background: #f4424b;
+	border: 1px solid #ce262f;
 }
