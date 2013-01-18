@@ -29,6 +29,7 @@ require_once MEMBERFUL_DIR.'/src/admin.php';
 require_once MEMBERFUL_DIR.'/src/acl.php';
 require_once MEMBERFUL_DIR.'/src/activator.php';
 require_once MEMBERFUL_DIR.'/src/shortcodes.php';
+require_once MEMBERFUL_DIR.'/src/widgets.php';
 
 register_activation_hook( __FILE__, 'memberful_activate' );
 
