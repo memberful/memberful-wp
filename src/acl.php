@@ -16,7 +16,7 @@ add_action( 'pre_get_posts', 'memberful_filter_posts' );
  */
 function memberful_user_disallowed_post_ids()
 {
-	static $ids = NULL;;
+	static $ids = NULL;
 
 	if ( is_admin() )
 		return array();
@@ -46,7 +46,7 @@ function memberful_user_disallowed_post_ids()
 	// definitely allowed to access
 	$union = array_diff( $user_restricted_posts, $user_allowed_posts );
 
-	return empty( $union ) ? array() : array_combine( $union, $union );
+	return $ids = (empty( $union ) ? array() : array_combine( $union, $union ));
 }
 
 function memberful_wp_filter_active_subscriptions($subscription) { 
