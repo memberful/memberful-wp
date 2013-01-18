@@ -24,11 +24,11 @@ function memberful_user_disallowed_post_ids()
 	if ( $ids !== NULL )
 		return $ids;
 
-	$acl = get_option( 'memberful_acl', array() );
-	$product_acl = isset($acl['product']) ? $acl['product'] : array();
-	$sub_acl     = isset($acl['subscription']) ? $acl['subscription'] : array();
-	
-	// The products the user has access to
+	$acl                     = get_option( 'memberful_acl', array() );
+	$global_product_acl      = isset($acl['product']) ? $acl['product'] : array();
+	$global_subscription_acl = isset($acl['subscription']) ? $acl['subscription'] : array();
+
+	// Items the user has access to
 	$user_products = get_user_meta( wp_get_current_user()->ID, 'memberful_products', TRUE );
 	$user_subs     = get_user_meta( wp_get_current_user()->ID, 'memberful_subscriptions', TRUE );
 
@@ -36,15 +36,15 @@ function memberful_user_disallowed_post_ids()
 		$user_subs     = array_filter($user_subs, 'memberful_wp_filter_active_subscriptions');
 
 	// Work out the set of posts the user is and isn't allowed to access 
-	$product_acl = memberful_wp_resolve_entities_to_acl_sets($user_products, $product_acl);
-	$sub_acl     = memberful_wp_resolve_entities_to_acl_sets($user_subs, $product_acl);
+	$user_product_acl      = memberful_wp_generate_user_specific_acl_from_global_acl( $user_products, $global_product_acl );
+	$user_subscription_acl = memberful_wp_generate_user_specific_acl_from_global_acl( $user_subs, $global_subscription_acl );
 
-	$allowed    = array_merge($product_acl['allowed'], $sub_acl['allowed']);
-	$restricted = array_merge($product_acl['restricted'], $sub_acl['restricted']);
+	$user_allowed_posts    = array_merge( $user_product_acl['allowed'],    $user_subscription_acl['allowed'] );
+	$user_restricted_posts = array_merge( $user_product_acl['restricted'], $user_subscription_acl['restricted'] );
 
 	// Remove from the set of restricted posts the posts that the user is
 	// definitely allowed to access
-	$union = array_diff( $restricted, $allowed );
+	$union = array_diff( $user_restricted_posts, $user_allowed_posts );
 
 	return empty( $union ) ? array() : array_combine( $union, $union );
 }
@@ -53,14 +53,20 @@ function memberful_wp_filter_active_subscriptions($subscription) {
 	return $subscription['expires_at'] > time();
 }
 
-function memberful_wp_resolve_entities_to_acl_sets($users_entities, $acl) {
+/**
+ * Given a set of products/subscriptions that the member has, and the correspending
+ * product/subscription acl for the site, work out what posts they can view
+ *
+ * @param array $users_entities An array of ids (either product ids or subscription ids) in form id => id
+ * @param array $acl            Global acl for the entity type.
+ */
+function memberful_wp_generate_user_specific_acl_from_global_acl($users_entities, $acl) {
 	if ( empty( $users_entities ) )
 		$users_entities = array();
 
 	$allowed_entities    = array_intersect_key( $acl, $users_entities );
 	$restricted_entities = array_diff_key( $acl, $users_entities );
 
-	
 	$allowed_ids    = array();
 	$restricted_ids = array();
 
@@ -79,8 +85,6 @@ function memberful_wp_resolve_entities_to_acl_sets($users_entities, $acl) {
 	$restricted = array_unique( $restricted_ids );
 
 	return array('allowed' => $allowed, 'restricted' => $restricted);
-
-
 }
 
 /**
