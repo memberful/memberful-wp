@@ -1,6 +1,5 @@
 <?php
 
-add_filter( 'request', 'memberful_audit_request' );
 add_action( 'pre_get_posts', 'memberful_filter_posts' );
 
 
@@ -70,13 +69,11 @@ function memberful_wp_generate_user_specific_acl_from_global_acl($users_entities
 	$allowed_ids    = array();
 	$restricted_ids = array();
 
-	foreach ( $allowed_entities as $posts )
-	{
+	foreach ( $allowed_entities as $posts ) {
 		$allowed_ids = array_merge( $allowed_ids, $posts );
 	}
 
-	foreach ( $restricted_entities as $posts )
-	{
+	foreach ( $restricted_entities as $posts ) {
 		$restricted_ids = array_merge( $restricted_ids, $posts );
 	}
 
@@ -88,33 +85,24 @@ function memberful_wp_generate_user_specific_acl_from_global_acl($users_entities
 }
 
 /**
- * Prevents user from directly viewing a post
+ * Adds conditions to queries that prevent protected pages and posts showing up to users who
+ * have not purchased the required products/subscriptions
  *
+ * @param WP_Query $query Query to filter
  */
-function memberful_audit_request( $request_args )
-{
-	$ids = memberful_user_disallowed_post_ids();
-
-	if ( ! empty( $request_args['p'] ) )
-	{
-		if ( isset( $ids[$request_args['p']] ) ) { 
-			$request_args['error'] = '404';
-		}
-	}
-	// If this isn't the homepage
-	elseif ( ! empty( $request_args ) )
-	{
-		$request_args['post__not_in'] = $ids;
-	}
-
-	return $request_args;
-}
-
 function memberful_filter_posts( $query )
 {
-	$ids = memberful_user_disallowed_post_ids();
+	$disallowed_posts = memberful_user_disallowed_post_ids();
 
-	$query->set( 'post__not_in', $ids );
+	$query->set( 'post__not_in', $disallowed_posts );
+
+	foreach( array('p', 'page_id') as $parameter ) {
+		if ( isset( $disallowed_posts[$query->get($parameter)] ) ) {
+			// If we simply set to '' then the query will fetch the next allowed post
+			// Instead we generate a query that will definitely generate no results
+			$query->set( $parameter, '-42' );
+		}
+	}
 }
 
 /**
