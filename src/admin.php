@@ -98,10 +98,12 @@ function memberful_add_icon() {
 ?>
 	<style type="text/css" media="screen">
 		#toplevel_page_memberful_options .wp-menu-image {
-			background: url(<?php echo MEMBERFUL_URL; ?>/images/memberful-menu-icon.png) no-repeat 6px 6px !important;
+			background: url(<?php echo MEMBERFUL_URL; ?>/images/memberful-menu-icon.png) no-repeat 2px 0 !important;
+			background-size: 28px 56px !important;
 		}
-		#toplevel_page_memberful_options:hover .wp-menu-image, #toplevel_page_memberful_options.wp-has-current-submenu .wp-menu-image {
-			background-position:6px -18px !important;
+		#toplevel_page_memberful_options:hover .wp-menu-image,
+		#toplevel_page_memberful_options.current .wp-menu-image {
+			background-position: 2px -25px !important;
 		}
 	</style>
 <?php
