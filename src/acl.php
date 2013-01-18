@@ -1,7 +1,7 @@
 <?php
 
-add_action( 'request', 'memberful_audit_request' );
-add_filter( 'pre_get_posts', 'memberful_filter_posts' );
+add_filter( 'request', 'memberful_audit_request' );
+add_action( 'pre_get_posts', 'memberful_filter_posts' );
 
 
 /**
