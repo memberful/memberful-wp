@@ -17,10 +17,6 @@
 	font-size: 16px;
 	font-weight: normal;
 }
-.memberful-sign-up p {
-	color: #666;
-	line-height: 18px;
-}
 .memberful-register-plugin {
 	margin-top: 30px;
 }
@@ -51,6 +47,13 @@
 #memberful-registered form {
 	display: inline;
 }
+
+/*---------------------------------------------------------
+	Shared
+------------------------------------------------------------ */
+.memberful-sign-up p,
+#memberful-registered p,
 .memberful-protect-help {
 	color: #666;
+	line-height: 18px;
 }
