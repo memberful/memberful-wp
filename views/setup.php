@@ -14,7 +14,7 @@
 			<form method="POST" action="<?php echo admin_url('admin.php?page=memberful_options&noheader=true') ?>">
 				<fieldset>
 					<textarea placeholder="<?php echo esc_attr( __( 'Paste your WordPress registration key here...', 'memberful' ) ); ?>" name="activation_code"></textarea>
-					<button class="memberful-button-grey"><?php _e( 'Register this site with your Memberful account', 'memberful' ); ?></button>
+					<button class="button action"><?php _e( 'Connect this site to your Memberful account', 'memberful' ); ?></button>
 					<input type="hidden" name="action" value="register" />
 					<?php wp_nonce_field( 'memberful_register' ); ?>
 				</fieldset>
