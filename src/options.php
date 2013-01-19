@@ -100,7 +100,8 @@ function memberful_wp_options() {
  * @param $code string The activation code
  */
 function memberful_wp_activate( $code ) { 
-	$activator = new Memberful_Activator( $code, html_entity_decode( get_bloginfo( 'name' ) ) );
+	$blog_name = wp_specialchars_decode( get_bloginfo( 'name', 'Display' ), ENT_QUOTES );
+	$activator = new Memberful_Activator( $code, $blog_name );
 
 	$activator
 		->require_api_key()
