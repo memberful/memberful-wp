@@ -1,0 +1,6 @@
+/*---------------------------------------------------------
+	Widget styling
+------------------------------------------------------------ */
+.widget.widget_memberful_wp_profile_widget img.avatar {
+	float: left;
+}
