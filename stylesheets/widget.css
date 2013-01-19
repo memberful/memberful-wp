@@ -1,6 +1,10 @@
 /*---------------------------------------------------------
 	Widget styling
 ------------------------------------------------------------ */
-.widget.widget_memberful_wp_profile_widget img.avatar {
+.widget.widget_memberful_wp_profile_widget .memberful-profile-gravatar {
 	float: left;
+	width: 68px;
+}
+.widget.widget_memberful_wp_profile_widget .memberful-profile-name {
+	margin-bottom: 12px;
 }
