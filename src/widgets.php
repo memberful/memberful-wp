@@ -1,12 +1,11 @@
 <?php
 
 wp_register_sidebar_widget(
-	'memberful_wp_widget_login',
-	'Memberful Auth',
-	'memberful_wp_widget_login'
+	'memberful_wp_profile_widget',
+	'Memberful',
+	'memberful_wp_profile_widget'
 );
 
-function memberful_wp_widget_login() {
-	memberful_wp_render('login_widget');
+function memberful_wp_profile_widget() {
+	memberful_wp_render( 'profile_widget' );
 }
-
