@@ -9,6 +9,9 @@ Author URI: http://memberful.com
 License: GPL
 */
 
+if ( ! defined( 'MEMBERFUL_VERSION' ) )
+	define( 'MEMBERFUL_VERSION', '0.1' );
+
 if ( ! defined( 'MEMBERFUL_DIR' ) )
 	define( 'MEMBERFUL_DIR', dirname( __FILE__ ) );
 

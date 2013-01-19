@@ -88,4 +88,30 @@ function memberful_register_wp_profile_widget() {
 
 add_action( 'widgets_init', 'memberful_register_wp_profile_widget' );
 
+/**
+ * Add a stylesheet for the Memberful widget if it is active
+ *
+ * @return void
+ */
+function memberful_add_stylesheet_if_action() {
+	// Verify that the widget is active before adding stylesheet
+	if ( ! is_active_widget( false, false, 'memberful_wp_profile_widget' ) )
+		return;
+
+	// Allow a filter to disable the stylesheet
+	$add_stylesheet = apply_filters( 'memberful_wp_profile_widget_add_stylesheet', true );
+
+	// Add the stylesheet
+	if ( true === $add_stylesheet ) {
+		wp_enqueue_style(
+			'memberful-wp-profile-widget',
+			MEMBERFUL_URL . '/stylesheets/widget.css',
+			array(),
+			MEMBERFUL_VERSION
+		);
+	}
+}
+
+add_action( 'wp_enqueue_scripts', 'memberful_add_stylesheet_if_action' );
+
 endif;
