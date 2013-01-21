@@ -52,11 +52,12 @@ function memberful_wp_filter_active_subscriptions($subscription) {
 }
 
 /**
- * Given a set of products/subscriptions that the member has, and the correspending
- * product/subscription acl for the site, work out what posts they can view
+ * Given a set of products/subscriptions that the member has, and the corresponding
+ * product/subscription acl for the site, work out what posts they can view.
  *
- * @param array $users_entities An array of ids (either product ids or subscription ids) in form id => id
- * @param array $acl            Global acl for the entity type.
+ * @param  array $users_entities An array of ids (either product ids or subscription ids) in form id => id.
+ * @param  array $acl            Global acl for the entity type.
+ * @return
  */
 function memberful_wp_generate_user_specific_acl_from_global_acl( $users_entities, $acl ) {
 	if ( empty( $users_entities ) )

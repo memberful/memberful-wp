@@ -69,12 +69,14 @@ class Memberful_Activator {
 				'body' => json_encode( $this->params ),
 			)
 		);
+		$response_code = wp_remote_retrieve_response_code( $response );
+		$response_body = wp_remote_retrieve_body( $response );
 
-		if ( $response['response']['code'] != 200 OR ! isset( $response['body'] ) ) {
+		if ( 200 !== $response_code OR empty( $response_body ) ) {
 			var_dump($response);die();
 			return new WP_Error( 'memberful_activation_fail', 'Memberful returned an invalid response' );
 		}
 
-		return json_decode( $response['body'] );
+		return json_decode( $response_body );
 	}
 }
