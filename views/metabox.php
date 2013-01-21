@@ -13,8 +13,8 @@
 		<?php foreach($subscriptions as $id => $subscription): ?>
 			<li>
 				<label>
-					<input type="checkbox" name="memberful_subscription_acl[]" value="<?php echo $id; ?>" <?php if($subscription['checked']):?>checked="checked"<?php endif; ?>>
-					<?php echo $subscription['name']; ?>
+					<input type="checkbox" name="memberful_subscription_acl[]" value="<?php echo $id; ?>" <?php checked( $subscription['checked'] ); ?>>
+					<?php echo esc_html( $subscription['name'] ); ?>
 				</label>
 			</li>
 		<?php endforeach; ?>
@@ -28,8 +28,8 @@
 		<?php foreach($products as $id => $product): ?>
 			<li>
 				<label>
-					<input type="checkbox" name="memberful_product_acl[]" value="<?php echo $id; ?>" <?php if($product['checked']):?>checked="checked"<?php endif; ?>>
-					<?php echo $product['name']; ?>
+					<input type="checkbox" name="memberful_product_acl[]" value="<?php echo $id; ?>" <?php checked( $subscription['checked'] ); ?>>
+					<?php echo esc_html( $product['name'] ); ?>
 				</label>
 			</li>
 		<?php endforeach; ?>
