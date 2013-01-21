@@ -44,17 +44,19 @@ register_activation_hook( __FILE__, 'memberful_activate' );
 function memberful_api_member( $member_id ) { 
 	$url = memberful_wrap_api_token( memberful_admin_member_url( $member_id, MEMBERFUL_JSON ) );
 
-	$response = wp_remote_get( $url, array( 'sslverify' => MEMBERFUL_SSL_VERIFY ) );
+	$response      = wp_remote_get( $url, array( 'sslverify' => MEMBERFUL_SSL_VERIFY ) );
+	$response_code = wp_remote_retrieve_response_code( $response );
+	$response_body = wp_remote_retrieve_body( $response );
 
 	if ( is_wp_error( $response ) ) { 
 		var_dump( $response, $url );
 		die();
 	}
 
-	if ( $response['response']['code'] != 200 OR ! isset( $response['body'] ) ) { 
+	if ( 200 !== $response_code OR empty( $response_body ) ) {
 		var_dump( $response );
-		return new WP_Error( 'memberful_fail', 'Coult not get member info from api' );
+		return new WP_Error( 'memberful_fail', 'Could not get member info from api' );
 	}
 
-	return json_decode( $response['body'] );
+	return json_decode( $response_body );
 }
