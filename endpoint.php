@@ -1,6 +1,7 @@
 <?php
 
-define( 'MEMBERFUL_DIR', dirname( __FILE__ ) );
+if ( ! defined( 'MEMBERFUL_DIR' ) )
+	define( 'MEMBERFUL_DIR', dirname( __FILE__ ) );
 
 if ( $_SERVER['REQUEST_METHOD'] !== 'POST' )
 	die( 'The webhook can only be accessed via POST' );

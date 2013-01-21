@@ -1,6 +1,7 @@
 <?php
 
-define( 'MEMBERFUL_DIR', dirname( __FILE__ ) );
+if ( ! defined( 'MEMBERFUL_DIR' ) )
+	define( 'MEMBERFUL_DIR', dirname( __FILE__ ) );
 
 require_once MEMBERFUL_DIR.'/../../../wp-load.php';
 
