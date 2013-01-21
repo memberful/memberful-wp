@@ -5,13 +5,10 @@ define( 'MEMBERFUL_DIR', dirname( __FILE__ ) );
 if ( $_SERVER['REQUEST_METHOD'] !== 'POST' )
 	die( 'The webhook can only be accessed via POST' );
 
-
-
 $body = file_get_contents( 'php://input' );
 
-
-require_once MEMBERFUL_DIR.'/../../../wp-load.php';
-require_once MEMBERFUL_DIR.'/src/webhook_ping.php';
+require_once MEMBERFUL_DIR . '/../../../wp-load.php';
+require_once MEMBERFUL_DIR . '/src/webhook_ping.php';
 
 $digest = $_SERVER['HTTP_X_MEMBERFUL_WEBHOOK_DIGEST'];
 
