@@ -24,15 +24,15 @@ if ( ! defined( 'MEMBERFUL_APPS_HOST' ) )
 // Should requests to memberful check the SSL certificate?
 define( 'MEMBERFUL_SSL_VERIFY', defined( 'SITE_ENVIRONMENT' ) ? SITE_ENVIRONMENT == 'production' : FALSE );
 
-require_once MEMBERFUL_DIR.'/src/core-ext.php';
-require_once MEMBERFUL_DIR.'/src/urls.php';
-require_once MEMBERFUL_DIR.'/src/user/map.php';
-require_once MEMBERFUL_DIR.'/src/authenticator.php';
-require_once MEMBERFUL_DIR.'/src/admin.php';
-require_once MEMBERFUL_DIR.'/src/acl.php';
-require_once MEMBERFUL_DIR.'/src/activator.php';
-require_once MEMBERFUL_DIR.'/src/shortcodes.php';
-require_once MEMBERFUL_DIR.'/src/widgets.php';
+require_once MEMBERFUL_DIR . '/src/core-ext.php';
+require_once MEMBERFUL_DIR . '/src/urls.php';
+require_once MEMBERFUL_DIR . '/src/user/map.php';
+require_once MEMBERFUL_DIR . '/src/authenticator.php';
+require_once MEMBERFUL_DIR . '/src/admin.php';
+require_once MEMBERFUL_DIR . '/src/acl.php';
+require_once MEMBERFUL_DIR . '/src/activator.php';
+require_once MEMBERFUL_DIR . '/src/shortcodes.php';
+require_once MEMBERFUL_DIR . '/src/widgets.php';
 
 register_activation_hook( __FILE__, 'memberful_activate' );
 

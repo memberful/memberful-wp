@@ -1,7 +1,7 @@
 <?php
 
-require_once MEMBERFUL_DIR.'/src/options.php';
-require_once MEMBERFUL_DIR.'/src/metabox.php';
+require_once MEMBERFUL_DIR . '/src/options.php';
+require_once MEMBERFUL_DIR . '/src/metabox.php';
 
 add_action( 'admin_menu', 'memberful_wp_menu' );
 add_action( 'admin_init', 'memberful_wp_register_options' );
