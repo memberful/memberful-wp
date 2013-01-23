@@ -64,6 +64,3 @@ class Memberful_Wp_Endpoint_Auth implements Memberful_Wp_Endpoint {
 		}
 	}
 }
-
-
-}
