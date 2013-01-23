@@ -4,6 +4,9 @@
  * directly with the plugin
  */
 
+require MEMBERFUL_DIR . '/src/endpoints/auth.php';
+require MEMBERFUL_DIR . '/src/endpoints/webhook.php';
+
 add_action( 'plugins_loaded', 'memberful_wp_endpoint_filter' );
 
 /**
