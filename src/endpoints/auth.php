@@ -14,11 +14,11 @@ class Memberful_Wp_Endpoint_Auth implements Memberful_Wp_Endpoint {
 		return $request_method === 'GET';
 	}
 
-	public function process(array $request_params, array $server_params) {
-		if ( isset( $params['action'] ) && $params['action'] == 'logout' ) {
+	public function process(array $request_params, array $server_params ) {
+		if ( isset( $request_params['action'] ) && $request_params['action'] == 'logout' ) {
 			wp_logout();
 			
-			$redirect_to = $this->after_logout_redirect_url($params);
+			$redirect_to = $this->after_logout_redirect_url($request_params);
 		} else {
 			$credentials = array( 'user_login' => '', 'user_password' => '', 'remember' => true );
 
@@ -27,7 +27,7 @@ class Memberful_Wp_Endpoint_Auth implements Memberful_Wp_Endpoint {
 
 			wp_signon( $credentials, is_ssl() );
 			
-			$redirect_to = $this->after_login_redirect_url($params);
+			$redirect_to = $this->after_login_redirect_url($request_params);
 
 			$this->clear_redirect_cookie();
 		}
