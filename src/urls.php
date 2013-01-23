@@ -22,7 +22,7 @@ function memberful_url( $uri = '', $format = MEMBERFUL_HTML ) {
 }
 
 function memberful_wp_login_url() { 
-	return memberful_wp_plugin_url( 'auth.php' );
+	return memberful_wp_endpoint_url( 'auth' );
 }
 
 function memberful_wp_logout_url() { 
@@ -75,9 +75,7 @@ function memberful_order_completed_url( $order ) {
  * @return string
  */
 function memberful_wp_oauth_callback_url() { 
-	// plugins_url calls dirname() on the second param so we need some chaf for
-	// it to cut off
-	return memberful_wp_plugin_url( 'auth.php' );
+	return memberful_wp_endpoint_url( 'auth' );
 }
 
 /**
@@ -86,9 +84,9 @@ function memberful_wp_oauth_callback_url() {
  * @return string
  */
 function memberful_wp_webhook_url() { 
-	return memberful_wp_plugin_url( 'endpoint.php' );
+	return memberful_wp_endpoint_url( 'webhook' );
 }
 
-function memberful_wp_plugin_url( $path ) { 
-	return plugins_url( $path, MEMBERFUL_DIR.'/memberful-times.php' );
+function memberful_wp_endpoint_url( $endpoint ) { 
+	return add_query_arg( array('memberful_endpoint' => $endpoint), site_url() );
 }

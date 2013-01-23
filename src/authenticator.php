@@ -123,6 +123,12 @@ class Memberful_Authenticator {
 	}
 
 
+	public function hook_into_wordpress() {
+		add_filter( 'authenticate', array( $this, 'init' ), 10, 3 );
+		add_filter( 'authenticate', array( $this, 'relay_errors' ), 50, 3 );
+	}
+
+
 	/**
 	 * login_redirect filter
 	 * Should redirect to where the user came from before he clicked the login button
