@@ -6,14 +6,14 @@
  * Also includes other misc code.
  */
 
-add_filter( 'allowed_redirect_hosts', 'memberful_allowed_hosts' );
+add_filter( 'allowed_redirect_hosts', 'memberful_wp_allowed_hosts' );
 
 /**
  * Adds the Memberful domain to the list of allowed redirect hosts
  * @param array $content A set of websites that can be redirected to
  * @return array The $content plus Memberful domain
  */
-function memberful_allowed_hosts( $content ) { 
+function memberful_wp_allowed_hosts( $content ) { 
 	$site = get_option( 'memberful_site' );
 
 	if ( !empty( $site ) ) { 

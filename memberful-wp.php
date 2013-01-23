@@ -34,7 +34,7 @@ require_once MEMBERFUL_DIR . '/src/activator.php';
 require_once MEMBERFUL_DIR . '/src/shortcodes.php';
 require_once MEMBERFUL_DIR . '/src/widgets.php';
 
-register_activation_hook( __FILE__, 'memberful_activate' );
+register_activation_hook( __FILE__, 'memberful_wp_activate' );
 
 /**
  * Get details about a specific member via the API
