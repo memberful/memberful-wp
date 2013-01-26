@@ -1,6 +1,6 @@
 <?php
 
-add_action( 'pre_get_posts', 'memberful_filter_posts' );
+add_action( 'pre_get_posts', 'memberful_wp_filter_posts' );
 
 /**
  * Determines the set of post IDs that the current user cannot access
@@ -12,7 +12,7 @@ add_action( 'pre_get_posts', 'memberful_filter_posts' );
  *
  * @return array Map of post ID => post ID
  */
-function memberful_user_disallowed_post_ids()
+function memberful_wp_user_disallowed_post_ids()
 {
 	static $ids = NULL;
 
@@ -90,9 +90,9 @@ function memberful_wp_generate_user_specific_acl_from_global_acl( $users_entitie
  *
  * @param WP_Query $query Query to filter
  */
-function memberful_filter_posts( $query )
+function memberful_wp_filter_posts( $query )
 {
-	$disallowed_posts = memberful_user_disallowed_post_ids();
+	$disallowed_posts = memberful_wp_user_disallowed_post_ids();
 
 	$query->set( 'post__not_in', $disallowed_posts );
 
@@ -110,7 +110,7 @@ function memberful_filter_posts( $query )
  *
  * @return array member's products
  */
-function memberful_user_products( $user_id ) {
+function memberful_wp_user_products( $user_id ) {
 	return get_user_meta( $user_id, 'memberful_product', TRUE );
 }
 
@@ -119,7 +119,7 @@ function memberful_user_products( $user_id ) {
  *
  * @return array member's subscriptions
  */
-function memberful_user_subscriptions( $user_id ) {
+function memberful_wp_user_subscriptions( $user_id ) {
 	return get_user_meta( $user_id, 'memberful_subscription', TRUE );
 }
 
@@ -128,9 +128,9 @@ function memberful_user_subscriptions( $user_id ) {
  *
  * @return array current member's products
  */
-function memberful_current_user_products() {
+function memberful_wp_current_user_products() {
 	$current_user = wp_get_current_user();
-	return memberful_user_products( $current_user->ID );
+	return memberful_wp_user_products( $current_user->ID );
 }
 
 /**
@@ -140,8 +140,8 @@ function memberful_current_user_products() {
  * @param array $subscriptions Ids of the subscriptions to restrict access to
  * @return boolean
  */
-function memberful_user_has_subscriptions( $user_id, array $subscriptions ) {
-	$user_subs = memberful_user_subscriptions( $user_id );
+function memberful_wp_user_has_subscriptions( $user_id, array $subscriptions ) {
+	$user_subs = memberful_wp_user_subscriptions( $user_id );
 
 	foreach ( $subscriptions as $subscription ) { 
 		if ( isset( $user_subs[ $subscription ] ) ) {
@@ -155,8 +155,15 @@ function memberful_user_has_subscriptions( $user_id, array $subscriptions ) {
 	return FALSE;
 }
 
-function memberful_user_has_products( $user_id, array $products ) {
-	$user_products = memberful_user_products( $user_id );
+/**
+ * Check that the specified user has at least one of a set of products
+ *
+ * @param int   $user_id  The id of the wordpress user
+ * @param array $products Ids of the products to check the user has
+ * @return boolean
+ */
+function memberful_wp_user_has_products( $user_id, array $products ) {
+	$user_products = memberful_wp_user_products( $user_id );
 
 	foreach ( $products as $product ) { 
 		if ( isset( $user_products[ $product ] ) )
@@ -177,7 +184,7 @@ function has_memberful_subscription( $slug ) {
 
 	$subscriptions = memberful_wp_slugs_to_ids( $slugs );
 
-	return memberful_user_has_subscriptions(
+	return memberful_wp_user_has_subscriptions(
 		wp_get_current_user()->ID,
 		$subscriptions
 	);
@@ -194,7 +201,7 @@ function has_memberful_product( $slug ) {
 
 	$products = memberful_wp_slugs_to_ids( $slugs );
 
-	return memberful_user_has_products(
+	return memberful_wp_user_has_products(
 		wp_get_current_user()->ID,
 		$products
 	);

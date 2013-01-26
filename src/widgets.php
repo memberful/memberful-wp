@@ -82,18 +82,18 @@ class Memberful_WP_Profile_Widget extends WP_Widget {
  *
  * @return void
  */
-function memberful_register_wp_profile_widget() {
+function memberful_wp_register_wp_profile_widget() {
 	register_widget( 'memberful_wp_profile_widget' );
 }
 
-add_action( 'widgets_init', 'memberful_register_wp_profile_widget' );
+add_action( 'widgets_init', 'memberful_wp_register_wp_profile_widget' );
 
 /**
  * Add a stylesheet for the Memberful widget if it is active
  *
  * @return void
  */
-function memberful_add_stylesheet_if_action() {
+function memberful_wp_add_stylesheet_if_action() {
 	// Verify that the widget is active before adding stylesheet
 	if ( ! is_active_widget( false, false, 'memberful_wp_profile_widget' ) )
 		return;
@@ -112,6 +112,6 @@ function memberful_add_stylesheet_if_action() {
 	}
 }
 
-add_action( 'wp_enqueue_scripts', 'memberful_add_stylesheet_if_action' );
+add_action( 'wp_enqueue_scripts', 'memberful_wp_add_stylesheet_if_action' );
 
 endif;

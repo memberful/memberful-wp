@@ -1,10 +1,10 @@
 <?php
 
-add_action( 'add_meta_boxes', 'memberful_add_metabox' );
-add_action( 'save_post', 'myplugin_save_postdata' );
+add_action( 'add_meta_boxes', 'memberful_wp_add_metabox' );
+add_action( 'save_post', 'memberful_wp_save_postdata' );
 
 
-function memberful_metabox_types() { 
+function memberful_wp_metabox_types() { 
 	$types = get_post_types();
 
 	unset( $types['attachment'], $types['revision'], $types['nav_menu_item'] );
@@ -12,21 +12,21 @@ function memberful_metabox_types() {
 	return $types;
 }
 
-function memberful_add_metabox() { 
+function memberful_wp_add_metabox() { 
 	if ( ! get_option('memberful_site', FALSE) )
 		return;
 
-	foreach ( memberful_metabox_types() as $type ) { 
+	foreach ( memberful_wp_metabox_types() as $type ) { 
 		add_meta_box(
 			'memberful_acl',
 			'Memberful: Restrict Access',
-			'memberful_metabox',
+			'memberful_wp_metabox',
 			$type
 		);
 	}
 }
 
-function memberful_metabox( $post ) { 
+function memberful_wp_metabox( $post ) { 
 	wp_nonce_field( plugin_basename( __FILE__ ), 'memberful_nonce' );
 
 	$acl = array();
@@ -36,32 +36,32 @@ function memberful_metabox( $post ) {
 	foreach ( $entities as $entity ) {
 		$acl_manager = new Memberful_Post_ACL( $post->ID, $entity);
 
-		$acl[$entity.'s'] = memberful_metabox_acl_format( $acl_manager->get_acl(), $entity );
+		$acl[$entity.'s'] = memberful_wp_metabox_acl_format( $acl_manager->get_acl(), $entity );
 	}
 
 	memberful_wp_render( 'metabox', $acl);
 }
 
-function memberful_metabox_acl_format( $acl_list, $entity ) { 
+function memberful_wp_metabox_acl_format( $acl_list, $entity ) { 
 	$entities = get_option( 'memberful_'.$entity.'s' );
 
 	foreach ( $entities as $id => $product ) { 
 		$entities[$id]['checked'] = isset( $acl_list[$id] );
 	}
 
-	uasort( $entities, 'memberful_sort_entities_callback' );
+	uasort( $entities, 'memberful_wp_sort_entities_callback' );
 
 	return $entities;
 }
 
-function memberful_sort_entities_callback( $a, $b ) { 
+function memberful_wp_sort_entities_callback( $a, $b ) { 
 	if ( $a['name'] == $b['name'] )
 		return 0;
 
 	return $a['name'] < $b['name'] ? - 1 : 1;
 }
 
-function myplugin_save_postdata( $post_id ) {
+function memberful_wp_save_postdata( $post_id ) {
 	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE )
 	  return;
 
@@ -71,7 +71,7 @@ function myplugin_save_postdata( $post_id ) {
 	if ( ! isset( $_POST['memberful_nonce'] ) || ! wp_verify_nonce( $_POST['memberful_nonce'], plugin_basename( __FILE__ ) ) )
 	  return;
 
-	if ( ! in_array( $_POST['post_type'], memberful_metabox_types() ) )
+	if ( ! in_array( $_POST['post_type'], memberful_wp_metabox_types() ) )
 		return;
 
 	$permission = $_POST['post_type'] === 'page' ? 'edit_page' : 'edit_post';

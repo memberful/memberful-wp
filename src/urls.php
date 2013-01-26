@@ -21,12 +21,12 @@ function memberful_url( $uri = '', $format = MEMBERFUL_HTML ) {
 	return rtrim( get_option( 'memberful_site' ),'/' ).$endpoint;
 }
 
-function memberful_wp_login_url() { 
+function memberful_wp_sign_in_url() { 
 	return memberful_wp_plugin_url( 'auth.php' );
 }
 
-function memberful_wp_logout_url() { 
-	return add_query_arg( 'action', 'logout', memberful_wp_login_url() );
+function memberful_wp_sign_out_url() { 
+	return add_query_arg( 'action', 'logout', memberful_wp_sign_in_url() );
 }
 
 function memberful_activation_url() { 
@@ -37,7 +37,7 @@ function memberful_member_url( $format = MEMBERFUL_HTML ) {
 	return memberful_url( 'member', $format );
 }
 
-function memberful_signout_url() { 
+function memberful_sign_out_url() { 
 	return memberful_url( 'auth/sign_out' );
 }
 
@@ -57,7 +57,7 @@ function memberful_admin_product_url( $product_id, $format = MEMBERFUL_HTML ) {
 	return memberful_url( 'admin/products/'.( int) $product_id, $format );
 }
 
-function memberful_signin_url() { 
+function memberful_sign_in_url() { 
 	return memberful_url( 'auth/sign_in' );
 }
 

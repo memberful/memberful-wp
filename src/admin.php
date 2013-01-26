@@ -3,16 +3,16 @@
 require_once MEMBERFUL_DIR . '/src/options.php';
 require_once MEMBERFUL_DIR . '/src/metabox.php';
 
-add_action( 'admin_menu', 'memberful_wp_menu' );
-add_action( 'admin_init', 'memberful_wp_register_options' );
-add_action( 'admin_init', 'memberful_wp_activation_redirect' );
-add_action( 'admin_enqueue_scripts', 'memberful_admin_enqueue_scripts' );
-add_action( 'admin_head', 'memberful_add_icon' );
+add_action( 'admin_menu',            'memberful_wp_menu' );
+add_action( 'admin_init',            'memberful_wp_register_options' );
+add_action( 'admin_init',            'memberful_wp_activation_redirect' );
+add_action( 'admin_enqueue_scripts', 'memberful_wp_admin_enqueue_scripts' );
+add_action( 'admin_head',            'memberful_wp_add_icon' );
 
 /**
  * Activates the plugin, runs DB migrations as part of the process
  */
-function memberful_activate() { 
+function memberful_wp_plugin_activate() { 
 	global $wpdb;
 
 	$columns = $wpdb->get_results( 'SHOW COLUMNS FROM `'.$wpdb->users.'` WHERE `Field` LIKE "memberful_%"' );
@@ -80,7 +80,7 @@ function memberful_wp_menu() {
  * Enqueues the Memberful admin screen CSS, only on the settings page.
  * Hooked on admin_enqueue_scripts.
  */
-function memberful_admin_enqueue_scripts() { 
+function memberful_wp_admin_enqueue_scripts() { 
 	$screen = get_current_screen();
 
 	if ( strpos( 'memberful', $screen->id ) !== null ) {
@@ -94,7 +94,7 @@ function memberful_admin_enqueue_scripts() {
 /**
  * Adds CSS that applies a menu icon to the memberful menu.
  */
-function memberful_add_icon() {
+function memberful_wp_add_icon() {
 ?>
 	<style type="text/css" media="screen">
 		#toplevel_page_memberful_options .wp-menu-image {
