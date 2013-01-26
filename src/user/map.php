@@ -78,7 +78,8 @@ class Memberful_User_Map {
 	 * If no such user exists then NULL is returned
 	 *
 	 * @param  StdClass $member The member to map from
-	 * @return int The ID of the wordpress user this member maps to
+	 * @return array            First element is the id of the user, the second is a bool indicating
+	 *                          whether we found this user in the map, or whether we found them by their email address
 	 */
 	private function find_user( $member ) { 
 		global $wpdb;
