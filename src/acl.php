@@ -19,13 +19,15 @@ function memberful_wp_user_disallowed_post_ids()
 	if ( $ids !== NULL )
 		return $ids;
 
+	$user_id = wp_get_current_user()->ID;
+
 	$acl                     = get_option( 'memberful_acl', array() );
 	$global_product_acl      = isset( $acl['product'] ) ? $acl['product'] : array();
 	$global_subscription_acl = isset( $acl['subscription'] ) ? $acl['subscription'] : array();
 
 	// Items the user has access to
-	$user_products = get_user_meta( wp_get_current_user()->ID, 'memberful_products', TRUE );
-	$user_subs     = get_user_meta( wp_get_current_user()->ID, 'memberful_subscriptions', TRUE );
+	$user_products = memberful_wp_user_products( $user_id );
+	$user_subs     = memberful_wp_user_subscriptions( $user_id );
 
 	if ( ! empty( $user_subs ) )
 		$user_subs     = array_filter( $user_subs, 'memberful_wp_filter_active_subscriptions' );
