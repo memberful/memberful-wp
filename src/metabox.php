@@ -68,7 +68,7 @@ function memberful_wp_save_postdata( $post_id ) {
 	// Verify this came from the our screen and with proper authorization,
 	// because save_post can be triggered at other times
 
-	if ( ! isset( $_POST['memberful_nonce'] ) || ! wp_verify_nonce( $_POST['memberful_nonce'], plugin_basename( __FILE__ ) ) )
+	if ( ! memberful_wp_valid_nonce( plugin_basename( __FILE__ ) ) )
 	  return;
 
 	if ( ! in_array( $_POST['post_type'], memberful_wp_metabox_types() ) )

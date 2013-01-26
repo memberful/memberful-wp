@@ -16,7 +16,7 @@
 					<textarea placeholder="<?php echo esc_attr( __( 'Paste your WordPress registration key here...', 'memberful' ) ); ?>" name="activation_code"></textarea>
 					<button class="button button-primary button-large"><?php _e( 'Connect to Memberful', 'memberful' ); ?></button>
 					<input type="hidden" name="action" value="register" />
-					<?php wp_nonce_field( 'memberful_register' ); ?>
+					<?php memberful_wp_nonce_field( 'memberful_setup' ); ?>
 				</fieldset>
 			</form>
 		</div>

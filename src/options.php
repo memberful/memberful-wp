@@ -47,6 +47,7 @@ function memberful_wp_register() {
  * Resets the plugin to its default state
  */
 function memberful_wp_reset() { 
+
 	foreach ( memberful_wp_all_options() as $option => $default ) {
 		update_option( $option, $default );
 	}
@@ -59,22 +60,27 @@ function memberful_wp_reset() {
  * Displays the memberful options page
  */
 function memberful_wp_options() { 
-	if ( isset( $_POST['manual_sync'] ) ) {
-		if ( is_wp_error( $error = memberful_wp_sync_products() ) ) {
-			var_dump($error);
-			die('Could not sync products');
+	if ( ! empty( $_POST ) ) {
+		if ( ! memberful_wp_valid_nonce( 'memberful_setup' ) )
+		  return;
+
+		if ( isset( $_POST['manual_sync'] ) ) {
+			if ( is_wp_error( $error = memberful_wp_sync_products() ) ) {
+				var_dump($error);
+				die('Could not sync products');
+			}
+
+			if ( is_wp_error( $error = memberful_wp_sync_subscriptions() ) ) {
+				var_dump($error);
+				die('Could not sync subscriptions');
+			}
+
+			return wp_redirect( admin_url( 'admin.php?page=memberful_options' ) );
 		}
 
-		if ( is_wp_error( $error = memberful_wp_sync_subscriptions() ) ) {
-			var_dump($error);
-			die('Could not sync subscriptions');
+		if ( isset( $_POST['reset_plugin'] ) ) {
+			return memberful_wp_reset();
 		}
-
-		return wp_redirect( admin_url( 'admin.php?page=memberful_options' ) );
-	}
-
-	if ( isset( $_POST['reset_plugin'] ) ) {
-		return memberful_wp_reset();
 	}
 
 	if ( ! get_option( 'memberful_client_id' ) ) {

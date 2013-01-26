@@ -7,6 +7,7 @@
 		<h2><?php printf( __( 'Syncing %d products and %d subscriptions.', 'memberful' ), count( $products ), count( $subscriptions ) ); ?></h2>
 		<p><?php printf( __( '<a href="%s">Sign in to your Memberful account</a> to manage products, subscriptions, members, and orders.' ), memberful_url( 'admin' ) ) ?></p>
 		<form method="POST" action="<?php echo admin_url('admin.php?page=memberful_options&noheader=true'); ?>">
+			<?php memberful_wp_nonce_field( 'memberful_setup' ); ?> 
 			<button type="submit" name="manual_sync" class="button action"><?php _e( 'Run manual sync', 'memberful' ); ?></button>
 			<button type="submit" name="reset_plugin" class="button memberful-red-button action"><?php _e( 'Disconnect', 'memberful' ); ?></button>
 		</form>
