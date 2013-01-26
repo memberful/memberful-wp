@@ -90,11 +90,17 @@ function memberful_wp_generate_user_specific_acl_from_global_acl( $users_entitie
  *
  * @param WP_Query $query Query to filter
  */
-function memberful_wp_filter_posts( $query )
-{
-	$disallowed_posts = memberful_wp_user_disallowed_post_ids();
+function memberful_wp_filter_posts( $query ) {
+	if ( current_user_can( 'publish_posts' ) )
+		return;
 
-	$query->set( 'post__not_in', $disallowed_posts );
+	// Merge the disallowed posts with the current post__not_in
+	$disallowed_posts     = memberful_user_disallowed_post_ids();
+	$current_post__not_in = (array) $query->get( 'post__not_in' );
+	$post__not_in         = array_merge( $disallowed_posts, $current_post__not_in );
+	$post__not_in         = array_unique( $post__not_in ); // Remove duplicates
+
+	$query->set( 'post__not_in', $post__not_in );
 
 	foreach( array('p', 'page_id') as $parameter ) {
 		if ( isset( $disallowed_posts[ $query->get( $parameter ) ] ) ) {
