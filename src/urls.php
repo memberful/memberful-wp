@@ -26,7 +26,7 @@ function memberful_wp_sign_in_url() {
 }
 
 function memberful_wp_sign_out_url() { 
-	return add_query_arg( 'action', 'logout', memberful_wp_sign_in_url() );
+	return memberful_sign_out_url();
 }
 
 function memberful_activation_url() { 
@@ -67,6 +67,11 @@ function memberful_wrap_api_token( $url ) {
 
 function memberful_order_completed_url( $order ) { 
 	return add_query_arg( 'id', $order, memberful_url( 'orders/completed' ) );
+}
+
+
+function memberful_wp_auth_sign_out_url() {
+	return add_query_arg( 'action', 'logout', memberful_wp_sign_in_url() );
 }
 
 /**
