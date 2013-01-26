@@ -16,9 +16,6 @@ function memberful_wp_user_disallowed_post_ids()
 {
 	static $ids = NULL;
 
-	if ( is_admin() )
-		return array();
-
 	if ( $ids !== NULL )
 		return $ids;
 
