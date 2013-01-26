@@ -1,6 +1,7 @@
 <?php
 
 abstract class Memberful_Wp_User_Entity { 
+
 	static public function sync($user_id, $entities) {
 		$syncer = new static($user_id);
 		return $syncer->set($entities);
@@ -32,50 +33,27 @@ abstract class Memberful_Wp_User_Entity {
 	 * @param array $entities
 	 */
 	public function add( array $entities ) {
-		$ids = array();
+		$current = $this->get();
 
 		foreach ( $entities as $entity ) {
-			$ids[$entity->id] = $this->format($entity);
+			$data = $this->format($entity);
+
+			$current[$data['id']] = $data;
 		}
 
-		return $this->addIds( $ids );
-	}
-
-	/**
-	 * Add a set of entity ids to the entities the user has
-	 *
-	 * @param array $entity_ids
-	 */
-	public function addIds( array $entity_ids ) {
-		$entities = $this->get();
-
-		foreach ( $entity_ids as $entity_id ) {
-			$entities[$entity_id] = $entity_id;
-		}
-
-		$this->setIds($entities);
+		update_user_meta( $this->user_id, $this->meta_field(), $current );
 	}
 
 	public function set( array $entities ) {
-		$ids = array();
+		$new_purchasables = array();
 		
 		foreach ( $entities as $entity) {
 			$data = $this->format($entity);
 
-			$ids[$data['id']] = $data;
+			$new_purchasables[$data['id']] = $data;
 		}
 
-		return $this->setIds($ids);
-	}
-
-	protected function setIds( array $entities ) {
-		$new_ids = array();
-
-		foreach ( $entities as $entity ) {
-			$new_ids[$entity['id']] = $entity;
-		}
-
-		update_user_meta( $this->user_id, $this->meta_field(), $new_ids );
+		update_user_meta( $this->user_id, $this->meta_field(), $new_purchasables );
 	}
 
 	protected function meta_field() {
