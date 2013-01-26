@@ -94,7 +94,7 @@ function memberful_wp_filter_posts( $query ) {
 		return;
 
 	// Merge the disallowed posts with the current post__not_in
-	$disallowed_posts     = memberful_user_disallowed_post_ids();
+	$disallowed_posts     = memberful_wp_user_disallowed_post_ids();
 	$current_post__not_in = (array) $query->get( 'post__not_in' );
 	$post__not_in         = array_merge( $disallowed_posts, $current_post__not_in );
 	$post__not_in         = array_unique( $post__not_in ); // Remove duplicates
