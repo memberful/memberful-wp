@@ -46,7 +46,7 @@ class Memberful_Wp_Endpoint_Auth implements Memberful_Wp_Endpoint {
 		if ( isset( $_COOKIE['memberful_redirect'] ) )
 			return $_COOKIE['memberful_redirect'];
 
-		return memberful_member_url();
+		return memberful_account_url();
 	}
 
 	private function clear_redirect_cookie() {

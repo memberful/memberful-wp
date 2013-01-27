@@ -5,10 +5,10 @@
 	<div class="memberful-profile-info">
 		<div class="memberful-profile-name"><?php echo wp_get_current_user()->display_name;  ?></div>
 		<div class="memberful-profile-links">
-			<a href="<?php echo memberful_member_url(); ?>" class="memberful-account-link"><?php echo __( 'Account' ); ?></a> |
-			<a href="<?php echo memberful_wp_sign_out_url(); ?>" class="memberful-sign-out-link"><?php echo __( 'Sign out' ); ?></a>
+			<a href="<?php echo memberful_account_url(); ?>" class="memberful-account-link"><?php echo __( 'Account' ); ?></a> |
+			<a href="<?php echo memberful_sign_out_url(); ?>" class="memberful-sign-out-link"><?php echo __( 'Sign out' ); ?></a>
 		</div>
 	</div>
 <?php else: ?>
-	<a href="<?php echo memberful_wp_sign_in_url(); ?>"><?php echo __( 'Sign in' ); ?></a>
+	<a href="<?php echo memberful_sign_in_url(); ?>"><?php echo __( 'Sign in' ); ?></a>
 <?php endif; ?>

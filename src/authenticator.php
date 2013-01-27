@@ -210,7 +210,7 @@ class Memberful_Authenticator {
 	 * @return array
 	 */
 	public function get_member_data( $access_token ) {
-		$url = memberful_member_url( MEMBERFUL_JSON );
+		$url = memberful_account_url( MEMBERFUL_JSON );
 
 		$response = wp_remote_get(
 			add_query_arg( 'access_token', $access_token, $url ),
