@@ -115,7 +115,7 @@ class Memberful_User_Map {
 		global $wpdb;
 
 		$data    = array();
-		$columns = $this->restrict_columns( array_values( $pairs ) );
+		$columns = $this->restrict_columns( array_keys( $pairs ) );
 
 		$update = 'UPDATE `'.self::table().'` SET ';
 
