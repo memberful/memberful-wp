@@ -17,7 +17,7 @@ class Memberful_WP_Profile_Widget extends WP_Widget {
 			'memberful_wp_profile_widget',
 			'Memberful Profile',
 			array(
-				'description' => __( 'Display Memberful profile information', 'memberful' ),
+				'description' => __( 'Display Memberful profile information.', 'memberful' ),
 			)
 		);
 	}
