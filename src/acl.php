@@ -179,35 +179,44 @@ function memberful_wp_user_has_products( $user_id, array $products ) {
 }
 
 /**
+ * Extracts ids, and a user ID from the arguments passed to one of the
+ * has_memberful_* helpers.
+ *
+ * @param array $args ALL arguments passed to the original helper
+ * @return array      Array of IDs extract from the slugs as first element, user id as second
+ */
+function memberful_wp_extract_slug_ids_and_user($args) {
+	$slugs = (array) $args[0];
+	$user  = $args[1];
+
+	if ( $user === NULL )
+		$user = wp_get_current_user()->ID;
+
+	return array( memberful_wp_slugs_to_ids( $slugs ), $user );
+}
+
+/**
  * Check that the current member has at least one of the specified subscriptions
  *
- * @param string $slug Slug of the subscription the member should have
+ * @param string|array $slug    Slug of the subscription the user should have. Can pass an array of slugs
+ * @param int          $user_id ID of the user who should have the subscription, defaults to current user
  * @return bool
  */
-function has_memberful_subscription( $slug ) {
-	$slugs = is_array( $slug ) ? $slug : func_get_args();
+function has_memberful_subscription( $slug, $user_id = NULL ) {
+	list( $subscriptions, $user_id ) = memberful_wp_extract_slug_ids_and_user( func_get_args() );
 
-	$subscriptions = memberful_wp_slugs_to_ids( $slugs );
-
-	return memberful_wp_user_has_subscriptions(
-		wp_get_current_user()->ID,
-		$subscriptions
-	);
+	return memberful_wp_user_has_subscriptions( $user_id, $subscriptions );
 }
 
 /**
  * Check that the current member has at least one of the specified products
  *
- * @param string $slug Slug of the product the member should have
+ * @param string|array $slug    Slug of the product the user should have. Can pass an array of slugs
+ * @param int          $user_id ID of the user who should have the product, defaults to current user
  * @return bool
  */
-function has_memberful_product( $slug ) {
-	$slugs = is_array( $slug ) ? $slug : func_get_args();
+function has_memberful_product( $slug, $user_id = NULL ) {
+	list( $products, $user_id ) = memberful_wp_extract_slug_ids_and_user( func_get_args() );
 
-	$products = memberful_wp_slugs_to_ids( $slugs );
-
-	return memberful_wp_user_has_products(
-		wp_get_current_user()->ID,
-		$products
-	);
+	return memberful_wp_user_has_products( $user_id, $products );
 }
