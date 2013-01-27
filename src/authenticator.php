@@ -9,18 +9,18 @@ require_once MEMBERFUL_DIR.'/src/user/subscriptions.php';
  *
  * @return boolean
  */
-function memberful_wp_oauth_enabled() { 
+function memberful_wp_oauth_enabled() {
 	return TRUE;
 }
 
-class Memberful_Authenticator { 
+class Memberful_Authenticator {
 	/**
 	 * Gets the url for the specified action at the member OAuth endpoint
 	 *
 	 * @param string $action Action to access at endpoint
 	 * @return string URL
 	 */
-	static public function oauth_member_url( $action = '' ) { 
+	static public function oauth_member_url( $action = '' ) {
 		return memberful_url( 'oauth/'.$action );
 	}
 
@@ -30,7 +30,7 @@ class Memberful_Authenticator {
 	 *
 	 * @return boolean
 	 */
-	static public function audit_password_reset( $allowed, $user_id ) { 
+	static public function audit_password_reset( $allowed, $user_id ) {
 		$user = new WP_User( $user_id );
 
 		return $user->has_cap( 'subscriber' ) ? FALSE : $allowed;
@@ -41,7 +41,7 @@ class Memberful_Authenticator {
 	 *
 	 * @return string
 	 */
-	static function oauth_auth_url() { 
+	static function oauth_auth_url() {
 		$params = array(
 			'response_type' => 'code',
 			'client_id'     => get_option( 'memberful_client_id' ),
@@ -55,12 +55,12 @@ class Memberful_Authenticator {
 	 */
 	protected $_wp_error = NULL;
 
-	protected function _error( $code, $message = NULL ) { 
+	protected function _error( $code, $message = NULL ) {
 		if ( $message === NULL ) {
-			$message = 'Could not authenticate against memberful';
+			$message = 'Could not authenticate with Memberful.';
 		}
 
-		$message .= '<br/>Please contact site admin';
+		$message .= '<br/>Please contact site admin.';
 
 		return $this->_wp_error = new WP_Error( $code, $message );
 	}
@@ -74,14 +74,14 @@ class Memberful_Authenticator {
 	 * @return WP_User The user to be logged in or NULL if user couldn't be
 	 * determined
 	 */
-	public function init( $user, $username, $password ) { 
+	public function init( $user, $username, $password ) {
 		// If another authentication system has handled this request
-		if ( $user instanceof WP_User || ! memberful_wp_oauth_enabled() ) { 
+		if ( $user instanceof WP_User || ! memberful_wp_oauth_enabled() ) {
 			return $user;
 		}
 
 		// This is the OAuth response
-		if ( isset( $_GET['code'] ) ) { 
+		if ( isset( $_GET['code'] ) ) {
 			$tokens = $this->get_oauth_tokens( $_GET['code'] );
 
 			if ( is_wp_error( $tokens ) )
@@ -133,7 +133,7 @@ class Memberful_Authenticator {
 	 * login_redirect filter
 	 * Should redirect to where the user came from before he clicked the login button
 	 */
-	public function redirect( $redirect, $request_redirect, $user ) { 
+	public function redirect( $redirect, $request_redirect, $user ) {
 		// Not enabled so return default
 		if ( ! memberful_wp_oauth_enabled() ) {
 			return $redirect;
@@ -152,9 +152,9 @@ class Memberful_Authenticator {
 	 * @param mixed $user
 	 * @return mixed
 	 */
-	public function relay_errors( $user ) { 
+	public function relay_errors( $user ) {
 		if ( $user instanceof WP_Error ) {
-			if ( in_array( $user->get_error_code(), array( 'empty_username', 'empty_password' ) ) ) { 
+			if ( in_array( $user->get_error_code(), array( 'empty_username', 'empty_password' ) ) ) {
 				return $this->_wp_error;
 			}
 		}
@@ -168,7 +168,7 @@ class Memberful_Authenticator {
 	 * @param string $auth_code The authorization code returned from OAuth endpoint
 	 * @return StdObject Access token and Refresh token
 	 */
-	public function get_oauth_tokens( $auth_code ) { 
+	public function get_oauth_tokens( $auth_code ) {
 		$params = array(
 			'client_id'     => get_option( 'memberful_client_id' ),
 			'client_secret' => get_option( 'memberful_client_secret' ),
@@ -192,7 +192,7 @@ class Memberful_Authenticator {
 		$body = json_decode( $response['body'] );
 		$code = $response['response']['code'];
 
-		if ( $code != 200 OR $body === NULL OR empty( $body->access_token ) ) { 
+		if ( $code != 200 OR $body === NULL OR empty( $body->access_token ) ) {
 			return $this->_error(
 				'oauth_access_fail',
 				'Could not get access token from Memberful'
@@ -209,7 +209,7 @@ class Memberful_Authenticator {
 	 * about the member
 	 * @return array
 	 */
-	public function get_member_data( $access_token ) { 
+	public function get_member_data( $access_token ) {
 		$url = memberful_member_url( MEMBERFUL_JSON );
 
 		$response = wp_remote_get(
@@ -219,7 +219,7 @@ class Memberful_Authenticator {
 
 		$body = json_decode( $response['body'] );
 
-		if ( $response['response']['code'] != 200 OR $body === NULL ) { 
+		if ( $response['response']['code'] != 200 OR $body === NULL ) {
 			die('Could not fetch your data from memberful');
 			return $this->_error( 'memberful_data_error', 'Could not fetch your data from Memberful.' );
 		}

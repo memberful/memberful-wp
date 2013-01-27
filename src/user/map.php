@@ -7,8 +7,8 @@
  * details provided.
  *
  */
-class Memberful_User_Map { 
-	static public function table() { 
+class Memberful_User_Map {
+	static public function table() {
 		global $wpdb;
 
 		return $wpdb->prefix.'memberful_mapping';
@@ -21,8 +21,8 @@ class Memberful_User_Map {
 	 * @param StdObject $details       Details about the member
 	 * @return WP_User
 	 */
-	public function map( $member, array $mapping = array() ) { 
-		list($user_id, $user_mapping_exists) = $this->find_user( $member );
+	public function map( $member, array $mapping = array() ) {
+		list( $user_id, $user_mapping_exists ) = $this->find_user( $member );
 
 		$user_exists = $user_id !== NULL;
 
@@ -31,7 +31,7 @@ class Memberful_User_Map {
 		if ( ! $user_mapping_exists ) {
 			$this->reserve_mapping(
 				$member,
-				( $user_exists ? array('wp_user_id' => $user_id) : array() )
+				( $user_exists ? array( 'wp_user_id' => $user_id ) : array() )
 			);
 		}
 
@@ -48,14 +48,14 @@ class Memberful_User_Map {
 
 		$user_data = array();
 
-		if ( ! $user_exists ) { 
+		if ( ! $user_exists ) {
 			$user_data['user_pass'] = wp_generate_password();
 			$user_data['show_admin_bar_frontend'] = FALSE;
-		} else { 
+		} else {
 			$user_data['ID'] = $user_id;
 		}
 
-		foreach ( $field_map as $key => $value ) { 
+		foreach ( $field_map as $key => $value ) {
 			$user_data[$key] = $member->$value;
 		}
 
@@ -81,18 +81,18 @@ class Memberful_User_Map {
 	 * @return array            First element is the id of the user, the second is a bool indicating
 	 *                          whether we found this user in the map, or whether we found them by their email address
 	 */
-	private function find_user( $member ) { 
+	private function find_user( $member ) {
 		global $wpdb;
 
 		$user_id        = NULL;
 		$mapping_exists = FALSE;
 
-		$sql = 
+		$sql =
 			'SELECT `wp_users`.`ID`, `mem`.`member_id` '.
 			'FROM `'.self::table().'` AS `mem`'.
 			'LEFT OUTER JOIN `'.$wpdb->users.'` AS `wp_users` ON (`mem`.`wp_user_id` = `wp_users`.`ID`) '.
 			'WHERE `mem`.`member_id` = %d';
-			
+
 		$mapping = $wpdb->get_row( $wpdb->prepare( $sql, $member->id ) );
 
 		if ( ! empty( $mapping ) ) {
@@ -104,21 +104,21 @@ class Memberful_User_Map {
 			$user_id = $user === FALSE ? NULL : $user->ID;
 		}
 
-		return array($user_id, $mapping_exists);
+		return array( $user_id, $mapping_exists );
 	}
 
 	/**
 	 * Update information about the user in the mapping table
 	 *
 	 */
-	public function update_mapping( $member, array $pairs ) { 
+	public function update_mapping( $member, array $pairs ) {
 		global $wpdb;
 
 		$data  = array();
 
 		$update = 'UPDATE `'.self::table().'` SET ';
 
-		foreach ( $pairs as $key => $value ) { 
+		foreach ( $pairs as $key => $value ) {
 			$update .= '`'.$key.'` = %s, ';
 			$data[]  = $value;
 		}
@@ -137,27 +137,27 @@ class Memberful_User_Map {
 	 * We do this to prevent problems where webhooks and oauth login attempt to create
 	 * a user simultaneously.
 	 */
-	private function reserve_mapping( $member, array $params = array() ) { 
+	private function reserve_mapping( $member, array $params = array() ) {
 		global $wpdb;
 
-		$columns = array_merge(array('member_id'), array_keys($params));
-		$column_list = '`'.implode('`, `', $columns).'`';
+		$columns = array_merge( array( 'member_id' ), array_keys( $params ) );
+		$column_list = '`'.implode( '`, `', $columns ).'`';
 
-		$values         = array($member->id);
-		$value_sub_list = array('%d');
+		$values         = array( $member->id );
+		$value_sub_list = array( '%d' );
 
 		foreach ( $params as $param ) {
 			$values[]         = $param;
 			$value_sub_list[] = '%s';
 		}
 
-		$value_list = implode(', ', $values);
+		$value_list = implode( ', ', $values );
 
-		$insert = 'INSERT INTO `'.self::table().'` ('.$column_list.') VALUES ('.$value_list.')';
+		$insert = 'INSERT INTO `'.self::table().'` ( '.$column_list.' ) VALUES ( '.$value_list.' )';
 
-		$result = $wpdb->query( $wpdb->prepare( $insert, $values) );
+		$result = $wpdb->query( $wpdb->prepare( $insert, $values ) );
 
-		if ( is_wp_error( $result ) ) { 
+		if ( is_wp_error( $result ) ) {
 			echo 'Could not reserve mapping:';
 			var_dump( $result );
 			die();

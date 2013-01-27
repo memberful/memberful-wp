@@ -4,7 +4,7 @@ add_action( 'add_meta_boxes', 'memberful_wp_add_metabox' );
 add_action( 'save_post', 'memberful_wp_save_postdata' );
 
 
-function memberful_wp_metabox_types() { 
+function memberful_wp_metabox_types() {
 	$types = get_post_types();
 
 	unset( $types['attachment'], $types['revision'], $types['nav_menu_item'] );
@@ -12,11 +12,11 @@ function memberful_wp_metabox_types() {
 	return $types;
 }
 
-function memberful_wp_add_metabox() { 
+function memberful_wp_add_metabox() {
 	if ( ! get_option('memberful_site', FALSE) )
 		return;
 
-	foreach ( memberful_wp_metabox_types() as $type ) { 
+	foreach ( memberful_wp_metabox_types() as $type ) {
 		add_meta_box(
 			'memberful_acl',
 			'Memberful: Restrict Access',
@@ -26,7 +26,7 @@ function memberful_wp_add_metabox() {
 	}
 }
 
-function memberful_wp_metabox( $post ) { 
+function memberful_wp_metabox( $post ) {
 	wp_nonce_field( plugin_basename( __FILE__ ), 'memberful_nonce' );
 
 	$acl = array();
@@ -34,18 +34,18 @@ function memberful_wp_metabox( $post ) {
 	$entities = array( Memberful_Post_ACL::PRODUCT, Memberful_Post_ACL::SUBSCRIPTION );
 
 	foreach ( $entities as $entity ) {
-		$acl_manager = new Memberful_Post_ACL( $post->ID, $entity);
+		$acl_manager = new Memberful_Post_ACL( $post->ID, $entity );
 
 		$acl[$entity.'s'] = memberful_wp_metabox_acl_format( $acl_manager->get_acl(), $entity );
 	}
 
-	memberful_wp_render( 'metabox', $acl);
+	memberful_wp_render( 'metabox', $acl );
 }
 
-function memberful_wp_metabox_acl_format( $acl_list, $entity ) { 
+function memberful_wp_metabox_acl_format( $acl_list, $entity ) {
 	$entities = get_option( 'memberful_'.$entity.'s' );
 
-	foreach ( $entities as $id => $product ) { 
+	foreach ( $entities as $id => $product ) {
 		$entities[$id]['checked'] = isset( $acl_list[$id] );
 	}
 
@@ -54,7 +54,7 @@ function memberful_wp_metabox_acl_format( $acl_list, $entity ) {
 	return $entities;
 }
 
-function memberful_wp_sort_entities_callback( $a, $b ) { 
+function memberful_wp_sort_entities_callback( $a, $b ) {
 	if ( $a['name'] == $b['name'] )
 		return 0;
 
@@ -80,7 +80,7 @@ function memberful_wp_save_postdata( $post_id ) {
 		return;
 
 	// Make sure we're using the actual post id and not a revision id
-	if ( $parent_id = wp_is_post_revision( $post_id ) ) { 
+	if ( $parent_id = wp_is_post_revision( $post_id ) ) {
 		$post_id = $parent_id;
 	}
 
@@ -101,7 +101,7 @@ function memberful_wp_save_postdata( $post_id ) {
 /**
  * Class for managing ACLs on a post
  *
- * Essentially this class creates two acl maps, one at the post level, and one at 
+ * Essentially this class creates two acl maps, one at the post level, and one at
  * the global level.
  *
  * The post level map is simply one of $entity_id => $entity_id (where $entity_id
@@ -116,19 +116,19 @@ function memberful_wp_save_postdata( $post_id ) {
  * We then use this as a post id exclusion
  *
  */
-class Memberful_Post_ACL { 
+class Memberful_Post_ACL {
 	const PRODUCT = 'product';
 	const SUBSCRIPTION = 'subscription';
 
 	protected $_id;
 	protected $_entity;
 
-	public function __construct( $post_id, $entity ) { 
+	public function __construct( $post_id, $entity ) {
 		$this->_id     = (int) $post_id;
 		$this->_entity = $entity;
 	}
 
-	public function get_acl() { 
+	public function get_acl() {
 		$restricted_acl = get_post_meta( $this->_id, 'memberful_acl', TRUE );
 
 		return empty( $restricted_acl[$this->_entity] ) ? array() : $restricted_acl[$this->_entity];
@@ -139,7 +139,7 @@ class Memberful_Post_ACL {
 	 *
 	 * @param array $entity_ids An array of numerical ids, indicating the required enitities
 	 */
-	public function set_acl( array $entity_ids ) { 
+	public function set_acl( array $entity_ids ) {
 		$old_acl = $this->get_acl();
 		$new_acl = array();
 
@@ -155,7 +155,7 @@ class Memberful_Post_ACL {
 		$this->_update_global_acl( $acl_map );
 	}
 
-	protected function _load_global_acl() { 
+	protected function _load_global_acl() {
 		$acl_map = get_option( 'memberful_acl', array() );
 
 		if ( ! isset( $acl_map[$this->_entity] ) )
@@ -173,8 +173,8 @@ class Memberful_Post_ACL {
 	}
 
 
-	protected function _update_post_acl( $new_acl ) { 
-		$current_acl = get_post_meta( $this->_id, 'memberful_acl', TRUE);
+	protected function _update_post_acl( $new_acl ) {
+		$current_acl = get_post_meta( $this->_id, 'memberful_acl', TRUE );
 		$current_acl[$this->_entity] = $new_acl;
 		update_post_meta( $this->_id, 'memberful_acl', $current_acl );
 	}
@@ -183,7 +183,7 @@ class Memberful_Post_ACL {
 	 * Remove any entities that were unchecked in the metabox from the global ACL map
 	 *
 	 */
-	protected function _remove_deleted_entities( array $map, array $old_acl, array $new_acl ) { 
+	protected function _remove_deleted_entities( array $map, array $old_acl, array $new_acl ) {
 		if ( empty( $map ) || empty( $old_acl ) )
 			return $map;
 
@@ -192,7 +192,7 @@ class Memberful_Post_ACL {
 		if ( empty( $deleted ) )
 			return $map;
 
-		foreach ( $deleted as $product ) { 
+		foreach ( $deleted as $product ) {
 			unset( $map[$product][$this->_id] );
 		}
 
@@ -202,14 +202,14 @@ class Memberful_Post_ACL {
 	/**
 	 * Adds any newly checked entities to the global ACL map
 	 *
-	 * @param array $map The current 
+	 * @param array $map The current
 	 */
-	protected function _add_new_entities( array $map, array $old_acl, array $new_acl ) { 
+	protected function _add_new_entities( array $map, array $old_acl, array $new_acl ) {
 		if ( empty( $new_acl ) )
 			return $map;
 
-		foreach ( $new_acl as $product ) { 
-			if ( ! isset( $map[$product] ) ) { 
+		foreach ( $new_acl as $product ) {
+			if ( ! isset( $map[$product] ) ) {
 				$map[$product] = array();
 			}
 
@@ -219,7 +219,7 @@ class Memberful_Post_ACL {
 		return $map;
 	}
 
-	protected function meta_field() { 
+	protected function meta_field() {
 		return 'memberful_'.$this->_entity;
 	}
 }

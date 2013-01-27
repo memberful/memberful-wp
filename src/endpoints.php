@@ -51,7 +51,7 @@ interface Memberful_Wp_Endpoint {
 	/**
 	 * Allow the endpoint to process the request
 	 */
-	public function process(array $request_params, array $server_params);
+	public function process( array $request_params, array $server_params );
 
 	/**
 	 * Checks if the request method is acceptable for this endpoint
@@ -60,5 +60,5 @@ interface Memberful_Wp_Endpoint {
 	 *
 	 * @return boolean True if request method is acceptable, else false
 	 */
-	public function verify_request($request_method);
+	public function verify_request( $request_method );
 }

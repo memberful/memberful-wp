@@ -32,7 +32,7 @@ function memberful_wp_user_disallowed_post_ids()
 	if ( ! empty( $user_subs ) )
 		$user_subs     = array_filter( $user_subs, 'memberful_wp_filter_active_subscriptions' );
 
-	// Work out the set of posts the user is and isn't allowed to access 
+	// Work out the set of posts the user is and isn't allowed to access
 	$user_product_acl      = memberful_wp_generate_user_specific_acl_from_global_acl( $user_products, $global_product_acl );
 	$user_subscription_acl = memberful_wp_generate_user_specific_acl_from_global_acl( $user_subs, $global_subscription_acl );
 
@@ -46,7 +46,7 @@ function memberful_wp_user_disallowed_post_ids()
 	return $ids = ( empty( $union ) ) ? array() : array_combine( $union, $union );
 }
 
-function memberful_wp_filter_active_subscriptions($subscription) { 
+function memberful_wp_filter_active_subscriptions($subscription) {
 	return $subscription['expires_at'] === FALSE || $subscription['expires_at'] > time();
 }
 
@@ -148,7 +148,7 @@ function memberful_wp_current_user_products() {
 function memberful_wp_user_has_subscriptions( $user_id, array $subscriptions ) {
 	$user_subs = memberful_wp_user_subscriptions( $user_id );
 
-	foreach ( $subscriptions as $subscription ) { 
+	foreach ( $subscriptions as $subscription ) {
 		if ( isset( $user_subs[ $subscription ] ) ) {
 			$user_sub = $user_subs[ $subscription ];
 
@@ -170,7 +170,7 @@ function memberful_wp_user_has_subscriptions( $user_id, array $subscriptions ) {
 function memberful_wp_user_has_products( $user_id, array $products ) {
 	$user_products = memberful_wp_user_products( $user_id );
 
-	foreach ( $products as $product ) { 
+	foreach ( $products as $product ) {
 		if ( isset( $user_products[ $product ] ) )
 			return TRUE;
 	}

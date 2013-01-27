@@ -44,8 +44,8 @@ class Memberful_Wp_Webhook_Ping {
 }
 
 class Memberful_Wp_Ping_Invalid_Digest extends RuntimeException { 
-	public function __construct($expected_digest, $calculated_digest) { 
-		parent::__construct("Expected digest ".$expected_digest." got ".$calculated_digest);
+	public function __construct( $expected_digest, $calculated_digest ) { 
+		parent::__construct( "Expected digest ".$expected_digest." got ".$calculated_digest );
 	}
 }
 
@@ -62,15 +62,15 @@ add_action( 'memberful_event_member_updated', 'memberful_wp_hook_member_updated'
  */
 function memberful_wp_hook_order_created( $data ) { 
 	$mapper = new Memberful_User_Map();
-	$mapper->map($data->order->member);
+	$mapper->map( $data->order->member );
 }
 
 function memberful_wp_hook_member_signup( $data ) { 
 	$mapper = new Memberful_User_Map();
-	$mapper->map($data->member);
+	$mapper->map( $data->member );
 }
 
 function memberful_wp_hook_member_updated( $data ) { 
 	$mapper = new Memberful_User_Map();
-	$mapper->map($data->member);
+	$mapper->map( $data->member );
 }
