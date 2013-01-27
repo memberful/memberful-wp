@@ -9,7 +9,7 @@ function memberful_sign_in_url() {
 }
 
 function memberful_sign_out_url() {
-	return memberful_sign_out_url();
+	return memberful_url( 'auth/sign_out' );
 }
 
 function memberful_activation_url() {
@@ -18,10 +18,6 @@ function memberful_activation_url() {
 
 function memberful_account_url( $format = MEMBERFUL_HTML ) {
 	return memberful_url( 'member', $format );
-}
-
-function memberful_sign_out_url() {
-	return memberful_url( 'auth/sign_out' );
 }
 
 function memberful_admin_member_url( $member_id, $format = MEMBERFUL_HTML ) {
