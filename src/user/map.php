@@ -114,13 +114,14 @@ class Memberful_User_Map {
 	public function update_mapping( $member, array $pairs ) {
 		global $wpdb;
 
-		$data  = array();
+		$data    = array();
+		$columns = $this->restrict_columns( array_values( $pairs ) );
 
 		$update = 'UPDATE `'.self::table().'` SET ';
 
-		foreach ( $pairs as $key => $value ) {
-			$update .= '`'.$key.'` = %s, ';
-			$data[]  = $value;
+		foreach ( $columns as $column ) {
+			$update .= '`'.$column.'` = %s, ';
+			$data[]  = $pairs[$column];
 		}
 
 		$update = substr( $update, 0, -2 );
@@ -140,18 +141,19 @@ class Memberful_User_Map {
 	private function reserve_mapping( $member, array $params = array() ) {
 		global $wpdb;
 
-		$columns = array_merge( array( 'member_id' ), array_keys( $params ) );
+		$columns     = array_merge( array( 'member_id' ), array_keys( $params ) );
+		$columns     = $this->restrict_columns( $columns );
 		$column_list = '`'.implode( '`, `', $columns ).'`';
 
 		$values         = array( $member->id );
 		$value_sub_list = array( '%d' );
 
-		foreach ( $params as $param ) {
-			$values[]         = $param;
+		foreach ( $columns as $column ) {
+			$values[]         = $params[$column];
 			$value_sub_list[] = '%s';
 		}
 
-		$value_list = implode( ', ', $values );
+		$value_list = implode( ', ', $value_sub_list );
 
 		$insert = 'INSERT INTO `'.self::table().'` ( '.$column_list.' ) VALUES ( '.$value_list.' )';
 
@@ -162,5 +164,18 @@ class Memberful_User_Map {
 			var_dump( $result );
 			die();
 		}
+	}
+
+	/**
+	 * Restricts the set of columns that the mapper can change
+	 *
+	 * @param array $columns Set of columns that
+	 * @return array
+	 */
+	private function restrict_columns( array $columns ) {
+		return array_intersect(
+			$columns,
+			array( 'member_id' ,'wp_user_id', 'refresh_token', 'last_sync_at' )
+		);
 	}
 }
