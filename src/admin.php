@@ -6,16 +6,15 @@ require_once MEMBERFUL_DIR . '/src/metabox.php';
 add_action( 'admin_menu',            'memberful_wp_menu' );
 add_action( 'admin_init',            'memberful_wp_register_options' );
 add_action( 'admin_init',            'memberful_wp_activation_redirect' );
+add_action( 'admin_init',            'memberful_wp_plugin_migrate_db' );
 add_action( 'admin_enqueue_scripts', 'memberful_wp_admin_enqueue_scripts' );
 add_action( 'admin_head',            'memberful_wp_add_icon' );
 
 /**
- * Activates the plugin, runs DB migrations as part of the process
+ * Ensures the database is up to date
  */
-function memberful_wp_plugin_activate() {
+function memberful_wp_plugin_migrate_db() {
 	global $wpdb;
-
-	$columns = $wpdb->get_results( 'SHOW COLUMNS FROM `'.$wpdb->users.'` WHERE `Field` LIKE "memberful_%"' );
 
 	if ( get_option( 'memberful_db_version', 0 ) < 1 ) {
 		$result = $wpdb->query(
@@ -31,6 +30,8 @@ function memberful_wp_plugin_activate() {
 			$wpdb->print_error();
 			exit();
 		}
+
+		$columns = $wpdb->get_results( 'SHOW COLUMNS FROM `'.$wpdb->users.'` WHERE `Field` LIKE "memberful_%"' );
 
 		if ( ! empty( $columns ) ) {
 			$wpdb->query(
@@ -50,8 +51,6 @@ function memberful_wp_plugin_activate() {
 
 		update_option( 'memberful_db_version', 1 );
 	}
-
-	add_option( 'memberful_wp_activation_redirect' , true );
 }
 
 /**

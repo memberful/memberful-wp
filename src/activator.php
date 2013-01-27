@@ -73,6 +73,7 @@ class Memberful_Activator {
 		$response_body = wp_remote_retrieve_body( $response );
 
 		if ( 200 !== $response_code OR empty( $response_body ) ) {
+			echo "Could not activate plugin: ";
 			var_dump($response);die();
 			return new WP_Error( 'memberful_activation_fail', 'Memberful returned an invalid response' );
 		}

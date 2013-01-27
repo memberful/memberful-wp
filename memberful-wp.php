@@ -37,6 +37,10 @@ require_once MEMBERFUL_DIR . '/src/endpoints.php';
 
 register_activation_hook( __FILE__, 'memberful_wp_plugin_activate' );
 
+function memberful_wp_plugin_activate() {
+	add_option( 'memberful_wp_activation_redirect' , true );
+}
+
 /**
  * Get details about a specific member via the API
  *
@@ -49,7 +53,9 @@ function memberful_api_member( $member_id ) {
 	$response_code = (int) wp_remote_retrieve_response_code( $response );
 	$response_body = wp_remote_retrieve_body( $response );
 
+
 	if ( is_wp_error( $response ) ) {
+		echo "Couldn't contact api: ";
 		var_dump( $response, $url );
 		die();
 	}
