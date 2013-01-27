@@ -149,6 +149,9 @@ class Memberful_User_Map {
 		$value_sub_list = array( '%d' );
 
 		foreach ( $columns as $column ) {
+			if ( $column === 'member_id' )
+				continue;
+
 			$values[]         = $params[$column];
 			$value_sub_list[] = '%s';
 		}
