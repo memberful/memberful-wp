@@ -1,8 +1,8 @@
 <?php
 
-abstract class Memberful_Wp_User_Entity { 
+abstract class Memberful_Wp_User_Entity {
 
-	static public function sync($user_id, $entities) {
+	static public function sync( $user_id, $entities ) {
 		$syncer = new static($user_id);
 		return $syncer->set($entities);
 	}
@@ -36,7 +36,7 @@ abstract class Memberful_Wp_User_Entity {
 		$current = $this->get();
 
 		foreach ( $entities as $entity ) {
-			$data = $this->format($entity);
+			$data = $this->format( $entity );
 
 			$current[$data['id']] = $data;
 		}
@@ -46,9 +46,9 @@ abstract class Memberful_Wp_User_Entity {
 
 	public function set( array $entities ) {
 		$new_purchasables = array();
-		
-		foreach ( $entities as $entity) {
-			$data = $this->format($entity);
+
+		foreach ( $entities as $entity ) {
+			$data = $this->format( $entity );
 
 			$new_purchasables[$data['id']] = $data;
 		}

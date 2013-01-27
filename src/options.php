@@ -1,6 +1,6 @@
 <?php
 
-function memberful_wp_all_options() { 
+function memberful_wp_all_options() {
 	return array(
 		'memberful_client_id' => NULL,
 		'memberful_client_secret' => NULL,
@@ -13,7 +13,7 @@ function memberful_wp_all_options() {
 	);
 }
 
-function memberful_wp_register_options() { 
+function memberful_wp_register_options() {
 	foreach ( memberful_wp_all_options() as $option => $default ) {
 		add_option( $option, $default );
 	}
@@ -21,9 +21,9 @@ function memberful_wp_register_options() {
 
 
 /**
- * Displays the page for registering the wordpress plugin with memberful.com
+ * Displays the page for registering the WordPress plugin with memberful.com
  */
-function memberful_wp_register() { 
+function memberful_wp_register() {
 	$vars = array();
 
 	if ( ! empty( $_POST['activation_code'] ) ) {
@@ -46,7 +46,7 @@ function memberful_wp_register() {
 /**
  * Resets the plugin to its default state
  */
-function memberful_wp_reset() { 
+function memberful_wp_reset() {
 
 	foreach ( memberful_wp_all_options() as $option => $default ) {
 		update_option( $option, $default );
@@ -59,7 +59,7 @@ function memberful_wp_reset() {
 /**
  * Displays the memberful options page
  */
-function memberful_wp_options() { 
+function memberful_wp_options() {
 	if ( ! empty( $_POST ) ) {
 		if ( ! memberful_wp_valid_nonce( 'memberful_setup' ) )
 		  return;
@@ -90,7 +90,7 @@ function memberful_wp_options() {
 	$products = get_option( 'memberful_products', array() );
 	$subs     = get_option( 'memberful_subscriptions', array() );
 
-	memberful_wp_render(
+	memberful_wp_render (
 		'options',
 		array(
 			'products'      => $products,
@@ -105,7 +105,7 @@ function memberful_wp_options() {
  *
  * @param $code string The activation code
  */
-function memberful_wp_activate( $code ) { 
+function memberful_wp_activate( $code ) {
 	$blog_name = wp_specialchars_decode( get_bloginfo( 'name', 'Display' ), ENT_QUOTES );
 	$activator = new Memberful_Activator( $code, $blog_name );
 
@@ -116,7 +116,7 @@ function memberful_wp_activate( $code ) {
 
 	$credentials = $activator->activate();
 
-	if ( is_wp_error( $credentials ) ) { 
+	if ( is_wp_error( $credentials ) ) {
 		var_dump ( $credentials );
 		die();
 	}
@@ -130,7 +130,7 @@ function memberful_wp_activate( $code ) {
 	return TRUE;
 }
 
-function memberful_wp_sync_products() { 
+function memberful_wp_sync_products() {
 	$url = memberful_admin_products_url( MEMBERFUL_JSON );
 
 	update_option( 'memberful_products', memberful_wp_fetch_entities( $url ) );
@@ -139,7 +139,7 @@ function memberful_wp_sync_products() {
 }
 
 function memberful_wp_sync_subscriptions() {
-	
+
 	$url = memberful_admin_subscriptions_url( MEMBERFUL_JSON );
 
 	update_option( 'memberful_subscriptions', memberful_wp_fetch_entities( $url ) );
@@ -147,24 +147,24 @@ function memberful_wp_sync_subscriptions() {
 	return TRUE;
 }
 
-function memberful_wp_fetch_entities($url) {
+function memberful_wp_fetch_entities( $url ) {
 	$full_url = add_query_arg( 'auth_token', get_option( 'memberful_api_key' ), $url );
 
 	$response = wp_remote_get( $full_url, array( 'sslverify' => MEMBERFUL_SSL_VERIFY ) );
 
-	if ( is_wp_error( $response ) ) { 
+	if ( is_wp_error( $response ) ) {
 		var_dump( $response, $full_url, $url );
 		die();
 	}
 
-	if ( $response['response']['code'] != 200 OR ! isset( $response['body'] ) ) { 
-		return new WP_Error( 'memberful_sync_fail', "Couldn't retrieve list of entities from memberful. Please contact memberful " );
+	if ( $response['response']['code'] != 200 OR ! isset( $response['body'] ) ) {
+		return new WP_Error( 'memberful_sync_fail', "Couldn't retrieve list of entities from Memberful." );
 	}
 
 	$raw_entity = json_decode( $response['body'] );
 	$entities   = array();
 
-	foreach ( $raw_entity as $entity ) { 
+	foreach ( $raw_entity as $entity ) {
 		$entities[$entity->id] = array(
 			'id'       => $entity->id,
 			'name'     => $entity->name,

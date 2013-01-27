@@ -8,7 +8,7 @@
 
 <?php if ( ! empty( $subscriptions ) ) : ?>
 	<div id="memberful-subscriptions">
-		<h4 style="margin-bottom: 0;">Subscriptions</h4>
+		<h4 style="margin-bottom: 0;"><?php _e( 'Subscriptions', 'memberful' ); ?></h4>
 		<ul>
 		<?php foreach($subscriptions as $id => $subscription): ?>
 			<li>
@@ -23,7 +23,7 @@
 <?php endif; ?>
 <?php if ( ! empty( $products ) ) : ?>
 	<div id="memberful-products">
-		<h4 style="margin-bottom: 0;">Products</h4>
+		<h4 style="margin-bottom: 0;"><?php _e( 'Products', 'memberful' ); ?></h4>
 		<ul>
 		<?php foreach($products as $id => $product): ?>
 			<li>

@@ -42,14 +42,14 @@ register_activation_hook( __FILE__, 'memberful_wp_plugin_activate' );
  *
  * TODO: Clean this mess up.
  */
-function memberful_api_member( $member_id ) { 
+function memberful_api_member( $member_id ) {
 	$url = memberful_wrap_api_token( memberful_admin_member_url( $member_id, MEMBERFUL_JSON ) );
 
 	$response      = wp_remote_get( $url, array( 'sslverify' => MEMBERFUL_SSL_VERIFY ) );
 	$response_code = (int) wp_remote_retrieve_response_code( $response );
 	$response_body = wp_remote_retrieve_body( $response );
 
-	if ( is_wp_error( $response ) ) { 
+	if ( is_wp_error( $response ) ) {
 		var_dump( $response, $url );
 		die();
 	}

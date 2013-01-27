@@ -11,7 +11,7 @@ class Memberful_Wp_User_Products extends Memberful_Wp_User_Entity {
 		return 'product';
 	}
 
-	protected function format($entity) {
-		return array('id' => $entity->id);
+	protected function format( $entity ) {
+		return array( 'id' => $entity->id );
 	}
 }
