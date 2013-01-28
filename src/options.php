@@ -13,6 +13,19 @@ function memberful_wp_all_options() {
 	);
 }
 
+/**
+ * Options that need to be reset when disconnecting from memberful.com
+ * @return array
+ */
+function memberful_wp_connection_options() {
+	return array(
+		'memberful_client_id',
+		'memberful_client_secret',
+		'memberful_api_key',
+		'memberful_webhook_secret'
+	);
+}
+
 function memberful_wp_register_options() {
 	foreach ( memberful_wp_all_options() as $option => $default ) {
 		add_option( $option, $default );
@@ -47,9 +60,10 @@ function memberful_wp_register() {
  * Resets the plugin to its default state
  */
 function memberful_wp_reset() {
+	$defaults = memberful_wp_all_options();
 
-	foreach ( memberful_wp_all_options() as $option => $default ) {
-		update_option( $option, $default );
+	foreach ( memberful_wp_connection_options() as $option ) {
+		update_option( $option, $defaults[$option] );
 	}
 
 	wp_redirect( admin_url( 'admin.php?page=memberful_options' ) );
