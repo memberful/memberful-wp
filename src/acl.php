@@ -47,7 +47,7 @@ function memberful_wp_user_disallowed_post_ids()
 }
 
 function memberful_wp_filter_active_subscriptions($subscription) {
-	return $subscription['expires_at'] === FALSE || $subscription['expires_at'] > time();
+	return empty($subscription['expires_at']) || $subscription['expires_at'] > time();
 }
 
 /**

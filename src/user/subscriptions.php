@@ -13,7 +13,8 @@ class Memberful_Wp_User_Subscriptions extends Memberful_Wp_User_Entity {
 
 	protected function format( $entity ) {
 		return array(
-			'id'         => $entity->id,
+			'id'         => $entity->subscription->id,
+			'expires'    => $entity->expires,
 			'expires_at' => strtotime( $entity->expires_at ),
 		);
 	}
