@@ -179,13 +179,17 @@ function memberful_wp_fetch_entities( $url ) {
 	$entities   = array();
 
 	foreach ( $raw_entity as $entity ) {
-		$entities[$entity->id] = array(
-			'id'       => $entity->id,
-			'name'     => $entity->name,
-			'slug'     => $entity->slug,
-			'for_sale' => $entity->for_sale,
-		);
+		$entities[$entity->id] = memberful_wp_format_entity( $entity );
 	}
 
 	return $entities;
+}
+
+function memberful_wp_format_entity( $entity ) {
+	return array(
+		'id'       => $entity->id,
+		'name'     => $entity->name,
+		'slug'     => $entity->slug,
+		'for_sale' => $entity->for_sale,
+	);
 }
