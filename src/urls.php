@@ -17,7 +17,7 @@ function memberful_activation_url() {
 }
 
 function memberful_account_url( $format = MEMBERFUL_HTML ) {
-	return memberful_url( 'member', $format );
+	return memberful_url( 'account', $format );
 }
 
 function memberful_admin_member_url( $member_id, $format = MEMBERFUL_HTML ) {
