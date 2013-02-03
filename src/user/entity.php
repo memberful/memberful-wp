@@ -2,10 +2,7 @@
 
 abstract class Memberful_Wp_User_Entity {
 
-	static public function sync( $user_id, $entities ) {
-		$syncer = new static($user_id);
-		return $syncer->set($entities);
-	}
+
 
 	protected $entities;
 	protected $user_id;
