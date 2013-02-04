@@ -28,7 +28,7 @@
 		<?php foreach($products as $id => $product): ?>
 			<li>
 				<label>
-					<input type="checkbox" name="memberful_product_acl[]" value="<?php echo $id; ?>" <?php checked( $subscription['checked'] ); ?>>
+					<input type="checkbox" name="memberful_product_acl[]" value="<?php echo $id; ?>" <?php checked( $product['checked'] ); ?>>
 					<?php echo esc_html( $product['name'] ); ?>
 				</label>
 			</li>
