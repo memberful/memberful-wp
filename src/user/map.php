@@ -27,13 +27,19 @@ class Memberful_User_Map {
 		$user_exists = $user_id !== NULL;
 
 		if ( $user_exists && ! $user_mapping_exists ) {
-			$data = get_userdata( $user_id );
-
-			if ( $data->user_level > 0 ) {
+			if ( ! is_user_logged_in() ) {
 				wp_safe_redirect( admin_url() );
-			}
+				die( "Found a wordpress user for this member, however memberful did not create the wordpress user. Please speak to site admin." );
+			} else {
+				$current_user       = wp_get_current_user();
+				$current_user_email = $current_user->user_email;
 
-			die( "Found a wordpress user for this member, however memberful did not create the wordpress user. Please speak to site admin." );
+				// Check the logged in user's email address against the Memberful email address
+				if ( $current_user_email !== $member->email ) {
+					wp_safe_redirect( admin_url() );
+					die( "Found a wordpress user for this member, however memberful did not create the wordpress user. Please speak to site admin." );
+				}
+			}
 		}
 
 		// We initially reserve a mapping to prevent other processes
