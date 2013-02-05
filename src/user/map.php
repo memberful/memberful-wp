@@ -18,13 +18,23 @@ class Memberful_User_Map {
 	 * Takes a set of Memberful member details and tries to associate it with the
 	 * WordPress user account.
 	 *
-	 * @param StdObject $details       Details about the member
+	 * @param StdObject $details	   Details about the member
 	 * @return WP_User
 	 */
 	public function map( $member, array $mapping = array() ) {
 		list( $user_id, $user_mapping_exists ) = $this->find_user( $member );
 
 		$user_exists = $user_id !== NULL;
+
+		if ( $user_exists && ! $user_mapping_exists ) {
+			$data = get_userdata( $user_id );
+
+			if ( $data->user_level > 0 ) {
+				wp_safe_redirect( admin_url() );
+			}
+
+			die( "Found a wordpress user for this member, however memberful did not create the wordpress user. Please speak to site admin." );
+		}
 
 		// We initially reserve a mapping to prevent other processes
 		// from trying to map the user at the same time as us
@@ -33,6 +43,15 @@ class Memberful_User_Map {
 				$member,
 				( $user_exists ? array( 'wp_user_id' => $user_id ) : array() )
 			);
+		}
+
+		$user_data = array();
+
+		if ( $user_exists ) {
+			$user_data['ID'] = $user_id;
+		} else {
+			$user_data['user_pass'] = wp_generate_password();
+			$user_data['show_admin_bar_frontend'] = FALSE;
 		}
 
 		// Mapping of WordPress => Memberful keys
@@ -45,15 +64,6 @@ class Memberful_User_Map {
 			'first_name'    => 'first_name',
 			'last_name'     => 'last_name'
 		);
-
-		$user_data = array();
-
-		if ( ! $user_exists ) {
-			$user_data['user_pass'] = wp_generate_password();
-			$user_data['show_admin_bar_frontend'] = FALSE;
-		} else {
-			$user_data['ID'] = $user_id;
-		}
 
 		foreach ( $field_map as $key => $value ) {
 			$user_data[$key] = $member->$value;
@@ -78,29 +88,27 @@ class Memberful_User_Map {
 	 * If no such user exists then NULL is returned
 	 *
 	 * @param  StdClass $member The member to map from
-	 * @return array            First element is the id of the user, the second is a bool indicating
-	 *                          whether we found this user in the map, or whether we found them by their email address
+	 * @return array			First element is the id of the user, the second is a bool indicating
+	 *						  whether we found this user in the map, or whether we found them by their email address
 	 */
 	private function find_user( $member ) {
 		global $wpdb;
 
-		$user_id        = NULL;
+		$user_id		= NULL;
 		$mapping_exists = FALSE;
 
 		$sql =
-			'SELECT `wp_users`.`ID`, `mem`.`member_id` '.
+			'SELECT `mem`.`wp_user_id`, `mem`.`member_id` '.
 			'FROM `'.self::table().'` AS `mem`'.
-			'LEFT OUTER JOIN `'.$wpdb->users.'` AS `wp_users` ON (`mem`.`wp_user_id` = `wp_users`.`ID`) '.
 			'WHERE `mem`.`member_id` = %d';
 
 		$mapping = $wpdb->get_row( $wpdb->prepare( $sql, $member->id ) );
 
 		if ( ! empty( $mapping ) ) {
 			$mapping_exists = TRUE;
-			$user_id = $mapping->ID;
+			$user_id        = $mapping->wp_user_id;
 		} else {
-			$user = get_user_by( 'email', $member->email );
-
+			$user    = get_user_by( 'email', $member->email );
 			$user_id = $user === FALSE ? NULL : $user->ID;
 		}
 
@@ -114,7 +122,7 @@ class Memberful_User_Map {
 	public function update_mapping( $member, array $pairs ) {
 		global $wpdb;
 
-		$data    = array();
+		$data	= array();
 		$columns = $this->restrict_columns( array_keys( $pairs ) );
 
 		$update = 'UPDATE `'.self::table().'` SET ';
@@ -141,18 +149,18 @@ class Memberful_User_Map {
 	private function reserve_mapping( $member, array $params = array() ) {
 		global $wpdb;
 
-		$columns     = array_merge( array( 'member_id' ), array_keys( $params ) );
-		$columns     = $this->restrict_columns( $columns );
+		$columns	 = array_merge( array( 'member_id' ), array_keys( $params ) );
+		$columns	 = $this->restrict_columns( $columns );
 		$column_list = '`'.implode( '`, `', $columns ).'`';
 
-		$values         = array( $member->id );
+		$values		 = array( $member->id );
 		$value_sub_list = array( '%d' );
 
 		foreach ( $columns as $column ) {
 			if ( $column === 'member_id' )
 				continue;
 
-			$values[]         = $params[$column];
+			$values[]		 = $params[$column];
 			$value_sub_list[] = '%s';
 		}
 
