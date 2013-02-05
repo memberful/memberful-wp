@@ -65,6 +65,12 @@ class Memberful_User_Map {
 			'last_name'     => 'last_name'
 		);
 
+		if ( ! empty( $user_data['ID'] ) && $existing_user = get_user_by( 'email', $member->email ) ) {
+			if ( ( (int) $user_data['ID'] ) != ( (int) $existing_user->ID ) ) {
+				die( 'Cannot change email address to that of another user' );
+			}
+		}
+
 		foreach ( $field_map as $key => $value ) {
 			$user_data[$key] = $member->$value;
 		}
