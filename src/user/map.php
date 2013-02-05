@@ -29,7 +29,7 @@ class Memberful_User_Map {
 		if ( $user_exists && ! $user_mapping_exists ) {
 			if ( ! is_user_logged_in() ) {
 				wp_safe_redirect( admin_url() );
-				die( "Found a wordpress user for this member, however memberful did not create the wordpress user. Please speak to site admin." );
+				wp_die( "Found a wordpress user for this member, however memberful did not create the wordpress user. Please speak to site admin." );
 			} else {
 				$current_user       = wp_get_current_user();
 				$current_user_email = $current_user->user_email;
@@ -37,7 +37,7 @@ class Memberful_User_Map {
 				// Check the logged in user's email address against the Memberful email address
 				if ( $current_user_email !== $member->email ) {
 					wp_safe_redirect( admin_url() );
-					die( "Found a wordpress user for this member, however memberful did not create the wordpress user. Please speak to site admin." );
+					wp_die( "Found a wordpress user for this member, however memberful did not create the wordpress user. Please speak to site admin." );
 				}
 			}
 		}
@@ -72,8 +72,8 @@ class Memberful_User_Map {
 		);
 
 		if ( ! empty( $user_data['ID'] ) && $existing_user = get_user_by( 'email', $member->email ) ) {
-			if ( ( (int) $user_data['ID'] ) != ( (int) $existing_user->ID ) ) {
-				die( 'Cannot change email address to that of another user' );
+			if ( ( (int) $user_data['ID'] ) !== ( (int) $existing_user->ID ) ) {
+				wp_die( 'Could not update account, please speak to admin' );
 			}
 		}
 
