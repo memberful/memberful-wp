@@ -29,7 +29,7 @@ class Memberful_User_Map {
 		if ( $user_exists && ! $user_mapping_exists ) {
 			if ( ! is_user_logged_in() ) {
 				wp_safe_redirect( admin_url() );
-				wp_die( "Found a wordpress user for this member, however memberful did not create the wordpress user. Please speak to site admin." );
+				wp_die( "Found a WordPress user for this member, but Memberful did not create the WordPress user. Please contact the site administrator." );
 			} else {
 				$current_user       = wp_get_current_user();
 				$current_user_email = $current_user->user_email;
@@ -37,7 +37,7 @@ class Memberful_User_Map {
 				// Check the logged in user's email address against the Memberful email address
 				if ( $current_user_email !== $member->email ) {
 					wp_safe_redirect( admin_url() );
-					wp_die( "Found a wordpress user for this member, however memberful did not create the wordpress user. Please speak to site admin." );
+					wp_die( "Found a WordPress user for this member, but Memberful did not create the WordPress user. Please contact the site administrator." );
 				}
 			}
 		}
