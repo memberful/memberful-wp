@@ -47,7 +47,7 @@ function memberful_wp_plugin_activate() {
  * TODO: Clean this mess up.
  */
 function memberful_api_member( $member_id ) {
-	$url = memberful_wrap_api_token( memberful_admin_member_url( $member_id, MEMBERFUL_JSON ) );
+	$url = memberful_wp_wrap_api_token( memberful_admin_member_url( $member_id, MEMBERFUL_JSON ) );
 
 	$response      = wp_remote_get( $url, array( 'sslverify' => MEMBERFUL_SSL_VERIFY ) );
 	$response_code = (int) wp_remote_retrieve_response_code( $response );
