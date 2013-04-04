@@ -53,19 +53,26 @@ class Memberful_Wp_Ping_Invalid_Payload extends RuntimeException {
 
 }
 
-add_action( 'memberful_event_order_purchased', 'memberful_wp_hook_order_purchased' );
+add_action( 'memberful_event_order_purchased', 'memberful_wp_hook_order_sync' );
+add_action( 'memberful_event_order_refunded',  'memberful_wp_hook_order_sync' );
+add_action( 'memberful_event_order_suspended', 'memberful_wp_hook_order_sync' );
 add_action( 'memberful_event_member_updated',  'memberful_wp_hook_member_updated' );
-add_action( 'memberful_event_product_created', 'memberful_wp_hook_product_created' );
-add_action( 'memberful_event_product_updated', 'memberful_wp_hook_product_created' );
-add_action( 'memberful_event_subscription_created', 'memberful_wp_hook_subscription_created' );
-add_action( 'memberful_event_subscription_updated', 'memberful_wp_hook_subscription_created' );
+add_action( 'memberful_event_product_created', 'memberful_wp_hook_product_sync' );
+add_action( 'memberful_event_product_updated', 'memberful_wp_hook_product_sync' );
+add_action( 'memberful_event_subscription_created', 'memberful_wp_hook_subscription_sync' );
+add_action( 'memberful_event_subscription_updated', 'memberful_wp_hook_subscription_sync' );
 
 /**
  * Triggered when a order_created event is received via webhook ping
  */
-function memberful_wp_hook_order_created( $data ) {
+function memberful_wp_hook_order_sync( $data ) {
 	$mapper = new Memberful_User_Map();
-	$mapper->map( $data->order->member );
+	$user   = $mapper->map( $data->order->member );
+
+	$details = memberful_api_member( $data->order->member->id );
+
+	Memberful_Wp_User_Products::sync( $user->ID, $details->products );
+	Memberful_Wp_User_Subscriptions::sync( $user->ID, $details->subscriptions );
 }
 
 function memberful_wp_hook_member_updated( $data ) {
@@ -73,7 +80,7 @@ function memberful_wp_hook_member_updated( $data ) {
 	$mapper->map( $data->member );
 }
 
-function memberful_wp_hook_product_created( $data ) {
+function memberful_wp_hook_product_sync( $data ) {
 	$products = get_option( 'memberful_products', array() );
 
 	$products[$data->product->id] = memberful_wp_format_entity( $data->product );
@@ -81,7 +88,7 @@ function memberful_wp_hook_product_created( $data ) {
 	update_option( 'memberful_products', $products );	
 }
 
-function memberful_wp_hook_subscription_created( $data ) {
+function memberful_wp_hook_subscription_sync( $data ) {
 	$subscriptions = get_option( 'memberful_subscriptions', array() );
 
 	$subscriptions[$data->subscription->id] = memberful_wp_format_entity( $data->subscription );
