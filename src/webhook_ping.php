@@ -54,6 +54,7 @@ class Memberful_Wp_Ping_Invalid_Payload extends RuntimeException {
 }
 
 add_action( 'memberful_event_order_purchased', 'memberful_wp_hook_order_sync' );
+add_action( 'memberful_event_order_completed', 'memberful_wp_hook_order_sync' );
 add_action( 'memberful_event_order_refunded',  'memberful_wp_hook_order_sync' );
 add_action( 'memberful_event_order_suspended', 'memberful_wp_hook_order_sync' );
 add_action( 'memberful_event_member_updated',  'memberful_wp_hook_member_updated' );
