@@ -67,6 +67,7 @@ class Memberful_Activator {
 			array(
 				'headers' => array( 'Content-Type' => 'application/json', ),
 				'body' => json_encode( $this->params ),
+				'sslverify' => MEMBERFUL_SSL_VERIFY
 			)
 		);
 		$response_code = (int) wp_remote_retrieve_response_code( $response );
