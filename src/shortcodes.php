@@ -4,6 +4,7 @@ add_shortcode( 'memberful', 'memberful_wp_shortcode' );
 
 function memberful_wp_shortcode( $atts, $content ) {
 	$show_content = FALSE;
+	$does_not_have_product = $does_not_have_subscription = NULL;
 
 	if ( ! empty( $atts['has_subscription'] ) ) {
 		$show_content = has_memberful_subscription( $atts['has_subscription'] );
@@ -19,16 +20,24 @@ function memberful_wp_shortcode( $atts, $content ) {
 		$does_not_have_subscription = ! has_memberful_subscription(
 			$atts['does_not_have_subscription']
 		);
-
-		$show_content = $show_content || $does_not_have_subscription;
 	}
 
 	if ( ! empty( $atts['does_not_have_product'] ) ) {
 		$does_not_have_product = ! has_memberful_product(
 			$atts['does_not_have_product']
 		);
+	}
 
-		$show_content = $show_content || $does_not_have_product;
+	if ( $does_not_have_product !== NULL || $does_not_have_subscription !== NULL) {
+		$requirements = array($does_not_have_subscription, $does_not_have_product);
+
+		if ( in_array( FALSE, $requirements, TRUE) ) {
+			// User may have access to either the mentioned product or the subscription
+			$show_content = FALSE;
+		} else {
+			// All specified requirements have been satisfied, so show content
+			$show_content = TRUE;
+		}
 	}
 
 	return $show_content ? $content : '';
