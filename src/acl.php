@@ -186,7 +186,7 @@ function memberful_wp_user_has_products( $user_id, array $products ) {
  * @return array      Array of IDs extract from the slugs as first element, user id as second
  */
 function memberful_wp_extract_slug_ids_and_user($args) {
-	$slugs = (array) $args[0];
+	$slugs = $args[0];
 	$user  = empty($args[1]) ? NULL : $args[1];
 
 	if ( $user === NULL )
