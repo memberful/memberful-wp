@@ -187,7 +187,7 @@ function memberful_wp_user_has_products( $user_id, array $products ) {
  */
 function memberful_wp_extract_slug_ids_and_user($args) {
 	$slugs = (array) $args[0];
-	$user  = $args[1];
+	$user  = empty($args[1]) ? NULL : $args[1];
 
 	if ( $user === NULL )
 		$user = wp_get_current_user()->ID;
