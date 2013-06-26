@@ -15,6 +15,22 @@ function memberful_wp_shortcode( $atts, $content ) {
 		$show_content = $show_content || $has_product;
 	}
 
+	if ( ! empty( $atts['does_not_have_subscription'] ) ) {
+		$does_not_have_subscription = ! has_memberful_subscription(
+			$atts['does_not_have_subscription']
+		);
+
+		$show_content = $show_content || $does_not_have_subscription;
+	}
+
+	if ( ! empty( $atts['does_not_have_product'] ) ) {
+		$does_not_have_product = ! has_memberful_product(
+			$atts['does_not_have_product']
+		);
+
+		$show_content = $show_content || $does_not_have_product;
+	}
+
 	return $show_content ? $content : '';
 }
 
