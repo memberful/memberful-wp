@@ -28,10 +28,10 @@ function memberful_wp_shortcode( $atts, $content ) {
 		);
 	}
 
-	if ( $does_not_have_product !== NULL || $does_not_have_subscription !== NULL) {
-		$requirements = array($does_not_have_subscription, $does_not_have_product);
+	if ( $does_not_have_product !== NULL || $does_not_have_subscription !== NULL ) {
+		$requirements = array( $does_not_have_subscription, $does_not_have_product );
 
-		if ( in_array( FALSE, $requirements, TRUE) ) {
+		if ( in_array( FALSE, $requirements, TRUE ) ) {
 			// User may have access to either the mentioned product or the subscription
 			$show_content = FALSE;
 		} else {
