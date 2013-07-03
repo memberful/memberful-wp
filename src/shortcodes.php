@@ -51,7 +51,11 @@ function memberful_wp_slugs_to_ids( $slugs ) {
 }
 
 function memberful_wp_extract_id_from_slug( $slug ) {
+	if( strpos( $slug, '-') === FALSE) {
+		return (int) $slug;
+	}
+	
 	list( $id, $name ) = explode( '-', $slug, 2 );
 
-	return $id;
+	return (int) trim($id);
 }
