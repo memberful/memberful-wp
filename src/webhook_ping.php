@@ -60,8 +60,10 @@ add_action( 'memberful_event_order_suspended', 'memberful_wp_hook_order_sync' );
 add_action( 'memberful_event_member_updated',  'memberful_wp_hook_member_updated' );
 add_action( 'memberful_event_product_created', 'memberful_wp_hook_product_sync' );
 add_action( 'memberful_event_product_updated', 'memberful_wp_hook_product_sync' );
+add_action( 'memberful_event_product_deleted', 'memberful_wp_hook_product_sync' );
 add_action( 'memberful_event_subscription_created', 'memberful_wp_hook_subscription_sync' );
 add_action( 'memberful_event_subscription_updated', 'memberful_wp_hook_subscription_sync' );
+add_action( 'memberful_event_subscription_deleted', 'memberful_wp_hook_subscription_sync' );
 
 /**
  * Triggered when a order_created event is received via webhook ping
