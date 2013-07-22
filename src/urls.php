@@ -61,6 +61,25 @@ function memberful_url( $uri = '', $format = MEMBERFUL_HTML ) {
 // Private generator methods
 // You should not rely on their implementation
 
+/**
+ * Determines whether to use HTTP or HTTPS on the frontend.
+ *
+ * By default WordPress will use the protocol of the current page,
+ * which means that if the admin panel is using HTTPS then the
+ * members will also use HTTPS.
+ *
+ * This method checks the "WordPress Address (URL)" option in the admin panel
+ * to check whether frontend users should use https.
+ *
+ * @return string 'http' | 'https'
+ */
+function memberful_frontend_protocol() {
+	if ( strpos( get_option( 'siteurl' ), 'https://' ) === 0 ) {
+		return 'https';
+	}
+
+	return 'http';
+}
 
 function memberful_wp_wrap_api_token( $url ) {
 	return add_query_arg( 'auth_token', get_option( 'memberful_api_key' ), $url );
@@ -85,5 +104,5 @@ function memberful_wp_webhook_url() {
 }
 
 function memberful_wp_endpoint_url( $endpoint ) {
-	return add_query_arg( array( 'memberful_endpoint' => $endpoint ), site_url() );
+	return add_query_arg( array( 'memberful_endpoint' => $endpoint ), site_url( '', memberful_frontend_protocol() ) );
 }
