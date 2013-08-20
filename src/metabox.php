@@ -131,7 +131,9 @@ class Memberful_Post_ACL {
 	public function get_acl() {
 		$restricted_acl = get_post_meta( $this->_id, 'memberful_acl', TRUE );
 
-		return empty( $restricted_acl[$this->_entity] ) ? array() : $restricted_acl[$this->_entity];
+		$entity_acl = empty( $restricted_acl[$this->_entity] ) ? array() : $restricted_acl[$this->_entity];
+
+		return is_array($entity_acl) ? $entity_acl : array();
 	}
 
 	/**
@@ -164,7 +166,7 @@ class Memberful_Post_ACL {
 		return $acl_map[$this->_entity];
 	}
 
-	protected function _update_global_acl($entity_acl) {
+	protected function _update_global_acl( array $entity_acl ) {
 		$acl_map = get_option( 'memberful_acl', array() );
 
 		$acl_map[$this->_entity] = $entity_acl;
@@ -173,7 +175,7 @@ class Memberful_Post_ACL {
 	}
 
 
-	protected function _update_post_acl( $new_acl ) {
+	protected function _update_post_acl( array $new_acl ) {
 		$current_acl = get_post_meta( $this->_id, 'memberful_acl', TRUE );
 		$current_acl[$this->_entity] = $new_acl;
 		update_post_meta( $this->_id, 'memberful_acl', $current_acl );
