@@ -1,4 +1,5 @@
 <?php
+require MEMBERFUL_DIR.'/src/user/map_stats.php';
 
 function memberful_wp_all_options() {
 	return array(
@@ -30,6 +31,16 @@ function memberful_wp_register_options() {
 	foreach ( memberful_wp_all_options() as $option => $default ) {
 		add_option( $option, $default );
 	}
+}
+
+function memberful_wp_option_values() {
+	$config = array();
+	
+	foreach ( memberful_wp_all_options() as $option => $default ) {
+		$config[$option] = get_option( $option );
+	}
+
+	return $config;
 }
 
 
@@ -69,6 +80,59 @@ function memberful_wp_reset() {
 	wp_redirect( admin_url( 'admin.php?page=memberful_options' ) );
 }
 
+function _memberful_wp_debug_all_post_meta() {
+	global $wpdb;
+
+	$results = $wpdb->get_results(
+		"SELECT posts.ID, meta.meta_value FROM {$wpdb->posts} AS posts ".
+		"LEFT JOIN {$wpdb->postmeta} AS meta ON (posts.ID = meta.post_id) ".
+		"WHERE meta.meta_key = 'memberful_acl';"
+	);
+
+	$meta = array();
+
+	foreach($results as $row) {
+		$meta[$row->ID] = $row->meta_value;
+	}
+
+	return $meta;
+}
+
+function memberful_wp_debug() {
+	$mapping_stats = new Memberful_User_Map_Stats(Memberful_User_Map::table());
+	$counts = count_users();
+
+	$unmapped_users = $mapping_stats->unmapped_users();
+	$total_mapping_records = $mapping_stats->count_mapping_records();
+
+	$total_users           = $counts['total_users'];
+	$total_unmapped_users  = count($unmapped_users);
+	$total_mapped_users    = $total_users - $total_unmapped_users;
+    $config                = memberful_wp_option_values();
+	$acl_for_all_posts     = _memberful_wp_debug_all_post_meta();
+
+	if($total_users != $total_mapped_users) {
+		$mapping_records = $mapping_stats->mapping_records();
+	}
+	else {
+		$mapping_records = array();
+	}
+
+	memberful_wp_render(
+		'debug',
+		compact(
+			'unmapped_users',
+			'total_users',
+			'total_unmapped_users',
+			'total_mapped_users',
+			'total_mapping_records',
+			'mapping_records',
+			'config',
+			'acl_for_all_posts'
+		  )
+	);
+}
+
 
 /**
  * Displays the memberful options page
@@ -97,8 +161,12 @@ function memberful_wp_options() {
 		}
 	}
 
+    if ( ! empty( $_GET['debug'] ) ) {
+      return memberful_wp_debug();
+    }
+
 	if ( ! get_option( 'memberful_client_id' ) ) {
-	  return memberful_wp_register();
+		return memberful_wp_register();
 	}
 
 	$products = get_option( 'memberful_products', array() );
