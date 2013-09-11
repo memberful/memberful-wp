@@ -7,7 +7,7 @@
 	<div id="memberful-registration">
 		<div class="memberful-sign-up">
 			<h1><?php _e( "You'll need a Memberful account.", 'memberful' ); ?></h1>
-			<p><?php _e( '<a href="http://memberful.com">Sign up for an account</a> to start selling digital goods and content the easy way.', 'memberful' ); ?></p>
+			<p><?php _e( '<a href="http://memberful.com">Sign up for a free account</a> and start selling memberships the easy way.', 'memberful' ); ?></p>
 		</div>
 		<div class="memberful-register-plugin">
 			<h3><?php _e( 'Already have an account?', 'memberful' ); ?></h3>
