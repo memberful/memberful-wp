@@ -94,3 +94,45 @@
 	background: #f4424b;
 	border: 1px solid #ce262f;
 }
+
+/*---------------------------------------------------------
+	Restrict Access Metabox
+------------------------------------------------------------ */
+#memberful_acl:before,
+#memberful_acl:after {
+	content: " ";
+	display: table;
+}
+#memberful_acl:after {
+	clear: both;
+}
+.memberful-restrict-access-options {
+	float: left;
+	width: 160px;
+	margin: 10px 20px 0 0;
+	padding: 0 20px;
+	background: #fff;
+	border: 1px solid #dedede;
+}
+p.memberful-access-label {
+	padding-bottom: 3px;
+	font-style: italic;
+	border-bottom: 1px solid #dedede;
+}
+.memberful-restrict-access-options ul {
+	margin-bottom: 20px;
+}
+.memberful-protected-content {
+	float: left;
+	width: 70%;
+	margin: 10px 0;
+}
+#memberful_protected_content_message_ifr {
+	background: #fff;
+}
+.memberful-restricted-access-content-description {
+	padding: 5px;
+	font-size: 12px;
+	background: #efefef;
+	border: 1px solid #dedede;
+}
