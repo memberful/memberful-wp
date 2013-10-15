@@ -114,6 +114,9 @@
 	background: #fff;
 	border: 1px solid #dedede;
 }
+p.memberful-select {
+	font-size: 11px;
+}
 p.memberful-access-label {
 	padding-bottom: 3px;
 	font-style: italic;
