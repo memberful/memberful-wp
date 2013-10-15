@@ -35,7 +35,7 @@
 	<div class="memberful-protected-content">
 		<?php
 
-		$content = "This content will be shown in place of your protected content to anyone <strong>without</strong> the required access...";
+		$content = "This marketing content will be shown in place of your protected content to anyone <strong>without</strong> the required access...";
 		$editor_id = 'memberful_protected_content_message';
 		wp_editor( $content, $editor_id, $settings );
 
@@ -43,7 +43,7 @@
 		<div class="memberful-restricted-access-content-description">
 			<label>
 				<input type="checkbox">
-				Make this the default content
+				Make this the default marketing content
 			</label>
 		</div>
 	</div>
