@@ -1,7 +1,7 @@
 <?php if ( ! empty( $subscriptions ) || ! empty( $products ) ) : ?>
 	<div class="memberful-restrict-access-options">
-		<h4 style="font-size: 1.1em;"><?php _e( 'Required for access', 'memberful' ); ?></h4>
-		<p class="memberful-select"><a href="#">select all</a> | <a href="#">select none</a>
+		<h4 style="font-size: 13px;"><?php _e( 'Required for access', 'memberful' ); ?></h4>
+		<p class="memberful-select-all"><a href="#">select all</a> | <a href="#">select none</a>
 		<?php if ( ! empty( $subscriptions ) ) : ?>
 			<div id="memberful-subscriptions">
 				<ul>
@@ -35,17 +35,15 @@
 	<div class="memberful-protected-content">
 		<?php
 
-		$content = 'This message is displayed to anyone <strong>without</strong> the required access...';
+		$content = "This content will be shown in place of your protected content to anyone <strong>without</strong> the required access...";
 		$editor_id = 'memberful_protected_content_message';
-		// $settings = array( 'tinymce' => false );
-
 		wp_editor( $content, $editor_id, $settings );
 
 		?>
 		<div class="memberful-restricted-access-content-description">
 			<label>
 				<input type="checkbox">
-				Make this the default message
+				Make this the default content
 			</label>
 		</div>
 	</div>

@@ -114,9 +114,6 @@
 	background: #fff;
 	border: 1px solid #dedede;
 }
-p.memberful-select {
-	font-size: 11px;
-}
 p.memberful-access-label {
 	padding-bottom: 3px;
 	font-style: italic;
@@ -127,7 +124,7 @@ p.memberful-access-label {
 }
 .memberful-protected-content {
 	float: left;
-	width: 70%;
+	width: 500px;
 	margin: 10px 0;
 }
 #memberful_protected_content_message_ifr {
