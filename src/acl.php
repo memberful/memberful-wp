@@ -15,7 +15,7 @@ function memberful_wp_user_disallowed_post_ids( $user_id )
 	static $ids = array();
 
 	if ( isset( $ids[$user_id] ) )
-		return $ids;
+		return $ids[$user_id];
 
 	$acl                     = get_option( 'memberful_acl', array() );
 	$global_product_acl      = isset( $acl['product'] ) ? $acl['product'] : array();
