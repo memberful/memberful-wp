@@ -35,10 +35,9 @@
 	<div class="memberful-marketing-content">
 		<?php
 
-		$content = "This marketing content will be shown in place of your protected content to anyone <strong>without</strong> the required access...";
 		$editor_id = 'memberful_marketing_content';
-        $settings = array();
-		wp_editor( $content, $editor_id, $settings );
+		$settings  = array();
+		wp_editor( $marketing_content , $editor_id, $settings );
 
 		?>
 		<div class="memberful-marketing-content-description">
