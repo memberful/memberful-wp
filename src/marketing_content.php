@@ -16,7 +16,7 @@ function memberful_wp_update_default_marketing_content( $content ) {
 }
 
 function memberful_wp_default_marketing_content() {
-	return get_option( MEMBERFUL_OPTION_DEFAULT_MARKETING_CONTENT, NULL );
+	return stripslashes( get_option( MEMBERFUL_OPTION_DEFAULT_MARKETING_CONTENT, '' ) );
 }
 
 function memberful_wp_marketing_content_explanation() {
