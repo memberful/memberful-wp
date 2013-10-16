@@ -122,15 +122,15 @@ p.memberful-access-label {
 .memberful-restrict-access-options ul {
 	margin-bottom: 20px;
 }
-.memberful-protected-content {
+.memberful-marketing-content {
 	float: left;
 	width: 500px;
 	margin: 10px 0;
 }
-#memberful_protected_content_message_ifr {
+#memberful_marketing_content_ifr {
 	background: #fff;
 }
-.memberful-restricted-access-content-description {
+.memberful-marketing-content-description {
 	padding: 5px;
 	font-size: 12px;
 	background: #efefef;
