@@ -1,7 +1,5 @@
 <?php
 
-add_action( 'pre_get_posts', 'memberful_wp_filter_posts' );
-
 /**
  * Determines the set of post IDs that the current user cannot access
  *
@@ -12,14 +10,12 @@ add_action( 'pre_get_posts', 'memberful_wp_filter_posts' );
  *
  * @return array Map of post ID => post ID
  */
-function memberful_wp_user_disallowed_post_ids()
+function memberful_wp_user_disallowed_post_ids( $user_id )
 {
-	static $ids = NULL;
+	static $ids = array();
 
-	if ( $ids !== NULL )
-		return $ids;
-
-	$user_id = wp_get_current_user()->ID;
+	if ( isset( $ids[$user_id] ) )
+		return $ids[$user_id];
 
 	$acl                     = get_option( 'memberful_acl', array() );
 	$global_product_acl      = isset( $acl['product'] ) ? $acl['product'] : array();
@@ -43,7 +39,7 @@ function memberful_wp_user_disallowed_post_ids()
 	// definitely allowed to access
 	$union = array_diff( $user_restricted_posts, $user_allowed_posts );
 
-	return $ids = ( empty( $union ) ) ? array() : array_combine( $union, $union );
+	return $ids[$user_id] = ( empty( $union ) ) ? array() : array_combine( $union, $union );
 }
 
 function memberful_wp_filter_active_subscriptions($subscription) {
@@ -81,33 +77,6 @@ function memberful_wp_generate_user_specific_acl_from_global_acl( $users_entitie
 	$restricted = array_unique( $restricted_ids );
 
 	return array( 'allowed' => $allowed, 'restricted' => $restricted );
-}
-
-/**
- * Adds conditions to queries that prevent protected pages and posts showing up to users who
- * have not purchased the required products/subscriptions
- *
- * @param WP_Query $query Query to filter
- */
-function memberful_wp_filter_posts( $query ) {
-	if ( current_user_can( 'publish_posts' ) )
-		return;
-
-	// Merge the disallowed posts with the current post__not_in
-	$disallowed_posts     = memberful_wp_user_disallowed_post_ids();
-	$current_post__not_in = (array) $query->get( 'post__not_in' );
-	$post__not_in         = array_merge( $disallowed_posts, $current_post__not_in );
-	$post__not_in         = array_unique( $post__not_in ); // Remove duplicates
-
-	$query->set( 'post__not_in', $post__not_in );
-
-	foreach( array('p', 'page_id') as $parameter ) {
-		if ( isset( $disallowed_posts[ $query->get( $parameter ) ] ) ) {
-			// If we simply set to '' then the query will fetch the next allowed post
-			// Instead we generate a query that will definitely generate no results
-			$query->set( $parameter, '-42' );
-		}
-	}
 }
 
 /**
@@ -193,6 +162,19 @@ function memberful_wp_extract_slug_ids_and_user($args) {
 		$user = wp_get_current_user()->ID;
 
 	return array( memberful_wp_slugs_to_ids( $slugs ), $user );
+}
+
+
+/**
+ * Checks that the user has permission to access the specified post
+ *
+ * @param integer $user_id ID of the user
+ * @param integer $post_id ID of the post that should have access checked
+ */
+function memberful_can_user_access_post( $user, $post ) {
+	$restricted_posts = memberful_wp_user_disallowed_post_ids( $user );
+
+	return ! isset( $restricted_posts[$post] );
 }
 
 /**

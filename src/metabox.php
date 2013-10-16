@@ -29,17 +29,25 @@ function memberful_wp_add_metabox() {
 function memberful_wp_metabox( $post ) {
 	wp_nonce_field( plugin_basename( __FILE__ ), 'memberful_nonce' );
 
-	$acl = array();
+	$view_vars = array();
 
 	$entities = array( Memberful_Post_ACL::PRODUCT, Memberful_Post_ACL::SUBSCRIPTION );
 
 	foreach ( $entities as $entity ) {
 		$acl_manager = new Memberful_Post_ACL( $post->ID, $entity );
 
-		$acl[$entity.'s'] = memberful_wp_metabox_acl_format( $acl_manager->get_acl(), $entity );
+		$view_vars[$entity.'s'] = memberful_wp_metabox_acl_format( $acl_manager->get_acl(), $entity );
 	}
 
-	memberful_wp_render( 'metabox', $acl );
+	$marketing_content = array(
+		memberful_marketing_content( $post->ID ),
+		memberful_wp_default_marketing_content(),
+		memberful_wp_marketing_content_explanation()
+    );
+
+	$view_vars['marketing_content'] = reset(array_filter($marketing_content));
+
+	memberful_wp_render( 'metabox', $view_vars );
 }
 
 function memberful_wp_metabox_acl_format( $acl_list, $entity ) {
@@ -94,6 +102,16 @@ function memberful_wp_save_postdata( $post_id ) {
 		$acl_manager = new Memberful_Post_ACL( $post_id, $entity );
 
 		$acl_manager->set_acl( $acl_list );
+	}
+
+	$marketing_content = trim( $_POST['memberful_marketing_content'] );
+
+	if ( $marketing_content !== memberful_wp_default_marketing_content() ) {
+		memberful_wp_update_post_marketing_content( $post_id, $marketing_content );
+
+		if ( ! empty( $_POST['memberful_make_default_marketing_content'] ) ) {
+			memberful_wp_update_default_marketing_content( $marketing_content );
+		}
 	}
 }
 
