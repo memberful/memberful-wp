@@ -1,7 +1,6 @@
 <?php if ( ! empty( $subscriptions ) || ! empty( $products ) ) : ?>
 	<div class="memberful-restrict-access-options">
 		<h4 style="font-size: 13px;"><?php _e( 'Required for access', 'memberful' ); ?></h4>
-		<p class="memberful-select-all"><a href="#">select all</a> | <a href="#">select none</a>
 		<?php if ( ! empty( $subscriptions ) ) : ?>
 			<div id="memberful-subscriptions">
 				<ul>
