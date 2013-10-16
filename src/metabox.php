@@ -109,7 +109,7 @@ function memberful_wp_save_postdata( $post_id ) {
 	if ( $marketing_content !== memberful_wp_default_marketing_content() ) {
 		memberful_wp_update_post_marketing_content( $post_id, $marketing_content );
 
-		if ( $_POST['memberful_make_default_marketing_content'] === '1' ) {
+		if ( ! empty( $_POST['memberful_make_default_marketing_content'] ) ) {
 			memberful_wp_update_default_marketing_content( $marketing_content );
 		}
 	}
