@@ -42,8 +42,8 @@
 		?>
 		<div class="memberful-marketing-content-description">
 			<label>
-				<input type="checkbox">
-				Make this the default marketing content
+				<input type="checkbox" name="memberful_make_default_marketing_content" value="1">
+				Make this the default marketing content for new posts and pages
 			</label>
 		</div>
 	</div>
