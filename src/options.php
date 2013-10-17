@@ -38,7 +38,9 @@ function memberful_wp_option_values() {
 	$config = array();
 	
 	foreach ( memberful_wp_all_options() as $option => $default ) {
-		$config[$option] = get_option( $option );
+		$value = get_option( $option );
+
+		$config[$option] = is_string( $value ) ? stripslashes( $value ) : $value;
 	}
 
 	return $config;
@@ -100,6 +102,8 @@ function _memberful_wp_debug_all_post_meta() {
 }
 
 function memberful_wp_debug() {
+	global $wp_version;
+
 	$mapping_stats = new Memberful_User_Map_Stats(Memberful_User_Map::table());
 	$counts = count_users();
 
@@ -111,6 +115,7 @@ function memberful_wp_debug() {
 	$total_mapped_users    = $total_users - $total_unmapped_users;
     $config                = memberful_wp_option_values();
 	$acl_for_all_posts     = _memberful_wp_debug_all_post_meta();
+	$plugins               = get_plugins();
 
 	if($total_users != $total_mapped_users) {
 		$mapping_records = $mapping_stats->mapping_records();
@@ -129,7 +134,9 @@ function memberful_wp_debug() {
 			'total_mapping_records',
 			'mapping_records',
 			'config',
-			'acl_for_all_posts'
+			'acl_for_all_posts',
+			'wp_version',
+			'plugins'
 		  )
 	);
 }
