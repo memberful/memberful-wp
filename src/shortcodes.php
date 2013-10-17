@@ -1,6 +1,21 @@
 <?php
 
 add_shortcode( 'memberful', 'memberful_wp_shortcode' );
+add_shortcode( 'memberful_account_link',  'memberful_wp_shortcode_account_link' );
+add_shortcode( 'memberful_sign_in_link',  'memberful_wp_shortcode_sign_in_link' );
+add_shortcode( 'memberful_sign_out_link', 'memberful_wp_shortcode_sign_out_link' );
+
+function memberful_wp_shortcode_sign_out_link( $atts, $content ) {
+	return '<a href="'.memberful_sign_out_url().'" role="sign_out">'.$content.'</a>';
+}
+
+function memberful_wp_shortcode_sign_in_link( $atts, $content ) {
+	return '<a href="'.memberful_sign_in_url().'" role="sign_in">'.$content.'</a>';
+}
+
+function memberful_wp_shortcode_account_link( $atts, $content ) {
+	return '<a href="'.memberful_account_url().'" role="account">'.$content.'</a>';
+}
 
 function memberful_wp_shortcode( $atts, $content ) {
 	$show_content = FALSE;
