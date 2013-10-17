@@ -114,7 +114,7 @@ class Memberful_Authenticator {
 			$referer = $_REQUEST['redirect_to'];
 		}
 
-		setcookie( 'memberful_redirect', $referer, $expire, COOKIEPATH, COOKIE_DOMAIN, is_ssl(), true );
+		setcookie( 'memberful_redirect', $referer, $expire, '/', COOKIE_DOMAIN, is_ssl(), true );
 
 
 		// Send the user to Memberful
