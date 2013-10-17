@@ -36,6 +36,7 @@ require_once MEMBERFUL_DIR . '/src/widgets.php';
 require_once MEMBERFUL_DIR . '/src/endpoints.php';
 require_once MEMBERFUL_DIR . '/src/marketing_content.php';
 require_once MEMBERFUL_DIR . '/src/content_filter.php';
+require_once MEMBERFUL_DIR . '/src/entities.php';
 
 register_activation_hook( __FILE__, 'memberful_wp_plugin_activate' );
 
