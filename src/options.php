@@ -189,8 +189,7 @@ function memberful_wp_options() {
  * @param $code string The activation code
  */
 function memberful_wp_activate( $code ) {
-	$blog_name = wp_specialchars_decode( get_bloginfo( 'name', 'Display' ), ENT_QUOTES );
-	$activator = new Memberful_Activator( $code, $blog_name );
+	$activator = new Memberful_Activator( $code, memberful_wp_site_name() );
 
 	$activator
 		->require_api_key()
@@ -261,4 +260,10 @@ function memberful_wp_format_entity( $entity ) {
 		'slug'     => $entity->slug,
 		'for_sale' => $entity->for_sale,
 	);
+}
+
+function memberful_wp_site_name() {
+	$blog_name = wp_specialchars_decode( trim( get_bloginfo( 'name', 'Display' ), ENT_QUOTES ) );
+
+	return empty( $blog_name ) ? 'WordPress Blog' : $blog_name;
 }
