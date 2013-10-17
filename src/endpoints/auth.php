@@ -36,7 +36,7 @@ class Memberful_Wp_Endpoint_Auth implements Memberful_Wp_Endpoint {
 	}
 
 	private function after_logout_redirect_url( $params ) {
-		return !empty( $params['redirect_to'] ) ? $params['redirect_to'] : site_url();
+		return !empty( $params['redirect_to'] ) ? $params['redirect_to'] : home_url();
 	}
 
 	private function after_login_redirect_url( $params ) {
