@@ -21,7 +21,7 @@ Features include:
  
 == Installation ==
  
-1. Install Memberful WP either via the WordPress.org plugin directory, or visit. Plugins => Add New => Upload in your WordPress dashboard.
+1. Install Memberful WP via the WordPress.org plugin directory, or download the file and visit Plugins => Add New => Upload from your WordPress dashboard.
 2. Activate the WordPress service from your Memberful account.
 3. From the plugin screen in your WordPress dashboard paste in your registration key and click the "Connect to Memberful" button.
 
@@ -29,7 +29,7 @@ Features include:
 
 = Do I need a Memberful account to use the plugin? =
 
-Yes. The plugin connects with the Memberful service to bring content protection and single sign on features to your WordPress website. Therefore, a Memberful account is required to use the plugin.
+Yes. The plugin connects with the Memberful service to bring content protection and single sign on features to your WordPress website.
 
 = How do I contribute to Memberful WP or report bugs? =
 
@@ -38,5 +38,11 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 == Changelog ==
 
 = 1.0.0 =
-* Initial release
+* New and improved Restrict Access meta box on the post and page edit screen.
+* Improved included debugging tools.
+* Stop syncing deleted subscriptions and products.
+* Added more shortcodes: account, sign in, sign out.
+* Improved error messages.
+* Ensure proper re-directs on sign out.
+
 
