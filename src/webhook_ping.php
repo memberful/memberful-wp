@@ -84,17 +84,9 @@ function memberful_wp_hook_member_updated( $data ) {
 }
 
 function memberful_wp_hook_product_sync( $data ) {
-	$products = get_option( 'memberful_products', array() );
-
-	$products[$data->product->id] = memberful_wp_format_entity( $data->product );
-
-	update_option( 'memberful_products', $products );	
+	memberful_wp_sync_products();
 }
 
 function memberful_wp_hook_subscription_sync( $data ) {
-	$subscriptions = get_option( 'memberful_subscriptions', array() );
-
-	$subscriptions[$data->subscription->id] = memberful_wp_format_entity( $data->subscription );
-
-	update_option( 'memberful_subscriptions', $subscriptions );
+	memberful_wp_sync_subscriptions();
 }
