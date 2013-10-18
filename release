@@ -22,3 +22,4 @@ git checkout master
 git reset --hard "v$1"
 
 git push --all origin
+git push --tags origin
