@@ -20,8 +20,8 @@ Features include:
 == Installation ==
  
 1. Install Memberful WP either via the WordPress.org plugin directory, or visit. Plugins => Add New => Upload in your WordPress dashboard.
-3. Activate the WordPress service from your Memberful account.
-4. From the plugin screen in your WordPress dashboard paste in your registration key and click the "Connect to Memberful" button.
+2. Activate the WordPress service from your Memberful account.
+3. From the plugin screen in your WordPress dashboard paste in your registration key and click the "Connect to Memberful" button.
 
 == Frequently Asked Questions ==
 
