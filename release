@@ -1,0 +1,24 @@
+#!/bin/bash
+
+set -e
+
+if [ -z "$1" ]; then
+  echo "Usage: ./release 1.0.0";
+  exit 1;
+fi;
+
+
+sed -re "s/Version:[^\\n]+/Version: $1/" -e "s/MEMBERFUL_VERSION', '[^']+'/MEMBERFUL_VERSION', '$1'/" -i memberful-wp.php
+sed -re "s/Stable tag:[^\\n]+/Stable tag: v$1/" -i readme.txt
+
+git diff
+
+git commit -aem "Changing stable version number to $1"
+
+git tag "v$1"
+
+git checkout master
+
+git reset --hard "v$1"
+
+git push --all origin
