@@ -2,11 +2,11 @@
 Contributors: matt-button, drewstrojny
 Tags: memberful, member, memberships, recurring payments, subscriptions, stripe, oauth, oauth2
 Requires at least: 3.6
-Tested up to: 3.6.1
+Tested up to: 3.6
 Stable tag: 1.0.0
 License: GPLv2 or later
 
-Start selling memberships and restrict access to content with WordPress and Memberful.
+Sell memberships and restrict access to content with WordPress and Memberful.
 
 == Description ==
 
@@ -34,6 +34,12 @@ Yes. The plugin connects with the Memberful service to bring content protection 
 = How do I contribute to Memberful WP or report bugs? =
 
 Glad you asked! We manage development of the plugin over at the [Memberful WP Github repository](https://github.com/memberful/memberful-wp). Please report any bugs there. If you want to help fix something or contribute a feature, submit a [pull request](https://help.github.com/articles/using-pull-requests).
+
+== Screenshots ==
+
+1. Sync your members and their permissions.
+2. Restrict access to posts or pages.
+3. Simple sign in and account management widget.
 
 == Changelog ==
 
