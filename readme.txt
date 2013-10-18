@@ -6,6 +6,8 @@ Tested up to: 3.6.1
 Stable tag: 1.0.0
 License: GPLv2 or later
 
+Start selling memberships and access to content with WordPress and Memberful.
+
 == Description ==
 
 Integrates your WordPress site with [Memberful](http://memberful.com) using the Memberful OAuth 2.0 endpoint. Memberful is a service for selling recurring memberships to your website with [Stripe](https://stripe.com).
