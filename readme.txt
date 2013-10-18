@@ -6,7 +6,7 @@ Tested up to: 3.6.1
 Stable tag: 1.0.0
 License: GPLv2 or later
 
-Start selling memberships and access to content with WordPress and Memberful.
+Start selling memberships and restrict access to content with WordPress and Memberful.
 
 == Description ==
 
