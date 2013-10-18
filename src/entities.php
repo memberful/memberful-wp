@@ -25,18 +25,23 @@ function memberful_subscription_plans() {
 function memberful_wp_sync_products() {
 	$url = memberful_admin_products_url( MEMBERFUL_JSON );
 
-	update_option( 'memberful_products', memberful_wp_fetch_entities( $url ) );
-
-	return TRUE;
+	return memberful_wp_update_entities( 'memberful_products', $url );
 }
 
 function memberful_wp_sync_subscriptions() {
-
 	$url = memberful_admin_subscriptions_url( MEMBERFUL_JSON );
 
-	update_option( 'memberful_subscriptions', memberful_wp_fetch_entities( $url ) );
+	return memberful_wp_update_entities( 'memberful_subscriptions', $url );
+}
 
-	return TRUE;
+function memberful_wp_update_entities( $type, $url ) {
+	$entities = memberful_wp_fetch_entities( $url );
+
+	if ( is_wp_error($entities) ) {
+		return $entities;
+	}
+
+	return update_option( $type, $entities );
 }
 
 function memberful_wp_fetch_entities( $url ) {
@@ -44,9 +49,11 @@ function memberful_wp_fetch_entities( $url ) {
 
 	$response = wp_remote_get( $full_url, array( 'sslverify' => MEMBERFUL_SSL_VERIFY ) );
 
+	$response_code = (int) wp_remote_retrieve_response_code( $response );
+	$response_body = wp_remote_retrieve_body( $response );
+
 	if ( is_wp_error( $response ) ) {
-		var_dump( $response, $full_url, $url );
-		die();
+		return new WP_Error( 'memberful_sync_request_error', "We couldn't connect to Memberful, please email info@memberful.com ({$response->get_error_message()}, {$url})" );
 	}
 
 	if ( $response['response']['code'] != 200 OR ! isset( $response['body'] ) ) {

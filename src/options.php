@@ -59,12 +59,12 @@ function memberful_wp_register() {
 		if ( $activation === TRUE ) {
 			memberful_wp_sync_products();
 			memberful_wp_sync_subscriptions();
-
-			wp_redirect( admin_url( 'admin.php?page=memberful_options' ) );
 		}
 		else {
-			$vars['error'] = $activation->get_error_message();
+			Memberful_Wp_Reporting::report( $activation, 'error' );
 		}
+
+		return wp_redirect( admin_url( 'admin.php?page=memberful_options' ) );
 	}
 
 	memberful_wp_render( 'setup', $vars );
@@ -152,13 +152,15 @@ function memberful_wp_options() {
 
 		if ( isset( $_POST['manual_sync'] ) ) {
 			if ( is_wp_error( $error = memberful_wp_sync_products() ) ) {
-				var_dump($error);
-				die('Could not sync products');
+				Memberful_Wp_Reporting::report( $error, 'error' );
+
+				return wp_redirect( admin_url( 'admin.php?page=memberful_options' ) );
 			}
 
 			if ( is_wp_error( $error = memberful_wp_sync_subscriptions() ) ) {
-				var_dump($error);
-				die('Could not sync subscriptions');
+				Memberful_Wp_Reporting::report( $error, 'error' );
+
+				return wp_redirect( admin_url( 'admin.php?page=memberful_options' ) );
 			}
 
 			return wp_redirect( admin_url( 'admin.php?page=memberful_options' ) );
@@ -206,8 +208,7 @@ function memberful_wp_activate( $code ) {
 	$credentials = $activator->activate();
 
 	if ( is_wp_error( $credentials ) ) {
-		var_dump ( $credentials );
-		die();
+		return $credentials;
 	}
 
 	update_option( 'memberful_client_id', $credentials->oauth->identifier );

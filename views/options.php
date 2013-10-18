@@ -1,3 +1,4 @@
+<?php memberful_wp_render('flash'); ?>
 <div id="memberful-wrap" class="wrap">
 	<div id="memberful-head">
 		<h2><?php _e( 'Memberful', 'memberful' ); ?></h2>

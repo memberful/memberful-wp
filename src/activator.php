@@ -73,10 +73,16 @@ class Memberful_Activator {
 		$response_code = (int) wp_remote_retrieve_response_code( $response );
 		$response_body = wp_remote_retrieve_body( $response );
 
+		if ( is_wp_error( $response ) ) {
+			return new WP_Error( 'memberful_activation_request_error', "We had trouble talking to Memberful, please email info@memberful.com ({$response->get_error_message()})" );
+		}
+
+		if ( 404 === $response_code ) {
+			return new WP_Error( 'memberful_activation_code_invalid', "It looks like your activation code is wrong. Please try again, and if this keeps happening email us at info@memberful.com" );
+		}
+
 		if ( 200 !== $response_code OR empty( $response_body ) ) {
-			echo "Could not activate plugin: ";
-			var_dump($response);die();
-			return new WP_Error( 'memberful_activation_fail', 'Memberful returned an invalid response' );
+			return new WP_Error( 'memberful_activation_fail', "We couldn't connect to Memberful (response code: {$response_code}), please email info@memberful.com" );
 		}
 
 		return json_decode( $response_body );
