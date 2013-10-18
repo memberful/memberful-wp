@@ -2,11 +2,11 @@
 /*
 Plugin Name: Memberful WP
 Plugin URI: http://github.com/memberful/memberful-wp
-Description: Allows Memberful users to login to WordPress using the Memberful OAuth 2.0 endpoint.
+Description: Sell memberships and restrict access to content with WordPress and Memberful.
 Version: 0.1
 Author: Memberful
 Author URI: http://memberful.com
-License: GPL
+License: GPLv2 or later
 */
 
 if ( ! defined( 'MEMBERFUL_VERSION' ) )
