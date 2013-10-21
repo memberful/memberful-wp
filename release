@@ -8,7 +8,7 @@ if [ -z "$1" ]; then
 fi;
 
 
-sed -re "s/Version:[^\\n]+/Version: $1/" -e "s/MEMBERFUL_VERSION', '[^']+'/MEMBERFUL_VERSION', '$1'/" -i memberful-wp.php
+sed -re "s/Version:[^\\n]+/Version: v$1/" -e "s/MEMBERFUL_VERSION', '[^']+'/MEMBERFUL_VERSION', '$1'/" -i memberful-wp.php
 sed -re "s/Stable tag:[^\\n]+/Stable tag: v$1/" -i readme.txt
 
 git diff
