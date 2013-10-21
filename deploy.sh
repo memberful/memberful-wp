@@ -53,6 +53,8 @@ svn propset svn:ignore "deploy.sh
 README.md
 assets
 tests
+deploy.sh
+release
 .git
 .gitignore" "$SVNPATH/trunk/"
 

@@ -23,3 +23,5 @@ git reset --hard "v$1"
 
 git push --all origin
 git push --tags origin
+
+SVNUSER=memberful PLUGINSLUG=memberful-wp ./deploy.sh
