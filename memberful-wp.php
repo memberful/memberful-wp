@@ -10,7 +10,7 @@ License: GPLv2 or later
 */
 
 if ( ! defined( 'MEMBERFUL_VERSION' ) )
-	define( 'MEMBERFUL_VERSION', '' );
+	define( 'MEMBERFUL_VERSION', '1.0.1' );
 
 if ( ! defined( 'MEMBERFUL_DIR' ) )
 	define( 'MEMBERFUL_DIR', dirname( __FILE__ ) );

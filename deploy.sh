@@ -72,15 +72,17 @@ echo "Changing directory to SVN and committing to trunk"
 cd $SVNPATH/trunk/
 rm -rf $IGNORABLE_FILES
 
+COMMIT_MESSAGE="Tagging version $NEWVERSION1"
+
 # Add all new files that are not set to be ignored
 svn status | grep -v "^.[ \t]*\..*" | grep "^?" | awk '{print $2}' | xargs -r svn add
-svn commit --username=$SVNUSER -m "$COMMITMSG"
+svn commit --username=$SVNUSER -m "$COMMIT_MESSAGE"
 
 echo "Creating new SVN tag & committing it"
 cd $SVNPATH
 svn copy trunk/ tags/$NEWVERSION1/
 cd $SVNPATH/tags/$NEWVERSION1
-svn commit --username=$SVNUSER -m "Tagging version $NEWVERSION1"
+svn commit --username=$SVNUSER -m "$COMMIT_MESSAGE"
 
 echo "Removing temporary directory $SVNPATH"
 rm -fr $SVNPATH/
