@@ -43,6 +43,9 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 == Changelog ==
 
+= 1.0.1 =
+* Cleanup release to ensure WordPress can correctly auto-upgrade the plugin
+
 = 1.0.0 =
 * New and improved Restrict Access meta box on the post and page edit screen.
 * Improved included debugging tools.
