@@ -10,8 +10,8 @@ fi;
 VERSION="$1"
 TAG="$VERSION"
 
-sed -re "s/Version:[^\\n]+/Version: v$VERSION/" -e "s/MEMBERFUL_VERSION', '[^']+'/MEMBERFUL_VERSION', '$VERSION'/" -i memberful-wp.php
-sed -re "s/Stable tag:[^\\n]+/Stable tag: v$VERSION/" -i readme.txt
+sed -re "s/Version:[^\\n]+/Version: $TAG/" -e "s/MEMBERFUL_VERSION', '[^']+'/MEMBERFUL_VERSION', '$VERSION'/" -i memberful-wp.php
+sed -re "s/Stable tag:[^\\n]+/Stable tag: $TAG/" -i readme.txt
 
 git diff
 
