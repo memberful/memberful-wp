@@ -7,7 +7,7 @@ if [ -z "$1" ]; then
   exit 1;
 fi;
 
-VERSION="$VERSION"
+VERSION="$1"
 TAG="$VERSION"
 
 sed -re "s/Version:[^\\n]+/Version: v$VERSION/" -e "s/MEMBERFUL_VERSION', '[^']+'/MEMBERFUL_VERSION', '$VERSION'/" -i memberful-wp.php
