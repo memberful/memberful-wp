@@ -7,19 +7,21 @@ if [ -z "$1" ]; then
   exit 1;
 fi;
 
+VERSION="$1"
+TAG="$VERSION"
 
-sed -re "s/Version:[^\\n]+/Version: v$1/" -e "s/MEMBERFUL_VERSION', '[^']+'/MEMBERFUL_VERSION', '$1'/" -i memberful-wp.php
-sed -re "s/Stable tag:[^\\n]+/Stable tag: v$1/" -i readme.txt
+sed -re "s/Version:[^\\n]+/Version: $TAG/" -e "s/MEMBERFUL_VERSION', '[^']*'/MEMBERFUL_VERSION', '$VERSION'/" -i memberful-wp.php
+sed -re "s/Stable tag:[^\\n]+/Stable tag: $TAG/" -i readme.txt
 
 git diff
 
-git commit -aem "Changing stable version number to $1"
+git commit -aem "Changing stable version number to $VERSION"
 
-git tag "v$1"
+git tag "$TAG"
 
 git checkout master
 
-git reset --hard "v$1"
+git reset --hard "$TAG"
 
 git push --all origin
 git push --tags origin

@@ -5,6 +5,8 @@
 # The difference is that this script lives in the plugin's git repo & doesn't require an existing SVN repo.
 # Source: https://github.com/thenbrent/multisite-user-management/blob/master/deploy.sh
 
+set -e
+
 if [ -z "$SVNUSER" ]; then
   echo "Please specify SVNUSER"
   exit 1;
@@ -49,14 +51,7 @@ echo "Creating local copy of SVN repo ..."
 svn co $SVNURL $SVNPATH
 
 echo "Ignoring github specific files and deployment script"
-svn propset svn:ignore "deploy.sh
-README.md
-assets
-tests
-deploy.sh
-release
-.git
-.gitignore" "$SVNPATH/trunk/"
+IGNORABLE_FILES="README.md assets tests deploy.sh release .git .gitignore"
 
 #export git -> SVN
 echo "Exporting the HEAD of master from git to the trunk of SVN"
@@ -70,20 +65,24 @@ then
 echo "Exporting the HEAD of each submodule from git to the trunk of SVN"
 git submodule init
 git submodule update
-git submodule foreach --recursive 'git checkout-index -a -f --prefix=$SVNPATH/trunk/$path/'
+git submodule foreach --recursive 'git checkout-index -a -f --prefix=$SVNPATH/trunk/$path/; cd $SVNPATH/trunk/$path; rm -rf $IGNORABLE_FILES'
 fi
 
 echo "Changing directory to SVN and committing to trunk"
 cd $SVNPATH/trunk/
+rm -rf $IGNORABLE_FILES
+
+COMMIT_MESSAGE="Tagging version $NEWVERSION1"
+
 # Add all new files that are not set to be ignored
-svn status | grep -v "^.[ \t]*\..*" | grep "^?" | awk '{print $2}' | xargs svn add
-svn commit --username=$SVNUSER -m "$COMMITMSG"
+svn status | grep -v "^.[ \t]*\..*" | grep "^?" | awk '{print $2}' | xargs -r svn add
+svn commit --username=$SVNUSER -m "$COMMIT_MESSAGE"
 
 echo "Creating new SVN tag & committing it"
 cd $SVNPATH
 svn copy trunk/ tags/$NEWVERSION1/
 cd $SVNPATH/tags/$NEWVERSION1
-svn commit --username=$SVNUSER -m "Tagging version $NEWVERSION1"
+svn commit --username=$SVNUSER -m "$COMMIT_MESSAGE"
 
 echo "Removing temporary directory $SVNPATH"
 rm -fr $SVNPATH/
