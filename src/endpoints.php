@@ -20,6 +20,7 @@ function memberful_wp_endpoint_filter() {
 		if ( ! $endpoint->verify_request( $_SERVER['REQUEST_METHOD'] ) )
 			die( 'Invalid request' );
 
+		header('Cache-Control: private');
 		$endpoint->process( $_REQUEST, $_SERVER );
 		exit();
 	}
