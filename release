@@ -13,6 +13,8 @@ TAG="$VERSION"
 sed -re "s/Version:[^\\n]+/Version: $TAG/" -e "s/MEMBERFUL_VERSION', '[^']*'/MEMBERFUL_VERSION', '$VERSION'/" -i memberful-wp.php
 sed -re "s/Stable tag:[^\\n]+/Stable tag: $TAG/" -i readme.txt
 
+"${EDITOR:-vi}" readme.txt
+
 git diff
 
 git commit -aem "Changing stable version number to $VERSION"
