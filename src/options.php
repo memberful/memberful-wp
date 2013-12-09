@@ -64,7 +64,7 @@ function memberful_wp_register() {
 			Memberful_Wp_Reporting::report( $activation, 'error' );
 		}
 
-		return wp_redirect( admin_url( 'admin.php?page=memberful_options' ) );
+		return wp_redirect( admin_url( 'options-general.php?page=memberful_options' ) );
 	}
 
 	memberful_wp_render( 'setup', $vars );
@@ -80,7 +80,7 @@ function memberful_wp_reset() {
 		update_option( $option, $defaults[$option] );
 	}
 
-	wp_redirect( admin_url( 'admin.php?page=memberful_options' ) );
+	wp_redirect( admin_url( 'options-general.php?page=memberful_options' ) );
 }
 
 function _memberful_wp_debug_all_post_meta() {
@@ -154,16 +154,16 @@ function memberful_wp_options() {
 			if ( is_wp_error( $error = memberful_wp_sync_products() ) ) {
 				Memberful_Wp_Reporting::report( $error, 'error' );
 
-				return wp_redirect( admin_url( 'admin.php?page=memberful_options' ) );
+				return wp_redirect( admin_url( 'options-general.php?page=memberful_options' ) );
 			}
 
 			if ( is_wp_error( $error = memberful_wp_sync_subscriptions() ) ) {
 				Memberful_Wp_Reporting::report( $error, 'error' );
 
-				return wp_redirect( admin_url( 'admin.php?page=memberful_options' ) );
+				return wp_redirect( admin_url( 'options-general.php?page=memberful_options' ) );
 			}
 
-			return wp_redirect( admin_url( 'admin.php?page=memberful_options' ) );
+			return wp_redirect( admin_url( 'options-general.php?page=memberful_options' ) );
 		}
 
 		if ( isset( $_POST['reset_plugin'] ) ) {
