@@ -2,7 +2,7 @@
 Contributors: matt-button, drewstrojny
 Tags: memberful, member, memberships, recurring payments, subscriptions, stripe, oauth, oauth2
 Requires at least: 3.6
-Tested up to: 3.6
+Tested up to: 3.8
 Stable tag: 1.0.2
 License: GPLv2 or later
 
@@ -10,7 +10,7 @@ Sell memberships and restrict access to content with WordPress and Memberful.
 
 == Description ==
 
-Integrates your WordPress site with [Memberful](http://memberful.com) using the Memberful OAuth 2.0 endpoint. Memberful is a service for selling recurring memberships to your website with [Stripe](https://stripe.com).
+Integrates your WordPress site with [Memberful](https://memberful.com) using the Memberful OAuth 2.0 endpoint. Memberful is a service for selling recurring memberships to your website with [Stripe](https://stripe.com).
 
 Features include:
 

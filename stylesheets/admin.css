@@ -9,9 +9,6 @@
 .memberful-protect-help {
 	margin-top: 20px;
 	padding: 10px 20px;
-	background: #ececec;
-	border-radius: 3px;
-	box-shadow: 0 1px 3px rgba(0,0,0,.25);
 }
 .memberful-sign-up h1 {
 	font-size: 16px;
@@ -35,9 +32,6 @@
 #memberful-registered {
 	margin-top: 20px;
 	padding: 10px 20px 20px 20px;
-	border: 1px solid #dfdfdf;
-	border-radius: 3px;
-	box-shadow: 0 1px 3px rgba(0,0,0,.25);
 }
 #memberful-registered h1 {
 	margin: .67em 0 10px 0;
@@ -65,8 +59,9 @@
 	color: #666;
 	line-height: 18px;
 }
-.button.memberful-red-button {
+.memberful-red-button {
 	float: right;
+	cursor: pointer;
 	text-shadow: 0 -1px 0 #a23b25;
 	color: #fff;
 	background: #ef2f39;
@@ -76,8 +71,10 @@
 	background-image: -o-linear-gradient(top,#ff6b64,#ef2f39);
 	background-image: linear-gradient(to bottom,#ff6b64,#ef2f39);
 	border: 1px solid #ce262f;
+	border-color: #ce262f;
+	border-radius: 3px;
 }
-.button.memberful-red-button:hover {
+.memberful-red-button:hover {
 	text-shadow: 0 -1px 0 #a23b25;
 	color: #fff;
 	background: #f4424b;
@@ -88,7 +85,7 @@
 	background-image: linear-gradient(to bottom,#ff7972,#f4424b);
 	border: 1px solid #ce262f;
 }
-.button.memberful-red-button:active {
+.memberful-red-button:active {
 	text-shadow: 0 -1px 0 #a23b25;
 	color: #fff;
 	background: #f4424b;
@@ -124,7 +121,6 @@ p.memberful-access-label {
 }
 .memberful-marketing-content {
 	float: left;
-	width: 500px;
 	margin: 10px 0;
 }
 #memberful_marketing_content_ifr {
