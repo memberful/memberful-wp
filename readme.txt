@@ -2,7 +2,7 @@
 Contributors: matt-button, drewstrojny
 Tags: memberful, member, memberships, recurring payments, subscriptions, stripe, oauth, oauth2
 Requires at least: 3.6
-Tested up to: 3.6
+Tested up to: 3.8
 Stable tag: 1.0.2
 License: GPLv2 or later
 
