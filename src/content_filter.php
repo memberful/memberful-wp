@@ -1,6 +1,6 @@
 <?php
 
-add_action( 'the_content', 'memberful_wp_protect_content' );
+add_action( 'the_content', 'memberful_wp_protect_content', -10 );
 
 
 function memberful_wp_protect_content( $content ) {
