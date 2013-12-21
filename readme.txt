@@ -44,7 +44,7 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 == Changelog ==
 
 = 1.1.1 =
-* Ensure that marketing content is swapped in before WP applies default filters to content
+* Ensure that marketing content is swapped in before WP applies default filters to content.
 
 = 1.1.0 =
 * WordPress 3.8 styling compatibility updates.
