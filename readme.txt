@@ -1,6 +1,6 @@
 === Memberful WP ===
 Contributors: matt-button, drewstrojny
-Tags: memberful, member, memberships, recurring payments, subscriptions, stripe, oauth, oauth2
+Tags: memberful, member, memberships, recurring payments, paywall, subscriptions, stripe, oauth, oauth2
 Requires at least: 3.6
 Tested up to: 3.8
 Stable tag: 1.1.1
@@ -16,7 +16,7 @@ Features include:
 
 * Automatic syncing of your Memberful member data to WordPress.
 * Single sign on: Members are automatically signed into WordPress when they sign in to Memberful.
-* Restrict access to content. Quickly protect any posts or pages right from your WordPress edit screen.
+* Create a paywall and restrict access to content. Quickly protect any posts or pages right from your WordPress edit screen.
 * A widget with links to sign in and manage your account (update credit card, cancel subscription, etc.).
  
 == Installation ==
