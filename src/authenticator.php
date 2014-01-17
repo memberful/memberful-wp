@@ -162,7 +162,7 @@ class Memberful_Authenticator {
 			array(
 				'body'      => $params,
 				'sslverify' => MEMBERFUL_SSL_VERIFY,
-				'timeout'   => 5
+				'timeout'   => 15
 			)
 		);
 
