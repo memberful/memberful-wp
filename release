@@ -17,6 +17,8 @@ sed -re "s/Stable tag:[^\\n]+/Stable tag: $TAG/" -i readme.txt
 
 git diff
 
+read
+
 git commit -aem "Changing stable version number to $VERSION"
 
 git tag "$TAG"
