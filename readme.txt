@@ -1,6 +1,6 @@
 === Memberful WP ===
 Contributors: matt-button, drewstrojny
-Tags: memberful, member, memberships, recurring payments, subscriptions, stripe, oauth, oauth2
+Tags: memberful, member, memberships, recurring payments, recurring billing, paywall, subscriptions, stripe, oauth, oauth2
 Requires at least: 3.6
 Tested up to: 3.8
 Stable tag: 1.1.1
@@ -16,7 +16,7 @@ Features include:
 
 * Automatic syncing of your Memberful member data to WordPress.
 * Single sign on: Members are automatically signed into WordPress when they sign in to Memberful.
-* Restrict access to content. Quickly protect any posts or pages right from your WordPress edit screen.
+* Create a paywall and restrict access to content. Quickly protect any posts or pages right from your WordPress edit screen.
 * A widget with links to sign in and manage your account (update credit card, cancel subscription, etc.).
  
 == Installation ==
@@ -29,7 +29,11 @@ Features include:
 
 = Do I need a Memberful account to use the plugin? =
 
-Yes. The plugin connects with the Memberful service to bring content protection and single sign on features to your WordPress website.
+Yes. [Memberful is online membership software](https://memberful.com), and the plugin connects with the Memberful service to bring content protection and single sign on features to your WordPress website.
+
+= Can I protect content on my WordPress website?
+
+Yes, you can [protect WordPress content](https://memberful.com/help/integrate/services/wordpress/protect-wordpress-content/) with Memberful. Every page and post features an meta box where you can set permissions. We also include [several helpful functions](https://memberful.com/help/integrate/services/wordpress/wordpress-functions/) for use in WordPress themes or plugins.
 
 = How do I contribute to Memberful WP or report bugs? =
 
@@ -44,7 +48,7 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 == Changelog ==
 
 = 1.1.1 =
-* Ensure that marketing content is swapped in before WP applies default filters to content
+* Ensure that marketing content is swapped in before WP applies default filters to content.
 
 = 1.1.0 =
 * WordPress 3.8 styling compatibility updates.
