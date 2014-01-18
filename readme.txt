@@ -29,9 +29,9 @@ Features include:
 
 = Do I need a Memberful account to use the plugin? =
 
-Yes. [Memberful is online membership software](https://memberful.com), and the plugin connects with the Memberful service to bring content protection and single sign on features to your WordPress website.
+Yes. Memberful is online [membership software](https://memberful.com), and the plugin connects with the Memberful service to bring content protection and single sign on features to your WordPress website.
 
-= Can I protect content on my WordPress website?
+= Can I protect content on my WordPress website? =
 
 Yes, you can [protect WordPress content](https://memberful.com/help/integrate/services/wordpress/protect-wordpress-content/) with Memberful. Every page and post features an meta box where you can set permissions. We also include [several helpful functions](https://memberful.com/help/integrate/services/wordpress/wordpress-functions/) for use in WordPress themes or plugins.
 
