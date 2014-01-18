@@ -10,7 +10,7 @@ Sell memberships and restrict access to content with WordPress and Memberful.
 
 == Description ==
 
-Integrates your WordPress site with [Memberful](https://memberful.com) using the Memberful OAuth 2.0 endpoint. Memberful is a service for selling recurring memberships to your website with [Stripe](https://stripe.com).
+A simple WordPress membership plugin that integrates your site with [Memberful](https://memberful.com). Memberful is a service for selling subscriptions to your website with [Stripe](https://stripe.com).
 
 Features include:
 
