@@ -21,6 +21,9 @@ if ( ! defined( 'MEMBERFUL_URL' ) )
 if ( ! defined( 'MEMBERFUL_APPS_HOST' ) )
 	define( 'MEMBERFUL_APPS_HOST', 'https://apps.memberful.com' );
 
+if ( ! defined( 'MEMBERFUL_EMBED_HOST' ) )
+	define( 'MEMBERFUL_EMBED_HOST', '//embed.memberful.com' );
+
 // Should requests to memberful check the SSL certificate?
 define( 'MEMBERFUL_SSL_VERIFY', defined( 'SITE_ENVIRONMENT' ) ? SITE_ENVIRONMENT == 'production' : FALSE );
 
@@ -37,6 +40,7 @@ require_once MEMBERFUL_DIR . '/src/endpoints.php';
 require_once MEMBERFUL_DIR . '/src/marketing_content.php';
 require_once MEMBERFUL_DIR . '/src/content_filter.php';
 require_once MEMBERFUL_DIR . '/src/entities.php';
+require_once MEMBERFUL_DIR . '/src/embed.php';
 require_once MEMBERFUL_DIR . '/vendor/reporting.php';
 
 register_activation_hook( __FILE__, 'memberful_wp_plugin_activate' );

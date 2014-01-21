@@ -11,6 +11,7 @@ function memberful_wp_all_options() {
 		'memberful_products' => array(),
 		'memberful_subscriptions' => array(),
 		'memberful_acl' => array(),
+        'memberful_embed_enabled' => FALSE,
 		MEMBERFUL_OPTION_DEFAULT_MARKETING_CONTENT => NULL
 	);
 }
