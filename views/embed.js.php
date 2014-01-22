@@ -1,6 +1,9 @@
 <script type="text/javascript">
    window.MemberfulOptions = {
-     site: "<?php echo get_option( 'memberful_site' ) ?>"
+     site: "<?php echo get_option( 'memberful_site' ) ?>",
+     intercept: [
+       "<?php echo memberful_sign_in_url(); ?>"
+     ]
    };
 
    (function() {
