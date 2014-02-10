@@ -36,17 +36,21 @@ class Memberful_Wp_Endpoint_Auth implements Memberful_Wp_Endpoint {
 	}
 
 	private function after_logout_redirect_url( $params ) {
-		return !empty( $params['redirect_to'] ) ? $params['redirect_to'] : home_url();
+		$url = !empty( $params['redirect_to'] ) ? $params['redirect_to'] : home_url();
+
+		return apply_filters( 'memberful_wp_after_sign_out_url', $url );
 	}
 
 	private function after_login_redirect_url( $params ) {
-		if ( isset( $params['redirect_to'] ) )
-			return urldecode($params['redirect_to']);
+		if ( isset( $params['redirect_to'] ) ) {
+			$url = urldecode($params['redirect_to']);
+		} else if ( isset( $_COOKIE['memberful_redirect'] ) ) {
+			$url = $_COOKIE['memberful_redirect'];
+		} else {
+			$url = memberful_account_url();
+		}
 
-		if ( isset( $_COOKIE['memberful_redirect'] ) )
-			return $_COOKIE['memberful_redirect'];
-
-		return memberful_account_url();
+		return apply_filters( 'memberful_wp_after_sign_in_url', $url );
 	}
 
 	private function clear_redirect_cookie() {
