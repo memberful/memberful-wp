@@ -30,7 +30,7 @@ function memberful_wp_connection_options() {
 }
 
 function memberful_wp_is_connected_to_site() {
-	return ! get_option( 'memberful_client_id', FALSE );
+	return !! get_option( 'memberful_client_id', FALSE );
 }
 
 function memberful_wp_register_options() {
