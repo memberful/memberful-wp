@@ -11,6 +11,7 @@ function memberful_wp_all_options() {
 		'memberful_products' => array(),
 		'memberful_subscriptions' => array(),
 		'memberful_acl' => array(),
+		'memberful_embed_enabled' => FALSE,
 		MEMBERFUL_OPTION_DEFAULT_MARKETING_CONTENT => NULL
 	);
 }
@@ -26,6 +27,10 @@ function memberful_wp_connection_options() {
 		'memberful_api_key',
 		'memberful_webhook_secret'
 	);
+}
+
+function memberful_wp_is_connected_to_site() {
+	return !! get_option( 'memberful_client_id', FALSE );
 }
 
 function memberful_wp_register_options() {
@@ -175,7 +180,7 @@ function memberful_wp_options() {
       return memberful_wp_debug();
     }
 
-	if ( ! get_option( 'memberful_client_id' ) ) {
+	if ( ! memberful_wp_is_connected_to_site() ) {
 		return memberful_wp_register();
 	}
 
