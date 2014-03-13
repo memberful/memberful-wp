@@ -18,5 +18,5 @@ function memberful_wp_render_embed() {
 }
 
 function memberful_wp_embed_script_src() {
-	return memberful_url( 'assets/embedded.js' );
+	return 'https://d35xxde4fgg0cx.cloudfront.net/assets/embedded.js';
 }
