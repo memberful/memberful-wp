@@ -62,6 +62,7 @@ function memberful_wp_register() {
 		$activation = memberful_wp_activate( $_POST['activation_code'] );
 
 		if ( $activation === TRUE ) {
+			update_option( 'memberful_embed_enabled', TRUE );
 			memberful_wp_sync_products();
 			memberful_wp_sync_subscriptions();
 		}
