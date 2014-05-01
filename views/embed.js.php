@@ -3,7 +3,8 @@
 		site: "<?php echo $site_url ?>",
 		intercept: [
 			"<?php echo memberful_sign_in_url(); ?>"
-		]
+		],
+		memberSignedIn: <?php echo is_user_logged_in() ? 'true' : 'false'; ?>
 	};
 
 	(function() {
