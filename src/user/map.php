@@ -103,7 +103,7 @@ class Memberful_User_Map {
 	 * @return array			First element is the id of the user, the second is a bool indicating
 	 *						  whether we found this user in the map, or whether we found them by their email address
 	 */
-	private function find_user( $member ) {
+	public function find_user( $member ) {
 		global $wpdb;
 
 		$user_id		= NULL;
@@ -158,7 +158,7 @@ class Memberful_User_Map {
 	 * We do this to prevent problems where webhooks and oauth login attempt to create
 	 * a user simultaneously.
 	 */
-	private function reserve_mapping( $member, array $params = array() ) {
+	public function reserve_mapping( $member, array $params = array() ) {
 		global $wpdb;
 
 		$columns	 = array_merge( array( 'member_id' ), array_keys( $params ) );
@@ -195,7 +195,7 @@ class Memberful_User_Map {
 	 * @param array $columns Set of columns that
 	 * @return array
 	 */
-	private function restrict_columns( array $columns ) {
+	public function restrict_columns( array $columns ) {
 		return array_intersect(
 			$columns,
 			array( 'member_id' ,'wp_user_id', 'refresh_token', 'last_sync_at' )
