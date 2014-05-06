@@ -34,9 +34,9 @@ function memberful_wp_metabox( $post ) {
 	$entities = array( Memberful_Post_ACL::PRODUCT, Memberful_Post_ACL::SUBSCRIPTION );
 
 	foreach ( $entities as $entity ) {
-		$acl_manager = new Memberful_Post_ACL( $post->ID, $entity );
+		$acl_manager = new Memberful_Post_ACL( $entity );
 
-		$view_vars[$entity.'s'] = memberful_wp_metabox_acl_format( $acl_manager->get_acl(), $entity );
+		$view_vars[$entity.'s'] = memberful_wp_metabox_acl_format( $acl_manager->get_acl( $post->ID ), $entity );
 	}
 
 	$marketing_content = array(
@@ -99,9 +99,9 @@ function memberful_wp_save_postdata( $post_id ) {
 
 		$acl_list = empty($_POST[$field]) ? array() : (array) $_POST[$field];
 
-		$acl_manager = new Memberful_Post_ACL( $post_id, $entity );
+		$acl_manager = new Memberful_Post_ACL( $entity );
 
-		$acl_manager->set_acl( $acl_list );
+		$acl_manager->set_acl( $post_id, $acl_list );
 	}
 
 	$marketing_content = trim( $_POST['memberful_marketing_content'] );
@@ -138,16 +138,14 @@ class Memberful_Post_ACL {
 	const PRODUCT = 'product';
 	const SUBSCRIPTION = 'subscription';
 
-	protected $_id;
 	protected $_entity;
 
-	public function __construct( $post_id, $entity ) {
-		$this->_id     = (int) $post_id;
+	public function __construct( $entity ) {
 		$this->_entity = $entity;
 	}
 
-	public function get_acl() {
-		$restricted_acl = get_post_meta( $this->_id, 'memberful_acl', TRUE );
+	public function get_acl( $post_id ) {
+		$restricted_acl = get_post_meta( $post_id, 'memberful_acl', TRUE );
 
 		$entity_acl = empty( $restricted_acl[$this->_entity] ) ? array() : $restricted_acl[$this->_entity];
 
@@ -159,8 +157,8 @@ class Memberful_Post_ACL {
 	 *
 	 * @param array $entity_ids An array of numerical ids, indicating the required enitities
 	 */
-	public function set_acl( array $entity_ids ) {
-		$old_acl = $this->get_acl();
+	public function set_acl( $post_id, array $entity_ids ) {
+		$old_acl = $this->get_acl( $post_id );
 		$new_acl = array();
 
 		if ( ! empty( $entity_ids ) )
@@ -168,10 +166,10 @@ class Memberful_Post_ACL {
 
 		$acl_map = $this->_load_global_acl();
 
-		$acl_map = $this->_remove_deleted_entities( $acl_map, $old_acl, $new_acl );
-		$acl_map = $this->_add_new_entities(        $acl_map, $old_acl, $new_acl );
+		$acl_map = $this->_remove_deleted_entities( $post_id, $acl_map, $old_acl, $new_acl );
+		$acl_map = $this->_add_new_entities(        $post_id, $acl_map, $old_acl, $new_acl );
 
-		$this->_update_post_acl( $new_acl );
+		$this->_update_post_acl( $post_id, $new_acl );
 		$this->_update_global_acl( $acl_map );
 	}
 
@@ -193,17 +191,17 @@ class Memberful_Post_ACL {
 	}
 
 
-	protected function _update_post_acl( array $new_acl ) {
-		$current_acl = get_post_meta( $this->_id, 'memberful_acl', TRUE );
+	protected function _update_post_acl( $post_id, array $new_acl ) {
+		$current_acl = get_post_meta( $post_id, 'memberful_acl', TRUE );
 		$current_acl[$this->_entity] = $new_acl;
-		update_post_meta( $this->_id, 'memberful_acl', $current_acl );
+		update_post_meta( $post_id, 'memberful_acl', $current_acl );
 	}
 
 	/**
 	 * Remove any entities that were unchecked in the metabox from the global ACL map
 	 *
 	 */
-	protected function _remove_deleted_entities( array $map, array $old_acl, array $new_acl ) {
+	protected function _remove_deleted_entities( $post_id, array $map, array $old_acl, array $new_acl ) {
 		if ( empty( $map ) || empty( $old_acl ) )
 			return $map;
 
@@ -213,7 +211,7 @@ class Memberful_Post_ACL {
 			return $map;
 
 		foreach ( $deleted as $product ) {
-			unset( $map[$product][$this->_id] );
+			unset( $map[$product][$post_id] );
 		}
 
 		return $map;
@@ -224,7 +222,7 @@ class Memberful_Post_ACL {
 	 *
 	 * @param array $map The current
 	 */
-	protected function _add_new_entities( array $map, array $old_acl, array $new_acl ) {
+	protected function _add_new_entities( $post_id, array $map, array $old_acl, array $new_acl ) {
 		if ( empty( $new_acl ) )
 			return $map;
 
@@ -233,7 +231,7 @@ class Memberful_Post_ACL {
 				$map[$product] = array();
 			}
 
-			$map[$product][$this->_id] = $this->_id;
+			$map[$product][$post_id] = $post_id;
 		}
 
 		return $map;
