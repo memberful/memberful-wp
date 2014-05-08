@@ -1,6 +1,10 @@
 <?php
 require MEMBERFUL_DIR.'/src/user/map_stats.php';
 
+add_action( 'update_option_home',     'memberful_wp_prepare_to_sync_options_to_memberful' );
+add_action( 'update_option_blogname', 'memberful_wp_prepare_to_sync_options_to_memberful' );
+add_filter( 'wp_redirect',            'memberful_wp_intercept_redirect_after_updating_options' );
+
 function memberful_wp_all_options() {
 	return array(
 		'memberful_client_id' => NULL,
@@ -51,4 +55,28 @@ function memberful_wp_option_values() {
 	return $config;
 }
 
+function memberful_wp_prepare_to_sync_options_to_memberful() {
+	$GLOBALS['memberful_wp_options_changed'] = true;
+}
 
+function memberful_wp_intercept_redirect_after_updating_options($location) {
+	if ( ! empty( $GLOBALS['memberful_wp_options_changed'] ) )
+		memberful_wp_send_site_options_to_memberful();
+
+	return $location;
+}
+
+function memberful_wp_site_name() {
+	$blog_name = wp_specialchars_decode( trim( get_bloginfo( 'name', 'Display' ), ENT_QUOTES ) );
+
+	return empty( $blog_name ) ? 'WordPress Blog' : $blog_name;
+}
+
+function memberful_wp_send_site_options_to_memberful() {
+	$options = array('name' => memberful_wp_site_name(), 'main_website_url' => home_url());
+
+	memberful_wp_send_data_to_api_as_json( 
+		memberful_url( 'admin/settings/integrate/website/settings' ),
+		$options
+	);
+}

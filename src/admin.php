@@ -305,9 +305,3 @@ function memberful_wp_mass_protect() {
 		)
 	);
 }
-
-function memberful_wp_site_name() {
-	$blog_name = wp_specialchars_decode( trim( get_bloginfo( 'name', 'Display' ), ENT_QUOTES ) );
-
-	return empty( $blog_name ) ? 'WordPress Blog' : $blog_name;
-}

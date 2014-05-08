@@ -75,3 +75,24 @@ function memberful_api_member( $member_id ) {
 
 	return json_decode( $response_body );
 }
+
+function memberful_wp_send_data_to_api_as_json( $url, $data ) {
+	global $wp_version;
+
+	$user_agent = 'WordPress/'.$wp_version.' (PHP '.phpversion().') memberful-wp/'.MEMBERFUL_VERSION;
+
+	return wp_remote_post(
+		memberful_wp_wrap_api_token( $url ),
+		array(
+			'method'  => 'PUT',
+			'headers' => array(
+				'User-Agent' => $user_agent,
+				'Content-Type' => 'application/json',
+				'Accept' => 'application/json'
+			),
+			'body' => json_encode( $data ),
+			'timeout' => 10,
+			'sslverify' => MEMBERFUL_SSL_VERIFY,
+		)
+	);
+}
