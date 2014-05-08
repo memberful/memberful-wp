@@ -62,6 +62,9 @@ Mapping records:
 <?php endforeach; ?>
 <?php endif; ?>
 
+Error Log:
+<?php var_export($error_log); ?>
+
 </code>
 </pre>
 

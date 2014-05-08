@@ -156,9 +156,10 @@ function memberful_wp_debug() {
 	$total_users           = $counts['total_users'];
 	$total_unmapped_users  = count($unmapped_users);
 	$total_mapped_users    = $total_users - $total_unmapped_users;
-    $config                = memberful_wp_option_values();
+	$config                = memberful_wp_option_values();
 	$acl_for_all_posts     = _memberful_wp_debug_all_post_meta();
 	$plugins               = get_plugins();
+	$error_log             = memberful_wp_api_error_log();
 
 	if($total_users != $total_mapped_users) {
 		$mapping_records = $mapping_stats->mapping_records();
@@ -179,7 +180,8 @@ function memberful_wp_debug() {
 			'config',
 			'acl_for_all_posts',
 			'wp_version',
-			'plugins'
+			'plugins',
+			'error_log'
 		  )
 	);
 }

@@ -16,6 +16,7 @@ function memberful_wp_all_options() {
 		'memberful_subscriptions' => array(),
 		'memberful_acl' => array(),
 		'memberful_embed_enabled' => FALSE,
+		'memberful_error_log' => array(),
 		MEMBERFUL_OPTION_DEFAULT_MARKETING_CONTENT => NULL
 	);
 }
@@ -77,6 +78,7 @@ function memberful_wp_send_site_options_to_memberful() {
 
 	memberful_wp_send_data_to_api_as_json( 
 		memberful_url( 'admin/settings/integrate/website/settings' ),
+		'sync_site_settings_to_memberful',
 		$options
 	);
 }
