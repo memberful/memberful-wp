@@ -1,23 +1,29 @@
 <?php
 
-function memberful_wp_instrument_api_response( $response, $caller ) {
-	if ( is_wp_error( $response ) )
-		return memberful_wp_record_api_response_error(
-			$caller,
-			memberful_wp_extract_api_error_log_from_wp_error( $response )
-		);
+function memberful_wp_instrument_api_call( $url, $request, $response, $caller ) {
+	$error_payload = NULL;
 
-	$status_code = (int) wp_remote_retrieve_response_code( $response, $caller );
+	if ( is_wp_error( $response ) ) {
+		$error_payload = memberful_wp_extract_api_error_log_from_wp_error( $response );
+	} else {
+		$status_code = (int) wp_remote_retrieve_response_code( $response );
 
-	if ( $status_code < 200 || $status_code >= 400 )
-		return memberful_wp_record_api_response_error( 
-			memberful_wp_extract_api_error_log_from_response( $response, $caller )
-		);
+		if ( $status_code < 200 || $status_code >= 400 ) {
+			$error_payload = memberful_wp_extract_api_error_log_from_response( $response );
+		}
+	}
+
+	if ( $error_payload !== NULL ) {
+		$error_payload['caller']     = $caller;
+		$error_payload['url']        = $url;
+		$error_payload['verify_ssl'] = $request['verify_ssl'];
+
+		memberful_wp_record_api_response_error( $error_payload );
+	}
 }
 
-function memberful_wp_extract_api_error_log_from_wp_error( $wp_error, $caller ) {
+function memberful_wp_extract_api_error_log_from_wp_error( $wp_error ) {
 	return array(
-		'caller'   => $caller,
 		'status'   => 0,
 		'date'     => gmdate('c'),
 		'codes'    => $wp_error->get_error_codes(),
@@ -25,17 +31,16 @@ function memberful_wp_extract_api_error_log_from_wp_error( $wp_error, $caller ) 
 	);
 }
 
-function memberful_wp_extract_api_error_log_from_response( $response, $caller ) {
+function memberful_wp_extract_api_error_log_from_response( $response ) {
 	$headers = isset( $response['headers'] ) ? $response['headers'] : array();
 
 	return array(
-		'caller'       => $caller,
 		'status'       => (int) wp_remote_retrieve_response_code( $response ),
 		'date'         => gmdate('c'),
-		'request_id'   => isset( $headers['X-Request-Id'] ) ? $headers['X-Request-Id'] : 'unknown',
-		'cache_hit'    => isset( $headers['X-Rack-Cache'] ) ? $headers['X-Rack-Cache'] : 'unknown',
-		'runtime'      => isset( $headers['X-Runtime'] )    ? $headers['X-Runtime'] : 'unknown',
-		'content_type' => isset( $headers['Content-Type'])  ? $headers['Content-Type'] : 'unknown',
+		'request_id'   => isset( $headers['x-request-id'] ) ? $headers['x-request-id'] : 'unknown',
+		'cache_hit'    => isset( $headers['x-rack-cache'] ) ? $headers['x-rack-cache'] : 'unknown',
+		'runtime'      => isset( $headers['x-runtime'] )    ? $headers['x-runtime']    : 'unknown',
+		'content_type' => isset( $headers['content-type'])  ? $headers['content-type'] : 'unknown',
 	);
 }
 
@@ -84,24 +89,23 @@ function memberful_api_member( $member_id ) {
 function memberful_wp_send_data_to_api_as_json( $url, $caller, $data ) {
 	global $wp_version;
 
+	$url        = memberful_wp_wrap_api_token( $url );
 	$user_agent = 'WordPress/'.$wp_version.' (PHP '.phpversion().') memberful-wp/'.MEMBERFUL_VERSION;
-
-	$response = wp_remote_post(
-		memberful_wp_wrap_api_token( $url ),
-		array(
-			'method'  => 'PUT',
-			'headers' => array(
-				'User-Agent' => $user_agent,
-				'Content-Type' => 'application/json',
-				'Accept' => 'application/json'
-			),
-			'body' => json_encode( $data ),
-			'timeout' => 10,
-			'sslverify' => MEMBERFUL_SSL_VERIFY,
-		)
+	$request    = array(
+		'method'  => 'PUT',
+		'headers' => array(
+			'User-Agent' => $user_agent,
+			'Content-Type' => 'application/json',
+			'Accept' => 'application/json'
+		),
+		'body' => json_encode( $data ),
+		'timeout' => 10,
+		'sslverify' => MEMBERFUL_SSL_VERIFY,
 	);
 
-	memberful_wp_instrument_api_response( $response, $caller );
+	$response = wp_remote_post( $url, $request );
+
+	memberful_wp_instrument_api_call( $url, $request, $response, $caller );
 
 	return $response;
 }
