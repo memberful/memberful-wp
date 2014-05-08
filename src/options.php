@@ -70,7 +70,7 @@ function memberful_wp_register() {
 			Memberful_Wp_Reporting::report( $activation, 'error' );
 		}
 
-		return wp_redirect( admin_url( 'options-general.php?page=memberful_options' ) );
+		return wp_redirect( memberful_wp_plugin_settings_url() );
 	}
 
 	memberful_wp_render( 'setup', $vars );
@@ -86,7 +86,7 @@ function memberful_wp_reset() {
 		update_option( $option, $defaults[$option] );
 	}
 
-	wp_redirect( admin_url( 'options-general.php?page=memberful_options' ) );
+	wp_redirect( memberful_wp_plugin_settings_url() );
 }
 
 function _memberful_wp_debug_all_post_meta() {
@@ -160,16 +160,14 @@ function memberful_wp_options() {
 			if ( is_wp_error( $error = memberful_wp_sync_products() ) ) {
 				Memberful_Wp_Reporting::report( $error, 'error' );
 
-				return wp_redirect( admin_url( 'options-general.php?page=memberful_options' ) );
+				return wp_redirect( memberful_wp_plugin_settings_url() );
 			}
 
 			if ( is_wp_error( $error = memberful_wp_sync_subscriptions() ) ) {
 				Memberful_Wp_Reporting::report( $error, 'error' );
-
-				return wp_redirect( admin_url( 'options-general.php?page=memberful_options' ) );
 			}
 
-			return wp_redirect( admin_url( 'options-general.php?page=memberful_options' ) );
+			return wp_redirect( memberful_wp_plugin_settings_url() );
 		}
 
 		if ( isset( $_POST['reset_plugin'] ) ) {
@@ -255,7 +253,7 @@ function memberful_wp_mass_protect() {
 			memberful_wp_update_post_marketing_content($thing->ID, $marketing_content);
 		}
 
-		wp_redirect( admin_url( 'options-general.php?page=memberful_options' ) );
+		wp_redirect( memberful_wp_plugin_settings_url() );
 	}
 
 	memberful_wp_render(
@@ -264,7 +262,7 @@ function memberful_wp_mass_protect() {
 			'products' => memberful_wp_metabox_acl_format( array(), 'product' ),
 			'subscriptions' => memberful_wp_metabox_acl_format( array(), 'subscription' ),
 			'marketing_content' => '',
-			'form_target'       => admin_url('options-general.php?page=memberful_options&noheader=true&mass_protect=true'),
+			'form_target'       => memberful_wp_plugin_mass_protect_url(TRUE),
 		)
 	);
 }

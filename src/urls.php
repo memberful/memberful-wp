@@ -44,6 +44,18 @@ function memberful_order_completed_url( $order ) {
 	return add_query_arg( 'id', $order, memberful_url( 'orders/completed' ) );
 }
 
+function memberful_wp_plugin_settings_url($no_header = FALSE) {
+	$header_parameter = $no_header === TRUE ? "noheader=true" : "";
+
+	return admin_url('options-general.php?page=memberful_options'.$header_parameter);
+}
+
+function memberful_wp_plugin_mass_protect_url($no_header = FALSE) {
+	$header_parameter = $no_header === TRUE ? "noheader=true" : "";
+
+	return admin_url('options-general.php?page=memberful_options&mass_protect=true'.$header_parameter);
+}
+
 
 /**
  * Generate a URL to the Memberful site
