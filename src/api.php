@@ -46,7 +46,7 @@ function memberful_wp_api_error_log() {
 function memberful_wp_record_api_response_error( $new_payload ) {
 	$error_log = get_option( 'memberful_error_log', array() );
 
-	// Try not to overload the WP options database with errors!
+	// Try not to overload the WP options table with errors!
 	$error_log = array_slice( $error_log, 0, 100, TRUE );
 
 	array_unshift( $error_log, $new_payload );
