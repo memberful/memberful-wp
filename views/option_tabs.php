@@ -7,7 +7,7 @@
     ),
     array(
       'id'    => 'mass_protect',
-      'title' => __('Mass protect content'),
+      'title' => __('Global restrict access'),
       'url'   => memberful_wp_plugin_mass_protect_url()
     )
   );
