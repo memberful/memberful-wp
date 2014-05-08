@@ -92,13 +92,27 @@
 	border: 1px solid #ce262f;
 }
 /*---------------------------------------------------------
-	Global restrict access
+	Bulk restrict access tool
 ------------------------------------------------------------ */
+form.memberful-bulk-restrict-access-form {
+	margin-top: 20px;
+}
 ul.memberful-global-restrict-access-category-list {
-	margin-left: 18px;
+	margin-bottom: 20px;
 }
 ul.memberful-global-restrict-access-required-list {
 	margin: 0;
+}
+.memberful-bulk-apply-box {
+	clear: both;
+	max-width: 670px;
+	margin-top: 20px;
+	padding: 10px 20px;
+	background: #fff;
+	border: 1px solid #dedede
+}
+.memberful-bulk-apply-box label {
+	margin-right: 5px;
 }
 /*---------------------------------------------------------
 	Restrict Access Metabox
