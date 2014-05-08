@@ -13,7 +13,7 @@ class Memberful_User_Map_Stats {
 
 		$query = 'SELECT `mapping`.`wp_user_id` FROM '.$this->table.' AS `mapping`';
 
-		$mapped_users = $wpdb->get_col($query);
+		$mapped_users = array_filter( $wpdb->get_col($query) );
 
 		$query = 'SELECT users.* FROM '.$wpdb->users.' AS `users` WHERE ID NOT IN('.implode(',', $mapped_users).')';
 
