@@ -97,6 +97,9 @@
 ul.memberful-global-restrict-access-category-list {
 	margin-left: 18px;
 }
+ul.memberful-global-restrict-access-required-list {
+	margin: 0;
+}
 /*---------------------------------------------------------
 	Restrict Access Metabox
 ------------------------------------------------------------ */
