@@ -47,6 +47,10 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 == Changelog ==
 
+= 1.6.0 =
+* Improve the mapping of Memberful members to WP members in edge cases.
+* Allow author to remove current marketing text.
+
 = 1.5.0 =
 * Improve overlay's handling of members being signed into Memberful, but not WP.
 
