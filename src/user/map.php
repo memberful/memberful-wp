@@ -24,7 +24,7 @@ class Memberful_User_Map {
 	public function map( $member, array $mapping = array() ) {
 		list( $user_id, $user_mapping_exists ) = $this->find_user( $member );
 
-		$user_exists = $user_id !== NULL;
+		$user_exists = $user_id !== NULL && get_user_by('id', $user_id) !== FALSE;
 
 		if ( $user_exists && ! $user_mapping_exists ) {
 			if ( ! is_user_logged_in() ) {
