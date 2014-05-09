@@ -48,6 +48,7 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 == Changelog ==
 
 = 1.6.0 =
+* Show admins a message if cURL extension is not installed.
 * If the user signs into Memberful without using the overlay, and they weren't trying to access a specific page then the plugin used to send them to the Memberful account page. It now sends them to the WP homepage.
 * Allow plugins to add/remove links in profile widget using `memberful_wp_widget_args` filter.
 * Allow authors to see the content of shortcodes without purchasing required plans/products.
