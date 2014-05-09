@@ -35,14 +35,20 @@ class Memberful_WP_Profile_Widget extends WP_Widget {
 		$title = ( ! empty( $instance['title'] ) ) ? $instance['title'] : 'Memberful Profile';
 		$title = apply_filters( 'widget_title', $title );
 
-		echo $args['before_widget'];
+		$args['title'] = $title;
 
-		if ( ! empty( $title ) )
-			echo $args['before_title'] . $title . $args['after_title'];
+		$args['signed_in_links'] = array(
+			array('href' => memberful_account_url(), 'class' => 'memberful-account-link', 'text' => __( 'Account' )),
+			array('href' => memberful_sign_out_url(), 'class' => 'memberful-sign-out-link', 'text' => __( 'Sign out' ))
+		);
 
-		memberful_wp_render( 'profile_widget' );
+		$args['signed_out_links'] = array(
+			array('href' => memberful_sign_in_url(), 'class' => 'memberful-sign-in-link', 'text' => __( 'Sign in' )),
+		);
 
-		echo $args['after_widget'];
+		$args = apply_filters( 'memberful_wp_widget_args', $args );
+
+		memberful_wp_render( 'profile_widget', $args );
 	}
 
 	/**
@@ -110,6 +116,14 @@ function memberful_wp_add_stylesheet_if_action() {
 			MEMBERFUL_VERSION
 		);
 	}
+}
+
+function memberful_wp_format_widget_links( $links ) {
+	foreach ( $links as $key => $link ) {
+		$links[$key] = '<a href="'.$link['href'].'" class="'.$link['class'].'">'.$link['text'].'</a>';
+	}
+
+	return implode( ' | ', $links );
 }
 
 add_action( 'wp_enqueue_scripts', 'memberful_wp_add_stylesheet_if_action' );

@@ -48,6 +48,7 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 == Changelog ==
 
 = 1.6.0 =
+* Allow plugins to add/remove links in profile widget using `memberful_wp_widget_args` filter.
 * Allow authors to see the content of shortcodes without purchasing required plans/products.
 * Improve the mapping of Memberful members to WP members in edge cases.
 * Allow author to remove current marketing text.
