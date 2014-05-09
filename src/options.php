@@ -152,6 +152,9 @@ function memberful_wp_debug() {
  * Displays the memberful options page
  */
 function memberful_wp_options() {
+	if ( ! function_exists( 'curl_version' ) || isset( $_GET['curl_message'] ) )
+		return memberful_wp_render( 'curl_required' );
+
 	if ( ! empty( $_POST ) ) {
 		if ( ! memberful_wp_valid_nonce( 'memberful_options' ) )
 		  return;
