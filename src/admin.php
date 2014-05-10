@@ -222,16 +222,17 @@ function memberful_wp_options() {
 		}
 	}
 
-    if ( ! empty( $_GET['debug'] ) ) {
-		return memberful_wp_debug();
-    }
-
 	if ( ! memberful_wp_is_connected_to_site() ) {
 		return memberful_wp_register();
 	}
 
-	if ( ! empty( $_GET['mass_protect'] ) ) {
-		return memberful_wp_mass_protect();
+	if ( ! empty( $_GET['subpage'] ) ) {
+		switch ( $_GET['subpage'] ) {
+			case 'bulk_protect': 
+				return memberful_wp_bulk_protect();
+			case 'debug':
+				return memberful_wp_debug();
+		}
 	}
 
 	$products = get_option( 'memberful_products', array() );
@@ -278,7 +279,7 @@ function memberful_wp_activate( $code ) {
 	return TRUE;
 }
 
-function memberful_wp_mass_protect() {
+function memberful_wp_bulk_protect() {
 	if ( ! empty( $_POST ) ) {
 		$categories_to_protect = empty( $_POST['memberful_protect_categories'] ) ? array() : (array) $_POST['memberful_protect_categories'];
 		$acl_for_products      = empty( $_POST['memberful_product_acl'] ) ? array() : (array) $_POST['memberful_product_acl'];
@@ -320,12 +321,12 @@ function memberful_wp_mass_protect() {
 	}
 
 	memberful_wp_render(
-		'mass_protect',
+		'bulk_protect',
 		array(
 			'products' => memberful_wp_metabox_acl_format( array(), 'product' ),
 			'subscriptions' => memberful_wp_metabox_acl_format( array(), 'subscription' ),
 			'marketing_content' => '',
-			'form_target'       => admin_url('options-general.php?page=memberful_options&noheader=true&mass_protect=true'),
+			'form_target'       => memberful_wp_plugin_bulk_protect_url(TRUE),
 		)
 	);
 }

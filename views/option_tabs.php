@@ -6,14 +6,14 @@
       'url'   => memberful_wp_plugin_settings_url()
     ),
     array(
-      'id'    => 'mass_protect',
+      'id'    => 'bulk_protect',
       'title' => __('Bulk restrict access tool'),
-      'url'   => memberful_wp_plugin_mass_protect_url()
+      'url'   => memberful_wp_plugin_bulk_protect_url()
     )
   );
 ?>
 <h2 class="nav-tab-wrapper">
 <?php foreach($links as $link): ?>
-  <a href="<?php echo $link['url']; ?>" class="nav-tab <?php echo $link['id'] === $active ? 'nav-tab-active' : '' ?>"><?php echo $link['title']; ?></a>
+  <a href="<?php echo $link['url']; ?>" id="nav_tab_<?php echo $link['id']; ?>" class="nav-tab <?php echo $link['id'] === $active ? 'nav-tab-active' : '' ?>"><?php echo $link['title']; ?></a>
 <?php endforeach; ?>
 </h2>

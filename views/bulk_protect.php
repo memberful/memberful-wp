@@ -1,5 +1,5 @@
 <div class="wrap">
-	<?php memberful_wp_render('option_tabs', array('active' => 'mass_protect')); ?>
+	<?php memberful_wp_render('option_tabs', array('active' => 'bulk_protect')); ?>
 	<?php memberful_wp_render('flash'); ?>
 	<div class="update-nag">
 		<strong>Be careful:</strong> When you bulk apply these restrict access settings we will <strong>overwrite and replace</strong> any specified individual Post or Page restrict access settings.
