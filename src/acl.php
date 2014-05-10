@@ -11,7 +11,7 @@ function memberful_wp_current_user_products() {
  * @deprecated 1.6.0
  */
 function has_memberful_subscription( $slug, $user_id = NULL ) {
-	return has_memberful_subscription_to_plan( $slug, $user_id );
+	return is_subscribed_to_memberful_plan( $slug, $user_id );
 }
 
 /**
@@ -56,7 +56,7 @@ function memberful_wp_user_has_subscriptions( $user_id, array $subscriptions ) {
  * @param int          $user_id ID of the user who should have the subscription, defaults to current user
  * @return bool
  */
-function has_memberful_subscription_to_plan( $slug, $user_id = NULL ) {
+function is_subscribed_to_memberful_plan( $slug, $user_id = NULL ) {
 	list( $required_plans , $user_id ) = memberful_wp_extract_slug_ids_and_user( func_get_args() );
 
 	return memberful_wp_user_has_subscription_to_plans( $user_id, $required_plans );

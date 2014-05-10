@@ -25,41 +25,65 @@ function memberful_wp_shortcode_download_link( $atts, $content) {
 	return '<a href="'.memberful_account_download_url( $atts['product'] ).'" role="download">'.$content.'</a>';
 }
 
-function memberful_wp_shortcode( $atts, $content ) {
-	$show_content = FALSE;
-	$does_not_have_product = $does_not_have_subscription = NULL;
-
-	if ( empty( $atts['does_not_have_subscription'] ) && empty( $atts['does_not_have_product'] ) && current_user_can( 'publish_posts' ) ) {
-		return $content;
-	}
-
+function memberful_wp_normalize_shortcode_args( $atts ) {
 	if ( ! empty( $atts['has_subscription'] ) ) {
-		$show_content = has_memberful_subscription( $atts['has_subscription'] );
+		$atts['has_subscription_to'] = $atts['has_subscription'];
 	}
 
 	if ( ! empty( $atts['has_product'] ) ) {
-		$has_product = has_memberful_product( $atts['has_product'] );
-
-		$show_content = $show_content || $has_product;
+		$atts['has_download'] = $atts['has_product'];
 	}
 
 	if ( ! empty( $atts['does_not_have_subscription'] ) ) {
-		$does_not_have_subscription = ! has_memberful_subscription_to_plan(
-			$atts['does_not_have_subscription']
-		);
+		$atts['does_not_have_subscription_to'] = $atts['does_not_have_subscription'];
 	}
 
 	if ( ! empty( $atts['does_not_have_product'] ) ) {
-		$does_not_have_product = ! has_memberful_download(
-			$atts['does_not_have_product']
+		$atts['does_not_have_download'] = $atts['does_not_have_product'];
+	}
+
+	return $atts;
+}
+
+function memberful_wp_shortcode( $atts, $content ) {
+	$show_content = FALSE;
+	$does_not_have_download = $does_not_have_subscription = NULL;
+
+	$atts = memberful_wp_normalize_shortcode_args( $atts );
+
+	$shortcode_is_checking_if_the_user_has_stuff = empty( $atts['does_not_have_subscription_to'] ) && empty( $atts['does_not_have_download'] );
+
+	if ( $shortcode_is_checking_if_the_user_has_stuff && current_user_can( 'publish_posts' ) ) {
+		return $content;
+	}
+
+	if ( ! empty( $atts['has_subscription_to'] ) ) {
+		$show_content = is_subscribed_to_memberful_plan( $atts['has_subscription_to'] );
+	}
+
+	if ( ! empty( $atts['has_download'] ) ) {
+		$has_download = has_memberful_download( $atts['has_download'] );
+
+		$show_content = $show_content || $has_download;
+	}
+
+	if ( ! empty( $atts['does_not_have_subscription_to'] ) ) {
+		$does_not_have_subscription = ! is_subscribed_to_memberful_plan(
+			$atts['does_not_have_subscription_to']
 		);
 	}
 
-	if ( $does_not_have_product !== NULL || $does_not_have_subscription !== NULL ) {
-		$requirements = array( $does_not_have_subscription, $does_not_have_product );
+	if ( ! empty( $atts['does_not_have_download'] ) ) {
+		$does_not_have_download = ! has_memberful_download(
+			$atts['does_not_have_download']
+		);
+	}
+
+	if ( $does_not_have_download !== NULL || $does_not_have_subscription !== NULL ) {
+		$requirements = array( $does_not_have_subscription, $does_not_have_download);
 
 		if ( in_array( FALSE, $requirements, TRUE ) ) {
-			// User may have access to either the mentioned product or the subscription
+			// User may have access to either the mentioned download or the subscription
 			$show_content = FALSE;
 		} else {
 			// All specified requirements have been satisfied, so show content
