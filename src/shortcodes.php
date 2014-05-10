@@ -29,6 +29,10 @@ function memberful_wp_shortcode( $atts, $content ) {
 	$show_content = FALSE;
 	$does_not_have_product = $does_not_have_subscription = NULL;
 
+	if ( empty( $atts['does_not_have_subscription'] ) && empty( $atts['does_not_have_product'] ) && current_user_can( 'publish_posts' ) ) {
+		return $content;
+	}
+
 	if ( ! empty( $atts['has_subscription'] ) ) {
 		$show_content = has_memberful_subscription( $atts['has_subscription'] );
 	}

@@ -47,7 +47,7 @@ class Memberful_Wp_Endpoint_Auth implements Memberful_Wp_Endpoint {
 		} else if ( isset( $_COOKIE['memberful_redirect'] ) ) {
 			$url = $_COOKIE['memberful_redirect'];
 		} else {
-			$url = memberful_account_url();
+			$url = home_url();
 		}
 
 		return apply_filters( 'memberful_wp_after_sign_in_url', $url );
