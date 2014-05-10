@@ -1,6 +1,6 @@
 <?php
 require_once MEMBERFUL_DIR.'/src/user/oauth_map.php';
-require_once MEMBERFUL_DIR.'/src/user/products.php';
+require_once MEMBERFUL_DIR.'/src/user/downloads.php';
 require_once MEMBERFUL_DIR.'/src/user/subscriptions.php';
 
 
@@ -95,7 +95,7 @@ class Memberful_Authenticator {
 			$mapper = new Memberful_User_Oauth_Map;
 			$user   = $mapper->map( $details->member, $tokens->refresh_token );
 
-			Memberful_Wp_User_Products::sync($user->ID, $details->products);
+			Memberful_Wp_User_Downloads::sync($user->ID, $details->products);
 			Memberful_Wp_User_Subscriptions::sync($user->ID, $details->subscriptions);
 
 			return $user;
@@ -193,12 +193,9 @@ class Memberful_Authenticator {
 	public function get_member_data( $access_token ) {
 		$url = memberful_account_url( MEMBERFUL_JSON );
 
-		$response = wp_remote_get(
+		$response = memberful_wp_get_data_from_api(
 			add_query_arg( 'access_token', $access_token, $url ),
-			array(
-				'sslverify' => MEMBERFUL_SSL_VERIFY,
-				'timeout'   => 15
-			)
+			'get_member_data_for_sign_in'
 		);
 
 		if ( is_wp_error( $response ) ) {

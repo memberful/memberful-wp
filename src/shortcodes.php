@@ -44,13 +44,13 @@ function memberful_wp_shortcode( $atts, $content ) {
 	}
 
 	if ( ! empty( $atts['does_not_have_subscription'] ) ) {
-		$does_not_have_subscription = ! has_memberful_subscription(
+		$does_not_have_subscription = ! has_memberful_subscription_to_plan(
 			$atts['does_not_have_subscription']
 		);
 	}
 
 	if ( ! empty( $atts['does_not_have_product'] ) ) {
-		$does_not_have_product = ! has_memberful_product(
+		$does_not_have_product = ! has_memberful_download(
 			$atts['does_not_have_product']
 		);
 	}
