@@ -281,26 +281,39 @@ function memberful_wp_activate( $code ) {
 function memberful_wp_mass_protect() {
 	if ( ! empty( $_POST ) ) {
 		$categories_to_protect = empty( $_POST['memberful_protect_categories'] ) ? array() : (array) $_POST['memberful_protect_categories'];
-		$protect_all_pages     = ! empty($_POST['memberful_protect_all_pages']);
 		$acl_for_products      = empty( $_POST['memberful_product_acl'] ) ? array() : (array) $_POST['memberful_product_acl'];
 		$acl_for_subscriptions = empty( $_POST['memberful_subscription_acl'] ) ? array() : (array) $_POST['memberful_subscription_acl'];
 		$marketing_content     = empty( $_POST['memberful_marketing_content'] ) ? '' : $_POST['memberful_marketing_content'];
+		$things_to_protect     = empty($_POST['target_for_restriction']) ? '' : $_POST['target_for_restriction'];
 
 		$product_acl_manager   = new Memberful_Post_ACL( 'product' );
 		$subscription_acl_manager = new Memberful_Post_ACL( 'subscription' );
 		
-		$to_protect = array();
 
-		if ( $protect_all_pages )
-			$to_protect = array_merge($to_protect, get_pages());
+		$query_params = array('nopaging' => true, 'fields' => 'ids');
 
-		if ( ! empty($categories_to_protect) )
-			$to_protect = array_merge($to_protect, get_posts(array('category__in' => $categories_to_protect, 'nopaging' => true)));
+		switch ( $things_to_protect ) {
+			case 'all_pages_and_posts':
+				$query_params['post_type'] = array('post', 'page');
+				break;
+			case 'all_pages':
+				$query_params['post_type'] = 'page';
+				break;
+			case 'all_posts':
+				$query_params['post_type'] = 'post';
+				break;
+			case 'all_posts_from_category':
+				$query_params['category__in'] = $categories_to_protect;
+				break;
+	
+		}
 
-		foreach($to_protect as $thing) {
-			$product_acl_manager->set_acl($thing->ID, $acl_for_products);
-			$subscription_acl_manager->set_acl($thing->ID, $acl_for_subscriptions);
-			memberful_wp_update_post_marketing_content($thing->ID, $marketing_content);
+		$query = new WP_Query($query_params);
+
+		foreach($query->posts as $id) {
+			$product_acl_manager->set_acl($id, $acl_for_products);
+			$subscription_acl_manager->set_acl($id, $acl_for_subscriptions);
+			memberful_wp_update_post_marketing_content($id, $marketing_content);
 		}
 
 		wp_redirect( admin_url( 'options-general.php?page=memberful_options' ) );

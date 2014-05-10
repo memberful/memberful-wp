@@ -9,7 +9,7 @@
 			<h3>Bulk apply restrict access settings</h3>
 			<fieldset>
 				<label>Apply the restrict access settings specified below to:</label>
-				<select name="global-restrict-target" id="global-restrict-target" class="postform">
+				<select name="target_for_restriction" id="global-restrict-target" class="postform">
 					<option value="all_pages_and_posts" selected="selected">All Pages and Posts</option>
 					<option value="all_pages">All Pages</option>
 					<option value="all_posts">All Posts</option>
