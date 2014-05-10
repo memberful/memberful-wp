@@ -86,5 +86,11 @@ function memberful_wp_admin_enqueue_scripts() {
 			'memberful-admin',
 			plugins_url( 'stylesheets/admin.css' , dirname(__FILE__) )
 		);
+		wp_enqueue_script(
+			'memberful-admin',
+			plugins_url( 'js/admin.js', dirname( __FILE__ ) ),
+			array('jquery'),
+			MEMBERFUL_VERSION
+		);
 	}
 }

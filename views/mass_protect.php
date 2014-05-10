@@ -9,13 +9,13 @@
 			<h3>Bulk apply restrict access settings</h3>
 			<fieldset>
 				<label>Apply the restrict access settings specified below to:</label>
-				<select name="default_category" id="default_category" class="postform">
-					<option selected="selected">All Pages and Posts</option>
-					<option>All Pages</option>
-					<option>All Posts</option>
-					<option>All Posts from a category or categories</option>
+				<select name="global-restrict-target" id="global-restrict-target" class="postform">
+					<option value="all_pages_and_posts" selected="selected">All Pages and Posts</option>
+					<option value="all_pages">All Pages</option>
+					<option value="all_posts">All Posts</option>
+					<option value="all_posts_from_category">All Posts from a category or categories</option>
 				</select>
-				<ul class="memberful-global-restrict-access-category-list">
+				<ul data-depends-on="global-restrict-target" data-depends-value="all_posts_from_category" class="memberful-global-restrict-access-category-list">
 					<?php foreach(get_categories() as $category): ?>
 						<li><label><input type="checkbox"  name="memberful_protect_categories[]" value="<?php echo $category->cat_ID ?>"><?php echo $category->cat_name; ?></option></label></li>
 			<?php endforeach; ?>
