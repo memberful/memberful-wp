@@ -45,13 +45,13 @@ function memberful_order_completed_url( $order ) {
 }
 
 function memberful_wp_plugin_settings_url($no_header = FALSE) {
-	$header_parameter = $no_header === TRUE ? "noheader=true" : "";
+	$header_parameter = $no_header === TRUE ? "&noheader=true" : "";
 
 	return admin_url('options-general.php?page=memberful_options'.$header_parameter);
 }
 
 function memberful_wp_plugin_mass_protect_url($no_header = FALSE) {
-	$header_parameter = $no_header === TRUE ? "noheader=true" : "";
+	$header_parameter = $no_header === TRUE ? "&noheader=true" : "";
 
 	return admin_url('options-general.php?page=memberful_options&mass_protect=true'.$header_parameter);
 }
