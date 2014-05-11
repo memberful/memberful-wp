@@ -19,10 +19,13 @@ function memberful_wp_shortcode_account_link( $atts, $content ) {
 }
 
 function memberful_wp_shortcode_download_link( $atts, $content) {
-	if ( empty($atts['product']) )
+	if ( ! empty($atts['product']) )
+		$atts['download'] = $atts['product'];
+
+	if ( empty($atts['download']))
 		return $content;
 
-	return '<a href="'.memberful_account_download_url( $atts['product'] ).'" role="download">'.$content.'</a>';
+	return '<a href="'.memberful_account_download_url( $atts['download'] ).'" rel="download">'.$content.'</a>';
 }
 
 function memberful_wp_normalize_shortcode_args( $atts ) {
