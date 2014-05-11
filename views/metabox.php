@@ -16,8 +16,8 @@
 			</div>
 		<?php endif; ?>
 		<?php if ( ! empty( $products ) ) : ?>
-			<div id="memberful-products">
-				<p class="memberful-access-label"><?php _e( 'Products', 'memberful' ); ?></p>
+			<div id="memberful-downloads">
+				<p class="memberful-access-label"><?php _e( 'Downloads', 'memberful' ); ?></p>
 				<ul>
 				<?php foreach($products as $id => $product): ?>
 					<li>
