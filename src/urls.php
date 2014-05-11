@@ -98,6 +98,14 @@ function memberful_frontend_protocol() {
 }
 
 function memberful_wp_wrap_api_token( $url ) {
+	if ( strpos($url, 'access_token') !== NULL || strpos($url, 'auth_token') !== NULL ) {
+		return $url;
+	}
+
+	if ( strpos($url, 'oauth/token') !== NULL ) {
+		return $url;
+	}
+
 	return add_query_arg( 'auth_token', get_option( 'memberful_api_key' ), $url );
 }
 

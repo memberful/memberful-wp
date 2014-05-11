@@ -1,5 +1,7 @@
 <?php
 
+define( 'MEMBERFUL_API_USER_AGENT', 'WordPress/'.$wp_version.' (PHP '.phpversion().') memberful-wp/'.MEMBERFUL_VERSION );
+
 /**
  * Get details about a specific member via the API
  *
@@ -29,14 +31,12 @@ function memberful_api_member( $member_id ) {
 }
 
 function memberful_wp_get_data_from_api( $url, $caller ) {
-	if ( strpos($url, 'access_token') === NULL && strpos($url, 'auth_token') === NULL ) {
-		$url = memberful_wp_wrap_api_token($url);
-	}
-	$user_agent = 'WordPress/'.$wp_version.' (PHP '.phpversion().') memberful-wp/'.MEMBERFUL_VERSION;
+	$url = memberful_wp_wrap_api_token( $url );
+
 	$request = array(
 		'sslverify' => MEMBERFUL_SSL_VERIFY,
 		'headers'   => array(
-			'User-Agent' => $user_agent,
+			'User-Agent' => MEMBERFUL_API_USER_AGENT,
 			'Accept' => 'application/json'
 		),
 		'timeout'   => 15
@@ -45,17 +45,37 @@ function memberful_wp_get_data_from_api( $url, $caller ) {
 	$response = wp_remote_get( $url, $request );
 
 	memberful_wp_instrument_api_call( $url, $request, $response, $caller );
+
+	return $response;
+}
+
+function memberful_wp_post_data_to_api_as_json( $url, $caller, $data ) {
+	$url        = memberful_wp_wrap_api_token( $url );
+	$request    = array(
+		'method'  => 'POST',
+		'headers' => array(
+			'User-Agent' => MEMBERFUL_API_USER_AGENT,
+			'Content-Type' => 'application/json',
+			'Accept' => 'application/json'
+		),
+		'body' => json_encode( $data ),
+		'timeout' => 15,
+		'sslverify' => MEMBERFUL_SSL_VERIFY,
+	);
+
+	$response = wp_remote_post( $url, $request );
+
+	memberful_wp_instrument_api_call( $url, $request, $response, $caller );
+
+	return $response;
 }
 
 function memberful_wp_put_data_to_api_as_json( $url, $caller, $data ) {
-	global $wp_version;
-
 	$url        = memberful_wp_wrap_api_token( $url );
-	$user_agent = 'WordPress/'.$wp_version.' (PHP '.phpversion().') memberful-wp/'.MEMBERFUL_VERSION;
 	$request    = array(
 		'method'  => 'PUT',
 		'headers' => array(
-			'User-Agent' => $user_agent,
+			'User-Agent' => MEMBERFUL_API_USER_AGENT,
 			'Content-Type' => 'application/json',
 			'Accept' => 'application/json'
 		),
@@ -87,7 +107,7 @@ function memberful_wp_instrument_api_call( $url, $request, $response, $caller ) 
 	if ( $error_payload !== NULL ) {
 		$error_payload['caller']     = $caller;
 		$error_payload['url']        = $url;
-		$error_payload['verify_ssl'] = $request['verify_ssl'];
+		$error_payload['sslverify'] = $request['sslverify'];
 
 		memberful_wp_record_api_response_error( $error_payload );
 	}

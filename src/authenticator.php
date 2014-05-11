@@ -157,14 +157,7 @@ class Memberful_Authenticator {
 			'grant_type'    => 'authorization_code',
 			'code'          => $auth_code,
 		);
-		$response = wp_remote_post(
-			self::oauth_member_url( 'token' ),
-			array(
-				'body'      => $params,
-				'sslverify' => MEMBERFUL_SSL_VERIFY,
-				'timeout'   => 15
-			)
-		);
+		$response = memberful_wp_post_data_to_api_as_json( self::oauth_member_url('token'), 'get_oauth_tokens', $params );
 
 		if ( is_wp_error($response) ) {
 			return $this->_error( 'could_not_get_tokens', $response );
