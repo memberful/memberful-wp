@@ -109,7 +109,7 @@ function memberful_wp_instrument_api_call( $url, $request, $response, $caller ) 
 		$error_payload['url']        = $url;
 		$error_payload['sslverify'] = $request['sslverify'];
 
-		memberful_wp_record_api_response_error( $error_payload );
+		memberful_wp_record_error( $error_payload );
 	}
 }
 
@@ -135,11 +135,11 @@ function memberful_wp_extract_api_error_log_from_response( $response ) {
 	);
 }
 
-function memberful_wp_api_error_log() {
+function memberful_wp_error_log() {
 	return get_option( 'memberful_error_log', array() );
 }
 
-function memberful_wp_record_api_response_error( $new_payload ) {
+function memberful_wp_record_error( $new_payload ) {
 	$error_log = get_option( 'memberful_error_log', array() );
 
 	// Try not to overload the WP options table with errors!
