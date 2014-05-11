@@ -9,7 +9,7 @@ define( 'MEMBERFUL_API_USER_AGENT', 'WordPress/'.$wp_version.' (PHP '.phpversion
  */
 function memberful_api_member( $member_id ) {
 	$response = memberful_wp_get_data_from_api(
-		memberful_wp_wrap_api_token( memberful_admin_member_url( $member_id, MEMBERFUL_JSON ) ),
+		memberful_admin_member_url( $member_id, MEMBERFUL_JSON ),
 		'fetch_member_account_from_admin'
 	);
 

@@ -14,6 +14,12 @@ class Memberful_User_Map {
 		return $wpdb->prefix.'memberful_mapping';
 	}
 
+	static public function least_recently_synced_members() {
+		global $wpdb;
+
+		return $wpdb->get_col( "SELECT member_id FROM ".self::table()." ORDER BY last_sync_at ASC" );
+	}
+
 	/**
 	 * Takes a set of Memberful member details and tries to associate it with the
 	 * WordPress user account.

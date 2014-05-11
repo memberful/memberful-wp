@@ -98,11 +98,11 @@ function memberful_frontend_protocol() {
 }
 
 function memberful_wp_wrap_api_token( $url ) {
-	if ( strpos($url, 'access_token') !== NULL || strpos($url, 'auth_token') !== NULL ) {
+	if ( strpos($url, 'access_token') !== FALSE || strpos($url, 'auth_token') !== FALSE ) {
 		return $url;
 	}
 
-	if ( strpos($url, 'oauth/token') !== NULL ) {
+	if ( strpos($url, 'oauth/token') !== FALSE ) {
 		return $url;
 	}
 
