@@ -39,13 +39,13 @@ function memberful_wp_metabox( $post ) {
 		$view_vars[$entity.'s'] = memberful_wp_metabox_acl_format( $acl_manager->get_acl( $post->ID ), $entity );
 	}
 
-	$marketing_content = array(
+	$marketing_content = array_filter(array(
 		memberful_marketing_content( $post->ID ),
 		memberful_wp_default_marketing_content(),
 		memberful_wp_marketing_content_explanation()
-    );
+    ));
 
-	$view_vars['marketing_content'] = reset(array_filter($marketing_content));
+	$view_vars['marketing_content'] = reset($marketing_content);
 
 	memberful_wp_render( 'metabox', $view_vars );
 }
