@@ -14,7 +14,14 @@ function memberful_subscription_plan( $slug ) {
 	return empty( $plans[$id] ) ? NULL : $plans[$id];
 }
 
+/**
+ * @deprecate 1.6.0
+ */
 function memberful_products() {
+	return memberful_downloads();
+}
+
+function memberful_downloads() {
 	return get_option( 'memberful_products', array() );
 }
 
@@ -22,14 +29,14 @@ function memberful_subscription_plans() {
 	return get_option( 'memberful_subscriptions', array() );
 }
 
-function memberful_wp_sync_products() {
-	$url = memberful_admin_products_url( MEMBERFUL_JSON );
+function memberful_wp_sync_downloads() {
+	$url = memberful_admin_downloads_url( MEMBERFUL_JSON );
 
 	return memberful_wp_update_entities( 'memberful_products', $url );
 }
 
-function memberful_wp_sync_subscriptions() {
-	$url = memberful_admin_subscriptions_url( MEMBERFUL_JSON );
+function memberful_wp_sync_subscription_plans() {
+	$url = memberful_admin_subscription_plans_url( MEMBERFUL_JSON );
 
 	return memberful_wp_update_entities( 'memberful_subscriptions', $url );
 }

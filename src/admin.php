@@ -106,8 +106,8 @@ function memberful_wp_register() {
 
 		if ( $activation === TRUE ) {
 			update_option( 'memberful_embed_enabled', TRUE );
-			memberful_wp_sync_products();
-			memberful_wp_sync_subscriptions();
+			memberful_wp_sync_downloads();
+			memberful_wp_sync_subscription_plans();
 		}
 		else {
 			Memberful_Wp_Reporting::report( $activation, 'error' );
@@ -205,13 +205,13 @@ function memberful_wp_options() {
 		  return;
 
 		if ( isset( $_POST['manual_sync'] ) ) {
-			if ( is_wp_error( $error = memberful_wp_sync_products() ) ) {
+			if ( is_wp_error( $error = memberful_wp_sync_downloads() ) ) {
 				Memberful_Wp_Reporting::report( $error, 'error' );
 
 				return wp_redirect( admin_url( 'options-general.php?page=memberful_options' ) );
 			}
 
-			if ( is_wp_error( $error = memberful_wp_sync_subscriptions() ) ) {
+			if ( is_wp_error( $error = memberful_wp_sync_subscription_plans() ) ) {
 				Memberful_Wp_Reporting::report( $error, 'error' );
 
 				return wp_redirect( admin_url( 'options-general.php?page=memberful_options' ) );

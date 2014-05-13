@@ -20,24 +20,28 @@ function memberful_account_url( $format = MEMBERFUL_HTML ) {
 	return memberful_url( 'account', $format );
 }
 
-function memberful_account_download_url( $product ) {
-	return memberful_url( 'account/downloads/get/'.memberful_wp_extract_id_from_slug( $product ) );
+function memberful_account_get_download_url( $download_slug ) {
+	return memberful_url( 'account/downloads/get/'.memberful_wp_extract_id_from_slug( $download_slug ) );
 }
 
 function memberful_admin_member_url( $member_id, $format = MEMBERFUL_HTML ) {
 	return memberful_url( 'admin/members/'.$member_id, $format );
 }
 
-function memberful_admin_products_url( $format = MEMBERFUL_HTML ) {
+function memberful_admin_downloads_url( $format = MEMBERFUL_HTML ) {
 	return memberful_url( 'admin/products', $format );
 }
 
-function memberful_admin_subscriptions_url( $format = MEMBERFUL_HTML ) {
+function memberful_admin_subscription_plans_url( $format = MEMBERFUL_HTML ) {
 	return memberful_url( 'admin/subscriptions', $format );
 }
 
 function memberful_admin_product_url( $product_id, $format = MEMBERFUL_HTML ) {
-	return memberful_url( 'admin/products/'.( int) $product_id, $format );
+	return memberful_admin_download_url( $product_id, $format );
+}
+
+function memberful_admin_download_url( $download_id, $format = MEMBERFUL_HTML ) {
+	return memberful_url( 'admin/products/'.( int) $download_id, $format );
 }
 
 function memberful_order_completed_url( $order ) {
