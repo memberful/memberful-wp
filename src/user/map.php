@@ -20,7 +20,7 @@ class Memberful_User_Map {
 		$sync_cut_off_point = 3600 * 24 * 3;
 
 		return $wpdb->get_col(
-			"SELECT member_id FROM ".self::table()." WHERE last_sync_at < ".(time()-$sync_cut_off_point)." ORDER BY last_sync_at ASC LIMIT 50"
+			"SELECT member_id FROM ".self::table()." WHERE last_sync_at < ".(time()-$sync_cut_off_point)." AND wp_user_id > 0 ORDER BY last_sync_at ASC LIMIT 50"
 		);
 	}
 
