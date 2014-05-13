@@ -12,9 +12,9 @@ class Memberful_Wp_Endpoint_Webhook implements Memberful_Wp_Endpoint {
 	public function process( array $request_params, array $server_params ) {
 		$payload = json_decode($this->raw_request_body());
 
-		if ( strpos( $payload->event, 'order.' ) === 0 ) {
+		if ( strpos( $payload->event, 'order.' ) !== FALSE ) {
 			$this->sync_member( $payload->order->member->id );
-		} elseif ( strpos( $payload->event, 'member.' ) === 0 ) {
+		} elseif ( strpos( $payload->event, 'member.' ) !== FALSE ) {
 			$this->sync_member( $payload->member->id );
 		}
 	}
