@@ -16,19 +16,8 @@ function memberful_wp_cron_sync_users() {
 	echo "<pre>library=memberful_wp fn=memberful_wp_cron_sync_users at=start members=".count($members_to_sync)."\n</pre>";
 
 	foreach ( $members_to_sync as $member_id ) {
-		$account = memberful_api_member( $member_id );
 
-		if ( is_wp_error( $account ) ) {
-			return memberful_wp_record_error(array(
-				'caller' => 'memberful_wp_cron_sync_users',
-				'error'  => $account->get_error_messages()
-			));
-		}
-
-		$user = $mapper->map( $account->member );
-
-		Memberful_Wp_User_Downloads::sync($user->ID, $account->products);
-		Memberful_Wp_User_Subscriptions::sync($user->ID, $account->subscriptions);
+		memberful_wp_sync_member_from_memberful( $member_id );
 
 		sleep(1);
 	}

@@ -163,7 +163,9 @@ function memberful_wp_user_downloads( $user_id ) {
 }
 
 /**
- * Gets the array of subscriptions that the member with $member_id owns
+ * Gets the plans that the member with $member_id is currently subscribed to
+ * If the member had a subscription to a plan, but it has expired then it
+ * is not included in this list.
  *
  * @return array member's subscriptions
  */

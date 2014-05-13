@@ -1,17 +1,4 @@
 <?php
-require_once MEMBERFUL_DIR.'/src/user/oauth_map.php';
-require_once MEMBERFUL_DIR.'/src/user/downloads.php';
-require_once MEMBERFUL_DIR.'/src/user/subscriptions.php';
-
-
-/**
- * Is OAuth authentication enabled?
- *
- * @return boolean
- */
-function memberful_wp_oauth_enabled() {
-	return TRUE;
-}
 
 class Memberful_Authenticator {
 	/**
@@ -82,7 +69,7 @@ class Memberful_Authenticator {
 	 */
 	public function init( $user, $username, $password ) {
 		// If another authentication system has handled this request
-		if ( $user instanceof WP_User || ! memberful_wp_oauth_enabled() ) {
+		if ( $user instanceof WP_User ) {
 			return $user;
 		}
 
@@ -90,15 +77,12 @@ class Memberful_Authenticator {
 		if ( isset( $_GET['code'] ) ) {
 			$tokens = $this->get_oauth_tokens( $_GET['code'] );
 
-			$details = $this->get_member_data( $tokens->access_token );
+			$account = $this->get_member_data( $tokens->access_token );
 
-			$mapper = new Memberful_User_Oauth_Map;
-			$user   = $mapper->map( $details->member, $tokens->refresh_token );
-
-			Memberful_Wp_User_Downloads::sync($user->ID, $details->products);
-			Memberful_Wp_User_Subscriptions::sync($user->ID, $details->subscriptions);
-
-			return $user;
+			return memberful_wp_sync_member_from_memberful_account(
+				$account,
+				array( 'refresh_token' => $tokens->refresh_token )
+			);
 		} elseif ( isset( $_GET['error'] ) ) {
 			// For some reason we got an error code.
 			return $this->_error(

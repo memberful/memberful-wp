@@ -32,6 +32,7 @@ require_once MEMBERFUL_DIR . '/src/core-ext.php';
 require_once MEMBERFUL_DIR . '/src/cron.php';
 require_once MEMBERFUL_DIR . '/src/urls.php';
 require_once MEMBERFUL_DIR . '/src/user/map.php';
+require_once MEMBERFUL_DIR . '/src/user/role_decision.php';
 require_once MEMBERFUL_DIR . '/src/authenticator.php';
 require_once MEMBERFUL_DIR . '/src/admin.php';
 require_once MEMBERFUL_DIR . '/src/acl.php';
@@ -44,6 +45,7 @@ require_once MEMBERFUL_DIR . '/src/content_filter.php';
 require_once MEMBERFUL_DIR . '/src/entities.php';
 require_once MEMBERFUL_DIR . '/src/embed.php';
 require_once MEMBERFUL_DIR . '/src/api.php';
+require_once MEMBERFUL_DIR . '/src/syncing.php';
 require_once MEMBERFUL_DIR . '/vendor/reporting.php';
 
 register_activation_hook( __FILE__, 'memberful_wp_plugin_activate' );
@@ -51,4 +53,3 @@ register_activation_hook( __FILE__, 'memberful_wp_plugin_activate' );
 function memberful_wp_plugin_activate() {
 	add_option( 'memberful_wp_activation_redirect' , true );
 }
-

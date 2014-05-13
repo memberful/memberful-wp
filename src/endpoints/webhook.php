@@ -10,31 +10,23 @@ class Memberful_Wp_Endpoint_Webhook implements Memberful_Wp_Endpoint {
 	}
 
 	public function process( array $request_params, array $server_params ) {
+		$member  = NULL;
 		$payload = json_decode($this->raw_request_body());
 
 		if ( strpos( $payload->event, 'order' ) !== FALSE ) {
 			$member = (int) $payload->order->member->id;
 
 			echo 'Processing order webhook for member '.$member;
-			$this->sync_member( $member );
 		} elseif ( strpos( $payload->event, 'member' ) !== FALSE ) {
 			$member = (int) $payload->member->id;
 
 			echo 'Processing member webhook for member '.$member;
-			$this->sync_member( $member );
 		} else {
 			echo 'Ignoring webhook';
 		}
-	}
 
-	private function sync_member( $member_id ) {
-		$account = memberful_api_member( $member_id );
-
-		$mapper = new Memberful_User_Map();
-		$user   = $mapper->map( $account->member );
-
-		Memberful_Wp_User_Downloads::sync( $user->ID, $account->products );
-		Memberful_Wp_User_Subscriptions::sync( $user->ID, $account->subscriptions );
+		if ( $member !== NULL )
+			memberful_wp_sync_member_from_memberful( $member );
 	}
 
 	private function raw_request_body() {

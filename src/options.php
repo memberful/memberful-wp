@@ -17,6 +17,8 @@ function memberful_wp_all_options() {
 		'memberful_acl' => array(),
 		'memberful_embed_enabled' => FALSE,
 		'memberful_error_log' => array(),
+		'memberful_role_active_customer' => 'subscriber',
+		'memberful_role_inactive_customer' => 'subscriber',
 		MEMBERFUL_OPTION_DEFAULT_MARKETING_CONTENT => NULL
 	);
 }
