@@ -1,9 +1,7 @@
 <?php
 
-wp_clear_scheduled_hook( 'memberful_wp_cron_sync_users' );
-
 if ( ! wp_next_scheduled( 'memberful_wp_cron_sync' ) ) {
-	  wp_schedule_event( time(), 'hourly', 'memberful_wp_cron_sync' );
+	  wp_schedule_event( time(), 'twicedaily', 'memberful_wp_cron_sync' );
 }
 
 add_action( 'memberful_wp_cron_sync', 'memberful_wp_cron_sync_users' );

@@ -17,7 +17,7 @@ class Memberful_User_Map {
 	static public function fetch_ids_of_members_that_need_syncing() {
 		global $wpdb;
 
-		$sync_cut_off_point = 3600 * 24 * 3;
+		$sync_cut_off_point = 3600 * 24 * 7;
 
 		return $wpdb->get_col(
 			"SELECT member_id FROM ".self::table()." WHERE last_sync_at < ".(time()-$sync_cut_off_point)." AND wp_user_id > 0 ORDER BY last_sync_at ASC LIMIT 50"
