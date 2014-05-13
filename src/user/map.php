@@ -14,10 +14,14 @@ class Memberful_User_Map {
 		return $wpdb->prefix.'memberful_mapping';
 	}
 
-	static public function least_recently_synced_members() {
+	static public function fetch_ids_of_members_that_need_syncing() {
 		global $wpdb;
 
-		return $wpdb->get_col( "SELECT member_id FROM ".self::table()." ORDER BY last_sync_at ASC" );
+		$sync_cut_off_point = 3600 * 24 * 3;
+
+		return $wpdb->get_col(
+			"SELECT member_id FROM ".self::table()." WHERE last_sync_at < ".(time()-$sync_cut_off_point)." ORDER BY last_sync_at ASC LIMIT 50"
+		);
 	}
 
 	/**
