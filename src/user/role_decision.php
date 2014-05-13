@@ -2,10 +2,10 @@
 
 class Memberful_Wp_User_Role_Decision {
 	public static function ensure_user_role_is_correct( $user ) {
-		$decision = new Memberful_User_Role_Decision();
+		$decision = new Memberful_Wp_User_Role_Decision();
 
 		$new_role = $decision->role_for_user(
-			$user->get_role(),
+			$user->role,
 			memberful_wp_user_plans_subscribed_to( $user->ID )
 		);
 

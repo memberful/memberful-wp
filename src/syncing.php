@@ -14,13 +14,13 @@ function memberful_wp_sync_member_from_memberful( $member_id, $mapping_context =
 		));
 	}
 
-	memberful_wp_sync_member_account( $account, $mapping_context );
+	return memberful_wp_sync_member_account( $account, $mapping_context );
 }
 
 function memberful_wp_sync_member_account( $account, $mapping_context ) {
-	$mapper = new Memberful_Wp_User_Map();
+	$mapper = new Memberful_User_Map();
 
-	$user = $mapper->map( $account, $mapping_context );
+	$user = $mapper->map( $account->member, $mapping_context );
 
 	Memberful_Wp_User_Downloads::sync($user->ID, $account->products);
 	Memberful_Wp_User_Subscriptions::sync($user->ID, $account->subscriptions);

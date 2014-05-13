@@ -79,7 +79,7 @@ class Memberful_Authenticator {
 
 			$account = $this->get_member_data( $tokens->access_token );
 
-			return memberful_wp_sync_member_from_memberful_account(
+			return memberful_wp_sync_member_account(
 				$account,
 				array( 'refresh_token' => $tokens->refresh_token )
 			);
