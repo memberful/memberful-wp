@@ -2,18 +2,18 @@
 	<?php memberful_wp_render('option_tabs', array('active' => 'bulk_protect')); ?>
 	<?php memberful_wp_render('flash'); ?>
 	<div class="update-nag">
-		<strong>Be careful:</strong> When you bulk apply these restrict access settings we will <strong>overwrite and replace</strong> any specified individual Post or Page restrict access settings.
+		<?php _e( "<strong>Be careful:</strong> When you bulk apply these restrict access settings we will <strong>overwrite and replace</strong> any specified individual Post or Page restrict access settings.", 'memberful' ); ?>
 	</div>
 	<form method="POST" action="<?php echo $form_target ?>">
 		<div class="memberful-bulk-apply-box">
-			<h3>Bulk apply restrict access settings</h3>
+			<h3><?php _e( "Bulk apply restrict access settings", 'memberful' ); ?></h3>
 			<fieldset>
-				<label>Apply the restrict access settings specified below to:</label>
+				<label><?php _e( "Apply the restrict access settings specified below to:", 'memberful' ); ?></label>
 				<select name="target_for_restriction" id="global-restrict-target" class="postform">
-					<option value="all_pages_and_posts" selected="selected">All Pages and Posts</option>
-					<option value="all_pages">All Pages</option>
-					<option value="all_posts">All Posts</option>
-					<option value="all_posts_from_category">All Posts from a category or categories</option>
+					<option value="all_pages_and_posts" selected="selected"><?php _e( "All Pages and Posts", 'memberful' ); ?></option>
+					<option value="all_pages"><?php _e( "All Pages", 'memberful' ); ?></option>
+					<option value="all_posts"><?php _e( "All Posts", 'memberful' ); ?></option>
+					<option value="all_posts_from_category"><?php _e( "All Posts from a category or categories", 'memberful' ); ?></option>
 				</select>
 				<ul data-depends-on="global-restrict-target" data-depends-value="all_posts_from_category" class="memberful-global-restrict-access-category-list">
 					<?php foreach(get_categories() as $category): ?>
@@ -21,7 +21,7 @@
 			<?php endforeach; ?>
 				</ul>
 					<p>
-						<input type="submit" class="button button-secondary" value="Bulk apply restrict access settings" />
+						<input type="submit" class="button button-secondary" value="<?php _e( "Bulk apply restrict access settings", 'memberful' ); ?>" />
 					</p>
 			</fieldset>
 		</div>

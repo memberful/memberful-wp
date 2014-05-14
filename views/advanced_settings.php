@@ -5,8 +5,8 @@
 			<table class="widefat fixed" id="memberful-role-mapping-table">
 				<thead>
 				<tr>
-					<th scope="col" class="manage-column">Customer state</th>
-					<th scope="col" class="manage-column">Assigned role</th>
+					<th scope="col" class="manage-column"><?php _e( "Member state", 'memberful' ); ?></th>
+					<th scope="col" class="manage-column"><?php _e( "Assigned role", 'memberful' ); ?></th>
 				</tr>
 				</thead>
 				<tbody class="role-mapping">
