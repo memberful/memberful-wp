@@ -287,6 +287,23 @@ function memberful_wp_activate( $code ) {
 function memberful_wp_advanced_settings() {
 	$allowed_roles = memberful_wp_roles_that_can_be_mapped_to();
 
+	if ( ! empty( $_POST ) ) {
+		$new_active_role   = isset( $_POST['role_mappings']['active_customer'] ) ? $_POST['role_mappings']['active_customer'] : '';
+		$new_inactive_role = isset( $_POST['role_mappings']['inactive_customer'] ) ? $_POST['role_mappings']['inactive_customer'] : '';
+
+		if ( array_key_exists( $new_active_role, $allowed_roles ) ) {
+			update_option( 'memberful_role_active_customer', $new_active_role );
+		}
+
+		if ( array_key_exists( $new_inactive_role, $allowed_roles ) ) {
+			update_option( 'memberful_role_inactive_customer', $new_inactive_role );
+		}
+
+		Memberful_Wp_Reporting::report( __('Settings updated') );
+
+		wp_redirect( memberful_wp_plugin_advanced_settings_url() );
+	}
+
 	$vars = array(
 		'available_state_mappings' => array(
 			'active_customer'   => array(

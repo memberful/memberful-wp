@@ -25,6 +25,6 @@
 				</tbody>
 			</table>
 			<p class="button-controls"><input type="submit" name="nav-menu-locations" id="nav-menu-locations" class="button button-primary left" value="Save Changes"></p>
-			<input type="hidden" id="_wpnonce" name="_wpnonce" value="bcaeefdee1"><input type="hidden" name="_wp_http_referer" value="/wp-admin/nav-menus.php?action=locations">			<input type="hidden" name="menu" id="nav-menu-meta-object-id" value="156">
+			<?php memberful_wp_nonce_field( 'memberful_options' ); ?>
 		</form>
 </div>
