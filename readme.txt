@@ -48,6 +48,8 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 == Changelog ==
 
 = 1.6.0 =
+* Improve how we handle the situation when a WP user account is created before Memberful member, then the Memberful member signs in.
+* Introduce role mapping (see options page for more details).
 * Add cron job for ensuring member profiles are kept up to date.
 * Deprecate old helpers and shortcodes that reference "products", see our documentation [on functions](https://memberful.com/help/integrate/services/wordpress/wordpress-functions/) and [shortcodes](https://memberful.com/help/integrate/services/wordpress/wordpress-shortcodes/) for new versions.
 * Allow admins to protect posts and pages in bulk. This will replace existing access rules for the posts and pages.
