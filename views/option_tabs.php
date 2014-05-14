@@ -12,7 +12,7 @@
 		),
 		array(
 			'id'    => 'advanced_settings',
-			'title' => __('Advanced Settings'),
+			'title' => __('Advanced Role Mapping'),
 			'url'   => memberful_wp_plugin_advanced_settings_url()
 		),
 	);
