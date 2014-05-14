@@ -46,16 +46,26 @@ class Memberful_User_Map {
 
 		if ( $user_exists && ! $user_mapping_exists ) {
 			if ( ! is_user_logged_in() ) {
-				wp_safe_redirect( admin_url() );
-				wp_die( "Found a WordPress user for this member, but Memberful did not create the WordPress user. Please contact the site administrator." );
+				update_user_meta(
+					$user_id,
+					'memberful_potential_member_mapping',
+					array(
+						'member'  => $member,
+						'context' => $mapping,
+					)
+				);
+
+				wp_safe_redirect(
+					add_query_arg( 'memberful_account_check', '1', wp_login_url() )
+			   	);
+				die();
 			} else {
 				$current_user       = wp_get_current_user();
 				$current_user_email = $current_user->user_email;
 
 				// Check the logged in user's email address against the Memberful email address
 				if ( $current_user_email !== $member->email ) {
-					wp_safe_redirect( admin_url() );
-					wp_die( "Found a WordPress user for this member, but Memberful did not create the WordPress user. Please contact the site administrator." );
+					wp_die( __( "It looks like Memberful didn't create your user on this WordPress site. Please make sure you're signed in as your WordPress user, then sign in through Memberful" ));
 				}
 			}
 		}
