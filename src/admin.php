@@ -285,21 +285,24 @@ function memberful_wp_activate( $code ) {
 }
 
 function memberful_wp_advanced_settings() {
-	$allowed_roles = memberful_wp_roles_that_can_be_mapped_to();
+	$allowed_roles         = memberful_wp_roles_that_can_be_mapped_to();
+	$current_active_role   = memberful_wp_role_for_active_customer();
+	$current_inactive_role = memberful_wp_role_for_inactive_customer();
 
 	if ( ! empty( $_POST ) ) {
 		$new_active_role   = isset( $_POST['role_mappings']['active_customer'] ) ? $_POST['role_mappings']['active_customer'] : '';
 		$new_inactive_role = isset( $_POST['role_mappings']['inactive_customer'] ) ? $_POST['role_mappings']['inactive_customer'] : '';
 
-		if ( array_key_exists( $new_active_role, $allowed_roles ) ) {
+		if ( array_key_exists( $new_active_role, $allowed_roles ) && array_key_exists( $new_inactive_role, $allowed_roles ) ) {
 			update_option( 'memberful_role_active_customer', $new_active_role );
-		}
-
-		if ( array_key_exists( $new_inactive_role, $allowed_roles ) ) {
 			update_option( 'memberful_role_inactive_customer', $new_inactive_role );
-		}
 
-		Memberful_Wp_Reporting::report( __('Settings updated') );
+			memberful_wp_update_customer_roles( $current_active_role, $new_active_role, $current_inactive_role, $new_inactive_role );
+
+			Memberful_Wp_Reporting::report( __('Settings updated') );
+		} else {
+			Memberful_Wp_Reporting::report( __('The roles you chose aren\'t in the list of allowed roles'), 'error' );
+		}
 
 		wp_redirect( memberful_wp_plugin_advanced_settings_url() );
 	}
@@ -308,11 +311,11 @@ function memberful_wp_advanced_settings() {
 		'available_state_mappings' => array(
 			'active_customer'   => array(
 				'name' => 'Paying customer',
-				'current_role' => memberful_wp_role_for_active_customer()
+				'current_role' => $current_active_role,
 			),
 			'inactive_customer' => array(
 				'name' => 'Customer without subscription',
-				'current_role' => memberful_wp_role_for_inactive_customer()
+				'current_role' => $current_inactive_role,
 			),
 		),
 		'available_roles' => $allowed_roles,

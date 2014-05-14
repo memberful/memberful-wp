@@ -24,6 +24,14 @@ class Memberful_User_Map {
 		);
 	}
 
+	static public function fetch_user_ids_of_all_mapped_members() {
+		global $wpdb;
+
+		return $wpdb->get_col(
+			"SELECT wp_user_id FROM ".self::table()." WHERE wp_user_id > 0;"
+		);
+	}
+
 	/**
 	 * Takes a set of Memberful member details and tries to associate it with the
 	 * WordPress user account.

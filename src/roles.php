@@ -27,3 +27,20 @@ function memberful_wp_role_for_inactive_customer( $default_role = 'subscriber' )
 
 	return $default_role;
 }
+
+
+function memberful_wp_update_customer_roles( $old_active_role, $new_active_role, $old_inactive_role, $new_inactive_role ) {
+	$mapped_users = Memberful_User_Map::fetch_user_ids_of_all_mapped_members();
+
+	$old_active_users = get_users(array('fields' => 'all', 'role' => $old_active_role, 'include' => $mapped_users));
+
+	foreach( $old_active_users as $user ) {
+		$user->set_role( $new_active_role );
+	}
+
+	$old_inactive_users = get_users(array('fields' => 'all', 'role' => $old_inactive_role, 'include' => $mapped_users));
+
+	foreach( $old_inactive_users as $user ) {
+		$user->set_role( $new_inactive_role );
+	}
+}
