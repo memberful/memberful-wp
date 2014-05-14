@@ -91,7 +91,6 @@ class Memberful_Authenticator {
 			);
 		}
 
-
 		// Store where the user came from in a cookie
 		$expire  = time() + ( 30 * 60 ); // 30 minutes
 		$referer = $_SERVER['HTTP_REFERER'];
@@ -192,3 +191,27 @@ class Memberful_Authenticator {
 
 // Backup, prevent members from resetting their password
 add_filter( 'allow_password_reset', array( 'Memberful_Authenticator', 'audit_password_reset' ), 50, 2 );
+add_filter( 'login_message', 'memberful_wp_display_check_account_message' );
+add_filter( 'wp_login', 'memberful_wp_link_accounts_if_appropriate', 10, 2 );
+
+function memberful_wp_display_check_account_message() {
+	if ( isset($_GET['memberful_account_check']) ) {
+		return '<p>'.__('It looks like have an account on this site which Memberful didn\'t create. Please sign in using your WP login so that we can sync your accounts up').'</p>';
+	}
+}
+
+function memberful_wp_link_accounts_if_appropriate($username, $user) {
+
+	if ( isset($_COOKIE['memberful_account_link_nonce']) ) { 
+		if ( $user->has_prop( 'memberful_potential_member_mapping' ) ) {
+			$potential_mapping = $user->get( 'memberful_potential_member_mapping' );
+
+			if ( $potential_mapping['member']->email === $user->user_email && $_COOKIE['memberful_account_link_nonce'] === $potential_mapping['nonce'] ) {
+				memberful_wp_sync_member_from_memberful( $potential_mapping['member']->id, $potential_mapping['context'] );
+			}
+		}
+
+		delete_user_meta( $user->ID, 'memberful_potential_member_mapping' );
+		setcookie('memberful_account_link_nonce', '', time()-3600, COOKIEPATH, COOKIE_DOMAIN, false, true);
+	}
+}
