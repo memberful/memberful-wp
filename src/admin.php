@@ -235,6 +235,8 @@ function memberful_wp_options() {
 				return memberful_wp_bulk_protect();
 			case 'debug':
 				return memberful_wp_debug();
+			case 'advanced_settings':
+				return memberful_wp_advanced_settings();
 		}
 	}
 
@@ -280,6 +282,25 @@ function memberful_wp_activate( $code ) {
 	memberful_wp_send_site_options_to_memberful();
 
 	return TRUE;
+}
+
+function memberful_wp_advanced_settings() {
+	$allowed_roles = memberful_wp_roles_that_can_be_mapped_to();
+
+	$vars = array(
+		'available_state_mappings' => array(
+			'active_customer'   => array(
+				'name' => 'Paying customer',
+				'current_role' => memberful_wp_role_for_active_customer()
+			),
+			'inactive_customer' => array(
+				'name' => 'Customer without subscription',
+				'current_role' => memberful_wp_role_for_inactive_customer()
+			),
+		),
+		'available_roles' => $allowed_roles,
+	);
+	memberful_wp_render( 'advanced_settings', $vars );
 }
 
 function memberful_wp_bulk_protect() {
