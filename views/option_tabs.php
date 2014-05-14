@@ -1,16 +1,21 @@
 <?php
-  $links = array(
-    array(
-      'id'    => 'settings',
-      'title' => __('Memberful'),
-      'url'   => memberful_wp_plugin_settings_url()
-    ),
-    array(
-      'id'    => 'bulk_protect',
-      'title' => __('Bulk restrict access tool'),
-      'url'   => memberful_wp_plugin_bulk_protect_url()
-    )
-  );
+	$links = array(
+		array(
+			'id'    => 'settings',
+			'title' => __('Memberful'),
+			'url'   => memberful_wp_plugin_settings_url()
+		),
+		array(
+			'id'    => 'bulk_protect',
+			'title' => __('Bulk restrict access tool'),
+			'url'   => memberful_wp_plugin_bulk_protect_url()
+		),
+		array(
+			'id'    => 'advanced_settings',
+			'title' => __('Advanced Settings'),
+			'url'   => memberful_wp_plugin_advanced_settings_url()
+		),
+	);
 ?>
 <h2 class="nav-tab-wrapper">
 <?php foreach($links as $link): ?>
