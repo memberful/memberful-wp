@@ -310,11 +310,11 @@ function memberful_wp_advanced_settings() {
 	$vars = array(
 		'available_state_mappings' => array(
 			'active_customer'   => array(
-				'name' => 'Paying customer',
+				'name' => 'Any active subscription plans',
 				'current_role' => $current_active_role,
 			),
 			'inactive_customer' => array(
-				'name' => 'Customer without subscription',
+				'name' => 'No active subscription plans',
 				'current_role' => $current_inactive_role,
 			),
 		),
