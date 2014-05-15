@@ -196,7 +196,7 @@ add_filter( 'wp_login', 'memberful_wp_link_accounts_if_appropriate', 10, 2 );
 
 function memberful_wp_display_check_account_message() {
 	if ( isset($_GET['memberful_account_check']) ) {
-		return '<p>'.__('It looks like have an account on this site which Memberful didn\'t create. Please sign in using your WP login so that we can sync your accounts up').'</p>';
+		return '<p>'.__( 'We found an existing WordPress user account with your email address. Please sign in so we can sync the accounts.' ).'</p>';
 	}
 }
 
