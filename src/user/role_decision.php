@@ -23,7 +23,7 @@ class Memberful_Wp_User_Role_Decision {
 			'subscriber'
 		);
 
-		if ( ! in_array( $current_role, $roles_memberful_is_allowed_to_change_from ) ) {
+		if ( ! empty( $current_role ) && ! in_array( $current_role, $roles_memberful_is_allowed_to_change_from ) ) {
 			return $current_role;
 		}
 
