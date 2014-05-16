@@ -47,6 +47,9 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 == Changelog ==
 
+= 1.6.1 =
+* Fix bug in syncing when an existing user has no role.
+
 = 1.6.0 =
 * Improve how we handle the situation when a WP user account is created before Memberful member, then the Memberful member signs in.
 * Introduce role mapping (see options page for more details).
