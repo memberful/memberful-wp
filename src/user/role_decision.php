@@ -20,7 +20,7 @@ class Memberful_Wp_User_Role_Decision {
 		$roles_memberful_is_allowed_to_change_from = array(
 			$active_role,
 			$inactive_role,
-			'subscriber'
+			get_option( 'default_role', 'subscriber' )
 		);
 
 		if ( ! empty( $current_role ) && ! in_array( $current_role, $roles_memberful_is_allowed_to_change_from ) ) {
