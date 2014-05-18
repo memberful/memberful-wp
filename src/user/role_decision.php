@@ -2,7 +2,7 @@
 
 class Memberful_Wp_User_Role_Decision {
 	public static function ensure_user_role_is_correct( $user ) {
-		$decision = new Memberful_Wp_User_Role_Decision();
+		$decision = self::build();
 
 		return $decision->update_user_role( $user );
 	}
