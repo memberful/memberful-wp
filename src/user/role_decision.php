@@ -4,7 +4,30 @@ class Memberful_Wp_User_Role_Decision {
 	public static function ensure_user_role_is_correct( $user ) {
 		$decision = new Memberful_Wp_User_Role_Decision();
 
-		$new_role = $decision->role_for_user(
+		return $decision->update_user_role( $user );
+	}
+
+	public static function build(array $extra_roles_memberful_is_allowed_to_change_from = array()) {
+		return new Memberful_Wp_User_Role_Decision(
+			get_option( 'memberful_role_active_customer', 'subscriber' ),
+			get_option( 'memberful_role_inactive_customer', 'subscriber' ),
+			get_option( 'default_role', 'subscriber' ),
+			$extra_roles_memberful_is_allowed_to_change_from
+		);
+	}
+
+	public function __construct( $active_role, $inactive_role, $default_role, array $extra_roles_memberful_is_allowed_to_change_from = array() ) {
+		$this->active_role   = $active_role;
+		$this->inactive_role = $inactive_role;
+
+		$this->roles_memberful_is_allowed_to_change_from = array_merge(
+			array( $active_role, $inactive_role, $default_role ),
+			$extra_roles_memberful_is_allowed_to_change_from
+		);
+	}
+
+	public function update_user_role( $user ) {
+		$new_role = $this->role_for_user(
 			reset( $user->roles ),
 			memberful_wp_user_plans_subscribed_to( $user->ID )
 		);
@@ -13,20 +36,12 @@ class Memberful_Wp_User_Role_Decision {
 	}
 
 	public function role_for_user($current_role, $current_subscriptions) {
-		$is_active     = ! empty( $current_subscriptions );
-		$active_role   = get_option( 'memberful_role_active_customer', 'subscriber' );
-		$inactive_role = get_option( 'memberful_role_inactive_customer', 'subscriber' );
+		$is_active = ! empty( $current_subscriptions );
 
-		$roles_memberful_is_allowed_to_change_from = array(
-			$active_role,
-			$inactive_role,
-			get_option( 'default_role', 'subscriber' )
-		);
-
-		if ( ! in_array( $current_role, $roles_memberful_is_allowed_to_change_from ) ) {
+		if ( ! in_array( $current_role, $this->roles_memberful_is_allowed_to_change_from ) ) {
 			return $current_role;
 		}
 
-		return $is_active ? $active_role : $inactive_role;
+		return $is_active ? $this->active_role : $this->inactive_role;
 	}
 }
