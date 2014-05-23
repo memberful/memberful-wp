@@ -189,6 +189,41 @@ class Memberful_Authenticator {
 	}
 }
 
+class Memberful_Sync_Verification {
+	const NONCE_META_KEY   = 'memberful_potential_member_mapping';
+	const NONCE_COOKIE_KEY = 'memberful_account_link_nonce';
+
+	public function setup( $wp_user, $member, array $context ) {
+		$nonce = bin2hex(openssl_random_pseudo_bytes(32));
+
+		update_user_meta(
+			$user_id,
+			self::NONCE_META_KEY,
+			array(
+				'nonce'   => $nonce,
+				'member'  => $member,
+				'context' => (array) $context,
+			)
+		);
+
+		return $nonce;
+	}
+
+	public function confirm_verification( $user, $nonce ) {
+		if ( $user->has_prop( NONCE_META_KEY ) ) {
+			$potential_mapping = $user->get( self::NONCE_META_KEY );
+
+			if ( $potential_mapping['member']->email === $user->user_email && $nonce === $potential_mapping['nonce'] ) {
+				delete_user_meta( $user->ID, self::NONCE_META_KEY );
+
+				$potential_mapping['context']['user_verified_they_want_to_sync_accounts'] = TRUE;
+
+				return memberful_wp_sync_member_from_memberful( $potential_mapping['member']->id, $potential_mapping['context'] );
+			}
+		}
+	}
+}
+
 // Backup, prevent members from resetting their password
 add_filter( 'allow_password_reset', array( 'Memberful_Authenticator', 'audit_password_reset' ), 50, 2 );
 add_filter( 'login_message', 'memberful_wp_display_check_account_message' );
