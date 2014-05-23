@@ -58,7 +58,7 @@ class Memberful_User_Map {
 			}
 		}
 
-		if ( $user_member_is_mapped_to ) {
+		if ( $user_member_is_mapped_to !== FALSE ) {
 			// Someone is attempting to change their email address to another user's,
 			// potentially an admin's. WordPress will actually allow multiple users
 			// with the same email address, so we'd better be a responsible citizen
