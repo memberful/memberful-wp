@@ -61,9 +61,6 @@ class Memberful_Authenticator {
 	/**
 	 * Callback for the `authenticate` hook.
 	 *
-	 * Called in wp-login.php when the login form is rendered, thus it responds
-	 * to both GET and POST requests.
-	 *
 	 * @return WP_User The user to be logged in or NULL if user couldn't be
 	 * determined
 	 */
@@ -79,10 +76,21 @@ class Memberful_Authenticator {
 
 			$account = $this->get_member_data( $tokens->access_token );
 
-			return memberful_wp_sync_member_account(
-				$account,
-				array( 'refresh_token' => $tokens->refresh_token )
-			);
+			$context = array( 'refresh_token' => $tokens->refresh_token );
+
+			$user = memberful_wp_sync_member_account( $account, $context );
+
+			if ( is_wp_error( $user ) && $user->get_error_code() === 'user_already_exists' ) {
+				$error_data = $user->get_error_data();
+
+				return $this->ask_user_to_verify_they_want_to_sync_accounts(
+					$existing_member,
+					$account->member,
+					$context
+				);
+			}
+
+			return $user;
 		} elseif ( isset( $_GET['error'] ) ) {
 			// For some reason we got an error code.
 			return $this->_error(
@@ -111,6 +119,17 @@ class Memberful_Authenticator {
 
 	public function hook_into_wordpress() {
 		add_filter( 'authenticate', array( $this, 'init' ), 10, 3 );
+	}
+
+	public function ask_user_to_verify_they_want_to_sync_accounts( $existing_wp_user, $memberful_member, $sync_context ) {
+		wp_logout();
+
+		setcookie('memberful_account_link_nonce', $nonce, time()+3600, COOKIEPATH, COOKIE_DOMAIN, false, true);
+
+		wp_safe_redirect(
+			add_query_arg( 'memberful_account_check', '1', wp_login_url() )
+		);
+		die();
 	}
 
 
@@ -236,17 +255,9 @@ function memberful_wp_display_check_account_message() {
 }
 
 function memberful_wp_link_accounts_if_appropriate($username, $user) {
+	if ( isset($_COOKIE[Memberful_Sync_Verification::NONCE_COOKIE_KEY]) ) { 
+		$nonce = $_COOKIE[Memberful_Sync_Verification::NONCE_COOKIE_KEY];
 
-	if ( isset($_COOKIE['memberful_account_link_nonce']) ) { 
-		if ( $user->has_prop( 'memberful_potential_member_mapping' ) ) {
-			$potential_mapping = $user->get( 'memberful_potential_member_mapping' );
-
-			if ( $potential_mapping['member']->email === $user->user_email && $_COOKIE['memberful_account_link_nonce'] === $potential_mapping['nonce'] ) {
-				memberful_wp_sync_member_from_memberful( $potential_mapping['member']->id, $potential_mapping['context'] );
-			}
-		}
-
-		delete_user_meta( $user->ID, 'memberful_potential_member_mapping' );
-		setcookie('memberful_account_link_nonce', '', time()-3600, COOKIEPATH, COOKIE_DOMAIN, false, true);
+		setcookie(Memberful_Sync_Verification::NONCE_COOKIE_KEY, '', time()-3600, COOKIEPATH, COOKIE_DOMAIN, false, true);
 	}
 }

@@ -18,14 +18,18 @@ function memberful_wp_sync_member_from_memberful( $member_id, $mapping_context =
 }
 
 function memberful_wp_sync_member_account( $account, $mapping_context ) {
-	$mapper = new Memberful_User_Map();
+	$currently_signed_in_user = is_user_logged_in() ? wp_get_current_user() : NULL;
+
+	$mapper = new Memberful_User_Map( $currently_signed_in_user );
 
 	$user = $mapper->map( $account->member, $mapping_context );
 
-	Memberful_Wp_User_Downloads::sync($user->ID, $account->products);
-	Memberful_Wp_User_Subscriptions::sync($user->ID, $account->subscriptions);
+	if ( ! is_wp_error( $user ) ) {
+		Memberful_Wp_User_Downloads::sync($user->ID, $account->products);
+		Memberful_Wp_User_Subscriptions::sync($user->ID, $account->subscriptions);
 
-	Memberful_Wp_User_Role_Decision::ensure_user_role_is_correct( $user );
+		Memberful_Wp_User_Role_Decision::ensure_user_role_is_correct( $user );
+	}
 
 	return $user;
 }
