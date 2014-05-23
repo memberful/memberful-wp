@@ -122,8 +122,8 @@ class Memberful_User_Map {
 	private function find_user_member_is_mapped_to( $member ) {
 		global $wpdb;
 
-		$user_member_is_mapped_to = NULL;
-		$mapping_exists = FALSE;
+		$user_member_is_mapped_to = FALSE;
+		$mapping_exists           = FALSE;
 
 		$sql =
 			'SELECT `mem`.`wp_user_id`, `mem`.`member_id` '.
