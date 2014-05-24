@@ -44,32 +44,33 @@ class Memberful_User_Map {
 
 		$existing_user_with_members_email = find_user_by( 'email', $member->email );
 
-		if ( $existing_user_with_members_email && ! $mapping_exists ) {
+		if ( $existing_user_with_members_email !== FALSE && $user_member_is_mapped_to === FALSE ) {
 			if ( empty($mapping['user_verified_they_want_to_sync_accounts']) ) {
 				return new WP_Error(
 					'user_already_exists',
 					"A user exists in WordPress with the same email address as a Memberful member, but we're not sure they belong to the same user",
 					array(
 						'member'        => $member,
-						'existing_user' => $existing_user,
+						'existing_user' => $existing_user_with_members_email,
 						'context'       => $context,
 					)
 				);
 			}
 		}
 
-		if ( $user_member_is_mapped_to !== FALSE ) {
+		if ( $existing_user_with_members_email !== FALSE && $user_member_is_mapped_to !== FALSE ) {
 			// Someone is attempting to change their email address to another user's,
 			// potentially an admin's. WordPress will actually allow multiple users
 			// with the same email address, so we'd better be a responsible citizen
-			if ( $user_member_is_mapped_to->ID !== $existing_user_with_email->ID ) {
+			if ( $user_member_is_mapped_to->ID !== $existing_user_with_members_email->ID ) {
 				return new WP_Error(
 					'user_is_mimicing_another_user',
 					"The member is trying to change their email address to that of a different user in WordPress",
 					array(
-						'member'        => $member,
-						'existing_user' => $existing_user,
-						'context'       => $context,
+						'member'          => $member,
+						'mapped_user'     => $user_member_is_mapped_to,
+						'user_with_email' => $existing_user_with_members_email
+						'context'         => $context,
 					)
 				);
 			}
@@ -77,7 +78,7 @@ class Memberful_User_Map {
 
 		$user_data = array();
 
-		if ( $user_exists ) {
+		if ( $user_member_is_mapped_to !== FALSE ) {
 			$user_data['ID'] = $user_member_is_mapped_to->ID;
 		} else {
 			$user_data['user_pass'] = wp_generate_password();
@@ -186,7 +187,7 @@ class Memberful_User_Map {
 		$value_sub_list = array( '%d', '%d' );
 
 		foreach ( $columns as $column ) {
-			if ( $column === 'member_id' )
+			if ( $column === 'member_id' || $column === 'wp_user_id' )
 				continue;
 
 			$values[]		 = $params[$column];
