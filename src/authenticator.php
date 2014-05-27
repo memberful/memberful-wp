@@ -261,6 +261,19 @@ class Memberful_Sync_Verification {
 add_filter( 'allow_password_reset', array( 'Memberful_Authenticator', 'audit_password_reset' ), 50, 2 );
 add_filter( 'login_message', 'memberful_wp_display_check_account_message' );
 add_filter( 'wp_login', 'memberful_wp_link_accounts_if_appropriate', 10, 2 );
+add_action( 'login_form', 'memberful_wp_add_nonce_check_to_login_form' );
+
+function memberful_wp_add_nonce_check_to_login_form() {
+	if ( ! isset( $_COOKIE[ Memberful_Sync_Verification::NONCE_COOKIE_KEY ] ) )
+		return;
+
+	return memberful_wp_render(
+		'login_form_nonce_field',
+		array(
+			'nonce' => $_COOKIE[ Memberful_Sync_Verification::NONCE_COOKIE_KEY ]
+		)
+	);
+}
 
 function memberful_wp_display_check_account_message() {
 	if ( isset($_GET['memberful_account_check']) ) {
@@ -270,7 +283,11 @@ function memberful_wp_display_check_account_message() {
 
 function memberful_wp_link_accounts_if_appropriate($username, $user) {
 	if ( isset($_COOKIE[Memberful_Sync_Verification::NONCE_COOKIE_KEY]) ) { 
-		$nonce = $_COOKIE[Memberful_Sync_Verification::NONCE_COOKIE_KEY];
+		$cookie_nonce = $_COOKIE[Memberful_Sync_Verification::NONCE_COOKIE_KEY];
+
+		if ( ! empty( $_POST['memberful_wp_confirm_sync_nonce'] ) && $_POST['memberful_wp_confirm_sync_nonce'] === $cookie_nonce ) {
+			var_dump(Memberful_Sync_Verification::verify( $user, $cookie_nonce ));
+		}
 
 		setcookie(Memberful_Sync_Verification::NONCE_COOKIE_KEY, '', time()-3600, COOKIEPATH, COOKIE_DOMAIN, false, true);
 	}
