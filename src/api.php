@@ -102,8 +102,7 @@ function memberful_wp_instrument_api_call( $url, $request, $response ) {
 	}
 
 	if ( $error_payload !== NULL ) {
-		$error_payload['caller']     = array_slice(debug_backtrace(), 0, 15);
-		$error_payload['url']        = $url;
+		$error_payload['url']       = $url;
 		$error_payload['sslverify'] = $request['sslverify'];
 
 		memberful_wp_record_error( $error_payload );
@@ -137,10 +136,22 @@ function memberful_wp_error_log() {
 }
 
 function memberful_wp_record_error( $new_payload ) {
-	$error_log = get_option( 'memberful_error_log', array() );
+	if ( ! isset( $new_payload['caller'] ) ) {
+		$new_payload['caller'] = array_map('memberful_wp_strip_args_from_backtrace', array_slice(debug_backtrace(), 1, 10));
+	}
 
+	return memberful_wp_store_error( $new_payload );
+}
+
+function memberful_wp_strip_args_from_backtrace( $line ) {
+	unset($line['args']);
+
+	return $line;
+}
+
+function memberful_wp_store_error( $new_payload ) {
 	// Try not to overload the WP options table with errors!
-	$error_log = array_slice( $error_log, 0, 100, TRUE );
+	$error_log = array_slice( memberful_wp_error_log(), 0, 99, TRUE );
 
 	array_unshift( $error_log, $new_payload );
 
