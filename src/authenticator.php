@@ -76,17 +76,15 @@ class Memberful_Authenticator {
 
 			$account = $this->get_member_data( $tokens->access_token );
 
-			$context = array( 'refresh_token' => $tokens->refresh_token );
-
-			$user = memberful_wp_sync_member_account( $account, $context );
+			$user = memberful_wp_sync_member_account( $account,  array( 'refresh_token' => $tokens->refresh_token ) );
 
 			if ( is_wp_error( $user ) && $user->get_error_code() === 'user_already_exists' ) {
 				$error_data = $user->get_error_data();
 
 				return $this->ask_user_to_verify_they_want_to_sync_accounts(
-					$existing_member,
-					$account->member,
-					$context
+					$error_data['existing_user'],
+					$error_data['member'],
+					$error_data['context']
 				);
 			}
 
@@ -121,8 +119,10 @@ class Memberful_Authenticator {
 		add_filter( 'authenticate', array( $this, 'init' ), 10, 3 );
 	}
 
-	public function ask_user_to_verify_they_want_to_sync_accounts( $existing_wp_user, $memberful_member, $sync_context ) {
+	public function ask_user_to_verify_they_want_to_sync_accounts( $existing_wp_user, $memberful_member, array $sync_context ) {
 		wp_logout();
+
+		$nonce = Memberful_Sync_Verification::setup( $existing_wp_user, $memberful_member, $sync_context );
 
 		setcookie('memberful_account_link_nonce', $nonce, time()+3600, COOKIEPATH, COOKIE_DOMAIN, false, true);
 
@@ -212,11 +212,23 @@ class Memberful_Sync_Verification {
 	const NONCE_META_KEY   = 'memberful_potential_member_mapping';
 	const NONCE_COOKIE_KEY = 'memberful_account_link_nonce';
 
-	public function setup( $wp_user, $member, array $context ) {
+	public static function setup( $wp_user, $member, array $context = array() ) {
+		$verification = new self;
+
+		return $verification->setup_nonce( $wp_user, $member, $context );
+	}
+
+	public static function verify( $user, $nonce ) {
+		$verification = new self;
+
+		return $verification->confirm_verification( $user, $nonce );
+	}
+
+	public function setup_nonce( $wp_user, $member, array $context ) {
 		$nonce = bin2hex(openssl_random_pseudo_bytes(32));
 
 		update_user_meta(
-			$user_id,
+			$wp_user->ID,
 			self::NONCE_META_KEY,
 			array(
 				'nonce'   => $nonce,
@@ -229,7 +241,7 @@ class Memberful_Sync_Verification {
 	}
 
 	public function confirm_verification( $user, $nonce ) {
-		if ( $user->has_prop( NONCE_META_KEY ) ) {
+		if ( $user->has_prop( self::NONCE_META_KEY ) ) {
 			$potential_mapping = $user->get( self::NONCE_META_KEY );
 
 			if ( $potential_mapping['member']->email === $user->user_email && $nonce === $potential_mapping['nonce'] ) {
@@ -240,6 +252,8 @@ class Memberful_Sync_Verification {
 				return memberful_wp_sync_member_from_memberful( $potential_mapping['member']->id, $potential_mapping['context'] );
 			}
 		}
+
+		return new WP_Error("could_not_verify_sync_link", "We could not verify that this user wanted to link their accounts together");
 	}
 }
 
