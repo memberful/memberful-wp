@@ -69,7 +69,7 @@ class Memberful_User_Map {
 					array(
 						'member'          => $member,
 						'mapped_user'     => $user_member_is_mapped_to,
-						'user_with_email' => $existing_user_with_members_email
+						'user_with_email' => $existing_user_with_members_email,
 						'context'         => $context,
 					)
 				);
