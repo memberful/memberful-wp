@@ -248,6 +248,7 @@ class Memberful_Sync_Verification {
 				delete_user_meta( $user->ID, self::NONCE_META_KEY );
 
 				$potential_mapping['context']['user_verified_they_want_to_sync_accounts'] = TRUE;
+				$potential_mapping['context']['id_of_user_who_has_verified_the_sync_link'] = $user->ID;
 
 				return memberful_wp_sync_member_from_memberful( $potential_mapping['member']->id, $potential_mapping['context'] );
 			}

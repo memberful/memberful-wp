@@ -1,5 +1,6 @@
 <?php
 
+
 /**
  * Maps a Memberful user to a WordPress user.
  *
@@ -45,7 +46,7 @@ class Memberful_User_Map {
 		$existing_user_with_members_email = get_user_by( 'email', $member->email );
 
 		if ( $existing_user_with_members_email !== FALSE && $user_member_is_mapped_to === FALSE ) {
-			if ( empty($mapping['user_verified_they_want_to_sync_accounts']) ) {
+			if ( empty($context['user_verified_they_want_to_sync_accounts']) || $context['id_of_user_who_has_verified_the_sync_link'] !== (int) $existing_user_with_members_email->ID ) {
 				return new WP_Error(
 					'user_already_exists',
 					"A user exists in WordPress with the same email address as a Memberful member, but we're not sure they belong to the same user",
