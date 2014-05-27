@@ -80,7 +80,6 @@ function memberful_wp_send_site_options_to_memberful() {
 
 	memberful_wp_put_data_to_api_as_json( 
 		memberful_url( 'admin/settings/integrate/website/settings' ),
-		'sync_site_settings_to_memberful',
 		$options
 	);
 }

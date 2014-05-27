@@ -104,6 +104,11 @@ class Memberful_User_Map {
 		}
 
 		$user_id = wp_insert_user( $user_data );
+
+		if ( is_wp_error( $user_id ) ) {
+			return $user_id;
+		}
+
 		$user_member_is_mapped_to = get_userdata( $user_id );
 
 		$context['last_sync_at'] = time();
@@ -186,6 +191,7 @@ class Memberful_User_Map {
 		$columns     = $this->restrict_columns( $columns );
 		$column_list = '`'.implode( '`, `', $columns ).'`';
 
+		var_dump($wp_user, $member);
 		$values      = array( $wp_user->ID, $member->id );
 		$value_sub_list = array( '%d', '%d' );
 
