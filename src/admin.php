@@ -15,7 +15,9 @@ add_action( 'admin_enqueue_scripts', 'memberful_wp_admin_enqueue_scripts' );
 function memberful_wp_plugin_migrate_db() {
 	global $wpdb;
 
-	if ( get_option( 'memberful_db_version', 0 ) < 1 ) {
+	$db_version = get_option( 'memberful_db_version', 0 );
+
+	if ( $db_version < 1 ) {
 		$result = $wpdb->query(
 			'CREATE TABLE `'.Memberful_User_Map::table().'`(
 			`wp_user_id` INT UNSIGNED NULL DEFAULT NULL UNIQUE KEY,
@@ -48,8 +50,22 @@ function memberful_wp_plugin_migrate_db() {
 			);
 		}
 
-		update_option( 'memberful_db_version', 1 );
+		$db_version = 1;
 	}
+
+	if ( $db_version < 2 ) {
+		$result = $wpdb->query('DELETE FROM '.Memberful_User_Map::table().' WHERE wp_user_id=0');
+
+		if ( $result === false ) {
+			echo 'Could not trim empty users from mapping table\n';
+			$wpdb->print_error();
+			exit();
+		}
+
+		$db_version = 2;
+	}
+
+	update_option( 'memberful_db_version', $db_version );
 }
 
 /**
