@@ -80,6 +80,8 @@ class Memberful_User_Map {
 
 		if ( $user_member_is_mapped_to !== FALSE ) {
 			$user_data['ID'] = $user_member_is_mapped_to->ID;
+		} elseif ( $existing_user_with_members_email !== FALSE ) {
+			$user_data['ID'] = $existing_user_with_members_email->ID;
 		} else {
 			$user_data['user_pass'] = wp_generate_password();
 			$user_data['show_admin_bar_frontend'] = FALSE;
@@ -190,7 +192,7 @@ class Memberful_User_Map {
 			if ( $column === 'member_id' || $column === 'wp_user_id' )
 				continue;
 
-			$values[]		 = $params[$column];
+			$values[] = $context[$column];
 			$value_sub_list[] = '%s';
 		}
 
