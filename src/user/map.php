@@ -42,7 +42,7 @@ class Memberful_User_Map {
 	public function map( $member, array $context = array() ) {
 		extract($this->find_user_member_is_mapped_to( $member ));
 
-		$existing_user_with_members_email = find_user_by( 'email', $member->email );
+		$existing_user_with_members_email = get_user_by( 'email', $member->email );
 
 		if ( $existing_user_with_members_email !== FALSE && $user_member_is_mapped_to === FALSE ) {
 			if ( empty($mapping['user_verified_they_want_to_sync_accounts']) ) {
@@ -105,7 +105,7 @@ class Memberful_User_Map {
 
 		$context['last_sync_at'] = time();
 
-		$mapping_created = $this->ensure_mapping_is_correct( $wp_user, $member, $context );
+		$mapping_created = $this->ensure_mapping_is_correct( $mapping_exists, $user_member_is_mapped_to, $member, $context );
 
 		return $user_member_is_mapped_to;
 	}
@@ -138,7 +138,7 @@ class Memberful_User_Map {
 			$user_member_is_mapped_to = get_user_by( 'id', $mapping->wp_user_id );
 		}
 
-		return compact( $mapping_exists, $user_member_is_mapped_to );
+		return compact( "mapping_exists", "user_member_is_mapped_to" );
 	}
 
 	private function ensure_mapping_is_correct( $mapping_existed_before, $wp_user, $member, array $context ) {
