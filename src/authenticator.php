@@ -159,7 +159,7 @@ class Memberful_Authenticator {
 			'grant_type'    => 'authorization_code',
 			'code'          => $auth_code,
 		);
-		$response = memberful_wp_post_data_to_api_as_json( self::oauth_member_url('token'), 'get_oauth_tokens', $params );
+		$response = memberful_wp_post_data_to_api_as_json( self::oauth_member_url('token'), $params );
 
 		if ( is_wp_error($response) ) {
 			return $this->_error( 'could_not_get_tokens', $response );
