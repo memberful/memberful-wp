@@ -106,6 +106,11 @@ class Memberful_User_Map {
 		$user_id = wp_insert_user( $user_data );
 
 		if ( is_wp_error( $user_id ) ) {
+			$data = $user_id->get_error_data();
+			$data['member']    = $member;
+			$data['user_data'] = $user_data;
+			$user_id->add_data($data);
+
 			return $user_id;
 		}
 

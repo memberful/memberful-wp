@@ -32,8 +32,9 @@ function memberful_wp_sync_member_account( $account, $mapping_context ) {
 		Memberful_Wp_User_Role_Decision::ensure_user_role_is_correct( $user );
 	} else {
 		memberful_wp_record_error(array(
-			'error' => $account->get_error_messages(),
-			'code'  => $account->get_error_code()
+			'error' => $user->get_error_messages(),
+			'code'  => $user->get_error_code(),
+			'data'  => $user->get_error_data()
 		));
 	}
 
