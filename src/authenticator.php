@@ -287,7 +287,7 @@ function memberful_wp_link_accounts_if_appropriate($username, $user) {
 		$cookie_nonce = $_COOKIE[Memberful_Sync_Verification::NONCE_COOKIE_KEY];
 
 		if ( ! empty( $_POST['memberful_wp_confirm_sync_nonce'] ) && $_POST['memberful_wp_confirm_sync_nonce'] === $cookie_nonce ) {
-			var_dump(Memberful_Sync_Verification::verify( $user, $cookie_nonce ));
+			Memberful_Sync_Verification::verify( $user, $cookie_nonce );
 		}
 
 		setcookie(Memberful_Sync_Verification::NONCE_COOKIE_KEY, '', time()-3600, COOKIEPATH, COOKIE_DOMAIN, false, true);
