@@ -196,7 +196,6 @@ class Memberful_User_Map {
 		$columns     = $this->restrict_columns( $columns );
 		$column_list = '`'.implode( '`, `', $columns ).'`';
 
-		var_dump($wp_user, $member);
 		$values      = array( $wp_user->ID, $member->id );
 		$value_sub_list = array( '%d', '%d' );
 
