@@ -156,7 +156,7 @@ class Memberful_User_Map {
 
 	private function ensure_mapping_is_correct( $mapping_existed_before, $wp_user, $member, array $context ) {
 		return $mapping_existed_before
-			? $this->update_mapping( $member, $context )
+			? $this->update_mapping( $wp_user, $member, $context )
 			: $this->create_mapping( $wp_user, $member, $context );
 	}
 
@@ -164,13 +164,13 @@ class Memberful_User_Map {
 	 * Update information about the user in the mapping table
 	 *
 	 */
-	public function update_mapping( $member, array $context ) {
+	public function update_mapping( $wp_user, $member, array $context ) {
 		global $wpdb;
 
-		$data	= array();
+		$data	= array( $wp_user->ID );
 		$columns = $this->restrict_columns( array_keys( $context ) );
 
-		$update = 'UPDATE `'.self::table().'` SET ';
+		$update = 'UPDATE `'.self::table().'` SET `wp_user_id` = %d, ';
 
 		foreach ( $columns as $column ) {
 			$update .= '`'.$column.'` = %s, ';
