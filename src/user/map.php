@@ -252,6 +252,7 @@ class Memberful_User_Map {
 						'member'  => $member,
 						'context' => $context
 					)
+				);
 			}
 		}
 
