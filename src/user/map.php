@@ -118,7 +118,19 @@ class Memberful_User_Map {
 
 		$context['last_sync_at'] = time();
 
-		$mapping_created = $this->ensure_mapping_is_correct( $mapping_exists, $user_member_is_mapped_to, $member, $context );
+		$outcome_of_mapping = $this->ensure_mapping_is_correct( $mapping_exists, $user_member_is_mapped_to, $member, $context );
+
+		if ( is_wp_error( $outcome_of_mapping ) ) {
+			if ( $outcome_of_mapping->get_error_code() === "memberful_race_condition" ) {
+				wp_delete_user( $user_id );
+
+				$error_data = $outcome_of_mapping->get_error_data();
+
+				return $error_data['canonical_user'];
+			} else {
+				return $outcome_of_mapping;
+			}
+		}
 
 		return $user_member_is_mapped_to;
 	}
@@ -183,6 +195,8 @@ class Memberful_User_Map {
 		$data[] = $member->id;
 
 		$wpdb->query( $wpdb->prepare( $update, $data ) );
+
+		return $wp_user->ID;
 	}
 
 	/**
@@ -211,13 +225,37 @@ class Memberful_User_Map {
 
 		$insert = 'INSERT INTO `'.self::table().'` ( '.$column_list.' ) VALUES ( '.$value_list.' )';
 
+		$previous_error_state = $wpdb->hide_errors();
+
 		$result = $wpdb->query( $wpdb->prepare( $insert, $values ) );
 
-		if ( is_wp_error( $result ) ) {
-			echo 'Could not reserve mapping:';
-			var_dump( $result );
-			die();
+		if ( $result === FALSE ) {
+			// Race condition, some other process has reserved the mapping
+			if ( strpos( strtolower( $wpdb->last_error ), 'duplicate entry' ) !== FALSE ) {
+				$real_mapping = $this->find_user_member_is_mapped_to( $member );
+
+				return new WP_Error(
+					"memberful_race_condition",
+					"Some other process created the user and mapping before we could. Use the earlier version",
+					array(
+						'canonical_user' => $real_mapping['user_member_is_mapped_to'],
+						'member'         => $member,
+						'context'        => $context
+					)
+				);
+			} else {
+				return new WP_Error(
+					"database_error",
+					$wpdb->last_error,
+					array(
+						'wp_user' => $wp_user,
+						'member'  => $member,
+						'context' => $context
+					)
+			}
 		}
+
+		return $wp_user->ID;
 	}
 
 	/**
