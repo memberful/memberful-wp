@@ -123,15 +123,13 @@ class Memberful_User_Map {
 
 		if ( is_wp_error( $outcome_of_mapping ) ) {
 			if ( $outcome_of_mapping->get_error_code() === "duplicate_user_for_member" ) {
-				$error_data = $outcome_of_mapping->get_error_data();
-				$error_data['our_user'] = $user_member_is_mapped_to;
-				$outcome_of_mapping->add_data( $error_data );
-
 				// We only record this error as others will be passed up and recorded
 				// by something else, whereas here we're working around the error.
 				memberful_wp_record_wp_error( $outcome_of_mapping );
 
 				wp_delete_user( $user_id );
+
+				$error_data = $outcome_of_mapping->get_error_data();
 
 				return $error_data['canonical_user'];
 			} else {
@@ -264,7 +262,8 @@ class Memberful_User_Map {
 					array(
 						'canonical_user' => $real_mapping['user_member_is_mapped_to'],
 						'member'         => $member,
-						'context'        => $context
+						'context'        => $context,
+						'our_user'       => $wp_user,
 					)
 				);
 			} else {
