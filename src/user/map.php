@@ -121,7 +121,7 @@ class Memberful_User_Map {
 		$outcome_of_mapping = $this->ensure_mapping_is_correct( $mapping_exists, $user_member_is_mapped_to, $member, $context );
 
 		if ( is_wp_error( $outcome_of_mapping ) ) {
-			if ( $outcome_of_mapping->get_error_code() === "memberful_race_condition" ) {
+			if ( $outcome_of_mapping->get_error_code() === "duplicate_user_for_member" ) {
 				wp_delete_user( $user_id );
 
 				$error_data = $outcome_of_mapping->get_error_data();
@@ -235,7 +235,7 @@ class Memberful_User_Map {
 				$real_mapping = $this->find_user_member_is_mapped_to( $member );
 
 				return new WP_Error(
-					"memberful_race_condition",
+					"duplicate_user_for_member",
 					"Some other process created the user and mapping before we could. Use the earlier version",
 					array(
 						'canonical_user' => $real_mapping['user_member_is_mapped_to'],
