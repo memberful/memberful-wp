@@ -201,7 +201,22 @@ class Memberful_User_Map {
 		$update .= ' WHERE `member_id` = %d';
 		$data[] = $member->id;
 
-		$wpdb->query( $wpdb->prepare( $update, $data ) );
+		$query = $wpdb->prepare( $update, $data );
+
+		$result = $wpdb->query( $query );
+
+		if ( $result === FALSE ) {
+			return new WP_Error(
+				"database_error",
+				$wpdb->last_error,
+				array(
+					'query'   => $query,
+					'wp_user' => $wp_user,
+					'member'  => $member,
+					'context' => $context
+				)
+			);
+		}
 
 		return $wp_user->ID;
 	}
@@ -234,7 +249,9 @@ class Memberful_User_Map {
 
 		$previous_error_state = $wpdb->hide_errors();
 
-		$result = $wpdb->query( $wpdb->prepare( $insert, $values ) );
+		$query  = $wpdb->prepare( $insert, $values );
+
+		$result = $wpdb->query( $query );
 
 		if ( $result === FALSE ) {
 			// Race condition, some other process has reserved the mapping
@@ -255,6 +272,7 @@ class Memberful_User_Map {
 					"database_error",
 					$wpdb->last_error,
 					array(
+						'query'   => $query,
 						'wp_user' => $wp_user,
 						'member'  => $member,
 						'context' => $context
