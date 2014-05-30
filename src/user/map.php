@@ -46,6 +46,10 @@ class Memberful_User_Map {
 
 		$existing_user_with_members_email = get_user_by( 'email', $member->email );
 
+		$existing_user_with_members_email = FALSE;
+		$user_member_is_mapped_to = FALSE;
+		$mapping_exists = FALSE;
+
 		if ( $existing_user_with_members_email !== FALSE && $user_member_is_mapped_to === FALSE ) {
 			if ( empty($context['user_verified_they_want_to_sync_accounts']) || $context['id_of_user_who_has_verified_the_sync_link'] !== (int) $existing_user_with_members_email->ID ) {
 				return new WP_Error(
@@ -123,9 +127,15 @@ class Memberful_User_Map {
 
 		if ( is_wp_error( $outcome_of_mapping ) ) {
 			if ( $outcome_of_mapping->get_error_code() === "duplicate_user_for_member" ) {
-				wp_delete_user( $user_id );
-
 				$error_data = $outcome_of_mapping->get_error_data();
+				$error_data['our_user'] = $user_member_is_mapped_to;
+				$outcome_of_mapping->add_data( $error_data );
+
+				// We only record this error as others will be passed up and recorded
+				// by something else, whereas here we're working around the error.
+				memberful_wp_record_wp_error( $outcome_of_mapping );
+
+				wp_delete_user( $user_id );
 
 				return $error_data['canonical_user'];
 			} else {

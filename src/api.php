@@ -111,7 +111,6 @@ function memberful_wp_instrument_api_call( $url, $request, $response ) {
 function memberful_wp_extract_api_error_log_from_wp_error( $wp_error ) {
 	return array(
 		'status'   => 0,
-		'date'     => gmdate('c'),
 		'codes'    => $wp_error->get_error_codes(),
 		'messages' => $wp_error->get_error_messages(),
 	);
@@ -122,7 +121,6 @@ function memberful_wp_extract_api_error_log_from_response( $response ) {
 
 	return array(
 		'status'       => (int) wp_remote_retrieve_response_code( $response ),
-		'date'         => gmdate('c'),
 		'request_id'   => isset( $headers['x-request-id'] ) ? $headers['x-request-id'] : 'unknown',
 		'cache_hit'    => isset( $headers['x-rack-cache'] ) ? $headers['x-rack-cache'] : 'unknown',
 		'runtime'      => isset( $headers['x-runtime'] )    ? $headers['x-runtime']    : 'unknown',
@@ -134,9 +132,21 @@ function memberful_wp_error_log() {
 	return get_option( 'memberful_error_log', array() );
 }
 
+function memberful_wp_record_wp_error( $wp_error ) {
+	return memberful_wp_record_error(array(
+		'codes'    => $wp_error->get_error_codes(),
+		'messages' => $wp_error->get_error_messages(),
+		'data'     => $wp_error->get_error_data()
+	));
+}
+
 function memberful_wp_record_error( $new_payload ) {
 	if ( ! isset( $new_payload['caller'] ) ) {
 		$new_payload['caller'] = array_map('memberful_wp_strip_args_from_backtrace', array_slice(debug_backtrace(), 1, 10));
+	}
+
+	if ( ! isset( $new_payload['date'] ) ) {
+		$new_payload['date'] = gmdate('c');
 	}
 
 	return memberful_wp_store_error( $new_payload );
