@@ -1,4 +1,5 @@
 <?php
+require_once( ABSPATH.'wp-admin/includes/user.php' );
 
 
 /**
