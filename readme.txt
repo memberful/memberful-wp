@@ -47,6 +47,9 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 == Changelog ==
 
+= 1.8.0 =
+* Add a fix that prevents duplicate users from being created during sign in.
+
 = 1.7.1 =
 * Remove a couple of debug lines that accidentally got included with 1.7.0.
 
