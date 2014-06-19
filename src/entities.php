@@ -78,11 +78,17 @@ function memberful_wp_fetch_entities( $url ) {
 }
 
 function memberful_wp_format_entity( $entity ) {
-	return array(
+	$payload = array(
 		'id'          => $entity->id,
 		'name'        => $entity->name,
 		'slug'        => $entity->slug,
 		'for_sale'    => $entity->for_sale,
-		'price'       => $entity->price
+		'price'       => $entity->price,
 	);
+
+	if ( isset( $entity->description ) ) {
+		$payload['description'] = isset( $entity->description ) ? $entity->description : '';
+	}
+
+	return $payload;
 }
