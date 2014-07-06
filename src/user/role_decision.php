@@ -1,7 +1,7 @@
 <?php
 
 class Memberful_Wp_User_Role_Decision {
-	public static function ensure_user_role_is_correct( $user ) {
+	public static function ensure_user_role_is_correct( WP_User $user ) {
 		$decision = self::build();
 
 		return $decision->update_user_role( $user );
@@ -26,7 +26,7 @@ class Memberful_Wp_User_Role_Decision {
 		);
 	}
 
-	public function update_user_role( $user ) {
+	public function update_user_role( WP_User $user ) {
 		$new_role = $this->role_for_user(
 			reset( $user->roles ),
 			memberful_wp_user_plans_subscribed_to( $user->ID )
