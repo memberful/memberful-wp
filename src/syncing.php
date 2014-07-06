@@ -19,9 +19,7 @@ function memberful_wp_sync_member_from_memberful( $member_id, $mapping_context =
 }
 
 function memberful_wp_sync_member_account( $account, $mapping_context ) {
-	$currently_signed_in_user = is_user_logged_in() ? wp_get_current_user() : NULL;
-
-	$mapper = new Memberful_User_Map( $currently_signed_in_user );
+	$mapper = new Memberful_User_Map( );
 
 	$user = $mapper->map( $account->member, $mapping_context );
 
