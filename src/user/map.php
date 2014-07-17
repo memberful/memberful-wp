@@ -42,46 +42,16 @@ class Memberful_User_Map {
 	 * @return WP_User
 	 */
 	public function map( $member, array $context = array() ) {
-		extract($this->find_user_member_is_mapped_to( $member ));
+		$mapping_from_member_to_wp_user = $this->find_user_member_is_mapped_to( $member );
 
 		$existing_user_with_members_email = get_user_by( 'email', $member->email );
 
-		if ( $existing_user_with_members_email !== FALSE && $user_member_is_mapped_to === FALSE ) {
-			if ( empty($context['user_verified_they_want_to_sync_accounts']) || $context['id_of_user_who_has_verified_the_sync_link'] !== (int) $existing_user_with_members_email->ID ) {
-				return new WP_Error(
-					'user_already_exists',
-					"A user exists in WordPress with the same email address as a Memberful member, but we're not sure they belong to the same user",
-					array(
-						'member'        => $member,
-						'existing_user' => $existing_user_with_members_email,
-						'context'       => $context,
-					)
-				);
-			}
-		}
-
-		if ( $existing_user_with_members_email !== FALSE && $user_member_is_mapped_to !== FALSE ) {
-			// Someone is attempting to change their email address to another user's,
-			// potentially an admin's. WordPress will actually allow multiple users
-			// with the same email address, so we'd better be a responsible citizen
-			if ( $user_member_is_mapped_to->ID !== $existing_user_with_members_email->ID ) {
-				return new WP_Error(
-					'user_is_mimicing_another_user',
-					"The member is trying to change their email address to that of a different user in WordPress",
-					array(
-						'member'          => $member,
-						'mapped_user'     => $user_member_is_mapped_to,
-						'user_with_email' => $existing_user_with_members_email,
-						'context'         => $context,
-					)
-				);
-			}
-		}
+		$result_of_precondition_check = $this->run_mapping_preconditions( $mapping_from_member_to_wp_user, $existing_user_with_members_email, $member, $context );
 
 		$user_data = array();
 
-		if ( $user_member_is_mapped_to !== FALSE ) {
-			$user_data['ID'] = $user_member_is_mapped_to->ID;
+		if ( $mapping_from_member_to_wp_user['user_member_is_mapped_to'] !== FALSE ) {
+			$user_data['ID'] = $mapping_from_member_to_wp_user['user_member_is_mapped_to']->ID;
 		} elseif ( $existing_user_with_members_email !== FALSE ) {
 			$user_data['ID'] = $existing_user_with_members_email->ID;
 		} else {
@@ -119,7 +89,7 @@ class Memberful_User_Map {
 
 		$context['last_sync_at'] = time();
 
-		$outcome_of_mapping = $this->ensure_mapping_is_correct( $mapping_exists, $user_member_is_mapped_to, $member, $context );
+		$outcome_of_mapping = $this->ensure_mapping_is_correct( $mapping_from_member_to_wp_user['mapping_exists'], $user_member_is_mapped_to, $member, $context );
 
 		if ( is_wp_error( $outcome_of_mapping ) ) {
 			if ( $outcome_of_mapping->get_error_code() === "duplicate_user_for_member" ) {
@@ -138,6 +108,40 @@ class Memberful_User_Map {
 		}
 
 		return $user_member_is_mapped_to;
+	}
+
+	private function run_mapping_preconditions($mapping_from_member, $existing_user_with_members_email, $member, $context) {
+		if ( $existing_user_with_members_email !== FALSE && $mapping_from_member_to_wp_user['user_member_is_mapped_to'] === FALSE ) {
+			if ( empty($context['user_verified_they_want_to_sync_accounts']) || $context['id_of_user_who_has_verified_the_sync_link'] !== (int) $existing_user_with_members_email->ID ) {
+				return new WP_Error(
+					'user_already_exists',
+					"A user exists in WordPress with the same email address as a Memberful member, but we're not sure they belong to the same user",
+					array(
+						'member'        => $member,
+						'existing_user' => $existing_user_with_members_email,
+						'context'       => $context,
+					)
+				);
+			}
+		}
+
+		if ( $existing_user_with_members_email !== FALSE && $mapping_from_member_to_wp_user['user_member_is_mapped_to'] !== FALSE ) {
+			// Someone is attempting to change their email address to another user's,
+			// potentially an admin's. WordPress will actually allow multiple users
+			// with the same email address, so we'd better be a responsible citizen
+			if ( $mapping_from_member_to_wp_user['user_member_is_mapped_to']->ID !== $existing_user_with_members_email->ID ) {
+				return new WP_Error(
+					'user_is_mimicing_another_user',
+					"The member is trying to change their email address to that of a different user in WordPress",
+					array(
+						'member'          => $member,
+						'mapped_user'     => $mapping_from_member_to_wp_user['user_member_is_mapped_to'],
+						'user_with_email' => $existing_user_with_members_email,
+						'context'         => $context,
+					)
+				);
+			}
+		}
 	}
 
 	/**
