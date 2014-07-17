@@ -34,62 +34,48 @@ class Memberful_User_Map {
 		);
 	}
 
+	private $_repository;
+
 	/**
 	 * Takes a set of Memberful member details and tries to associate it with the
-	 * WordPress user account.
-	 *
+	 * WordPress user account.  *
 	 * @param StdObject $details	   Details about the member
 	 * @return WP_User
 	 */
 	public function map( $member, array $context = array() ) {
-		$mapping_from_member_to_wp_user = $this->find_user_member_is_mapped_to( $member );
-
 		$existing_user_with_members_email = get_user_by( 'email', $member->email );
 
-		$result_of_precondition_check = $this->run_mapping_preconditions( $mapping_from_member_to_wp_user, $existing_user_with_members_email, $member, $context );
+		$mapping_from_member = $this->repository()->find_user_member_is_mapped_to( $member );
+		$mapping_from_user   = $this->repository()->find_member_user_is_mapped_to( $existing_user_with_members_email );
 
-		$user_data = array();
-
-		if ( $mapping_from_member_to_wp_user['user_member_is_mapped_to'] !== FALSE ) {
-			$user_data['ID'] = $mapping_from_member_to_wp_user['user_member_is_mapped_to']->ID;
-		} elseif ( $existing_user_with_members_email !== FALSE ) {
-			$user_data['ID'] = $existing_user_with_members_email->ID;
-		} else {
-			$user_data['user_pass'] = wp_generate_password();
-			$user_data['show_admin_bar_frontend'] = FALSE;
-		}
-
-		// Mapping of WordPress => Memberful keys
-		$field_map = array(
-			'user_email'    => 'email',
-			'user_login'    => 'username',
-			'display_name'  => 'full_name',
-			'user_nicename' => 'username',
-			'nickname'      => 'full_name',
-			'first_name'    => 'first_name',
-			'last_name'     => 'last_name'
+		$result_of_precondition_check = $this->run_mapping_preconditions(
+			$mapping_from_member_to_wp_user,
+			$existing_user_with_members_email,
+			$context
 		);
 
-		foreach ( $field_map as $key => $value ) {
-			$user_data[$key] = $member->$value;
+		if ( is_wp_error( $result_of_precondition_check ) ) {
+			return $this->add_data_to_wp_error( $result_of_precondition_check, compact( 'member' ) );
 		}
+
+		$possible_users = array_filter( array( $mapping_from_member['user'], $existing_user_with_members_email ) );
+
+		$existing_wp_user        = empty( $possible_users ) ? FALSE : reset( $possible_users );
+		$user_created_in_process = $existing_wp_user !== FALSE;
+
+		$user_data = $this->build_user_data( $existing_wp_user, $member );
 
 		$user_id = wp_insert_user( $user_data );
 
 		if ( is_wp_error( $user_id ) ) {
-			$data = $user_id->get_error_data();
-			$data['member']    = $member;
-			$data['user_data'] = $user_data;
-			$user_id->add_data($data);
-
-			return $user_id;
+			return $this->add_data_to_wp_error( $user_id, compact( 'member', 'user_data' ) );
 		}
 
-		$user_member_is_mapped_to = get_userdata( $user_id );
+		$wp_user = get_userdata( $user_id );
 
 		$context['last_sync_at'] = time();
 
-		$outcome_of_mapping = $this->ensure_mapping_is_correct( $mapping_from_member_to_wp_user['mapping_exists'], $user_member_is_mapped_to, $member, $context );
+		$outcome_of_mapping = $this->ensure_mapping_is_correct( $mapping_from_member['mapping_exists'], $wp_user, $member, $context );
 
 		if ( is_wp_error( $outcome_of_mapping ) ) {
 			if ( $outcome_of_mapping->get_error_code() === "duplicate_user_for_member" ) {
@@ -110,39 +96,100 @@ class Memberful_User_Map {
 		return $user_member_is_mapped_to;
 	}
 
-	private function run_mapping_preconditions($mapping_from_member, $existing_user_with_members_email, $member, $context) {
-		if ( $existing_user_with_members_email !== FALSE && $mapping_from_member_to_wp_user['user_member_is_mapped_to'] === FALSE ) {
-			if ( empty($context['user_verified_they_want_to_sync_accounts']) || $context['id_of_user_who_has_verified_the_sync_link'] !== (int) $existing_user_with_members_email->ID ) {
+	private function build_user_data( $wp_user, $member ) {
+		$user_data = array();
+
+		if ( $wp_user !== FALSE ) {
+			$user_data['ID'] = $wp_user->ID;
+		} else {
+			$user_data['user_pass'] = wp_generate_password();
+			$user_data['show_admin_bar_frontend'] = FALSE;
+		}
+
+		// Mapping of WordPress => Memberful keys
+		$field_map = array(
+			'user_email'    => 'email',
+			'user_login'    => 'username',
+			'display_name'  => 'full_name',
+			'user_nicename' => 'username',
+			'nickname'      => 'full_name',
+			'first_name'    => 'first_name',
+			'last_name'     => 'last_name'
+		);
+
+		foreach ( $field_map as $key => $value ) {
+			$user_data[$key] = $member->$value;
+		}
+
+		return $user_data;
+	}
+
+	private function run_mapping_preconditions($mapping_from_member, $existing_user_with_email, $member, $context) {
+		$there_is_already_a_user_with_members_email = $existing_user_with_email !== FALSE;
+		$the_member_is_mapped_to_a_user             = $mapping_from_member['user_member_is_mapped_to'] !== FALSE
+
+		if ( $there_is_a_pre_existing_user_with_members_email && ! $the_member_is_mapped_to_a_user ) {
+			$user_has_not_verified_they_want_to_link_these_accounts = empty($context['user_verified_they_want_to_sync_accounts']) || $context['id_of_user_who_has_verified_the_sync_link'] !== (int) $existing_user_with_members_email->ID;
+
+			if ( $user_has_not_verified_they_want_to_link_these_accounts ) {
 				return new WP_Error(
 					'user_already_exists',
 					"A user exists in WordPress with the same email address as a Memberful member, but we're not sure they belong to the same user",
 					array(
 						'member'        => $member,
-						'existing_user' => $existing_user_with_members_email,
+						'existing_user' => $existing_user_with_email,
 						'context'       => $context,
 					)
 				);
 			}
 		}
 
-		if ( $existing_user_with_members_email !== FALSE && $mapping_from_member_to_wp_user['user_member_is_mapped_to'] !== FALSE ) {
+		if ( $there_is_already_a_user_with_members_email && $the_member_is_mapped_to_a_user ) {
+			$user_member_is_mapped_to_is_different_from_user_with_same_email = $mapping_from_member_to_wp_user['user_member_is_mapped_to']->ID !== $existing_user_with_members_email->ID;
+
 			// Someone is attempting to change their email address to another user's,
 			// potentially an admin's. WordPress will actually allow multiple users
 			// with the same email address, so we'd better be a responsible citizen
-			if ( $mapping_from_member_to_wp_user['user_member_is_mapped_to']->ID !== $existing_user_with_members_email->ID ) {
+			if ( $user_member_is_mapped_to_is_different_from_user_with_same_email ) {
 				return new WP_Error(
 					'user_is_mimicing_another_user',
 					"The member is trying to change their email address to that of a different user in WordPress",
 					array(
 						'member'          => $member,
-						'mapped_user'     => $mapping_from_member_to_wp_user['user_member_is_mapped_to'],
-						'user_with_email' => $existing_user_with_members_email,
+						'mapped_user'     => $mapping_from_member['user_member_is_mapped_to'],
+						'user_with_email' => $existing_user_with_email,
 						'context'         => $context,
 					)
 				);
 			}
 		}
 	}
+
+	private function ensure_mapping_is_correct( $mapping_existed_before, $wp_user, $member, array $context ) {
+		return $mapping_existed_before
+			? $this->update_mapping( $wp_user, $member, $context )
+			: $this->create_mapping( $wp_user, $member, $context );
+	}
+
+	private function add_data_to_wp_error( WP_Error $error, array $data ) {
+		$error_data = $error->get_data();
+
+		$error->add_data( array_merge( $error_data, $data ) );
+
+		return $error;
+	}
+
+	private function repository() {
+		if ( empty( $this->_repository ) ) {
+			$this->_repository = new Memberful_User_Mapping_Repository();
+		}
+
+		return $this->_repository;
+	}
+
+}
+
+class Memberful_User_Mapping_Repository {
 
 	/**
 	 * Attempts to find the ID of the user who the specified member maps to in
@@ -162,7 +209,7 @@ class Memberful_User_Map {
 
 		$sql =
 			'SELECT `mem`.`wp_user_id`, `mem`.`member_id` '.
-			'FROM `'.self::table().'` AS `mem`'.
+			'FROM `'.Memberful_User_Map::table().'` AS `mem`'.
 			'WHERE `mem`.`member_id` = %d';
 
 		$mapping = $wpdb->get_row( $wpdb->prepare( $sql, $member->id ) );
@@ -172,14 +219,9 @@ class Memberful_User_Map {
 			$user_member_is_mapped_to = get_user_by( 'id', $mapping->wp_user_id );
 		}
 
-		return compact( "mapping_exists", "user_member_is_mapped_to" );
+		return array( 'mapping_exists' => $mapping_exists, 'user' => $user_member_is_mapped_to, 'member' => $member );
 	}
 
-	private function ensure_mapping_is_correct( $mapping_existed_before, $wp_user, $member, array $context ) {
-		return $mapping_existed_before
-			? $this->update_mapping( $wp_user, $member, $context )
-			: $this->create_mapping( $wp_user, $member, $context );
-	}
 
 	/**
 	 * Update information about the user in the mapping table
@@ -191,7 +233,7 @@ class Memberful_User_Map {
 		$data	= array( $wp_user->ID );
 		$columns = $this->restrict_columns( array_keys( $context ) );
 
-		$update = 'UPDATE `'.self::table().'` SET `wp_user_id` = %d, ';
+		$update = 'UPDATE `'.Memberful_User_Map::table().'` SET `wp_user_id` = %d, ';
 
 		foreach ( $columns as $column ) {
 			$update .= '`'.$column.'` = %s, ';
@@ -226,7 +268,7 @@ class Memberful_User_Map {
 	/**
 	 * Creates a mapping of Memberful member to WordPress user
 	 */
-	private function create_mapping( $wp_user, $member, array $context ) {
+	public function create_mapping( $wp_user, $member, array $context ) {
 		global $wpdb;
 
 		$columns     = array( 'wp_user_id', 'member_id' );
@@ -247,7 +289,7 @@ class Memberful_User_Map {
 
 		$value_list = implode( ', ', $value_sub_list );
 
-		$insert = 'INSERT INTO `'.self::table().'` ( '.$column_list.' ) VALUES ( '.$value_list.' )';
+		$insert = 'INSERT INTO `'.Memberful_User_Map::table().'` ( '.$column_list.' ) VALUES ( '.$value_list.' )';
 
 		$previous_error_state = $wpdb->hide_errors();
 
@@ -299,4 +341,5 @@ class Memberful_User_Map {
 			array( 'member_id' ,'wp_user_id', 'refresh_token', 'last_sync_at' )
 		);
 	}
+
 }
