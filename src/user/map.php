@@ -49,7 +49,7 @@ class Memberful_User_Map {
 
 		$context['last_sync_at'] = time();
 
-		return $this->ensure_mapping_is_correct($mapping_from_member['mapping_exists'], $mapping_from_user['mapping_exists'], $wp_user, $member, $context);
+		return $this->ensure_mapping_is_correct($mapping_from_member['mapping_exists'], $mapping_from_user['mapping_exists'], $wp_user, $member, $wp_user_existed_before_request, $context);
 	}
 
 	private function run_mapping_preconditions($mapping_from_member, $existing_user_with_email, $mapping_from_user, $context) {
@@ -91,7 +91,7 @@ class Memberful_User_Map {
 		}
 	}
 
-	private function ensure_mapping_is_correct( $mapping_from_member_exists, $mapping_from_user_exists, $wp_user, $member, array $context ) {
+	private function ensure_mapping_is_correct( $mapping_from_member_exists, $mapping_from_user_exists, $wp_user, $member, $wp_user_existed_before_request, array $context ) {
 		if ( $mapping_from_member_exists ) {
 			$method = 'update_mapping_by_member';
 		} elseif ( $mapping_from_user_exists ) {
