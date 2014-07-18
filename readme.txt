@@ -49,6 +49,7 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 = 1.9.0 =
 * Store product description when syncing them from Memberful.
+* Fix bug when switching to a different Memberful site, and signing in as members from the old site.
 
 = 1.8.1 =
 * Fix plugin deployment problem.
