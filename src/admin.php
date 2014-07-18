@@ -19,7 +19,7 @@ function memberful_wp_plugin_migrate_db() {
 
 	if ( $db_version < 1 ) {
 		$result = $wpdb->query(
-			'CREATE TABLE `'.Memberful_User_Map::table().'`(
+			'CREATE TABLE `'.Memberful_User_Mapping_Repository::table().'`(
 			`wp_user_id` INT UNSIGNED NULL DEFAULT NULL UNIQUE KEY,
 			`member_id` INT UNSIGNED NOT NULL PRIMARY KEY,
 			`refresh_token` VARCHAR( 45 ) NULL DEFAULT NULL,
@@ -36,7 +36,7 @@ function memberful_wp_plugin_migrate_db() {
 
 		if ( ! empty( $columns ) ) {
 			$wpdb->query(
-				'INSERT INTO `'.Memberful_User_Map::table().'` '.
+				'INSERT INTO `'.Memberful_User_Mapping_Repository::table().'` '.
 				'(`member_id`, `wp_user_id`, `refresh_token`, `last_sync_at`) '.
 				'SELECT `memberful_member_id`, `ID`, `memberful_refresh_token`, UNIX_TIMESTAMP() '.
 				'FROM `'.$wpdb->users.'` '.
@@ -54,7 +54,7 @@ function memberful_wp_plugin_migrate_db() {
 	}
 
 	if ( $db_version < 2 ) {
-		$result = $wpdb->query('DELETE FROM '.Memberful_User_Map::table().' WHERE wp_user_id=0');
+		$result = $wpdb->query('DELETE FROM '.Memberful_User_Mapping_Repository::table().' WHERE wp_user_id=0');
 
 		if ( $result === false ) {
 			echo 'Could not trim empty users from mapping table\n';
@@ -169,7 +169,7 @@ function _memberful_wp_debug_all_post_meta() {
 function memberful_wp_debug() {
 	global $wp_version;
 
-	$mapping_stats = new Memberful_User_Map_Stats(Memberful_User_Map::table());
+	$mapping_stats = new Memberful_User_Map_Stats(Memberful_User_Mapping_Repository::table());
 	$counts = count_users();
 
 	$unmapped_users = $mapping_stats->unmapped_users();

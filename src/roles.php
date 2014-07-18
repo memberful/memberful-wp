@@ -30,7 +30,7 @@ function memberful_wp_role_for_inactive_customer( $default_role = 'subscriber' )
 
 
 function memberful_wp_update_customer_roles( $old_active_role, $new_active_role, $old_inactive_role, $new_inactive_role ) {
-	$mapped_users = Memberful_User_Map::fetch_user_ids_of_all_mapped_members();
+	$mapped_users = Memberful_User_Mapping_Repository::fetch_user_ids_of_all_mapped_members();
 	$role_decision = Memberful_Wp_User_Role_Decision::build(array($old_active_role, $old_inactive_role));
 
 	$mapped_users = get_users(array('fields' => 'all', 'include' => $mapped_users));
