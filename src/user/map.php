@@ -43,29 +43,13 @@ class Memberful_User_Map {
 
 		if ( is_wp_error( $wp_user ) ) {
 			$this->add_data_to_wp_error( $wp_user, array( 'member' => $member, 'wp_user' => $canonical_user ) );
+
+			return $wp_user;
 		}
 
 		$context['last_sync_at'] = time();
 
-		$outcome_of_mapping = $this->ensure_mapping_is_correct( $mapping_from_member['mapping_exists'], $wp_user, $member, $context );
-
-		if ( is_wp_error( $outcome_of_mapping ) ) {
-			if ( $outcome_of_mapping->get_error_code() === "duplicate_user_for_member" && ! $wp_user_existed_before_request ) {
-				// We only record this error as others will be passed up and recorded
-				// by something else, whereas here we're working around the error.
-				memberful_wp_record_wp_error( $outcome_of_mapping );
-
-				wp_delete_user( $user_id );
-
-				$error_data = $outcome_of_mapping->get_error_data();
-
-				return $error_data['canonical_user'];
-			} else {
-				return $outcome_of_mapping;
-			}
-		}
-
-		return $wp_user;
+		return $this->ensure_mapping_is_correct($mapping_from_member['mapping_exists'], $mapping_from_user['mapping_exists'], $wp_user, $member, $context);
 	}
 
 	private function run_mapping_preconditions($mapping_from_member, $existing_user_with_email, $mapping_from_user, $context) {
@@ -73,7 +57,7 @@ class Memberful_User_Map {
 		$the_member_is_mapped_to_a_user             = $mapping_from_member['user'] !== FALSE;
 
 		if ( $there_is_already_a_user_with_members_email && ! $the_member_is_mapped_to_a_user ) {
-			$user_has_not_verified_they_want_to_link_these_accounts = empty($context['user_verified_they_want_to_sync_accounts']) || $context['id_of_user_who_has_verified_the_sync_link'] !== (int) $existing_user_with_members_email->ID;
+			$user_has_not_verified_they_want_to_link_these_accounts = empty($context['user_verified_they_want_to_sync_accounts']) || $context['id_of_user_who_has_verified_the_sync_link'] !== (int) $existing_user_with_email->ID;
 
 			if ( $user_has_not_verified_they_want_to_link_these_accounts ) {
 				return new WP_Error(
@@ -107,10 +91,34 @@ class Memberful_User_Map {
 		}
 	}
 
-	private function ensure_mapping_is_correct( $mapping_existed_before, $wp_user, $member, array $context ) {
-		return $mapping_existed_before
-			? $this->repository()->update_mapping( $wp_user, $member, $context )
-			: $this->repository()->create_mapping( $wp_user, $member, $context );
+	private function ensure_mapping_is_correct( $mapping_from_member_exists, $mapping_from_user_exists, $wp_user, $member, array $context ) {
+		if ( $mapping_from_member_exists ) {
+			$method = 'update_mapping_by_member';
+		} elseif ( $mapping_from_user_exists ) {
+			$method = 'update_mapping_by_user';
+		} else {
+			$method = 'create_mapping';
+		}
+
+		$outcome_of_mapping = $this->repository()->$method( $wp_user, $member, $context );
+
+		if ( is_wp_error( $outcome_of_mapping ) ) {
+			if ( $outcome_of_mapping->get_error_code() === "duplicate_user_for_member" && ! $wp_user_existed_before_request ) {
+				// We only record this error as others will be passed up and recorded
+				// by something else, whereas here we're working around the error.
+				memberful_wp_record_wp_error( $outcome_of_mapping );
+
+				wp_delete_user( $user_id );
+
+				$error_data = $outcome_of_mapping->get_error_data();
+
+				return $error_data['canonical_user'];
+			} else {
+				return $outcome_of_mapping;
+			}
+		}
+
+		return $wp_user;
 	}
 
 	private function add_data_to_wp_error( WP_Error $error, array $data ) {
@@ -266,27 +274,52 @@ class Memberful_User_Mapping_Repository {
 		return compact( 'mapping_exists', 'id_of_member_user_is_mapped_to' );
 	}
 
+	public function update_mapping_by_member( $wp_user, $member, array $context ) {
+		return $this->update_mapping( $wp_user, $member, $context, array( 'member_id' => $member->id ) );
+	}
+
+	public function update_mapping_by_user( $wp_user, $member, array $context ) {
+		return $this->update_mapping( $wp_user, $member, $context, array( 'wp_user_id' => $wp_user->ID ) );
+	}
+
 	/**
 	 * Update information about the user in the mapping table
 	 *
 	 */
-	public function update_mapping( $wp_user, $member, array $context ) {
+	public function update_mapping( $wp_user, $member, array $context, array $constraints ) {
 		global $wpdb;
 
-		$data	= array( $wp_user->ID );
+		if ( empty( $constraints ) ) {
+			return new WP_Error(
+				"empty_update_constraints",
+				"A set of constraints must be provided when updating a mapping",
+				array(
+					'user'        => $wp_user,
+					'member'      => $member,
+					'context'     => $context,
+					'constraints' => $constraints
+				)
+			);
+		}
+
+		$data	= array( $wp_user->ID, $member->id );
 		$columns = $this->restrict_columns( array_keys( $context ) );
 
-		$update = 'UPDATE `'.Memberful_User_Mapping_Repository::table().'` SET `wp_user_id` = %d, ';
+		$update = 'UPDATE `'.Memberful_User_Mapping_Repository::table().'` SET `wp_user_id` = %d, `member_id` = %d, ';
 
 		foreach ( $columns as $column ) {
 			$update .= '`'.$column.'` = %s, ';
 			$data[]  = $context[$column];
 		}
 
-		$update = substr( $update, 0, -2 );
+		$update = substr( $update, 0, -2 ).' WHERE ';
 
-		$update .= ' WHERE `member_id` = %d';
-		$data[] = $member->id;
+		foreach( $constraints as $key => $constraint ) {
+			$update .= '`'.$key.'` = %d AND ';
+			$data[]  = $constraint;
+		}
+
+		$update = substr( $update, 0, -4 ).' LIMIT 1';
 
 		$query = $wpdb->prepare( $update, $data );
 
