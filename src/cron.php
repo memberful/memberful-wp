@@ -10,7 +10,7 @@ add_action( 'memberful_wp_cron_sync', 'memberful_wp_cron_sync_entities' );
 function memberful_wp_cron_sync_users() {
 	set_time_limit( 0 );
 
-	$members_to_sync = Memberful_User_Map::fetch_ids_of_members_that_need_syncing();
+	$members_to_sync = Memberful_User_Mapping_Repository::fetch_ids_of_members_that_need_syncing();
 	$mapper = new Memberful_User_Map();
 
 	echo "<pre>library=memberful_wp fn=memberful_wp_cron_sync_users at=start members=".count($members_to_sync)."\n</pre>";
