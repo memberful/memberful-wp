@@ -169,24 +169,17 @@ class Memberful_User_Mapping_Ensure_User {
 		if ( $this->wp_user !== FALSE ) {
 			$user_data['ID'] = $this->wp_user->ID;
 		} else {
-			$user_data['user_pass'] = wp_generate_password();
+			$user_data['user_pass']               = wp_generate_password();
 			$user_data['show_admin_bar_frontend'] = FALSE;
+			$user_data['user_login']              = $this->member->username;
+			$user_data['user_nicename']           = $this->member->username;
+			$user_data['nickname']                = $this->member->full_name
+			$user_data['display_name']            = $this->member->full_name
 		}
 
-		// Mapping of WordPress => Memberful keys
-		$field_map = array(
-			'user_email'    => 'email',
-			'user_login'    => 'username',
-			'display_name'  => 'full_name',
-			'user_nicename' => 'username',
-			'nickname'      => 'full_name',
-			'first_name'    => 'first_name',
-			'last_name'     => 'last_name'
-		);
-
-		foreach ( $field_map as $key => $value ) {
-			$user_data[$key] = $this->member->$value;
-		}
+		$user_data['user_email'] = $this->member->email;
+		$user_data['first_name'] = $this->member->first_name;
+		$user_data['last_name']  = $this->member->last_name;
 
 		return $user_data;
 	}
