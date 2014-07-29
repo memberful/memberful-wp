@@ -108,7 +108,7 @@ class Memberful_User_Map {
 				// by something else, whereas here we're working around the error.
 				memberful_wp_record_wp_error( $outcome_of_mapping );
 
-				wp_delete_user( $user_id );
+				wp_delete_user( $wp_user->ID );
 
 				$error_data = $outcome_of_mapping->get_error_data();
 
