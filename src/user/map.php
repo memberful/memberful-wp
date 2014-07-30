@@ -167,14 +167,18 @@ class Memberful_User_Mapping_Ensure_User {
 		$user_data = array();
 
 		if ( $this->wp_user !== FALSE ) {
-			$user_data['ID'] = $this->wp_user->ID;
+			$user_data['ID']            = $this->wp_user->ID;
+			$user_data['user_login']    = $this->wp_user->user_login;
+			$user_data['user_nicename'] = $this->wp_user->user_nicename;
+			$user_data['nickname']      = $this->wp_user->nickname;
+			$user_data['display_name']  = $this->wp_user->display_name;
 		} else {
 			$user_data['user_pass']               = wp_generate_password();
 			$user_data['show_admin_bar_frontend'] = FALSE;
 			$user_data['user_login']              = $this->member->username;
 			$user_data['user_nicename']           = $this->member->username;
-			$user_data['nickname']                = $this->member->full_name
-			$user_data['display_name']            = $this->member->full_name
+			$user_data['nickname']                = $this->member->full_name;
+			$user_data['display_name']            = $this->member->full_name;
 		}
 
 		$user_data['user_email'] = $this->member->email;
