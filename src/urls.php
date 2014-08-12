@@ -4,8 +4,8 @@ define( 'MEMBERFUL_HTML', NULL );
 define( 'MEMBERFUL_JSON', 'json' );
 
 
-function memberful_sign_in_url() {
-	return memberful_wp_endpoint_url( 'auth' );
+function memberful_sign_in_url($protocol = NULL) {
+	return memberful_wp_endpoint_url( 'auth', $protocol );
 }
 
 function memberful_sign_out_url() {
@@ -134,6 +134,7 @@ function memberful_wp_webhook_url() {
 	return memberful_wp_endpoint_url( 'webhook' );
 }
 
-function memberful_wp_endpoint_url( $endpoint ) {
-	return add_query_arg( array( 'memberful_endpoint' => $endpoint ), site_url( '', memberful_frontend_protocol() ) );
+function memberful_wp_endpoint_url( $endpoint, $protocol = NULL ) {
+	$protocol = $protocol === NULL ? memberful_frontend_protocol() : $protocol;
+	return add_query_arg( array( 'memberful_endpoint' => $endpoint ), site_url( '', $protocol ) );
 }

@@ -47,6 +47,9 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 == Changelog ==
 
+= 1.7.0 =
+* Ensure the overlay targets both http and https varients of the sign in page.
+
 = 1.6.2 =
 * Update supported version tag.
 * Fix choosing correct role for members when updating role settings.

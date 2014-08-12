@@ -2,7 +2,9 @@
 	window.MemberfulOptions = {
 		site: "<?php echo $site_url ?>",
 		intercept: [
-			"<?php echo memberful_sign_in_url(); ?>"
+			<?php foreach( $intercepted_urls as $url ): ?>
+			"<?php echo $url; ?>",
+			<?php endforeach; ?>
 		],
 		memberSignedIn: <?php echo is_user_logged_in() ? 'true' : 'false'; ?>
 	};
