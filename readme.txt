@@ -3,7 +3,7 @@ Contributors: matt-button, drewstrojny
 Tags: memberful, member, memberships, recurring payments, recurring billing, paywall, subscriptions, stripe, oauth, oauth2
 Requires at least: 3.6
 Tested up to: 3.9.1
-Stable tag: 1.10.0
+Stable tag: 1.11.0
 License: GPLv2 or later
 
 Sell memberships and restrict access to content with WordPress and Memberful.
