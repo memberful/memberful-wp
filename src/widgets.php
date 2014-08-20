@@ -43,7 +43,7 @@ class Memberful_WP_Profile_Widget extends WP_Widget {
 		);
 
 		$args['signed_out_links'] = array(
-			array('href' => memberful_sign_in_url(), 'class' => 'memberful-sign-in-link', 'text' => __( 'Sign in' )),
+			array('href' => memberful_sign_in_url( is_ssl() ? 'https' : 'http' ), 'class' => 'memberful-sign-in-link', 'text' => __( 'Sign in' )),
 		);
 
 		$args = apply_filters( 'memberful_wp_widget_args', $args );
