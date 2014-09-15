@@ -5,6 +5,12 @@ add_shortcode( 'memberful_account_link',  'memberful_wp_shortcode_account_link' 
 add_shortcode( 'memberful_sign_in_link',  'memberful_wp_shortcode_sign_in_link' );
 add_shortcode( 'memberful_sign_out_link', 'memberful_wp_shortcode_sign_out_link' );
 add_shortcode( 'memberful_download_link', 'memberful_wp_shortcode_download_link' );
+add_shortcode( 'memberful_register_link', 'memberful_wp_shortcode_register_link' );
+
+
+function memberful_wp_shortcode_register_link( $atts, $content ) {
+	return '<a href="'.memberful_registration_page_url().'"> role="register">'.$content.'</a>';
+}
 
 function memberful_wp_shortcode_sign_out_link( $atts, $content ) {
 	return '<a href="'.memberful_sign_out_url().'" role="sign_out">'.$content.'</a>';

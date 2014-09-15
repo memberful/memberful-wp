@@ -20,6 +20,10 @@ function memberful_account_url( $format = MEMBERFUL_HTML ) {
 	return memberful_url( 'account', $format );
 }
 
+function memberful_registration_page_url() {
+	return memberful_url( 'register' );
+}
+
 function memberful_account_get_download_url( $download_slug ) {
 	return memberful_url( 'account/downloads/get/'.memberful_wp_extract_id_from_slug( $download_slug ) );
 }

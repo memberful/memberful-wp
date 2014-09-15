@@ -47,6 +47,9 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 == Changelog ==
 
+= 1.12.0 =
+* Add [memberful_register_link] shortcode to WP plugin.
+
 = 1.11.1 =
 * Ensure the widget links to the https version of sign in if on page served over SSL.
 * Update WP compatibility for 4.0.
