@@ -91,9 +91,10 @@ function memberful_wp_user_disallowed_post_ids( $user_id ) {
 	if ( isset( $ids[$user_id] ) )
 		return $ids[$user_id];
 
-	$acl                     = get_option( 'memberful_acl', array() );
-	$global_product_acl      = isset( $acl['product'] ) ? $acl['product'] : array();
-	$global_subscription_acl = isset( $acl['subscription'] ) ? $acl['subscription'] : array();
+	$acl                         = get_option( 'memberful_acl', array() );
+	$global_product_acl          = isset( $acl['product'] ) ? $acl['product'] : array();
+	$global_subscription_acl     = isset( $acl['subscription'] ) ? $acl['subscription'] : array();
+	$posts_viewable_by_all_users = get_option( 'memberful_posts_all_registered_members_can_access', array() );
 
 	// Items the user has access to
 	$user_products = memberful_wp_user_downloads( $user_id );
@@ -109,11 +110,12 @@ function memberful_wp_user_disallowed_post_ids( $user_id ) {
 	$user_allowed_posts    = array_merge( $user_product_acl['allowed'],    $user_subscription_acl['allowed'] );
 	$user_restricted_posts = array_merge( $user_product_acl['restricted'], $user_subscription_acl['restricted'] );
 
-	// Remove from the set of restricted posts the posts that the user is
-	// definitely allowed to access
-	$union = array_diff( $user_restricted_posts, $user_allowed_posts );
+	// Remove the set of posts a user can access from the set they can't.
+	// If a post requires 1 of 2 subscriptions, and a member only has 1 of them
+	// then the post will be in the restricted set and the allowed set
+	$posts_user_is_allowed_to_access = array_diff( $user_restricted_posts, $user_allowed_posts, $posts_viewable_by_all_users);
 
-	return $ids[$user_id] = ( empty( $union ) ) ? array() : array_combine( $union, $union );
+	return $ids[$user_id] = ( empty( $posts_user_is_allowed_to_access) ) ? array() : array_combine( $posts_user_is_allowed_to_access, $posts_user_is_allowed_to_access );
 }
 
 function memberful_wp_filter_active_subscriptions($subscription) {
@@ -151,6 +153,10 @@ function memberful_wp_generate_user_specific_acl_from_global_acl( $users_entitie
 	$restricted = array_unique( $restricted_ids );
 
 	return array( 'allowed' => $allowed, 'restricted' => $restricted );
+}
+
+function memberful_wp_generate_acl_for_all_registered_users_from_global_acl( ) {
+	return get_option( 'memberful_posts_viewable_by_all_registered_users', array( 'restricted' => array(), 'allowed' => array() ) );
 }
 
 /**

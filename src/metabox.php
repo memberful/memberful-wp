@@ -104,6 +104,10 @@ function memberful_wp_save_postdata( $post_id ) {
 		$acl_manager->set_acl( $post_id, $acl_list );
 	}
 
+	$viewable_by_all_registered_users = isset($_POST['memberful_viewable_by_all_registered_users']) && $_POST['memberful_viewable_by_all_registered_users'] === '1';
+
+	memberful_wp_set_viewable_by_all_registered_users( $viewable_by_all_registered_users );
+
 	$marketing_content = trim( $_POST['memberful_marketing_content'] );
 
 	memberful_wp_update_post_marketing_content( $post_id, $marketing_content );
@@ -111,6 +115,20 @@ function memberful_wp_save_postdata( $post_id ) {
 	if ( ! empty( $_POST['memberful_make_default_marketing_content'] ) ) {
 		memberful_wp_update_default_marketing_content( $marketing_content );
 	}
+}
+
+function memberful_wp_set_viewable_by_all_registered_users( $post_id, $is_viewable_by_all_registered_users ) {
+	update_post_meta( $post_id, 'memberful_viewable_by_all_registered_users', $viewable_by_all_registered_users);
+	
+	$globally_viewable_by_by_all_registered_users = get_option( 'memberful_posts_viewable_by_all_registered_users', array('allowed' => array(), 'restricted' => array()) );
+
+	if ( $is_viewable_by_all_registered_users ) {
+		$globally_viewable_by_by_all_registered_users[$post_id] = $post_id;
+	} else {
+		unset($globally_viewable_by_by_all_registered_users[$post_id]);
+	}
+
+	update_option( 'memberful_posts_viewable_by_all_registered_users', $globally_viewable_by_by_all_registered_users );
 }
 
 
