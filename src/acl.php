@@ -94,7 +94,7 @@ function memberful_wp_user_disallowed_post_ids( $user_id ) {
 	$acl                         = get_option( 'memberful_acl', array() );
 	$global_product_acl          = isset( $acl['product'] ) ? $acl['product'] : array();
 	$global_subscription_acl     = isset( $acl['subscription'] ) ? $acl['subscription'] : array();
-	$posts_viewable_by_all_users = get_option( 'memberful_posts_all_registered_members_can_access', array() );
+	$posts_viewable_by_all_users = get_option( 'memberful_posts_any_registered_members_can_access', array() );
 
 	// Items the user has access to
 	$user_products = memberful_wp_user_downloads( $user_id );
@@ -156,7 +156,7 @@ function memberful_wp_generate_user_specific_acl_from_global_acl( $users_entitie
 }
 
 function memberful_wp_generate_acl_for_all_registered_users_from_global_acl( ) {
-	return get_option( 'memberful_posts_viewable_by_all_registered_users', array( 'restricted' => array(), 'allowed' => array() ) );
+	return get_option( 'memberful_posts_viewable_by_any_registered_users', array( 'restricted' => array(), 'allowed' => array() ) );
 }
 
 /**

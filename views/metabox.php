@@ -2,20 +2,21 @@
 	<div class="memberful-restrict-access-options">
 		<h4 style="font-size: 13px;"><?php _e( 'Required for access', 'memberful' ); ?></h4>
 		<!-- Either this approach
-		<select name="memberful_viewable_by_all_registered_users">
-			<option value="1">Viewable by any registered users</option>
-			<option value="0">Viewable by users with:</option>
+		<select name="memberful_viewable_by_any_registered_users">
+			<option value="1">A registered account</option>
+			<option value="0">Specific purchases</option>
 		</select>
 		-->
 		<div>
 			<label>
-				<input type="checkbox" name="memberful_viewable_by_all_registered_users" value="1" />
-				Anyone with a registered account
+				<input type="checkbox" name="memberful_viewable_by_any_registered_users" value="1" />
+				A registered account
 			</label>
 		</div>
-		<div data-depends-on="memberful_viewable_by_all_registered_users" data-depends-value-not="1">
+		<div data-depends-on="memberful_viewable_by_any_registered_users" data-depends-value-not="1">
 			<?php if ( ! empty( $subscriptions ) ) : ?>
 				<div id="memberful-subscriptions">
+					<p class="memberful-access-label"><?php _e( 'Subscriptions', 'memberful' ); ?></p>
 					<ul>
 					<?php foreach($subscriptions as $id => $subscription): ?>
 						<li>
