@@ -1,21 +1,15 @@
 <?php if ( ! empty( $subscriptions ) || ! empty( $products ) ) : ?>
 	<div class="memberful-restrict-access-options">
 		<h4 style="font-size: 13px;"><?php _e( 'Required for access', 'memberful' ); ?></h4>
-		<!-- Either this approach
-		<select name="memberful_viewable_by_any_registered_users">
-			<option value="1">A registered account</option>
-			<option value="0">Specific purchases</option>
-		</select>
-		-->
-		<div>
+		<div class="memberful-acl-block">
 			<label>
 				<input type="checkbox" name="memberful_viewable_by_any_registered_users" value="1" />
-				A registered account
+				Any registered user
 			</label>
 		</div>
 		<div data-depends-on="memberful_viewable_by_any_registered_users" data-depends-value-not="1">
 			<?php if ( ! empty( $subscriptions ) ) : ?>
-				<div id="memberful-subscriptions">
+				<div id="memberful-subscriptions" class="memberful-acl-block">
 					<p class="memberful-access-label"><?php _e( 'Subscriptions', 'memberful' ); ?></p>
 					<ul>
 					<?php foreach($subscriptions as $id => $subscription): ?>
@@ -30,7 +24,7 @@
 				</div>
 			<?php endif; ?>
 			<?php if ( ! empty( $products ) ) : ?>
-				<div id="memberful-downloads">
+				<div id="memberful-downloads" class="memberful-acl-block">
 					<p class="memberful-access-label"><?php _e( 'Downloads', 'memberful' ); ?></p>
 					<ul>
 					<?php foreach($products as $id => $product): ?>
