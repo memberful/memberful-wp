@@ -9,7 +9,7 @@ add_shortcode( 'memberful_register_link', 'memberful_wp_shortcode_register_link'
 
 
 function memberful_wp_shortcode_register_link( $atts, $content ) {
-	return '<a href="'.memberful_registration_page_url().'"> role="register">'.$content.'</a>';
+	return '<a href="'.memberful_registration_page_url().'" role="register">'.$content.'</a>';
 }
 
 function memberful_wp_shortcode_sign_out_link( $atts, $content ) {
