@@ -3,7 +3,7 @@
 		<h4 style="font-size: 13px;"><?php _e( 'Required for access', 'memberful' ); ?></h4>
 		<div class="memberful-acl-block">
 			<label>
-				<input type="checkbox" name="memberful_viewable_by_any_registered_users" value="1" />
+				<input type="checkbox" name="memberful_viewable_by_any_registered_users" value="1" <?php if($viewable_by_any_registered_users): ?>checked="checked"<?php endif; ?> />
 				Any registered user
 			</label>
 		</div>

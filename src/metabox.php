@@ -46,7 +46,8 @@ function memberful_wp_metabox( $post ) {
     ));
 
 	$view_vars['marketing_content'] = reset($marketing_content);
-	$view_vars['viewable_by_any_registered_user'] = 
+	$view_vars['viewable_by_any_registered_users'] = memberful_wp_get_viewable_by_any_registered_users( $post->ID );
+
 
 	memberful_wp_render( 'metabox', $view_vars );
 }
@@ -107,7 +108,7 @@ function memberful_wp_save_postdata( $post_id ) {
 
 	$viewable_by_any_registered_users = isset($_POST['memberful_viewable_by_any_registered_users']) && $_POST['memberful_viewable_by_any_registered_users'] === '1';
 
-	memberful_wp_set_viewable_by_any_registered_users( $viewable_by_any_registered_users );
+	memberful_wp_set_viewable_by_any_registered_users( $post_id, $viewable_by_any_registered_users );
 
 	$marketing_content = trim( $_POST['memberful_marketing_content'] );
 
@@ -118,8 +119,12 @@ function memberful_wp_save_postdata( $post_id ) {
 	}
 }
 
+function memberful_wp_get_viewable_by_any_registered_users( $post_id ) {
+	return get_post_meta( $post_id, 'memberful_viewable_by_any_registered_users', TRUE ) === "1";
+}
+
 function memberful_wp_set_viewable_by_any_registered_users( $post_id, $is_viewable_by_any_registered_users ) {
-	update_post_meta( $post_id, 'memberful_viewable_by_any_registered_users', $viewable_by_any_registered_users);
+	update_post_meta( $post_id, 'memberful_viewable_by_any_registered_users', $is_viewable_by_any_registered_users);
 	
 	$globally_viewable_by_by_any_registered_users = get_option( 'memberful_posts_viewable_by_any_registered_users', array('allowed' => array(), 'restricted' => array()) );
 
