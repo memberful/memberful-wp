@@ -1,6 +1,6 @@
 <?php if ( ! empty( $subscriptions ) || ! empty( $products ) ) : ?>
 	<div class="memberful-restrict-access-options">
-		<h4 style="font-size: 13px;"><?php _e( 'Required for access', 'memberful' ); ?></h4>
+		<h4 style="font-size: 13px;"><?php _e( 'Who can read this post?', 'memberful' ); ?></h4>
 		<div class="memberful-acl-block">
 			<label>
 				<input type="checkbox" name="memberful_viewable_by_any_registered_users" value="1" <?php if($viewable_by_any_registered_users): ?>checked="checked"<?php endif; ?> />
@@ -10,7 +10,7 @@
 		<div data-depends-on="memberful_viewable_by_any_registered_users" data-depends-value-not="1">
 			<?php if ( ! empty( $subscriptions ) ) : ?>
 				<div id="memberful-subscriptions" class="memberful-acl-block">
-					<p class="memberful-access-label"><?php _e( 'Subscriptions', 'memberful' ); ?></p>
+					<p class="memberful-access-label"><?php _e( 'Anybody subscribed to:', 'memberful' ); ?></p>
 					<ul>
 					<?php foreach($subscriptions as $id => $subscription): ?>
 						<li>
@@ -25,7 +25,7 @@
 			<?php endif; ?>
 			<?php if ( ! empty( $products ) ) : ?>
 				<div id="memberful-downloads" class="memberful-acl-block">
-					<p class="memberful-access-label"><?php _e( 'Downloads', 'memberful' ); ?></p>
+					<p class="memberful-access-label"><?php _e( 'Anybody who owns:', 'memberful' ); ?></p>
 					<ul>
 					<?php foreach($products as $id => $product): ?>
 						<li>
