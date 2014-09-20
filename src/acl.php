@@ -91,10 +91,6 @@ function memberful_wp_generate_user_specific_acl_from_global_acl( $users_entitie
 	return array( 'allowed' => $allowed, 'restricted' => $restricted );
 }
 
-function memberful_wp_generate_acl_for_all_registered_users_from_global_acl( ) {
-	return get_option( 'memberful_posts_viewable_by_any_registered_users', array( 'restricted' => array(), 'allowed' => array() ) );
-}
-
 /**
  * Gets the array of products the member with $member_id owns
  *
