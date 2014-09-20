@@ -1,79 +1,6 @@
 <?php
-
-/**
- * @deprecated 1.6.0
- */
-function memberful_wp_current_user_products() {
-	return memberful_wp_current_user_downloads();
-}
-
-/**
- * @deprecated 1.6.0
- */
-function has_memberful_subscription( $slug, $user_id = NULL ) {
-	return is_subscribed_to_memberful_plan( $slug, $user_id );
-}
-
-/**
- * @deprecated 1.6.0
- */
-function has_memberful_product( $slug, $user_id = NULL ) {
-	return has_memberful_download( $slug, $user_id );
-}
-
-/**
- * @deprecated 1.6.0
- */
-function memberful_wp_user_products( $user_id ) {
-	return memberful_wp_user_downloads( $user_id );
-}
-
-/**
- * @deprecated 1.6.0
- */
-function memberful_wp_user_subscriptions( $user_id ) {
-	return memberful_wp_user_plans_subscribed_to( $user_id );
-}
-
-/**
- * @deprecated 1.6.0
- */
-function memberful_wp_user_has_products( $user_id, array $products ) {
-	return memberful_wp_user_has_downloads( $user_id, $products );
-}
-
-/**
- * @deprecated 1.6.0
- */
-function memberful_wp_user_has_subscriptions( $user_id, array $subscriptions ) {
-	return memberful_wp_user_has_subscription_to_plans( $user_id, $subscriptions );
-}
-
-/**
- * Check that the current member has a subscription to at least least one of the required plans
- *
- * @param string|array $slug    Slug of the plan the user should have. Can pass an array of slugs
- * @param int          $user_id ID of the user who should have the subscription, defaults to current user
- * @return bool
- */
-function is_subscribed_to_memberful_plan( $slug, $user_id = NULL ) {
-	list( $required_plans , $user_id ) = memberful_wp_extract_slug_ids_and_user( func_get_args() );
-
-	return memberful_wp_user_has_subscription_to_plans( $user_id, $required_plans );
-}
-
-/**
- * Check that the current member has at least one of the specified products
- *
- * @param string|array $slug    Slug of the product the user should have. Can pass an array of slugs
- * @param int          $user_id ID of the user who should have the product, defaults to current user
- * @return bool
- */
-function has_memberful_download( $slug, $user_id = NULL ) {
-	list( $required_downloads, $user_id ) = memberful_wp_extract_slug_ids_and_user( func_get_args() );
-
-	return memberful_wp_user_has_downloads( $user_id, $required_downloads );
-}
+require_once MEMBERFUL_DIR . '/src/acl/helpers.php';
+require_once MEMBERFUL_DIR . '/src/acl/free_membership.php';
 
 /**
  * Determines the set of post IDs that the current user cannot access
@@ -88,12 +15,16 @@ function has_memberful_download( $slug, $user_id = NULL ) {
 function memberful_wp_user_disallowed_post_ids( $user_id ) {
 	static $ids = array();
 
+	$user_id        = (int) $user_id;
+	$user_signed_in = $user_id !== 0;
+
 	if ( isset( $ids[$user_id] ) )
 		return $ids[$user_id];
 
-	$acl                     = get_option( 'memberful_acl', array() );
-	$global_product_acl      = isset( $acl['product'] ) ? $acl['product'] : array();
-	$global_subscription_acl = isset( $acl['subscription'] ) ? $acl['subscription'] : array();
+	$acl                            = get_option( 'memberful_acl', array() );
+	$global_product_acl             = isset( $acl['product'] ) ? $acl['product'] : array();
+	$global_subscription_acl        = isset( $acl['subscription'] ) ? $acl['subscription'] : array();
+	$posts_for_any_registered_users = memberful_wp_get_all_posts_available_to_any_registered_user();
 
 	// Items the user has access to
 	$user_products = memberful_wp_user_downloads( $user_id );
@@ -107,13 +38,20 @@ function memberful_wp_user_disallowed_post_ids( $user_id ) {
 	$user_subscription_acl = memberful_wp_generate_user_specific_acl_from_global_acl( $user_subs, $global_subscription_acl );
 
 	$user_allowed_posts    = array_merge( $user_product_acl['allowed'],    $user_subscription_acl['allowed'] );
-	$user_restricted_posts = array_merge( $user_product_acl['restricted'], $user_subscription_acl['restricted'] );
+	// At this point we dont know if the user is signed in, so assume they're not & that they can't access
+	// "registered users only" posts
+	$user_restricted_posts = array_merge( $user_product_acl['restricted'], $user_subscription_acl['restricted'], $posts_for_any_registered_users );
 
-	// Remove from the set of restricted posts the posts that the user is
-	// definitely allowed to access
-	$union = array_diff( $user_restricted_posts, $user_allowed_posts );
+	// Remove the set of posts a user can access from the set they can't.
+	// If a post requires 1 of 2 subscriptions, and a member only has 1 of them
+	// then the post will be in the restricted set and the allowed set
+	$posts_user_is_not_allowed_to_access = array_diff( $user_restricted_posts, $user_allowed_posts );
 
-	return $ids[$user_id] = ( empty( $union ) ) ? array() : array_combine( $union, $union );
+	if ( $user_signed_in ) {
+		$posts_user_is_not_allowed_to_access = array_diff( $posts_user_is_not_allowed_to_access, $posts_for_any_registered_users);
+	}
+
+	return $ids[$user_id] = ( empty( $posts_user_is_not_allowed_to_access ) ) ? array() : array_combine( $posts_user_is_not_allowed_to_access, $posts_user_is_not_allowed_to_access );
 }
 
 function memberful_wp_filter_active_subscriptions($subscription) {

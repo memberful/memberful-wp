@@ -46,6 +46,8 @@ function memberful_wp_metabox( $post ) {
     ));
 
 	$view_vars['marketing_content'] = reset($marketing_content);
+	$view_vars['viewable_by_any_registered_users'] = memberful_wp_get_post_available_to_any_registered_users( $post->ID );
+
 
 	memberful_wp_render( 'metabox', $view_vars );
 }
@@ -104,6 +106,10 @@ function memberful_wp_save_postdata( $post_id ) {
 		$acl_manager->set_acl( $post_id, $acl_list );
 	}
 
+	$viewable_by_any_registered_users = isset($_POST['memberful_viewable_by_any_registered_users']) && $_POST['memberful_viewable_by_any_registered_users'] === '1';
+
+	memberful_wp_set_post_available_to_any_registered_users( $post_id, $viewable_by_any_registered_users );
+
 	$marketing_content = trim( $_POST['memberful_marketing_content'] );
 
 	memberful_wp_update_post_marketing_content( $post_id, $marketing_content );
@@ -112,6 +118,7 @@ function memberful_wp_save_postdata( $post_id ) {
 		memberful_wp_update_default_marketing_content( $marketing_content );
 	}
 }
+
 
 
 /**

@@ -138,7 +138,7 @@ p.memberful-access-label {
 	font-style: italic;
 	border-bottom: 1px solid #dedede;
 }
-.memberful-restrict-access-options ul {
+.memberful-acl-block {
 	margin-bottom: 20px;
 }
 .memberful-marketing-content {

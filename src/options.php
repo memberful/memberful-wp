@@ -19,6 +19,7 @@ function memberful_wp_all_options() {
 		'memberful_error_log' => array(),
 		'memberful_role_active_customer' => 'subscriber',
 		'memberful_role_inactive_customer' => 'subscriber',
+		'memberful_posts_available_to_any_registered_user' => array(),
 		MEMBERFUL_OPTION_DEFAULT_MARKETING_CONTENT => NULL
 	);
 }
