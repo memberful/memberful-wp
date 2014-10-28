@@ -178,7 +178,7 @@ class Memberful_User_Mapping_Ensure_User {
 		$user_data = $this->fields_that_always_sync_from_memberful();
 
 		$user_data['user_pass']               = wp_generate_password();
-		$user_data['show_admin_bar_frontend'] = FALSE;
+		$user_data['show_admin_bar_front']    = FALSE;
 		$user_data['user_login']              = $this->member->username;
 		$user_data['user_nicename']           = $this->member->username;
 		$user_data['nickname']                = $this->member->full_name;

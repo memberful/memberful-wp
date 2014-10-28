@@ -48,7 +48,8 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 == Changelog ==
 
 = next =
-* Fix bug when linking existing WP accounts to Memberful, caused by changes in WP 4.0 #113
+* Fix bug when linking existing WP accounts to Memberful, caused by changes in WP 4.0. #113
+* By default new users should not get the WP admin bar. #111
 
 = 1.12.0 =
 * Add [memberful_register_link] shortcode to WP plugin.
