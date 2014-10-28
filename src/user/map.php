@@ -192,7 +192,7 @@ class Memberful_User_Mapping_Ensure_User {
 			'user_email' => $this->member->email,
 			'first_name' => $this->member->first_name,
 			'last_name'  => $this->member->last_name
-		)
+		);
 	}
 
 }
