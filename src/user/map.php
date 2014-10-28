@@ -145,14 +145,13 @@ class Memberful_User_Mapping_Ensure_User {
 	private $member;
 
 	public function __construct( $wp_user, $member ) {
-		$this->wp_user = $wp_user;
-		$this->member  = $member;
+		$this->wp_user     = $wp_user;
+		$this->user_exists = $wp_user !== FALSE;
+		$this->member      = $member;
 	}
 
 	public function ensure_present() {
-		$user_data = $this->user_data();
-
-		$user_id = wp_insert_user( $user_data );
+		$user_id = $this->user_exists ? $this->update_user() : $this->create_user(); 
 
 		if ( is_wp_error( $user_id ) ) {
 			$user_id->add_data( array_merge( $user_id->get_error_data(), compact('user_data') ) );
@@ -163,29 +162,37 @@ class Memberful_User_Mapping_Ensure_User {
 		return get_userdata( $user_id );
 	}
 
-	private function user_data() {
-		$user_data = array();
+	private function update_user() {
+		$user_data = $this->fields_that_always_sync_from_memberful();
 
-		if ( $this->wp_user !== FALSE ) {
-			$user_data['ID']            = $this->wp_user->ID;
-			$user_data['user_login']    = $this->wp_user->user_login;
-			$user_data['user_nicename'] = $this->wp_user->user_nicename;
-			$user_data['nickname']      = $this->wp_user->nickname;
-			$user_data['display_name']  = $this->wp_user->display_name;
-		} else {
-			$user_data['user_pass']               = wp_generate_password();
-			$user_data['show_admin_bar_frontend'] = FALSE;
-			$user_data['user_login']              = $this->member->username;
-			$user_data['user_nicename']           = $this->member->username;
-			$user_data['nickname']                = $this->member->full_name;
-			$user_data['display_name']            = $this->member->full_name;
-		}
+		$user_data['ID']            = $this->wp_user->ID;
+		$user_data['user_login']    = $this->wp_user->user_login;
+		$user_data['user_nicename'] = $this->wp_user->user_nicename;
+		$user_data['nickname']      = $this->wp_user->nickname;
+		$user_data['display_name']  = $this->wp_user->display_name;
 
-		$user_data['user_email'] = $this->member->email;
-		$user_data['first_name'] = $this->member->first_name;
-		$user_data['last_name']  = $this->member->last_name;
+		return wp_update_user( $user_data );
+	}
 
-		return $user_data;
+	private function create_user() {
+		$user_data = $this->fields_that_always_sync_from_memberful();
+
+		$user_data['user_pass']               = wp_generate_password();
+		$user_data['show_admin_bar_frontend'] = FALSE;
+		$user_data['user_login']              = $this->member->username;
+		$user_data['user_nicename']           = $this->member->username;
+		$user_data['nickname']                = $this->member->full_name;
+		$user_data['display_name']            = $this->member->full_name;
+
+		return wp_insert_user( $user_data );
+	}
+
+	private function fields_that_always_sync_from_memberful() {
+		return array(
+			'user_email' => $this->member->email,
+			'first_name' => $this->member->first_name,
+			'last_name'  => $this->member->last_name
+		)
 	}
 
 }
