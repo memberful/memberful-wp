@@ -159,7 +159,11 @@ class Memberful_User_Mapping_Ensure_User {
 			return $user_id;
 		}
 
-		return get_userdata( $user_id );
+		$this->wp_user = get_userdata( $user_id );
+
+		$this->update_user_meta();
+
+		return $this->wp_user;
 	}
 
 	private function update_user() {
@@ -193,6 +197,12 @@ class Memberful_User_Mapping_Ensure_User {
 			'first_name' => $this->member->first_name,
 			'last_name'  => $this->member->last_name
 		);
+	}
+
+	private function update_user_meta() {
+		if ( ! empty( $this->member->custom_field ) ) {
+			update_user_meta( $this->wp_user->ID, MEMBERFUL_WP_SINGLE_CUSTOM_FIELD_META_KEY, $this->member->custom_field );
+		}
 	}
 
 }
