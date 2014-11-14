@@ -1,6 +1,6 @@
 <?php
 
-define( 'MEMBERFUL_WP_SINGLE_CUSTOM_FIELD_META_KEY', 'memberful_wp_custom_field' );
+define( 'MEMBERFUL_WP_SINGLE_CUSTOM_FIELD_META_KEY', 'memberful_custom_field' );
 
 function memberful_custom_field( $user ) {
 	return get_user_meta( $user->ID, MEMBERFUL_WP_SINGLE_CUSTOM_FIELD_META_KEY, true );

@@ -32,6 +32,7 @@ require_once MEMBERFUL_DIR . '/src/core-ext.php';
 require_once MEMBERFUL_DIR . '/src/cron.php';
 require_once MEMBERFUL_DIR . '/src/urls.php';
 require_once MEMBERFUL_DIR . '/src/user/map.php';
+require_once MEMBERFUL_DIR . '/src/user/meta.php';
 require_once MEMBERFUL_DIR . '/src/user/role_decision.php';
 require_once MEMBERFUL_DIR . '/src/authenticator.php';
 require_once MEMBERFUL_DIR . '/src/admin.php';
