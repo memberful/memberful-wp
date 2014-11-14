@@ -2,7 +2,7 @@
 
 define( 'MEMBERFUL_WP_SINGLE_CUSTOM_FIELD_META_KEY', 'memberful_custom_field' );
 
-function memberful_custom_field( $user ) {
+function memberful_custom_field( WP_User $user ) {
 	return get_user_meta( $user->ID, MEMBERFUL_WP_SINGLE_CUSTOM_FIELD_META_KEY, true );
 }
 
