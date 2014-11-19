@@ -47,6 +47,9 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 == Changelog ==
 
+= next =
+* Add a WP filter to allow other plugins to modify Memberful members prior to their creation in WP #116
+
 = 1.13.0 =
 * Sync custom field from Memberful.
 

@@ -175,7 +175,7 @@ class Memberful_User_Mapping_Ensure_User {
 		$user_data['nickname']      = $this->wp_user->nickname;
 		$user_data['display_name']  = $this->wp_user->display_name;
 
-		return wp_update_user( $user_data );
+		return wp_update_user( apply_filters( 'memberful.map_user.update', $user_data, $this->wp_user, $this->member ) );
 	}
 
 	private function create_user() {
@@ -188,7 +188,7 @@ class Memberful_User_Mapping_Ensure_User {
 		$user_data['nickname']                = $this->member->full_name;
 		$user_data['display_name']            = $this->member->full_name;
 
-		return wp_insert_user( $user_data );
+		return wp_insert_user( apply_filters( 'memberful.map_user.create', $user_data, $this->member ) );
 	}
 
 	private function fields_that_always_sync_from_memberful() {
