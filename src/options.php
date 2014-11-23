@@ -71,7 +71,7 @@ function memberful_wp_intercept_redirect_after_updating_options($location) {
 }
 
 function memberful_wp_site_name() {
-	$blog_name = wp_specialchars_decode( trim( get_bloginfo( 'name', 'Display' ), ENT_QUOTES ) );
+	$blog_name = wp_specialchars_decode( trim( get_bloginfo( 'name', 'Display' ) ), ENT_QUOTES );
 
 	return empty( $blog_name ) ? 'WordPress Blog' : $blog_name;
 }
