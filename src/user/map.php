@@ -122,7 +122,7 @@ class Memberful_User_Map {
 	}
 
 	private function add_data_to_wp_error( WP_Error $error, array $data ) {
-		$error_data = $error->get_error_data();
+		$error_data = (array) $error->get_error_data();
 
 		$error->add_data( array_merge( $error_data, $data ) );
 
@@ -154,7 +154,7 @@ class Memberful_User_Mapping_Ensure_User {
 		$user_id = $this->user_exists ? $this->update_user() : $this->create_user(); 
 
 		if ( is_wp_error( $user_id ) ) {
-			$user_id->add_data( array_merge( $user_id->get_error_data(), compact('user_data') ) );
+			$user_id->add_data( array_merge( (array) $user_id->get_error_data(), compact('user_data') ) );
 
 			return $user_id;
 		}

@@ -47,6 +47,9 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 == Changelog ==
 
+= next =
+* Fix some PHP warnings when interacting with WP_Error messages. #104
+
 = 1.14.0 =
 * Add a WP filter to allow other plugins to modify Memberful members prior to their creation in WP #116
 * Fix bug that caused special characters in site name to be sent to Memberful in escaped form. #112
