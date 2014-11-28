@@ -25,29 +25,110 @@
 		);
 	}
 
-	var insertCheckoutLink = function(editor) {
-		var checkoutItemCtrl = {
-				name: "item",
-				type: "listbox",
-				text: "Choose a download or plan",
-				label: "Item to buy",
-				values: []
-			},
-			linkTextCtrl= {
-				name: "linkText",
-				type: "textbox",
-				label: "Link text"
+	function insertLinkToDownload(editor) {
+		downloadItemCtrl = {
+			name: "downloadSlug",
+			type: "listbox",
+			text: "Choose download",
+			label: "Link to this download",
+			values: window.MemberfulData.downloads.map(function(x) { return {text: x.name, value: x.slug} })
 		};
 
 		editor.windowManager.open({
-			title: "Link to checkout",
+			title: "Link to download",
+			body: [
+				downloadItemCtrl,
+			],
+			onSubmit: function(e) {
+				if ( ! e.data.downloadSlug )
+					return;
+
+				wrapContentsWithShortcode(
+					editor,
+					"[memberful_download_link download='"+e.data.downloadSlug+"']",
+					"[/memberful_download_link]",
+					"Download file"
+				);
+			}
+		});
+	}
+
+	function insertCheckoutLinkDialog(editor, options) {
+		var checkoutItemCtrl = {}, linkTextCtrl = {};
+
+		function optionsForPurchasables(current) {
+			return {text: current.name, value: current.slug};
+		};
+
+		options = options || {};
+
+		checkoutItemCtrl = {
+			name: "item",
+			type: "listbox",
+			text: options.prompt,
+			label: options.label,
+			values: options.choices.map(optionsForPurchasables)
+		};
+
+		linkTextCtrl = {
+			name: "linkText",
+			type: "textbox",
+			label: "Link text"
+		};
+
+		editor.windowManager.open({
+			title: options.dialogTitle || "Link to checkout",
 			body: [
 				checkoutItemCtrl,
 				linkTextCtrl
-			]
+			],
+			onSubmit: function(e) {
+				(options.onSubmit || function() {})(editor, e.data.item, e.data.linkText);
+			}
 		});
 
+	}
+
+	function insertSubscriptionCheckoutLink(editor) {
+		function handleDialogSubmit(editor, plan, linkText) {
+			var shortcode =
+				"[memberful_buy_subscription_link plan='"+plan+"']"+
+				linkText+
+				"[/memberful_buy_subscription_link]";
+
+			editor.insertContent(shortcode);
+		};
+
+		insertCheckoutLinkDialog(
+			editor,
+			{
+				prompt: "Choose a plan",
+				label: "Plan to subscribe to",
+				choices: window.MemberfulData.plans,
+				onSubmit: handleDialogSubmit
+			}
+		);
 	};
+
+	function insertDownloadCheckoutLink(editor) {
+		function handleDialogSubmit(editor, downloadSlug, linkText) {
+			editor.insertContent(
+				"[memberful_buy_download_link download='"+downloadSlug+"']"+
+				linkText+
+				"[/memberful_buy_download_link]"
+			);
+		}
+
+		insertCheckoutLinkDialog(
+			editor,
+			{
+				prompt: "Choose a download",
+				label: "Download to buy",
+				choices: window.MemberfulData.downloads,
+				onSubmit: handleDialogSubmit
+			}
+		);
+	}
 
 	 /* Register the buttons */
 	 tinymce.create('tinymce.plugins.memberful_wp', {
@@ -55,10 +136,13 @@
 			editor.addButton('memberful_wp', {
 				type: 'menubutton',
 				text: 'Memberful',
-				icon: true,
+				icon: 'memberful_wp',
 				menu: [
-					{text: 'Registration Link', onclick: function() { insertRegistrationShortcode(editor); }},
-					{text: 'Checkout Link', onclick: function() { insertCheckoutLink(editor); }},
+					{text: 'Add Free Signup Link', onclick: function() { insertRegistrationShortcode(editor); }},
+					{text: 'Add Sign in Link', onclick: function() { insertSignInShortcode(editor); }},
+					{text: 'Add Buy Subscription Link', onclick: function() { insertSubscriptionCheckoutLink(editor); }},
+					{text: 'Add Buy Download Link', onclick: function() { insertDownloadCheckoutLink(editor); }},
+					{text: 'Add Link to Download', onClick: function() { insertLinkToDownload(editor); }},
 				]
 			});
 		 }

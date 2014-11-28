@@ -3,6 +3,7 @@
 require_once MEMBERFUL_DIR . '/src/options.php';
 require_once MEMBERFUL_DIR . '/src/metabox.php';
 
+add_action( 'admin_head',            'memberful_wp_announce_plans_and_download_in_head' );
 add_action( 'admin_menu',            'memberful_wp_menu' );
 add_action( 'admin_init',            'memberful_wp_register_options' );
 add_action( 'admin_init',            'memberful_wp_activation_redirect' );
@@ -389,4 +390,15 @@ function memberful_wp_bulk_protect() {
 			'form_target'       => memberful_wp_plugin_bulk_protect_url(TRUE),
 		)
 	);
+}
+
+function memberful_wp_announce_plans_and_download_in_head() {
+	memberful_wp_render(
+		'js_vars',
+		array(
+			'plans' => array_values(memberful_subscription_plans()),
+			'downloads' => array_values(memberful_downloads()),
+		)
+	);
+
 }
