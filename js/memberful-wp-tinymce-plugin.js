@@ -1,8 +1,8 @@
 (function(){
 
-	var wrapContentsWithShortcode = function(editor, before, after, default) {
+	var wrapContentsWithShortcode = function(editor, before, after, placeholder) {
 		var selection = editor.selection.getContent({format: "text"}) || "";
-		var contentToWrap = selection == "" ? default : selection;
+		var contentToWrap = selection == "" ? placeholder : selection;
 
 		editor.insertContent(before+contentToWrap+after);
 	}
@@ -25,8 +25,27 @@
 		);
 	}
 
-	var insertPurchaseLink = function(editor) {
-	
+	var insertCheckoutLink = function(editor) {
+		var checkoutItemCtrl = {
+				name: "item",
+				type: "listbox",
+				text: "Choose a download or plan",
+				label: "Item to buy",
+				values: []
+			},
+			linkTextCtrl= {
+				name: "linkText",
+				type: "textbox",
+				label: "Link text"
+		};
+
+		editor.windowManager.open({
+			title: "Link to checkout",
+			body: [
+				checkoutItemCtrl,
+				linkTextCtrl
+			]
+		});
 
 	};
 
@@ -39,7 +58,7 @@
 				icon: true,
 				menu: [
 					{text: 'Registration Link', onclick: function() { insertRegistrationShortcode(editor); }},
-					{text: 'Purchase Link', onclick: function() { insertPurchaseShortcode(editor); }},
+					{text: 'Checkout Link', onclick: function() { insertCheckoutLink(editor); }},
 				]
 			});
 		 }
