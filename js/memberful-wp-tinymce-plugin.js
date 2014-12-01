@@ -137,10 +137,10 @@
 				type: 'menubutton',
 				text: 'Memberful',
 				menu: [
-					{text: 'Free Signup link', onclick: function() { insertRegistrationShortcode(editor); }},
+					{text: 'Free signup link', onclick: function() { insertRegistrationShortcode(editor); }},
 					{text: 'Sign in link', onclick: function() { insertSignInShortcode(editor); }},
-					{text: 'Buy Subscription link', onclick: function() { insertSubscriptionCheckoutLink(editor); }},
-					{text: 'Buy Download link', onclick: function() { insertDownloadCheckoutLink(editor); }},
+					{text: 'Buy subscription plan', onclick: function() { insertSubscriptionCheckoutLink(editor); }},
+					{text: 'Buy Download', onclick: function() { insertDownloadCheckoutLink(editor); }},
 					{text: 'Link to Download', onClick: function() { insertLinkToDownload(editor); }},
 				]
 			});
