@@ -136,13 +136,12 @@
 			editor.addButton('memberful_wp', {
 				type: 'menubutton',
 				text: 'Memberful',
-				icon: 'memberful_wp',
 				menu: [
-					{text: 'Add Free Signup Link', onclick: function() { insertRegistrationShortcode(editor); }},
-					{text: 'Add Sign in Link', onclick: function() { insertSignInShortcode(editor); }},
-					{text: 'Add Buy Subscription Link', onclick: function() { insertSubscriptionCheckoutLink(editor); }},
-					{text: 'Add Buy Download Link', onclick: function() { insertDownloadCheckoutLink(editor); }},
-					{text: 'Add Link to Download', onClick: function() { insertLinkToDownload(editor); }},
+					{text: 'Free Signup link', onclick: function() { insertRegistrationShortcode(editor); }},
+					{text: 'Sign in link', onclick: function() { insertSignInShortcode(editor); }},
+					{text: 'Buy Subscription link', onclick: function() { insertSubscriptionCheckoutLink(editor); }},
+					{text: 'Buy Download link', onclick: function() { insertDownloadCheckoutLink(editor); }},
+					{text: 'Link to Download', onClick: function() { insertLinkToDownload(editor); }},
 				]
 			});
 		 }
