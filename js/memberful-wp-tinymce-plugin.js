@@ -138,9 +138,9 @@
 				text: 'Memberful',
 				menu: [
 					{text: 'Buy Subscription Plan', onclick: function() { insertSubscriptionCheckoutLink(editor); }},
-					{text: 'Buy Download', onclick: function() { insertDownloadCheckoutLink(editor); }},
-					{text: 'Free signup link', onclick: function() { insertRegistrationShortcode(editor); }},
 					{text: 'Sign in link', onclick: function() { insertSignInShortcode(editor); }},
+					{text: 'Free signup link', onclick: function() { insertRegistrationShortcode(editor); }},
+					{text: 'Buy Download', onclick: function() { insertDownloadCheckoutLink(editor); }},
 					{text: 'Link to Download', onClick: function() { insertLinkToDownload(editor); }},
 				]
 			});
