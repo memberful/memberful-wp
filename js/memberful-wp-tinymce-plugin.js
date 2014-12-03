@@ -133,16 +133,30 @@
 	 /* Register the buttons */
 	 tinymce.create('tinymce.plugins.memberful_wp', {
 		init : function(editor, url) {
+			if ( ! window.MemberfulData.connectedToMemberful) {
+				return;
+			}
+
+			var menu = [];
+
+			if (window.MemberfulData.plans.length > 0) {
+				menu.push({text: 'Buy Subscription Plan', onclick: function() { insertSubscriptionCheckoutLink(editor); }});
+			}
+
+			menu.push({text: 'Sign in link', onclick: function() { insertSignInShortcode(editor); }});
+			menu.push({text: 'Free signup link', onclick: function() { insertRegistrationShortcode(editor); }});
+
+			if (window.MemberfulData.downloads.length > 0) {
+				menu.push(
+					{text: 'Buy Download', onclick: function() { insertDownloadCheckoutLink(editor); }},
+					{text: 'Link to Download', onClick: function() { insertLinkToDownload(editor); }}
+				);
+			}
+
 			editor.addButton('memberful_wp', {
 				type: 'menubutton',
 				text: 'Memberful',
-				menu: [
-					{text: 'Buy Subscription Plan', onclick: function() { insertSubscriptionCheckoutLink(editor); }},
-					{text: 'Sign in link', onclick: function() { insertSignInShortcode(editor); }},
-					{text: 'Free signup link', onclick: function() { insertRegistrationShortcode(editor); }},
-					{text: 'Buy Download', onclick: function() { insertDownloadCheckoutLink(editor); }},
-					{text: 'Link to Download', onClick: function() { insertLinkToDownload(editor); }},
-				]
+				menu: menu
 			});
 		 }
 	 });

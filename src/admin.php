@@ -396,9 +396,11 @@ function memberful_wp_announce_plans_and_download_in_head() {
 	memberful_wp_render(
 		'js_vars',
 		array(
-			'plans' => array_values(memberful_subscription_plans()),
-			'downloads' => array_values(memberful_downloads()),
+			'data' => array(
+				'plans' => array_values(memberful_subscription_plans()),
+				'downloads' => array_values(memberful_downloads()),
+				'connectedToMemberful' => memberful_wp_is_connected_to_site(),
+			)
 		)
 	);
-
 }
