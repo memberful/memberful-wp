@@ -12,6 +12,9 @@ License: GPLv2 or later
 if ( ! defined( 'MEMBERFUL_VERSION' ) )
 	define( 'MEMBERFUL_VERSION', '1.14.0' );
 
+if ( ! defined( 'MEMBERFUL_PLUGIN_FILE' ) )
+	define( 'MEMBERFUL_PLUGIN_FILE', __FILE__ );
+
 if ( ! defined( 'MEMBERFUL_DIR' ) )
 	define( 'MEMBERFUL_DIR', dirname( __FILE__ ) );
 
@@ -36,6 +39,7 @@ require_once MEMBERFUL_DIR . '/src/user/meta.php';
 require_once MEMBERFUL_DIR . '/src/user/role_decision.php';
 require_once MEMBERFUL_DIR . '/src/authenticator.php';
 require_once MEMBERFUL_DIR . '/src/admin.php';
+require_once MEMBERFUL_DIR . '/src/admin/editor.php';
 require_once MEMBERFUL_DIR . '/src/acl.php';
 require_once MEMBERFUL_DIR . '/src/activator.php';
 require_once MEMBERFUL_DIR . '/src/shortcodes.php';
