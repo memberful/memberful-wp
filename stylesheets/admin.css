@@ -154,3 +154,11 @@ p.memberful-access-label {
 	background: #efefef;
 	border: 1px solid #dedede;
 }
+.memberful-bbpress-enable {
+	margin: 10px;
+}
+
+.memberful-bbpress-redirect {
+	float: left;
+	margin: 10px 0;
+}

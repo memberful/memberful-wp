@@ -9,7 +9,8 @@
 				Protect ALL bbPress forums with Memberful
 			</label>
 		</div>
-		<div class="memberful-bbpress-acl" data-depends-on="memberful-protect-bbpress" data-depends-value="1">
+		<div class="memberful-restrict-access-options memberful-bbpress-acl" data-depends-on="memberful_protect_bbpress" data-depends-value="1">
+			<h4>Who can access forums?</h4>
 <?php
 memberful_wp_render(
 	'acl_selection',
@@ -21,10 +22,8 @@ memberful_wp_render(
 )
 ?>
 		</div>
-		<div class="memberful-bbpress-redirect" data-depends-on="memberful-protect-bbpress" data-depends-value="1">
-			<div>
-				Where should users who aren't allowed to view the forums be sent?
-			</div>
+		<div class="memberful-bbpress-redirect" data-depends-on="memberful_protect_bbpress" data-depends-value="1">
+			<h4>Where should users who aren't allowed to access forums be sent?</h4>
 			<div>
 				<fieldset>
 					<div>
@@ -40,8 +39,8 @@ memberful_wp_render(
 						</label>
 					</div>
 					<div data-depends-on="memberful_send_unauthorized_users" data-depends-value="url">
-						<label>Send them to this URL:</label>
-						<input type="text" name="memberful_send_unauthorized_users_to_url" value="<?php echo esc_attr($send_unauthorized_users_to_url); ?>" placeholder="http://..." />
+						<label for="memberful_send_unauthorized_users_to_url">Send them to this URL:</label>
+						<input type="text" id="memberful_send_unauthorized_users_to_url" name="memberful_send_unauthorized_users_to_url" value="<?php echo esc_attr($send_unauthorized_users_to_url); ?>" placeholder="http://..." />
 					</div>
 				</fieldset>
 			</div>
