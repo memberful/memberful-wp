@@ -52,6 +52,14 @@ function memberful_order_completed_url( $order ) {
 	return add_query_arg( 'id', $order, memberful_url( 'orders/completed' ) );
 }
 
+function memberful_checkout_for_subscription_url( $plan_id ) {
+	return add_query_arg( 'plan', $plan_id, memberful_url( 'checkout' ) );
+}
+
+function memberful_checkout_for_download_url( $download_id ) {
+	return add_query_arg( 'download', $download_id, memberful_url( 'checkout' ) );
+}
+
 function memberful_wp_plugin_settings_url($no_header = FALSE, $subpage='') {
 	$header_parameter  = $no_header === TRUE ? "&noheader=true" : "";
 	$subpage_parameter = $subpage !== '' ? '&subpage='.$subpage : '';
