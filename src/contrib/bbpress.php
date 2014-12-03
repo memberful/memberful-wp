@@ -1,30 +1,39 @@
 <?php
 
-add_filter( 'bbp_current_user_can_publish_topics', 'memberful_wp_prevent_access_to_unauthorized_users' );
-add_filter( 'bbp_after_get_forums_for_current_user_parse_args', 'memberful_wp_restrict_forums_current_user_can_access' );
+add_action( 'template_redirect', 'memberful_wp_regulate_access_to_bbpress' );
 
+function memberful_wp_regulate_access_to_bbpress() {
+	if ( ! is_bbpress() )
+		return;
 
-/**
- * Hooks into bbp_parse_args / bbp_get_forums_for_current_user
- */
-function memberful_wp_restrict_forums_current_user_can_access( $args ) {
-	$disallowed_post_ids = memberful_wp_user_disallowed_post_ids( get_current_user_id() );
+	if ( current_user_can( 'moderate' ) )
+		return;
 
-	if ( empty( $args['exclude'] ) ) {
-		$args['exclude'] = $disallowed_post_ids;
-	} else {
-		$args['exclude'] = array_merge( (array) $args['exclude'], $disallowed_post_ids );
+	if ( memberful_wp_bbpress_restricted_to_registered_users() && ! is_user_logged_in() )
+		wp_safe_redirect( memberful_wp_bbpress_unauthorized_user_landing_page() );
+
+	if ( memberful_wp_bbpress_restricted_to_customers() ) {
+		$has_required_plan     = memberful_wp_user_has_subscription_to_plans( get_current_user_id(), memberful_wp_bbpress_required_plans() );
+		$has_required_download = memberful_wp_user_has_downloads( get_current_user_id(), memberful_wp_bbpress_required_downloads());
+
+		if ( $has_required_plan || $has_required_download ) {
+			wp_safe_redirect( memberful_wp_bbpress_unauthorized_user_landing_page() );
+		}
 	}
-
-	return $args;
 }
 
-function memberful_wp_prevent_access_to_unauthorized_users( $currently_allowed ) {
-	if ( ! $currently_allowed )
-		return $currently_allowed;
+function memberful_wp_bbpress_restricted_to_registered_users() {
+	return get_option( 'memberful_bbpress_restricted_registered_users', FALSE );
+}
 
-	if ( bbp_is_user_keymaster() )
-		return true;
+function memberful_wp_bbpress_restricted_to_customers() {
+	return get_option( 'memberful_bbpress_protect_forums', FALSE );
+}
 
-	return FALSE;
+function memberful_wp_bbpress_required_plans() {
+	return get_option( 'memberful_bbpress_required_plans', array() );
+}
+
+function memberful_wp_bbpress_required_downloads() {
+	return get_option( 'memberful_bbpress_required_downloads', array() );
 }

@@ -254,6 +254,8 @@ function memberful_wp_options() {
 				return memberful_wp_debug();
 			case 'advanced_settings':
 				return memberful_wp_advanced_settings();
+			case 'protect_bbpress':
+				return memberful_wp_protect_bbpress();
 		}
 	}
 
@@ -388,6 +390,34 @@ function memberful_wp_bulk_protect() {
 			'subscriptions' => memberful_wp_metabox_acl_format( array(), 'subscription' ),
 			'marketing_content' => '',
 			'form_target'       => memberful_wp_plugin_bulk_protect_url(TRUE),
+		)
+	);
+}
+
+function memberful_wp_protect_bbpress() {
+	$plans     = memberful_subscription_plans();
+	$downloads = memberful_downloads();
+
+	$required_plans     = memberful_wp_bbpress_required_plans();
+	$required_downloads = memberful_wp_bbpress_required_downloads();
+
+	foreach( $plans as $id => $plan ) {
+		$plans[$id]['checked'] = isset($required_plans[$id]);
+	}
+
+	foreach( $downloads as $id => $download ) {
+		$downloads[$id]['checked'] = isset($required_downloads[$id]);
+	}
+
+	memberful_wp_render(
+		'protect_bbpress',
+		array(
+			'protect_bbpress'                => TRUE,
+			'restricted_to_registered_users' => memberful_wp_bbpress_restricted_to_registered_users(),
+			'plans'                          => $plans,
+			'downloads'                      => $downloads,
+			'send_unauthorized_users_to_homepage' => TRUE,
+			'send_unauthorized_users_to_url' => ''
 		)
 	);
 }
