@@ -7,7 +7,7 @@ add_action( 'save_post', 'memberful_wp_save_postdata' );
 function memberful_wp_metabox_types() {
 	$types = get_post_types();
 
-	unset( $types['attachment'], $types['revision'], $types['nav_menu_item'] );
+	unset( $types['attachment'], $types['revision'], $types['nav_menu_item'], $types['forum'], $types['topic'], $types['reply'] );
 
 	return $types;
 }
