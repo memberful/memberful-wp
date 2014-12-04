@@ -398,7 +398,7 @@ function memberful_wp_protect_bbpress() {
 	if ( ! empty( $_POST ) ) {
 		$protection_enabled     = empty( $_POST['memberful_protect_bbpress'] ) ? FALSE : ( $_POST['memberful_protect_bbpress'] == '1');
 		$required_downloads     = empty( $_POST['memberful_product_acl'] ) ? array() : (array) $_POST['memberful_product_acl'];
-		$required_subscriptions = empty( $_POST['memberful_subscription_acl'] ) ? array() : (array) $_POST['memberful_subscription_acl'];
+		$required_subscription_plans = empty( $_POST['memberful_subscription_acl'] ) ? array() : (array) $_POST['memberful_subscription_acl'];
 		$viewable_by_any_user   = empty( $_POST['memberful_viewable_by_any_registered_users'] ) ? FALSE : ($_POST['memberful_viewable_by_any_registered_users'] == '1');
 		$redirect_to_homepage   = empty( $_POST['memberful_send_unauthorized_users'] ) ? TRUE : ($_POST['memberful_send_unauthorized_users'] == 'homepage');
 		$redirect_to_url        = empty( $_POST['memberful_send_unauthorized_users_to_url'] ) ? '' : $_POST['memberful_send_unauthorized_users_to_url'];
@@ -407,7 +407,7 @@ function memberful_wp_protect_bbpress() {
 		memberful_wp_bbpress_update_protect_forums( $protection_enabled );
 		memberful_wp_bbpress_update_restricted_to_registered_user( $viewable_by_any_user );
 		memberful_wp_bbpress_update_required_downloads( array_combine($required_downloads, $required_downloads) );
-		memberful_wp_bbpress_update_required_subscriptions( array_combine($required_subscriptions, $required_subscriptions) );
+		memberful_wp_bbpress_update_required_subscription_plans( array_combine($required_subscription_plans, $required_subscription_plans) );
 		memberful_wp_bbpress_update_send_unauthorized_users_to_url( $redirect_to_url );
 
 		wp_redirect( memberful_wp_plugin_protect_bbpress_url() );
@@ -416,11 +416,11 @@ function memberful_wp_protect_bbpress() {
 	$plans     = memberful_subscription_plans();
 	$downloads = memberful_downloads();
 
-	$required_subscriptions = memberful_wp_bbpress_required_subscriptions();
+	$required_subscription_plans = memberful_wp_bbpress_required_subscription_plans();
 	$required_downloads     = memberful_wp_bbpress_required_downloads();
 
 	foreach( $plans as $id => $plan ) {
-		$plans[$id]['checked'] = isset($required_subscriptions[$id]);
+		$plans[$id]['checked'] = isset($required_subscription_plans[$id]);
 	}
 
 	foreach( $downloads as $id => $download ) {
