@@ -34,7 +34,7 @@ segment is a separate number. i.e. `1.12.0` > `1.11.0`.
 
 * `master` represents the latest stable version of the plugin that has been released.
 * `develop` is the default branch and should be used for development of the next version of the plugin.
-* If a change needs to be done over more than 1 commit then create a feature branch in the form `{issue number}-{quick description}`, e.g. `71-protect-bbpress`. This allows you to easily tab complete branches, and easily see which issue to reference when committing, or opening a pull request.
+* If a change needs to be done over more than 1 commit then create a feature branch in the form `{issue number}-{quick description}`, e.g. `71-protect-bbpress`. This allows you to tab complete branches, and see which issue to reference when committing, or opening a pull request.
 
 ## Releasing a new version of the plugin.
 
