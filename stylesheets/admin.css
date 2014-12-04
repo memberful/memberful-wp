@@ -155,10 +155,26 @@ p.memberful-access-label {
 	border: 1px solid #dedede;
 }
 .memberful-bbpress-enable {
-	margin: 10px;
+	margin: 20px;
 }
 
 .memberful-bbpress-redirect {
 	float: left;
 	margin: 10px 0;
+}
+.memberful-bbpress-redirect-custom-url {
+	margin: 5px 22px;
+}
+
+.memberful-bbpress-redirect-custom-url input[type="text"] {
+	min-width: 300px;
+}
+
+.memberful-bbpress-submit-buttons::before {
+	clear: both;
+	content: ' '
+}
+.memberful-bbpress-submit-buttons {
+	clear: both;
+	margin: 30px 0;
 }
