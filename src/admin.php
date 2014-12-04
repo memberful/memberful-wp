@@ -9,6 +9,7 @@ add_action( 'admin_init',            'memberful_wp_register_options' );
 add_action( 'admin_init',            'memberful_wp_activation_redirect' );
 add_action( 'admin_init',            'memberful_wp_plugin_migrate_db' );
 add_action( 'admin_enqueue_scripts', 'memberful_wp_admin_enqueue_scripts' );
+add_filter( 'display_post_states',   'memberful_wp_add_protected_state_to_post_list', 10, 2 );
 
 /**
  * Ensures the database is up to date
@@ -403,4 +404,18 @@ function memberful_wp_announce_plans_and_download_in_head() {
 			)
 		)
 	);
+}
+
+function memberful_wp_add_protected_state_to_post_list($states, $post) {
+	static $ids_of_protected_posts = NULL;
+
+	if ( $ids_of_protected_posts === NULL ) {
+		$ids_of_protected_posts = memberful_wp_posts_that_are_protected();
+	}
+
+	if ( isset( $ids_of_protected_posts[ $post->ID ] ) ) {
+		$states[] = __('Protected by Memberful');
+	}
+
+	return $states;
 }

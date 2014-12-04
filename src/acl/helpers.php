@@ -74,3 +74,14 @@ function has_memberful_download( $slug, $user_id = NULL ) {
 
 	return memberful_wp_user_has_downloads( $user_id, $required_downloads );
 }
+
+function memberful_wp_posts_that_are_protected() {
+	$global_acl = get_option( 'memberful_acl' );
+	$post_ids   = array();
+
+	foreach( $global_acl as $entity_type => $acl ) {
+		$post_ids += array_keys( $acl );
+	}
+
+	return array_combine( $post_ids, $post_ids );
+}
