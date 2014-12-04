@@ -52,6 +52,7 @@ require_once MEMBERFUL_DIR . '/src/embed.php';
 require_once MEMBERFUL_DIR . '/src/api.php';
 require_once MEMBERFUL_DIR . '/src/roles.php';
 require_once MEMBERFUL_DIR . '/src/syncing.php';
+require_once MEMBERFUL_DIR . '/src/logout_hooks.php';
 require_once MEMBERFUL_DIR . '/src/contrib/bbpress.php';
 require_once MEMBERFUL_DIR . '/vendor/reporting.php';
 
