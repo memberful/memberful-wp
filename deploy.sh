@@ -51,7 +51,7 @@ echo "Creating local copy of SVN repo ..."
 svn co $SVNURL $SVNPATH
 
 echo "Ignoring github specific files and deployment script"
-IGNORABLE_FILES="README.md assets tests deploy.sh release .git .gitignore Vagrantfile vagrant wordpress"
+IGNORABLE_FILES="README.md assets tests deploy.sh release .git .gitignore Vagrantfile vagrant wordpress DEVELOPERS.md"
 
 #export git -> SVN
 echo "Exporting the HEAD of master from git to the trunk of SVN"
