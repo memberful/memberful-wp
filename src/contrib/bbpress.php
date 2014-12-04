@@ -6,34 +6,66 @@ function memberful_wp_regulate_access_to_bbpress() {
 	if ( ! is_bbpress() )
 		return;
 
+	if ( ! memberful_wp_bbpress_protect_forums() )
+		return;
+
 	if ( current_user_can( 'moderate' ) )
 		return;
 
 	if ( memberful_wp_bbpress_restricted_to_registered_users() && ! is_user_logged_in() )
 		wp_safe_redirect( memberful_wp_bbpress_unauthorized_user_landing_page() );
 
-	if ( memberful_wp_bbpress_restricted_to_customers() ) {
-		$has_required_plan     = memberful_wp_user_has_subscription_to_plans( get_current_user_id(), memberful_wp_bbpress_required_plans() );
-		$has_required_download = memberful_wp_user_has_downloads( get_current_user_id(), memberful_wp_bbpress_required_downloads());
+	$has_required_plan     = memberful_wp_user_has_subscription_to_plans( get_current_user_id(), memberful_wp_bbpress_required_plans() );
+	$has_required_download = memberful_wp_user_has_downloads( get_current_user_id(), memberful_wp_bbpress_required_downloads());
 
-		if ( $has_required_plan || $has_required_download ) {
-			wp_safe_redirect( memberful_wp_bbpress_unauthorized_user_landing_page() );
-		}
-	}
+	if ( $has_required_plan || $has_required_download )
+		wp_safe_redirect( memberful_wp_bbpress_unauthorized_user_landing_page() );
+}
+
+function memberful_wp_bbpress_update_restricted_to_registered_user( $new_value ) {
+	return update_option( 'memberful_bbpress_restricted_registered_users', !! $new_value );
 }
 
 function memberful_wp_bbpress_restricted_to_registered_users() {
 	return get_option( 'memberful_bbpress_restricted_registered_users', FALSE );
 }
 
-function memberful_wp_bbpress_restricted_to_customers() {
+function memberful_wp_bbpress_update_protect_forums( $new_value ) {
+	return update_option( 'memberful_bbpress_protect_forums', !! $new_value );
+}
+
+function memberful_wp_bbpress_protect_forums() {
 	return get_option( 'memberful_bbpress_protect_forums', FALSE );
 }
 
-function memberful_wp_bbpress_required_plans() {
-	return get_option( 'memberful_bbpress_required_plans', array() );
+function memberful_wp_bbpress_required_subscriptions() {
+	return get_option( 'memberful_bbpress_required_subscriptions', array() );
 }
 
 function memberful_wp_bbpress_required_downloads() {
 	return get_option( 'memberful_bbpress_required_downloads', array() );
+}
+
+function memberful_wp_bbpress_update_required_downloads( array $new_downloads ) {
+	return update_option( 'memberful_bbpress_required_downloads', $new_downloads );
+}
+
+function memberful_wp_bbpress_update_required_subscriptions( array $plans ) {
+	return update_option( 'memberful_bbpress_required_subscriptions', $plans );
+}
+
+function memberful_wp_bbpress_send_unauthorized_users_to_homepage() {
+	return get_option( 'memberful_bbpress_send_unauthorized_users_to_homepage', TRUE );
+}
+
+function memberful_wp_bbpress_update_send_unauthorized_users_to_homepage( $new_val ) {
+	return update_option( 'memberful_bbpress_send_unauthorized_users_to_homepage', !! $new_val );
+}
+
+function memberful_wp_bbpress_update_send_unauthorized_users_to_url( $new_val ) {
+	return update_option( 'memberful_bbpress_send_unauthorized_users_to_url', $new_val );
+}
+
+function memberful_wp_bbpress_send_unauthorized_users_to_url() {
+	return get_option( 'memberful_bbpress_send_unauthorized_users_to_url', '' );
 }

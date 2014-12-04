@@ -2,12 +2,16 @@
 	<?php memberful_wp_render('option_tabs', array('active' => 'protect_bbpress')); ?>
 	<?php memberful_wp_render('flash'); ?>
 	<form method="POST" action="<?php echo $form_target ?>">
+		<?php memberful_wp_nonce_field( 'memberful_options' ); ?>
 		<div class="memberful-bbpress-enable">
 			<label>
 				<input type="hidden" name="memberful_protect_bbpress" value="0" />
 				<input type="checkbox" name="memberful_protect_bbpress" value="1" <?php checked($protect_bbpress) ?>/>
 				Protect ALL bbPress forums with Memberful
 			</label>
+		</div>
+		<div class="clear">
+			<input type="submit" class="button button-secondary" value="<?php _e( "Apply settings", 'memberful' ); ?>" />
 		</div>
 		<div class="memberful-restrict-access-options memberful-bbpress-acl" data-depends-on="memberful_protect_bbpress" data-depends-value="1">
 			<h4>Who can access forums?</h4>

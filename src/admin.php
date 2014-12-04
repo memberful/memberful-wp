@@ -395,14 +395,32 @@ function memberful_wp_bulk_protect() {
 }
 
 function memberful_wp_protect_bbpress() {
+	if ( ! empty( $_POST ) ) {
+		$protection_enabled     = empty( $_POST['memberful_protect_bbpress'] ) ? FALSE : ( $_POST['memberful_protect_bbpress'] == '1');
+		$required_downloads     = empty( $_POST['memberful_product_acl'] ) ? array() : (array) $_POST['memberful_product_acl'];
+		$required_subscriptions = empty( $_POST['memberful_subscription_acl'] ) ? array() : (array) $_POST['memberful_subscription_acl'];
+		$viewable_by_any_user   = empty( $_POST['memberful_viewable_by_any_registered_users'] ) ? FALSE : ($_POST['memberful_viewable_by_any_registered_users'] == '1');
+		$redirect_to_homepage   = empty( $_POST['memberful_send_unauthorized_users'] ) ? TRUE : ($_POST['memberful_send_unauthorized_users'] == 'homepage');
+		$redirect_to_url        = empty( $_POST['memberful_send_unauthorized_users_to_url'] ) ? '' : $_POST['memberful_send_unauthorized_users_to_url'];
+
+		memberful_wp_bbpress_update_send_unauthorized_users_to_homepage( $redirect_to_homepage );
+		memberful_wp_bbpress_update_protect_forums( $protection_enabled );
+		memberful_wp_bbpress_update_restricted_to_registered_user( $viewable_by_any_user );
+		memberful_wp_bbpress_update_required_downloads( array_combine($required_downloads, $required_downloads) );
+		memberful_wp_bbpress_update_required_subscriptions( array_combine($required_subscriptions, $required_subscriptions) );
+		memberful_wp_bbpress_update_send_unauthorized_users_to_url( $redirect_to_url );
+
+		wp_redirect( memberful_wp_plugin_protect_bbpress_url() );
+	}
+
 	$plans     = memberful_subscription_plans();
 	$downloads = memberful_downloads();
 
-	$required_plans     = memberful_wp_bbpress_required_plans();
-	$required_downloads = memberful_wp_bbpress_required_downloads();
+	$required_subscriptions = memberful_wp_bbpress_required_subscriptions();
+	$required_downloads     = memberful_wp_bbpress_required_downloads();
 
 	foreach( $plans as $id => $plan ) {
-		$plans[$id]['checked'] = isset($required_plans[$id]);
+		$plans[$id]['checked'] = isset($required_subscriptions[$id]);
 	}
 
 	foreach( $downloads as $id => $download ) {
@@ -412,12 +430,13 @@ function memberful_wp_protect_bbpress() {
 	memberful_wp_render(
 		'protect_bbpress',
 		array(
-			'protect_bbpress'                => TRUE,
-			'restricted_to_registered_users' => memberful_wp_bbpress_restricted_to_registered_users(),
-			'plans'                          => $plans,
-			'downloads'                      => $downloads,
-			'send_unauthorized_users_to_homepage' => TRUE,
-			'send_unauthorized_users_to_url' => ''
+			'protect_bbpress'                     => memberful_wp_bbpress_protect_forums(),
+			'restricted_to_registered_users'      => memberful_wp_bbpress_restricted_to_registered_users(),
+			'plans'                               => $plans,
+			'downloads'                           => $downloads,
+			'send_unauthorized_users_to_homepage' => memberful_wp_bbpress_send_unauthorized_users_to_homepage(),
+			'send_unauthorized_users_to_url'      => memberful_wp_bbpress_send_unauthorized_users_to_url(),
+			'form_target'                         => memberful_wp_plugin_protect_bbpress_url( TRUE ),
 		)
 	);
 }
