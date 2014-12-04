@@ -160,7 +160,8 @@ p.memberful-access-label {
 
 .memberful-bbpress-redirect {
 	float: left;
-	margin: 10px 0;
+	margin: 10px 0px;
+	padding-top: 1px;
 }
 .memberful-bbpress-redirect-custom-url {
 	margin: 5px 22px;
