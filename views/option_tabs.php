@@ -16,6 +16,13 @@
 			'url'   => memberful_wp_plugin_advanced_settings_url()
 		),
 	);
+	if ( is_plugin_active( 'bbpress/bbpress.php' ) ) {
+		$links[] = array(
+			'id'  => 'protect_bbpress',
+			'title' => __('bbPress Forums'),
+			'url'   => memberful_wp_plugin_protect_bbpress_url()
+		);
+	}
 ?>
 <h2 class="nav-tab-wrapper">
 <?php foreach($links as $link): ?>
