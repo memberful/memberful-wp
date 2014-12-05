@@ -3,7 +3,7 @@ Contributors: matt-button, drewstrojny
 Tags: memberful, member, memberships, recurring payments, recurring billing, paywall, subscriptions, stripe, oauth, oauth2
 Requires at least: 3.6
 Tested up to: 4.0.0
-Stable tag: 1.14.0
+Stable tag: 1.15.0
 License: GPLv2 or later
 
 Sell memberships and restrict access to content with WordPress and Memberful.
@@ -47,7 +47,7 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 == Changelog ==
 
-= next =
+= 1.15.0 =
 * Fix some PHP warnings when interacting with WP_Error messages. #104
 * Add a note to Post/Page list showing which posts are protected by Memberful. #110
 * Add option to protect bbPress forums. Currently done at a global level from within settings panel. #71
