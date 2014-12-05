@@ -404,11 +404,17 @@ function memberful_wp_protect_bbpress() {
 		$redirect_to_homepage   = empty( $_POST['memberful_send_unauthorized_users'] ) ? TRUE : ($_POST['memberful_send_unauthorized_users'] == 'homepage');
 		$redirect_to_url        = empty( $_POST['memberful_send_unauthorized_users_to_url'] ) ? '' : $_POST['memberful_send_unauthorized_users_to_url'];
 
+		if ( ! empty( $required_subscription_plans ) )
+			$required_subscription_plans = array_combine( $required_subscription_plans, $required_subscription_plans );
+
+		if ( ! empty( $required_downloads ) )
+			$required_downloads = array_combine( $required_downloads, $required_downloads );
+
 		memberful_wp_bbpress_update_send_unauthorized_users_to_homepage( $redirect_to_homepage );
 		memberful_wp_bbpress_update_protect_forums( $protection_enabled );
 		memberful_wp_bbpress_update_restricted_to_registered_user( $viewable_by_any_user );
-		memberful_wp_bbpress_update_required_downloads( array_combine($required_downloads, $required_downloads) );
-		memberful_wp_bbpress_update_required_subscription_plans( array_combine($required_subscription_plans, $required_subscription_plans) );
+		memberful_wp_bbpress_update_required_downloads( $required_downloads );
+		memberful_wp_bbpress_update_required_subscription_plans( $required_subscription_plans );
 		memberful_wp_bbpress_update_send_unauthorized_users_to_url( $redirect_to_url );
 
 		wp_redirect( memberful_wp_plugin_protect_bbpress_url() );

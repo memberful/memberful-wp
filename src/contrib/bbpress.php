@@ -1,6 +1,6 @@
 <?php
 
-add_action( 'template_redirect', 'memberful_wp_regulate_access_to_bbpress' );
+add_action( 'bbp_template_redirect', 'memberful_wp_regulate_access_to_bbpress', 1 );
 
 function memberful_wp_regulate_access_to_bbpress() {
 	if ( ! is_bbpress() )
@@ -12,18 +12,19 @@ function memberful_wp_regulate_access_to_bbpress() {
 	if ( current_user_can( 'moderate' ) )
 		return;
 
-	if ( memberful_wp_bbpress_restricted_to_registered_users() && ! is_user_logged_in() ) {
-		wp_safe_redirect( memberful_wp_bbpress_unauthorized_user_landing_page() );
-		exit();
+	if ( memberful_wp_bbpress_restricted_to_registered_users() && is_user_logged_in() ) {
+		return;
 	}
 
 	$has_required_plan     = memberful_wp_user_has_subscription_to_plans( get_current_user_id(), memberful_wp_bbpress_required_subscription_plans() );
 	$has_required_download = memberful_wp_user_has_downloads( get_current_user_id(), memberful_wp_bbpress_required_downloads());
 
-	if ( ! ( $has_required_plan || $has_required_download ) ) {
-		wp_safe_redirect( memberful_wp_bbpress_unauthorized_user_landing_page() );
-		exit();
+	if ( $has_required_plan || $has_required_download ) {
+		return;
 	}
+
+	wp_safe_redirect( memberful_wp_bbpress_unauthorized_user_landing_page() );
+	exit();
 }
 
 function memberful_wp_bbpress_unauthorized_user_landing_page() {
