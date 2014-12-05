@@ -4,8 +4,13 @@ if ( ! wp_next_scheduled( 'memberful_wp_cron_sync' ) ) {
 	  wp_schedule_event( time(), 'twicedaily', 'memberful_wp_cron_sync' );
 }
 
+if ( ! wp_next_scheduled( 'memberful_wp_cron_sync_settings' ) ) {
+	  wp_schedule_event( time(), 'twicedaily', 'memberful_wp_cron_sync_settings' );
+}
+
 add_action( 'memberful_wp_cron_sync', 'memberful_wp_cron_sync_users' );
 add_action( 'memberful_wp_cron_sync', 'memberful_wp_cron_sync_entities' );
+add_action( 'memberful_wp_cron_sync_settings', 'memberful_wp_cron_sync_settings' );
 
 function memberful_wp_cron_sync_users() {
 	set_time_limit( 0 );
@@ -34,4 +39,27 @@ function memberful_wp_cron_sync_entities() {
 	memberful_wp_sync_subscription_plans();
 
 	echo "<pre>library=memberful_wp method=memberful_wp_cron_sync_entities at=finish\n</pre>";
+}
+
+function memberful_wp_cron_sync_settings() {
+	set_time_limit( 0 );
+
+	echo "<pre>library=memberful_wp method=memberful_wp_cron_sync_settings at=start\n</pre>";
+
+	$new_settings = array(
+		'oauth' => array(
+			'website' => home_url(),
+			'redirect_uri' => memberful_wp_oauth_callback_url(),
+		),
+		'webhook' => array(
+			'url' => memberful_wp_webhook_url(),
+		),
+	);
+
+	memberful_wp_put_data_to_api_as_json(
+		memberful_wp_update_plugin_settings_on_memberful_url(),
+		$new_settings
+	);
+
+	echo "<pre>library=memberful_wp method=memberful_wp_cron_sync_settings at=finish\n</pre>";
 }
