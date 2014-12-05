@@ -51,6 +51,7 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 * Fix some PHP warnings when interacting with WP_Error messages. #104
 * Add a note to Post/Page list showing which posts are protected by Memberful. #110
 * Add option to protect bbPress forums. Currently done at a global level from within settings panel. #71
+* Regularly sync the current OAuth/Webhook URL to Memberful in a cronjob. #57
 
 = 1.14.0 =
 * Add a WP filter to allow other plugins to modify Memberful members prior to their creation in WP #116
