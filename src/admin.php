@@ -279,18 +279,35 @@ function memberful_wp_options() {
  * @param $code string The activation code
  */
 function memberful_wp_activate( $code ) {
-	$activator = new Memberful_Activator( $code, memberful_wp_site_name() );
+	$params = array(
+		'requirements'       => array('oauth', 'api_key', 'webhook'),
+		'activation_code'    => trim($code),
+		'app_name'           => trim(memberful_wp_site_name()),
+		'oauth_redirect_url' => memberful_wp_oauth_callback_url(),
+		'webhook_url'        => memberful_wp_webhook_url()
+	);
 
-	$activator
-		->require_api_key()
-		->require_oauth( memberful_wp_oauth_callback_url() )
-		->require_webhook( memberful_wp_webhook_url() );
+	$response = memberful_wp_post_data_to_api_as_json(
+		memberful_activation_url(),
+		$params
+	);
 
-	$credentials = $activator->activate();
-
-	if ( is_wp_error( $credentials ) ) {
-		return $credentials;
+	if ( is_wp_error( $response ) ) {
+		return new WP_Error( 'memberful_activation_request_error', "We had trouble connecting to Memberful, please email info@memberful.com. ({$response->get_error_message()})" );
 	}
+
+	$response_code = (int) wp_remote_retrieve_response_code( $response );
+	$response_body = wp_remote_retrieve_body( $response );
+
+	if ( 404 === $response_code ) {
+		return new WP_Error( 'memberful_activation_code_invalid', "It looks like your activation code is wrong. Please try again, and if this keeps happening email us at info@memberful.com." );
+	}
+
+	if ( $response_code !== 200 || empty( $response_body ) ) {
+		return new WP_Error( 'memberful_activation_fail', "We couldn't connect to Memberful, please email info@memberful.com" );
+	}
+
+	$credentials = json_decode( $response_body );
 
 	update_option( 'memberful_client_id', $credentials->oauth->identifier );
 	update_option( 'memberful_client_secret', $credentials->oauth->secret );
