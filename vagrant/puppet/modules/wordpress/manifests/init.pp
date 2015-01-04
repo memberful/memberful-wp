@@ -59,7 +59,7 @@ class wordpress::install {
   file { '/vagrant/wordpress/wp-tests-config.php':
     source => 'puppet:///modules/wordpress/wp-tests-config.php'
   }
-  file { '/vagrant/wordpress/wp-content/memberful-wp':
+  file { '/vagrant/wordpress/wp-content/plugins/memberful-wp':
     ensure => 'link',
     target => '/vagrant'
   }

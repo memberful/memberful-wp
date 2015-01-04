@@ -11,3 +11,11 @@ class { 'mysql::install': }
 class { 'wordpress::install': }
 class { 'phpmyadmin::install': }
 class { 'phpqa::install': }
+
+file { '/etc/hosts':
+  ensure  => file,
+  owner   => 'root',
+  group   => 'root',
+  mode    => '0644',
+  source  => '/vagrant/vagrant/files/etc/hosts'
+}
