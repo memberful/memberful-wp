@@ -71,6 +71,10 @@ $table_prefix  = 'wp_';
  */
 define('WPLANG', '');
 
+define('MEMBERFUL_APPS_HOST', 'https://apps.memberful.dev');
+define('MEMBERFUL_EMBED_HOST', 'https://apps.memberful.dev');
+define('MEMBERFUL_SSL_VERIFY', FALSE);
+
 /**
  * For developers: WordPress debugging mode.
  *

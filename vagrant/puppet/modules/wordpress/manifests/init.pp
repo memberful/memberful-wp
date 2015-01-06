@@ -57,10 +57,12 @@ class wordpress::install {
 
   # Copy a working wp-tests-config.php file for the vagrant setup.
   file { '/vagrant/wordpress/wp-tests-config.php':
-    source => 'puppet:///modules/wordpress/wp-tests-config.php'
+    source => 'puppet:///modules/wordpress/wp-tests-config.php',
+    require => Exec['untar-wordpress']
   }
   file { '/vagrant/wordpress/wp-content/plugins/memberful-wp':
     ensure => 'link',
-    target => '/vagrant'
+    target => '/vagrant',
+    require => Exec['untar-wordpress'],
   }
 }
