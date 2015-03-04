@@ -1,7 +1,7 @@
 <VirtualHost *:80>
 	ServerAdmin webmaster@localhost
 
-	DocumentRoot /vagrant/wordpress
+	DocumentRoot /home/vagrant/wordpress
 	RewriteLogLevel 9
 	RewriteLog ${APACHE_LOG_DIR}/vagrant.rewrite.log
 

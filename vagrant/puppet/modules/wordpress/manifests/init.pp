@@ -18,20 +18,24 @@ class wordpress::install {
 
   exec { 'download-wordpress': #tee hee
     command => '/usr/bin/wget http://wordpress.org/latest.tar.gz',
-    cwd     => '/vagrant',
-    creates => '/vagrant/latest.tar.gz'
+    cwd     => '/home/vagrant',
+    creates => '/home/vagrant/latest.tar.gz'
   }
 
   exec { 'untar-wordpress':
-    cwd     => '/vagrant/',
-    command => '/bin/tar xzvf /vagrant/latest.tar.gz',
+    cwd     => '/home/vagrant',
+    command => '/bin/tar xzvf /home/vagrant/latest.tar.gz',
     require => Exec['download-wordpress'],
-    creates => '/vagrant/wordpress',
+    creates => '/home/vagrant/wordpress',
   }
 
   # Import a MySQL database for a basic wordpress site.
+#  file { '/tmp/wordpress-db.sql':
+#    source => 'puppet:///modules/wordpress/wordpress-db.sql'
+#  }
+
   file { '/tmp/wordpress-db.sql':
-    source => 'puppet:///modules/wordpress/wordpress-db.sql'
+    source  => '/vagrant/vagrant/wordpress.sql',
   }
 
   exec { 'load-db':
@@ -40,10 +44,10 @@ class wordpress::install {
   }
 
   # Copy a working wp-config.php file for the vagrant setup.
-  file { '/vagrant/wordpress/wp-config.php':
+  file { '/home/vagrant/wordpress/wp-config.php':
     source => 'puppet:///modules/wordpress/wp-config.php'
   }
-  
+
    # Create the Wordpress Unit Tests database
   exec { 'create-tests-database':
     unless  => '/usr/bin/mysql -u root -pvagrant wp_tests',
@@ -56,11 +60,11 @@ class wordpress::install {
   }
 
   # Copy a working wp-tests-config.php file for the vagrant setup.
-  file { '/vagrant/wordpress/wp-tests-config.php':
+  file { '/home/vagrant/wordpress/wp-tests-config.php':
     source => 'puppet:///modules/wordpress/wp-tests-config.php',
     require => Exec['untar-wordpress']
   }
-  file { '/vagrant/wordpress/wp-content/plugins/memberful-wp':
+  file { '/home/vagrant/wordpress/wp-content/plugins/memberful-wp':
     ensure => 'link',
     target => '/vagrant',
     require => Exec['untar-wordpress'],
