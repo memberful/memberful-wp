@@ -1,7 +1,7 @@
 <?php if ( ! empty( $subscriptions ) || ! empty( $products ) ) : ?>
 	<div class="memberful-restrict-access-options">
 		<h4 style="font-size: 13px;"><?php _e( 'Who can read this post?', 'memberful' ); ?></h4>
-		<?php memberful_wp_render( 'acl_selection', compact( 'subscriptions', 'products' ) ); ?>
+		<?php memberful_wp_render( 'acl_selection', compact( 'subscriptions', 'products', 'viewable_by_any_registered_users' ) ); ?>
 	</div>
 	<div class="memberful-marketing-content">
 		<?php
