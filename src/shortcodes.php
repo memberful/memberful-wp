@@ -8,6 +8,7 @@ add_shortcode( 'memberful_download_link', 'memberful_wp_shortcode_download_link'
 add_shortcode( 'memberful_register_link', 'memberful_wp_shortcode_register_link' );
 add_shortcode( 'memberful_buy_download_link', 'memberful_wp_shortcode_buy_download_link' );
 add_shortcode( 'memberful_buy_subscription_link', 'memberful_wp_shortcode_buy_subscription_link' );
+add_shortcode( 'memberful_private_user_feed_link', 'memberful_wp_shortcode_private_user_feed_link' );
 
 function memberful_wp_shortcode_buy_download_link( $atts, $content ) {
 	$url = memberful_checkout_for_download_url(
@@ -119,6 +120,31 @@ function memberful_wp_shortcode( $atts, $content ) {
 	}
 
 	return $show_content ? do_shortcode($content) : '';
+}
+
+function memberful_wp_shortcode_private_user_feed_link($atts, $content = '') {
+  if(!is_user_logged_in())
+    return __("You don’t have access to this RSS feed.", "memberful");
+
+  $requiredPlan = memberful_private_user_feed_settings_get_required_plan();
+
+  // We want to allow the private user feed only if the admin has configured it.
+  if($requiredPlan == false)
+    return __("You don’t have access to this RSS feed.", "memberful");
+
+  $current_user_id = get_current_user_id();
+
+  if(!is_subscribed_to_memberful_plan($requiredPlan, $current_user_id))
+    return __("You don’t have access to this RSS feed.", "memberful");
+
+  $feedToken = get_user_meta($current_user_id, 'memberful_private_user_feed_token', true);
+
+  if($feedToken == false || $feedToken == '') {
+    $feedToken = uniqid(rand(1,10000));
+    update_user_meta($current_user_id, 'memberful_private_user_feed_token', $feedToken);
+  }
+
+  return (get_home_url() . '/' . memberful_private_user_feed_get_url_identifier($feedToken) );
 }
 
 function memberful_wp_slugs_to_ids( $slugs ) {
