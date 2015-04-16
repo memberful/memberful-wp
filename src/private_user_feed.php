@@ -114,7 +114,7 @@ if(!function_exists('memberful_private_user_feed_get_url_identifier'))  {
    * @return string
    */
   function memberful_private_user_feed_get_url_identifier($user_token = '') {
-    return 'memberful-feed/' . $user_token;
+    return '?memberful-feed=' . $user_token;
   }
 
 }
