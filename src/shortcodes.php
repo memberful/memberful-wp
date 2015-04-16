@@ -122,7 +122,7 @@ function memberful_wp_shortcode( $atts, $content ) {
 	return $show_content ? do_shortcode($content) : '';
 }
 
-function memberful_wp_shortcode_private_user_feed_link($atts, $content = '') {
+function memberful_wp_shortcode_private_user_feed_link($atts = array(), $content = '') {
   if(!is_user_logged_in())
     return __("You don’t have access to this RSS feed.", "memberful");
 
