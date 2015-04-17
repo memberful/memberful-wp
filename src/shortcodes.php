@@ -123,7 +123,7 @@ function memberful_wp_shortcode( $atts, $content ) {
 }
 
 function memberful_wp_shortcode_private_user_feed_link($atts = array(), $content = '') {
-  return memberful_private_rss_feed_link(true, true);
+	return memberful_private_rss_feed_link(true, true);
 }
 
 function memberful_wp_slugs_to_ids( $slugs ) {
