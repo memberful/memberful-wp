@@ -94,7 +94,7 @@ function memberful_private_rss_feed_link($return = false) {
   $feedToken = get_user_meta($current_user_id, 'memberful_private_user_feed_token', true);
 
   if($feedToken == false || $feedToken == '') {
-    $feedToken = uniqid(rand(1,10000));
+    $feedToken = substr(md5(uniqid(rand(1,10000))), 2, 30);
     update_user_meta($current_user_id, 'memberful_private_user_feed_token', $feedToken);
   }
 
