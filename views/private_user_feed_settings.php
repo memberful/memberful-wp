@@ -17,7 +17,7 @@
 												<input type="checkbox"
 															 name="memberful_private_feed_subscriptions[]"
 															 value="<?php echo $id; ?>"
-															<?php checked(in_array($id, memberful_private_user_feed_settings_get_required_plan()));?>
+															<?php checked(in_array($id, $current_feed_subscriptions));?>
 														>
 												<?php echo esc_html( $subscription['name'] ); ?>
 											</label>
@@ -29,7 +29,7 @@
 							<p class="memberful-private-feed-error"><?php _e( "There are no available Subscription Plans.", 'memberful' ); ?></p>
 						<?php endif; ?>
 						<p>
-							<input type="submit" class="button button-primary" value="<?php _e( "Save Changes", 'memberful' ); ?>" />
+							<input type="submit" name="memberful_private_feed_subscriptions_submit" class="button button-primary" value="<?php _e( "Save Changes", 'memberful' ); ?>" />
 						</p>
 					</fieldset>
 				</div>
