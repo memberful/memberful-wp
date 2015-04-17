@@ -75,9 +75,10 @@ function memberful_private_user_feed_deliver() {
 /**
  * @param bool $return - false
  * @param bool $html_link - false
+ * @param string $content - ''
  * @return string|void
  */
-function memberful_private_rss_feed_link($return = false, $html_link = false) {
+function memberful_private_rss_feed_link($return = false, $html_link = false, $content = '') {
 	if(!is_user_logged_in())
 		return __("You don’t have access to this RSS feed.", "memberful");
 
@@ -102,7 +103,7 @@ function memberful_private_rss_feed_link($return = false, $html_link = false) {
 	$link = (get_home_url() . '/' . memberful_private_user_feed_get_url_identifier($feedToken) );
 
 	if($html_link)
-		$link = '<a href="' . $link . '">' . $link . '</a>';
+		$link = '<a href="' . $link . '">' . ($content != '' ? $content : $link) . '</a>';
 
 	if($return)
 		return $link;
