@@ -3,6 +3,9 @@
 
 // We want to make sure nobody influences our results.
 remove_all_actions('pre_get_posts');
+remove_all_filters('the_content');
+remove_all_filters('the_excerpt');
+remove_all_filters('the_excerpt_rss');
 
 query_posts(array(
 		'post_type'       => 'post',
