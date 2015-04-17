@@ -7,7 +7,7 @@
       <fieldset>
         <?php if ( ! empty( $subscription_plans ) ) : ?>
           <div id="memberful-private-user-feed-subscription-list">
-            <h3><?php _e( 'Set up private user RSS feeds', 'memberful' ); ?></h3>
+            <h3><?php _e( 'Enable private user RSS feeds', 'memberful' ); ?></h3>
 						<p><?php _e( "Provide a private user RSS feed (<strong>all posts included</strong>) for active subscribers to the following Subscription Plans:", 'memberful' ); ?></p>
             <ul>
               <?php foreach($subscription_plans as $id => $subscription): ?>
@@ -16,7 +16,7 @@
                     <input type="checkbox"
                            name="memberful_private_feed_subscriptions[]"
                            value="<?php echo $id; ?>"
-                          <?php checked(in_array($id, $current_feed_subscriptions));?>
+                          <?php checked(in_array($id, memberful_private_user_feed_settings_get_required_plan()));?>
                         >
                     <?php echo esc_html( $subscription['name'] ); ?>
                   </label>
@@ -28,7 +28,7 @@
           <p class="memberful-private-feed-error"><?php _e( "There are no available Subscription Plans.", 'memberful' ); ?></p>
         <?php endif; ?>
         <p>
-          <input type="submit" name="memberful_private_feed_subscriptions_submit" class="button button-primary" value="<?php _e( "Save Changes", 'memberful' ); ?>" />
+          <input type="submit" class="button button-primary" value="<?php _e( "Save Changes", 'memberful' ); ?>" />
         </p>
       </fieldset>
       <div class="memberful-private-feed-instructions-container memberful-protect-help postbox">
