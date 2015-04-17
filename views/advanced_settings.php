@@ -1,4 +1,4 @@
-<div class="wrap">
+<div id="memberful-wrap" class="wrap">
 	<?php memberful_wp_render('option_tabs', array('active' => 'advanced_settings')); ?>
 	<?php memberful_wp_render('flash'); ?>
 	<p><?php _e( "Assign roles to active (paying) and inactive (not paying) members. Memberful will automatically keep the role mappings in sync. Works best with custom roles created by other plugins.", 'memberful' ); ?></p>

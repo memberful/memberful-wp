@@ -17,7 +17,7 @@
 		),
     array(
         'id'    => 'private_user_feed_settings',
-        'title' => __('Private User RSS Feed'),
+        'title' => __('Private RSS Feed'),
         'url'   => memberful_wp_plugin_private_user_feed_settings_url()
     ),
 	);
