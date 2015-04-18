@@ -80,18 +80,18 @@ function memberful_private_user_feed_deliver() {
  */
 function memberful_private_rss_feed_link($return = false, $html_link = false, $content = '') {
 	if(!is_user_logged_in())
-		return __("You don’t have access to this RSS feed.", "memberful");
+    return memberful_private_rss_feed_link_response_helper(__("You don’t have access to this RSS feed.", "memberful"), $return);
 
 	$requiredPlan = memberful_private_user_feed_settings_get_required_plan();
 
 	// We want to allow the private user feed only if the admin has configured it.
 	if($requiredPlan == false)
-		return __("You don’t have access to this RSS feed.", "memberful");
+    return memberful_private_rss_feed_link_response_helper(__("You don’t have access to this RSS feed.", "memberful"), $return);
 
 	$current_user_id = get_current_user_id();
 
 	if(!is_subscribed_to_memberful_plan($requiredPlan, $current_user_id))
-		return __("You don’t have access to this RSS feed.", "memberful");
+    return memberful_private_rss_feed_link_response_helper(__("You don’t have access to this RSS feed.", "memberful"), $return);
 
 	$feedToken = get_user_meta($current_user_id, 'memberful_private_user_feed_token', true);
 
@@ -105,10 +105,16 @@ function memberful_private_rss_feed_link($return = false, $html_link = false, $c
 	if($html_link)
 		$link = '<a href="' . $link . '">' . ($content != '' ? $content : $link) . '</a>';
 
-	if($return)
-		return $link;
+  return memberful_private_rss_feed_link_response_helper($link, $return);
+}
 
-	echo $link;
+function memberful_private_rss_feed_link_response_helper($response, $return = false) {
+  if($return)
+    return $response;
+
+  echo $response;
+
+  return '';
 }
 
 // Admin Settings Functionality
