@@ -73,25 +73,25 @@ function memberful_private_user_feed_deliver() {
 }
 
 /**
- * @param string $content - ''
- * @param bool $return - true
- * @param bool $html_link - false
- * @return string|void
+ * @param string $successMessage - '', if present, will return an clickable link
+ * @param string $errorMessage - "You don’t have access to this RSS feed."
+ * @param bool $return
+ * @return string
  */
-function memberful_private_rss_feed_url($content = '', $return = true, $html_link = false) {
+function memberful_private_rss_feed_url($successMessage = '', $errorMessage = "You don’t have access to this RSS feed.", $return = false) {
 	if(!is_user_logged_in())
-    return memberful_private_rss_feed_link_response_helper(__("You don’t have access to this RSS feed.", "memberful"), $return);
+    return memberful_private_rss_feed_link_response_helper($errorMessage, $return);
 
 	$requiredPlan = memberful_private_user_feed_settings_get_required_plan();
 
 	// We want to allow the private user feed only if the admin has configured it.
 	if($requiredPlan == false)
-    return memberful_private_rss_feed_link_response_helper(__("You don’t have access to this RSS feed.", "memberful"), $return);
+    return memberful_private_rss_feed_link_response_helper($errorMessage, $return);
 
 	$current_user_id = get_current_user_id();
 
 	if(!is_subscribed_to_memberful_plan($requiredPlan, $current_user_id))
-    return memberful_private_rss_feed_link_response_helper(__("You don’t have access to this RSS feed.", "memberful"), $return);
+    return memberful_private_rss_feed_link_response_helper($errorMessage, $return);
 
 	$feedToken = get_user_meta($current_user_id, 'memberful_private_user_feed_token', true);
 
@@ -102,8 +102,8 @@ function memberful_private_rss_feed_url($content = '', $return = true, $html_lin
 
 	$link = (get_home_url() . '/' . memberful_private_user_feed_get_url_identifier($feedToken) );
 
-	if($html_link || $content != '')
-		$link = '<a href="' . $link . '">' . ($content != '' ? $content : $link) . '</a>';
+	if($successMessage != '')
+		$link = '<a href="' . $link . '">' . $successMessage . '</a>';
 
   return memberful_private_rss_feed_link_response_helper($link, $return);
 }
