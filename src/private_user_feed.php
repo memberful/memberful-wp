@@ -73,12 +73,12 @@ function memberful_private_user_feed_deliver() {
 }
 
 /**
+ * @param string $content - ''
  * @param bool $return - false
  * @param bool $html_link - false
- * @param string $content - ''
  * @return string|void
  */
-function memberful_private_rss_feed_link($return = false, $html_link = false, $content = '') {
+function memberful_private_rss_feed_url($content = '', $return = false, $html_link = false) {
 	if(!is_user_logged_in())
     return memberful_private_rss_feed_link_response_helper(__("You don’t have access to this RSS feed.", "memberful"), $return);
 
@@ -102,7 +102,7 @@ function memberful_private_rss_feed_link($return = false, $html_link = false, $c
 
 	$link = (get_home_url() . '/' . memberful_private_user_feed_get_url_identifier($feedToken) );
 
-	if($html_link)
+	if($html_link || $content != '')
 		$link = '<a href="' . $link . '">' . ($content != '' ? $content : $link) . '</a>';
 
   return memberful_private_rss_feed_link_response_helper($link, $return);

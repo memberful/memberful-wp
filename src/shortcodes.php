@@ -8,7 +8,7 @@ add_shortcode( 'memberful_download_link', 'memberful_wp_shortcode_download_link'
 add_shortcode( 'memberful_register_link', 'memberful_wp_shortcode_register_link' );
 add_shortcode( 'memberful_buy_download_link', 'memberful_wp_shortcode_buy_download_link' );
 add_shortcode( 'memberful_buy_subscription_link', 'memberful_wp_shortcode_buy_subscription_link' );
-add_shortcode( 'memberful_private_rss_feed_link', 'memberful_wp_shortcode_private_user_feed_link' );
+add_shortcode( 'memberful_private_rss_feed_link', 'memberful_wp_shortcode_private_user_feed_url' );
 
 function memberful_wp_shortcode_buy_download_link( $atts, $content ) {
 	$url = memberful_checkout_for_download_url(
@@ -122,8 +122,8 @@ function memberful_wp_shortcode( $atts, $content ) {
 	return $show_content ? do_shortcode($content) : '';
 }
 
-function memberful_wp_shortcode_private_user_feed_link($atts = array(), $content = '') {
-	return memberful_private_rss_feed_link(true, true, $content);
+function memberful_wp_shortcode_private_user_feed_url($atts = array(), $content = '') {
+	return memberful_private_rss_feed_url($content, true, true);
 }
 
 function memberful_wp_slugs_to_ids( $slugs ) {
