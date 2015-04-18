@@ -1,5 +1,5 @@
 === Memberful WP ===
-Contributors: matt-button, drewstrojny
+Contributors: matt-button, drewstrojny, dwestendorf, rusuandreirobert
 Tags: memberful, member, memberships, recurring payments, recurring billing, paywall, subscriptions, stripe, oauth, oauth2
 Requires at least: 3.6
 Tested up to: 4.1.1
