@@ -25,6 +25,15 @@
 		);
 	}
 
+  var insertPrivateRSSFeedShortcode = function(editor) {
+    wrapContentsWithShortcode(
+        editor,
+        "[memberful_private_rss_feed_link]",
+        "[/memberful_private_rss_feed_link]",
+        "Your RSS Feed"
+    );
+  }
+
 	function insertLinkToDownload(editor) {
 		downloadItemCtrl = {
 			name: "downloadSlug",
@@ -152,6 +161,8 @@
 					{text: 'Link to Download', onClick: function() { insertLinkToDownload(editor); }}
 				);
 			}
+
+      menu.push({text: 'Private RSS Feed link', onclick: function() { insertPrivateRSSFeedShortcode(editor); }});
 
 			editor.addButton('memberful_wp', {
 				type: 'menubutton',
