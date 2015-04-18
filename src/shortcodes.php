@@ -1,5 +1,4 @@
 <?php
-
 add_shortcode( 'memberful', 'memberful_wp_shortcode' );
 add_shortcode( 'memberful_account_link',  'memberful_wp_shortcode_account_link' );
 add_shortcode( 'memberful_sign_in_link',  'memberful_wp_shortcode_sign_in_link' );
