@@ -78,7 +78,7 @@ function memberful_private_user_feed_deliver() {
  * @param bool $return
  * @return string
  */
-function memberful_private_rss_feed_url($successMessage = '', $errorMessage = "You don’t have access to this RSS feed.", $return = false) {
+function memberful_private_rss_feed_link($successMessage = '', $errorMessage = "You don’t have access to this RSS feed.", $return = false) {
 	if(!is_user_logged_in())
     return memberful_private_rss_feed_link_response_helper($errorMessage, $return);
 
