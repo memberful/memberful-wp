@@ -28,13 +28,15 @@
 						<?php else : ?>
 							<p class="memberful-private-feed-error"><?php _e( "There are no available Subscription Plans.", 'memberful' ); ?></p>
 						<?php endif; ?>
-						<p>
-							<input type="submit" name="memberful_private_feed_subscriptions_submit" class="button button-primary" value="<?php _e( "Save Changes", 'memberful' ); ?>" />
-						</p>
+						<input type="submit" name="memberful_private_feed_subscriptions_submit" class="button button-primary" value="<?php _e( "Save Changes", 'memberful' ); ?>" />
 					</fieldset>
 				</div>
-				<div class="memberful-private-feed-instructions-container memberful-protect-help postbox">
-					<?php _e( '<strong>To share the link with active members</strong> add the <em>[memberful_private_user_feed_link]</em> shortcode in a page or use the <em> memberful_private_rss_feed_link()</em> function in your WordPress theme.</code>', 'memberful' ); ?> <strong></strong>
+				<div class="memberful-private-feed-instructions postbox">
+					<h3><?php _e( 'Display the private RSS Feed link to members with access', 'memberful' ); ?></h3>
+					<p><?php _e( 'Show a private user RSS Feed link to a WordPress post or page:', 'memberful' ); ?></p>
+					<p><code><?php _e( '[memberful_private_rss_feed_link]Your RSS feed[/memberful_private_rss_feed_link]', 'memberful' ); ?></code></p>
+					<p><?php _e( 'Output a private user RSS Feed URL in your WordPress theme:', 'memberful' ); ?></p>
+					<p><code><?php _e( '&lt;?php echo memberful_private_rss_feed_url(); ?&gt;', 'memberful' ); ?></code></p>
 				</div>
 			</div>
 			<?php memberful_wp_nonce_field( 'memberful_options' ); ?>

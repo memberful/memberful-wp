@@ -191,3 +191,10 @@ p.memberful-access-label {
 .plans-for-rss ul {
 	margin: 10px 0 20px 0;
 }
+.postbox.memberful-private-feed-instructions {
+	width: 640px;
+	padding: 10px 20px 10px 20px;
+}
+.postbox.memberful-private-feed-instructions code {
+	font-size: 12px;
+}
