@@ -3,7 +3,7 @@ Contributors: matt-button, drewstrojny
 Tags: memberful, member, memberships, recurring payments, recurring billing, paywall, subscriptions, stripe, oauth, oauth2
 Requires at least: 3.6
 Tested up to: 4.1.1
-Stable tag: 1.16.3
+Stable tag: 1.17.0
 License: GPLv2 or later
 
 Sell memberships and restrict access to content with WordPress and Memberful.
@@ -18,6 +18,7 @@ Features include:
 * Single sign on: Members are automatically signed into WordPress when they sign in to Memberful.
 * Create a paywall and restrict access to content. Quickly protect any posts or pages right from your WordPress edit screen.
 * A widget with links to sign in and manage your account (update credit card, cancel subscription, etc.).
+* Ability to create Private RSS feeds
 
 == Installation ==
 
@@ -46,6 +47,9 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 3. Simple sign in and account management widget.
 
 == Changelog ==
+
+= 1.17.0 =
+* Add support for private RSS feeds
 
 = 1.16.2 =
 * Version bump
