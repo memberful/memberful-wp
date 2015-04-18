@@ -79,6 +79,10 @@ function memberful_wp_plugin_advanced_settings_url($no_header = FALSE) {
 	return memberful_wp_plugin_settings_url($no_header, 'advanced_settings');
 }
 
+function memberful_wp_plugin_private_user_feed_settings_url($no_header = FALSE) {
+  return memberful_wp_plugin_settings_url($no_header, 'private_user_feed_settings');
+}
+
 function memberful_wp_plugin_protect_bbpress_url($no_header = FALSE) {
 	return memberful_wp_plugin_settings_url($no_header, 'protect_bbpress');
 }

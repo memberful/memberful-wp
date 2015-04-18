@@ -257,6 +257,8 @@ function memberful_wp_options() {
 				return memberful_wp_advanced_settings();
 			case 'protect_bbpress':
 				return memberful_wp_protect_bbpress();
+      case 'private_user_feed_settings':
+        return memberful_wp_private_rss_feed_settings();
 		}
 	}
 
@@ -463,6 +465,27 @@ function memberful_wp_protect_bbpress() {
 			'form_target'                         => memberful_wp_plugin_protect_bbpress_url( TRUE ),
 		)
 	);
+}
+
+function memberful_wp_private_rss_feed_settings() {
+  if(isset($_POST['memberful_private_feed_subscriptions_submit'])) {
+    $private_feed_subscriptions = isset($_POST['memberful_private_feed_subscriptions']) ? $_POST['memberful_private_feed_subscriptions'] : false;
+
+    memberful_private_user_feed_settings_set_required_plan($private_feed_subscriptions);
+  }
+
+  $current_feed_subscriptions = memberful_private_user_feed_settings_get_required_plan();
+  $current_feed_subscriptions = !is_array($current_feed_subscriptions) ? array() : $current_feed_subscriptions;
+
+  memberful_wp_render(
+      'private_user_feed_settings',
+      array(
+          'form_target'               => memberful_wp_plugin_private_user_feed_settings_url(),
+          'subscription_plans'        => memberful_subscription_plans(),
+          'available_subscriptions'   => memberful_private_user_feed_settings_get_required_plan(),
+          'current_feed_subscriptions'=> $current_feed_subscriptions
+      )
+  );
 }
 
 function memberful_wp_announce_plans_and_download_in_head() {

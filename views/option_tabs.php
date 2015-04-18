@@ -15,6 +15,11 @@
 			'title' => __('Advanced Role Mapping'),
 			'url'   => memberful_wp_plugin_advanced_settings_url()
 		),
+    array(
+        'id'    => 'private_user_feed_settings',
+        'title' => __('Private RSS Feeds'),
+        'url'   => memberful_wp_plugin_private_user_feed_settings_url()
+    ),
 	);
 	if ( is_plugin_active( 'bbpress/bbpress.php' ) ) {
 		$links[] = array(

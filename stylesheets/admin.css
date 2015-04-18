@@ -154,10 +154,12 @@ p.memberful-access-label {
 	background: #efefef;
 	border: 1px solid #dedede;
 }
+/*---------------------------------------------------------
+	bbPress
+------------------------------------------------------------ */
 .memberful-bbpress-enable {
 	margin: 20px;
 }
-
 .memberful-bbpress-redirect {
 	float: left;
 	margin: 10px 0px;
@@ -178,4 +180,21 @@ p.memberful-access-label {
 .memberful-bbpress-submit-buttons {
 	clear: both;
 	margin: 30px 20px;
+}
+/*---------------------------------------------------------
+	Private RSS Feeds
+------------------------------------------------------------ */
+.postbox.plans-for-rss {
+	margin-top: 20px;
+	padding: 10px 20px 20px 20px;
+}
+.plans-for-rss ul {
+	margin: 10px 0 20px 0;
+}
+.postbox.memberful-private-feed-instructions {
+	width: 640px;
+	padding: 10px 20px 10px 20px;
+}
+.postbox.memberful-private-feed-instructions code {
+	font-size: 12px;
 }
