@@ -36,7 +36,7 @@
 					<p><?php _e( 'Show a private user RSS Feed link to a WordPress post or page:', 'memberful' ); ?></p>
 					<p><code><?php _e( '[memberful_private_rss_feed_link]Your RSS feed[/memberful_private_rss_feed_link]', 'memberful' ); ?></code></p>
 					<p><?php _e( 'Output a private user RSS Feed link in your WordPress theme:', 'memberful' ); ?></p>
-					<p><code><?php _e( '&lt;?php memberful_private_rss_feed_link("Your RSS Feed", "You don\'t have access."); ?&gt;', 'memberful' ); ?></code></p>
+					<p><code><?php _e( '&lt;?php memberful_private_rss_feed_link( "Your RSS Feed", "You don\'t have access." ); ?&gt;', 'memberful' ); ?></code></p>
 				</div>
 			</div>
 			<?php memberful_wp_nonce_field( 'memberful_options' ); ?>
