@@ -9,7 +9,7 @@
 						<?php if ( ! empty( $subscription_plans ) ) : ?>
 							<div id="memberful-private-user-feed-subscription-list">
 								<h3><?php _e( 'Enable private user RSS feeds', 'memberful' ); ?></h3>
-								<p><?php _e( "Provide a private user RSS feed of <strong>ALL POSTS</strong> for active subscribers to these Subscription Plans:", 'memberful' ); ?></p>
+								<p><?php _e( "Provide a private RSS feed of <strong>ALL POSTS</strong> for active subscribers to these Subscription Plans:", 'memberful' ); ?></p>
 								<ul>
 									<?php foreach($subscription_plans as $id => $subscription): ?>
 										<li>
@@ -36,7 +36,7 @@
 					<p><?php _e( 'Show a private user RSS Feed link to a WordPress post or page:', 'memberful' ); ?></p>
 					<p><code><?php _e( '[memberful_private_rss_feed_link]Your RSS feed[/memberful_private_rss_feed_link]', 'memberful' ); ?></code></p>
 					<p><?php _e( 'Output a private user RSS Feed URL in your WordPress theme:', 'memberful' ); ?></p>
-					<p><code><?php _e( '&lt;?php echo memberful_private_rss_feed_url(); ?&gt;', 'memberful' ); ?></code></p>
+					<p><code><?php _e( '&lt;?php memberful_private_rss_feed_url("Your RSS Feed", "You don\'t have access."); ?&gt;', 'memberful' ); ?></code></p>
 				</div>
 			</div>
 			<?php memberful_wp_nonce_field( 'memberful_options' ); ?>
