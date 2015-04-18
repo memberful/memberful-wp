@@ -74,11 +74,11 @@ function memberful_private_user_feed_deliver() {
 
 /**
  * @param string $content - ''
- * @param bool $return - false
+ * @param bool $return - true
  * @param bool $html_link - false
  * @return string|void
  */
-function memberful_private_rss_feed_url($content = '', $return = false, $html_link = false) {
+function memberful_private_rss_feed_url($content = '', $return = true, $html_link = false) {
 	if(!is_user_logged_in())
     return memberful_private_rss_feed_link_response_helper(__("You don’t have access to this RSS feed.", "memberful"), $return);
 
