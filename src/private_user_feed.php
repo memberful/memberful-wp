@@ -73,37 +73,39 @@ function memberful_private_user_feed_deliver() {
 }
 
 /**
- * @param string $successMessage - '', if present, will return an clickable link
- * @param string $errorMessage - "You don’t have access to this RSS feed."
+ * @param string $success_message - '', if present, will return an clickable link
+ * @param string $error_message - "You don’t have access to this RSS feed."
  * @param bool $return
  * @return string
  */
-function memberful_private_rss_feed_link($successMessage = '', $errorMessage = "You don’t have access to this RSS feed.", $return = false) {
-	if(!is_user_logged_in())
-    return memberful_private_rss_feed_link_response_helper($errorMessage, $return);
+function memberful_private_rss_feed_link($success_message = '', $error_message = "You don’t have access to this RSS feed.", $return = false) {
+  $error_message = apply_filters( 'memberful_private_rss_feed_error_message', $error_message );
 
-	$requiredPlan = memberful_private_user_feed_settings_get_required_plan();
+  if(!is_user_logged_in())
+    return memberful_private_rss_feed_link_response_helper($error_message, $return);
 
-	// We want to allow the private user feed only if the admin has configured it.
-	if($requiredPlan == false)
-    return memberful_private_rss_feed_link_response_helper($errorMessage, $return);
+  $requiredPlan = memberful_private_user_feed_settings_get_required_plan();
 
-	$current_user_id = get_current_user_id();
+  // We want to allow the private user feed only if the admin has configured it.
+  if($requiredPlan == false)
+    return memberful_private_rss_feed_link_response_helper($error_message, $return);
 
-	if(!is_subscribed_to_memberful_plan($requiredPlan, $current_user_id))
-    return memberful_private_rss_feed_link_response_helper($errorMessage, $return);
+  $current_user_id = get_current_user_id();
 
-	$feedToken = get_user_meta($current_user_id, 'memberful_private_user_feed_token', true);
+  if(!is_subscribed_to_memberful_plan($requiredPlan, $current_user_id))
+    return memberful_private_rss_feed_link_response_helper($error_message, $return);
 
-	if($feedToken == false || $feedToken == '') {
-		$feedToken = substr(md5(uniqid(rand(1,10000))), 2, 30);
-		update_user_meta($current_user_id, 'memberful_private_user_feed_token', $feedToken);
-	}
+  $feedToken = get_user_meta($current_user_id, 'memberful_private_user_feed_token', true);
 
-	$link = (get_home_url() . '/' . memberful_private_user_feed_get_url_identifier($feedToken) );
+  if($feedToken == false || $feedToken == '') {
+    $feedToken = substr(md5(uniqid(rand(1,10000))), 2, 30);
+    update_user_meta($current_user_id, 'memberful_private_user_feed_token', $feedToken);
+  }
 
-	if($successMessage != '')
-		$link = '<a href="' . $link . '">' . $successMessage . '</a>';
+  $link = (get_home_url() . '/' . memberful_private_user_feed_get_url_identifier($feedToken) );
+
+  if($success_message != '')
+    $link = '<a href="' . $link . '">' . $success_message . '</a>';
 
   return memberful_private_rss_feed_link_response_helper($link, $return);
 }
