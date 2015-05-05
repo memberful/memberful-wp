@@ -9,7 +9,7 @@
  * @author Andrei-Robert Rusu
  */
 
-add_action('init', 'memberful_private_user_feed_init');
+add_action('init', 'memberful_private_user_feed_init', 1);
 
 function memberful_private_user_feed_init() {
 	// In case this is not available, just don't carry on with the logic, it should always be here.
