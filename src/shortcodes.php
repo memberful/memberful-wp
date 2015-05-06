@@ -81,7 +81,7 @@ function memberful_wp_shortcode( $atts, $content ) {
 	$shortcode_is_checking_if_the_user_has_stuff = empty( $atts['does_not_have_subscription_to'] ) && empty( $atts['does_not_have_download'] );
 
 	if ( $shortcode_is_checking_if_the_user_has_stuff && current_user_can( 'publish_posts' ) ) {
-		return $content;
+		return do_shortcode($content);
 	}
 
 	if ( ! empty( $atts['has_subscription_to'] ) ) {

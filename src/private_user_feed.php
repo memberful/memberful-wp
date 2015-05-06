@@ -105,7 +105,7 @@ function memberful_private_rss_feed_link($success_message = '', $error_message =
   $link = (get_home_url() . '/' . memberful_private_user_feed_get_url_identifier($feedToken) );
 
   if($success_message != '')
-    $link = '<a href="' . $link . '">' . $success_message . '</a>';
+    $link = '<a href="' . $link . '">' . do_shortcode($success_message) . '</a>';
 
   return memberful_private_rss_feed_link_response_helper($link, $return);
 }
