@@ -110,6 +110,9 @@ function memberful_wp_save_postdata( $post_id ) {
 
 	memberful_wp_set_post_available_to_any_registered_users( $post_id, $viewable_by_any_registered_users );
 
+  if(!isset($_POST['memberful_marketing_content']))
+    return;
+
 	$marketing_content = trim( $_POST['memberful_marketing_content'] );
 
 	memberful_wp_update_post_marketing_content( $post_id, $marketing_content );
