@@ -55,6 +55,7 @@ require_once MEMBERFUL_DIR . '/src/logout_hooks.php';
 require_once MEMBERFUL_DIR . '/src/contrib/bbpress.php';
 require_once MEMBERFUL_DIR . '/vendor/reporting.php';
 require_once MEMBERFUL_DIR . '/src/private_user_feed.php';
+require_once MEMBERFUL_DIR . '/src/comments_protection.php';
 
 register_activation_hook( __FILE__, 'memberful_wp_plugin_activate' );
 
