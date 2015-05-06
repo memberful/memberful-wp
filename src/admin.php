@@ -368,7 +368,7 @@ function memberful_wp_bulk_protect() {
 		$acl_for_products      = empty( $_POST['memberful_product_acl'] ) ? array() : (array) $_POST['memberful_product_acl'];
 		$acl_for_subscriptions = empty( $_POST['memberful_subscription_acl'] ) ? array() : (array) $_POST['memberful_subscription_acl'];
 		$marketing_content     = empty( $_POST['memberful_marketing_content'] ) ? '' : $_POST['memberful_marketing_content'];
-		$things_to_protect     = empty($_POST['target_for_restriction']) ? '' : $_POST['target_for_restriction'];
+		$things_to_protect     = empty( $_POST['target_for_restriction']) ? '' : $_POST['target_for_restriction'];
 
 		$product_acl_manager   = new Memberful_Post_ACL( 'product' );
 		$subscription_acl_manager = new Memberful_Post_ACL( 'subscription' );
@@ -399,6 +399,9 @@ function memberful_wp_bulk_protect() {
 			$subscription_acl_manager->set_acl($id, $acl_for_subscriptions);
 			memberful_wp_update_post_marketing_content($id, $marketing_content);
 		}
+
+    if( isset($_POST['memberful_make_default_marketing_content']) && $_POST['memberful_make_default_marketing_content'] )
+      memberful_wp_update_default_marketing_content( $marketing_content );
 
 		wp_redirect( admin_url( 'options-general.php?page=memberful_options' ) );
 	}
