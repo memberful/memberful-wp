@@ -9,7 +9,7 @@ remove_all_filters('the_excerpt_rss');
 
 query_posts(array(
 		'post_type'       => 'post',
-		'posts_per_page'  => -1
+		'posts_per_page'  => get_option( 'posts_per_rss', 10 )
 ));
 
 echo '<?xml version="1.0" encoding="'.get_option('blog_charset').'"?'.'>';
