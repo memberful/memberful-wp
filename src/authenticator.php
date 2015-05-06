@@ -225,7 +225,7 @@ class Memberful_Sync_Verification {
 	}
 
 	public function setup_nonce( $wp_user, $member, array $context ) {
-		$nonce = bin2hex(openssl_random_pseudo_bytes(32));
+		$nonce = $this->get_nonce();
 
 		update_user_meta(
 			$wp_user->ID,
@@ -239,6 +239,19 @@ class Memberful_Sync_Verification {
 
 		return $nonce;
 	}
+
+  /**
+   * Because of the nature of how this works, we'll keep it simple and flexible.
+   * @return string
+   */
+  private function get_nonce() {
+    /** In case we'll need to activate something like, we'll have it ready.
+    if(function_exists('openssl_random_pseudo_bytes'))
+      return bin2hex(openssl_random_pseudo_bytes(32));
+    **/
+
+    return wp_create_nonce('memberful_authenticator_nonce');
+  }
 
 	public function confirm_verification( $user, $nonce ) {
 		if ( $user->has_prop( self::NONCE_META_KEY ) ) {
