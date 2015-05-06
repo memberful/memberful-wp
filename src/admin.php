@@ -206,7 +206,7 @@ function memberful_wp_debug() {
 			'wp_version',
 			'plugins',
 			'error_log'
-		  )
+			)
 	);
 }
 
@@ -220,7 +220,7 @@ function memberful_wp_options() {
 
 	if ( ! empty( $_POST ) ) {
 		if ( ! memberful_wp_valid_nonce( 'memberful_options' ) )
-		  return;
+			return;
 
 		if ( isset( $_POST['manual_sync'] ) ) {
 			if ( is_wp_error( $error = memberful_wp_sync_downloads() ) ) {
@@ -257,8 +257,8 @@ function memberful_wp_options() {
 				return memberful_wp_advanced_settings();
 			case 'protect_bbpress':
 				return memberful_wp_protect_bbpress();
-      case 'private_user_feed_settings':
-        return memberful_wp_private_rss_feed_settings();
+			case 'private_user_feed_settings':
+				return memberful_wp_private_rss_feed_settings();
 		}
 	}
 
@@ -400,8 +400,8 @@ function memberful_wp_bulk_protect() {
 			memberful_wp_update_post_marketing_content($id, $marketing_content);
 		}
 
-    if( isset($_POST['memberful_make_default_marketing_content']) && $_POST['memberful_make_default_marketing_content'] )
-      memberful_wp_update_default_marketing_content( $marketing_content );
+		if( isset($_POST['memberful_make_default_marketing_content']) && $_POST['memberful_make_default_marketing_content'] )
+			memberful_wp_update_default_marketing_content( $marketing_content );
 
 		wp_redirect( admin_url( 'options-general.php?page=memberful_options' ) );
 	}
@@ -471,24 +471,24 @@ function memberful_wp_protect_bbpress() {
 }
 
 function memberful_wp_private_rss_feed_settings() {
-  if(isset($_POST['memberful_private_feed_subscriptions_submit'])) {
-    $private_feed_subscriptions = isset($_POST['memberful_private_feed_subscriptions']) ? $_POST['memberful_private_feed_subscriptions'] : false;
+	if(isset($_POST['memberful_private_feed_subscriptions_submit'])) {
+		$private_feed_subscriptions = isset($_POST['memberful_private_feed_subscriptions']) ? $_POST['memberful_private_feed_subscriptions'] : false;
 
-    memberful_private_user_feed_settings_set_required_plan($private_feed_subscriptions);
-  }
+		memberful_private_user_feed_settings_set_required_plan($private_feed_subscriptions);
+	}
 
-  $current_feed_subscriptions = memberful_private_user_feed_settings_get_required_plan();
-  $current_feed_subscriptions = !is_array($current_feed_subscriptions) ? array() : $current_feed_subscriptions;
+	$current_feed_subscriptions = memberful_private_user_feed_settings_get_required_plan();
+	$current_feed_subscriptions = !is_array($current_feed_subscriptions) ? array() : $current_feed_subscriptions;
 
-  memberful_wp_render(
-      'private_user_feed_settings',
-      array(
-          'form_target'               => memberful_wp_plugin_private_user_feed_settings_url(),
-          'subscription_plans'        => memberful_subscription_plans(),
-          'available_subscriptions'   => memberful_private_user_feed_settings_get_required_plan(),
-          'current_feed_subscriptions'=> $current_feed_subscriptions
-      )
-  );
+	memberful_wp_render(
+			'private_user_feed_settings',
+			array(
+					'form_target'               => memberful_wp_plugin_private_user_feed_settings_url(),
+					'subscription_plans'        => memberful_subscription_plans(),
+					'available_subscriptions'   => memberful_private_user_feed_settings_get_required_plan(),
+					'current_feed_subscriptions'=> $current_feed_subscriptions
+			)
+	);
 }
 
 function memberful_wp_announce_plans_and_download_in_head() {
@@ -513,3 +513,45 @@ function memberful_wp_add_protected_state_to_post_list($states, $post) {
 
 	return $states;
 }
+
+function memberful_wp_ssl_notification_init() {
+
+	if( !defined('FORCE_SSL_ADMIN') || strpos( get_home_url() , 'https') !== 0) {
+
+		if( isset( $_GET['memberful_hide_ssl_notification'] ) && $_GET['memberful_hide_ssl_notification'] == 1 )
+			update_user_meta( get_current_user_id(), 'memberful_hide_ssl_notification', 1);
+
+		if( get_user_meta( get_current_user_id() , 'memberful_hide_ssl_notification' , true) != 1)
+			add_action('admin_notices', 'memberful_wp_ssl_notification_display');
+
+	}
+
+}
+
+function memberful_wp_ssl_notification_display() {
+	$current_url = $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+	$hide_notice = $current_url . ( strpos( $current_url, '?') === false ? '?' : '&') . 'memberful_hide_ssl_notification=1';
+
+	if( strpos( $hide_notice, 'http' ) === false)
+		$hide_notice = 'http://' . $hide_notice;
+
+	echo '<div class="error">';
+	echo  '<h2>' . __("Memberful") . '</h2>';
+	echo  '<ol>';
+	echo    '<li>' .
+						__("Please install an SSL certificate and set your Site URL and Home URL to start with https:// or your members may receive browser security warnings.", 'memberful') .
+					'</li>';
+	echo    '<li>';
+
+	echo sprintf(
+					__("Please force SSL logins by adding %s to your %s file or your members may receive browser security warnings.", 'memberful'),
+					"<strong>define('FORCE_SSL_ADMIN', true);</strong>", "<strong>wp-config.php</strong>"
+			 );
+
+	echo    '</li>';
+	echo  '</ol>';
+	echo  '<p><a href="' . $hide_notice . '" class="button">' . __("Hide this notice") . '</a></p>';
+	echo '</div>';
+}
+
+add_action( 'init', 'memberful_wp_ssl_notification_init' );
