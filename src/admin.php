@@ -536,21 +536,22 @@ function memberful_wp_ssl_notification_display() {
 		$hide_notice = 'http://' . $hide_notice;
 
 	echo '<div class="error">';
-	echo  '<h2>' . __("Memberful") . '</h2>';
+	echo  '<h3>' . __("SSL Certificate Recommended (Memberful)") . '</h3>';
+	echo  '<p>' . __("Please install an SSL certificate or your members may receive web browser security warnings. After installing the certificate:") . '</p>';
 	echo  '<ol>';
 	echo    '<li>' .
-						__("Please install an SSL certificate and set your Site URL and Home URL to start with https:// or your members may receive browser security warnings.", 'memberful') .
+						__("Set your <strong>WordPress Address (URL)</strong> and <strong>Site Address (URL)</strong> (<em>Settings &rarr; General</em>) to start with <strong>https</strong> and disconnect / reconnect the plugin to Memberful.", 'memberful') .
 					'</li>';
 	echo    '<li>';
 
 	echo sprintf(
-					__("Please force SSL logins by adding %s to your %s file or your members may receive browser security warnings.", 'memberful'),
+					__("Force SSL logins by adding %s to your %s file.", 'memberful'),
 					"<strong>define('FORCE_SSL_ADMIN', true);</strong>", "<strong>wp-config.php</strong>"
 			 );
 
 	echo    '</li>';
 	echo  '</ol>';
-	echo  '<p><a href="' . $hide_notice . '" class="button">' . __("Hide this notice") . '</a></p>';
+	echo  '<p><a href="' . $hide_notice . '">' . __("Hide this notice") . '</a></p>';
 	echo '</div>';
 }
 
