@@ -515,8 +515,9 @@ function memberful_wp_add_protected_state_to_post_list($states, $post) {
 }
 
 function memberful_wp_ssl_notification_init() {
-        if( get_option( 'memberful_api_key' , '') == '' ) 
-            return;
+  if( get_option( 'memberful_api_key' , '') == '' )
+      return;
+  
 	if( !defined('FORCE_SSL_ADMIN') || strpos( get_home_url() , 'https') !== 0) {
 
 		if( isset( $_GET['memberful_hide_ssl_notification'] ) && $_GET['memberful_hide_ssl_notification'] == 1 )
