@@ -20,5 +20,5 @@ function memberful_wp_default_marketing_content() {
 }
 
 function memberful_wp_marketing_content_explanation() {
-	return __( "This marketing content will be shown in place of your protected content to anyone <strong>who is not allowed to read the post</strong>..." );
+	return __( "This marketing content will be shown in place of your protected content to anyone who is not allowed to read the post..." );
 }
