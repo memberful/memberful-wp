@@ -3,7 +3,7 @@ Contributors: matt-button, drewstrojny, dwestendorf, rusuandreirobert
 Tags: memberful, member, memberships, recurring payments, recurring billing, paywall, subscriptions, stripe, oauth, oauth2
 Requires at least: 3.6
 Tested up to: 4.2.2
-Stable tag: 1.17.1
+Stable tag: 1.18.0
 License: GPLv2 or later
 
 Sell memberships and restrict access to content with WordPress and Memberful.
@@ -47,6 +47,20 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 3. Simple sign in and account management widget.
 
 == Changelog ==
+
+= 1.18.0 =
+* Don't require the openssl extension. Use the built in WordPress nonces.
+* Hide comments on protected Memberful posts.
+* Add support for nested shortcodes.
+* Fix Bulk Restrict Access tool default content checkbox.
+* Fix PHP notice: Undefined index: memberful_marketing_content.
+* For Private RSS Feeds, mirror the WordPress feed count setting.
+* Add a warning recommending an SSL certificate if no SSL is found.
+* Only run syncing when connected to Memberful.
+* Fix the formatting in the Private RSS Feeds.
+
+= 1.17.1 =
+* Bug fixes for private RSS feeds
 
 = 1.17.0 =
 * Add support for private RSS feeds
