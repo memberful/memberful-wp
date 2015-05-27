@@ -20,7 +20,7 @@ memberful_wp_render(
 		'products' => $downloads,
 		'viewable_by_any_registered_users' => $restricted_to_registered_users
 	)
-)
+);
 ?>
 		</div>
 		<div class="memberful-bbpress-redirect" data-depends-on="memberful_protect_bbpress" data-depends-value="1">
