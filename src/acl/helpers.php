@@ -94,5 +94,5 @@ function memberful_wp_posts_that_are_protected() {
 
 	$post_ids = array_unique( $post_ids );
 
-	return empty( $post_ids ) ? array() : array_combine( $post_ids, $post_ids );
+	return empty( $post_ids ) ? array() : $post_ids;
 }

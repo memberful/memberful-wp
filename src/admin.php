@@ -507,7 +507,7 @@ function memberful_wp_announce_plans_and_download_in_head() {
 function memberful_wp_add_protected_state_to_post_list($states, $post) {
 	$ids_of_protected_posts = memberful_wp_posts_that_are_protected();
 
-	if ( isset( $ids_of_protected_posts[ $post->ID ] ) ) {
+	if ( in_array( $post->ID, $ids_of_protected_posts ) ) {
 		$states[] = __('Protected by Memberful');
 	}
 
