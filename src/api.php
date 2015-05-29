@@ -1,5 +1,7 @@
 <?php
 
+global $wp_version;
+
 define( 'MEMBERFUL_API_USER_AGENT', 'WordPress/'.$wp_version.' (PHP '.phpversion().') memberful-wp/'.MEMBERFUL_VERSION );
 
 /**
