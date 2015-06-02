@@ -36,7 +36,7 @@ function memberful_wp_bbpress_unauthorized_user_landing_page() {
 
 
 function memberful_wp_bbpress_update_restricted_to_registered_user( $new_value ) {
-	return update_option( 'memberful_bbpress_restricted_registered_users', !! $new_value );
+	return update_option( 'memberful_bbpress_restricted_registered_users', ( $new_value == true ? 1 : 0 ) );
 }
 
 function memberful_wp_bbpress_restricted_to_registered_users() {
@@ -72,7 +72,7 @@ function memberful_wp_bbpress_send_unauthorized_users_to_homepage() {
 }
 
 function memberful_wp_bbpress_update_send_unauthorized_users_to_homepage( $new_val ) {
-	return update_option( 'memberful_bbpress_send_unauthorized_users_to_homepage', !! $new_val );
+  return update_option( 'memberful_bbpress_send_unauthorized_users_to_homepage', ( $new_val == true ? 1 : 0 ) );
 }
 
 function memberful_wp_bbpress_update_send_unauthorized_users_to_url( $new_val ) {
