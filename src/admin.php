@@ -364,11 +364,12 @@ function memberful_wp_advanced_settings() {
 
 function memberful_wp_bulk_protect() {
 	if ( ! empty( $_POST ) ) {
-		$categories_to_protect = empty( $_POST['memberful_protect_categories'] ) ? array() : (array) $_POST['memberful_protect_categories'];
-		$acl_for_products      = empty( $_POST['memberful_product_acl'] ) ? array() : (array) $_POST['memberful_product_acl'];
-		$acl_for_subscriptions = empty( $_POST['memberful_subscription_acl'] ) ? array() : (array) $_POST['memberful_subscription_acl'];
-		$marketing_content     = empty( $_POST['memberful_marketing_content'] ) ? '' : $_POST['memberful_marketing_content'];
-		$things_to_protect     = empty( $_POST['target_for_restriction']) ? '' : $_POST['target_for_restriction'];
+		$categories_to_protect           = empty( $_POST['memberful_protect_categories'] ) ? array() : (array) $_POST['memberful_protect_categories'];
+		$acl_for_products                = empty( $_POST['memberful_product_acl'] ) ? array() : (array) $_POST['memberful_product_acl'];
+		$acl_for_subscriptions           = empty( $_POST['memberful_subscription_acl'] ) ? array() : (array) $_POST['memberful_subscription_acl'];
+		$marketing_content               = empty( $_POST['memberful_marketing_content'] ) ? '' : $_POST['memberful_marketing_content'];
+		$things_to_protect               = empty( $_POST['target_for_restriction']) ? '' : $_POST['target_for_restriction'];
+		$viewable_by_any_registered_user = empty( $_POST['memberful_viewable_by_any_registered_users'] ) ? '' : $_POST['memberful_viewable_by_any_registered_users'];
 
 		$product_acl_manager   = new Memberful_Post_ACL( 'product' );
 		$subscription_acl_manager = new Memberful_Post_ACL( 'subscription' );
@@ -398,6 +399,7 @@ function memberful_wp_bulk_protect() {
 			$product_acl_manager->set_acl($id, $acl_for_products);
 			$subscription_acl_manager->set_acl($id, $acl_for_subscriptions);
 			memberful_wp_update_post_marketing_content($id, $marketing_content);
+			memberful_wp_set_post_available_to_any_registered_users($id, $viewable_by_any_registered_user);
 		}
 
 		if( isset($_POST['memberful_make_default_marketing_content']) && $_POST['memberful_make_default_marketing_content'] )
