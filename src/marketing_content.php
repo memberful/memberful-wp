@@ -4,7 +4,8 @@ define( 'MEMBERFUL_MARKETING_META_KEY', 'memberful_marketing_content' );
 define( 'MEMBERFUL_OPTION_DEFAULT_MARKETING_CONTENT', 'memberful_default_marketing_content' );
 
 function memberful_marketing_content( $post_id ) {
-	return get_post_meta( $post_id, MEMBERFUL_MARKETING_META_KEY, TRUE );
+	$memberful_marketing_content = get_post_meta( $post_id, MEMBERFUL_MARKETING_META_KEY, TRUE );
+	return apply_filters( 'memberful_marketing_content', $memberful_marketing_content );
 }
 
 function memberful_wp_update_post_marketing_content( $post_id, $content ) {

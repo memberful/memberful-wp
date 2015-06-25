@@ -11,7 +11,8 @@ function memberful_wp_protect_content( $content ) {
 	}
 
 	if ( ! memberful_can_user_access_post( wp_get_current_user()->ID, $post->ID ) ) {
-		return memberful_marketing_content( $post->ID );
+		$memberful_marketing_content = memberful_marketing_content( $post->ID );
+		return apply_filters( 'memberful_wp_protect_content', $memberful_marketing_content );
 	}
 
 	return $content;
