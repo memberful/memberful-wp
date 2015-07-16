@@ -162,6 +162,7 @@ class Memberful_Authenticator {
 		$response = memberful_wp_post_data_to_api_as_json( self::oauth_member_url('token'), $params );
 
 		if ( is_wp_error($response) ) {
+			memberful_wp_record_wp_error( $response );
 			return $this->_error( 'could_not_get_tokens', $response );
 		}
 
@@ -169,23 +170,47 @@ class Memberful_Authenticator {
 		$code = $response['response']['code'];
 
 		if ( $code != 200 ) {
+			$payload = array(
+				'code' => 'oauth_access_fail',
+				'error' => 'Invalid response from Memberful',
+				'response' => $response
+			);
+
+			memberful_wp_record_error( $payload );
+
 			return $this->_error(
-				'oauth_access_fail',
-				'Invalid response from Memberful'
+				$payload['code'],
+				$payload['error']
 			);
 		}
 
 		if ( $body === NULL ) {
+			$payload = array(
+				'code' => 'oauth_access_fail',
+				'error' => 'Could not get access token from Memberful',
+				'response' => $response
+			);
+
+			memberful_wp_record_error( $payload );
+
 			return $this->_error(
-				'oauth_access_fail',
-				'Could not get access token from Memberful'
+				$payload['code'],
+				$payload['error']
 			);
 		}
 
 		if (empty( $body->access_token ) ) {
+			$payload = array(
+				'code' => 'oauth_access_fail',
+				'error' => 'Received empty access token from Memberful',
+				'response' => $response
+			);
+
+			memberful_wp_record_error( $payload );
+
 			return $this->_error(
-				'oauth_access_fail',
-				'Received empty access token from Memberful'
+				$payload['code'],
+				$payload['error']
 			);
 		}
 
