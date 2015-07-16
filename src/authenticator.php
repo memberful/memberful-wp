@@ -168,10 +168,24 @@ class Memberful_Authenticator {
 		$body = json_decode( $response['body'] );
 		$code = $response['response']['code'];
 
-		if ( $code != 200 OR $body === NULL OR empty( $body->access_token ) ) {
+		if ( $code != 200 ) {
+			return $this->_error(
+				'oauth_access_fail',
+				'Invalid response from Memberful'
+			);
+		}
+
+		if ( $body === NULL ) {
 			return $this->_error(
 				'oauth_access_fail',
 				'Could not get access token from Memberful'
+			);
+		}
+
+		if (empty( $body->access_token ) ) {
+			return $this->_error(
+				'oauth_access_fail',
+				'Recieved empty access token from Memberful'
 			);
 		}
 
@@ -296,7 +310,7 @@ function memberful_wp_display_check_account_message() {
 }
 
 function memberful_wp_link_accounts_if_appropriate($username, $user) {
-	if ( isset($_COOKIE[Memberful_Sync_Verification::NONCE_COOKIE_KEY]) ) { 
+	if ( isset($_COOKIE[Memberful_Sync_Verification::NONCE_COOKIE_KEY]) ) {
 		$cookie_nonce = $_COOKIE[Memberful_Sync_Verification::NONCE_COOKIE_KEY];
 
 		if ( ! empty( $_POST['memberful_wp_confirm_sync_nonce'] ) && $_POST['memberful_wp_confirm_sync_nonce'] === $cookie_nonce ) {
