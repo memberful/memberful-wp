@@ -169,40 +169,10 @@ class Memberful_Authenticator {
 		$body = json_decode( $response['body'] );
 		$code = $response['response']['code'];
 
-		if ( $code != 200 ) {
-			$payload = array(
-				'code' => 'oauth_access_fail',
-				'error' => 'Invalid response from Memberful',
-				'response' => $response
-			);
-
-			memberful_wp_record_error( $payload );
-
-			return $this->_error(
-				$payload['code'],
-				$payload['error']
-			);
-		}
-
-		if ( $body === NULL ) {
+		if ( $code != 200 || $body === NULL || empty( $body->access_token ) ) {
 			$payload = array(
 				'code' => 'oauth_access_fail',
 				'error' => 'Could not get access token from Memberful',
-				'response' => $response
-			);
-
-			memberful_wp_record_error( $payload );
-
-			return $this->_error(
-				$payload['code'],
-				$payload['error']
-			);
-		}
-
-		if (empty( $body->access_token ) ) {
-			$payload = array(
-				'code' => 'oauth_access_fail',
-				'error' => 'Received empty access token from Memberful',
 				'response' => $response
 			);
 
