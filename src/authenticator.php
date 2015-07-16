@@ -185,7 +185,7 @@ class Memberful_Authenticator {
 		if (empty( $body->access_token ) ) {
 			return $this->_error(
 				'oauth_access_fail',
-				'Recieved empty access token from Memberful'
+				'Received empty access token from Memberful'
 			);
 		}
 
