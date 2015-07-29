@@ -203,6 +203,10 @@ class Memberful_Post_ACL {
 
 	protected function _update_post_acl( $post_id, array $new_acl ) {
 		$current_acl = get_post_meta( $post_id, 'memberful_acl', TRUE );
+
+    if( !is_array( $current_acl ) )
+      $current_acl = array();
+
 		$current_acl[$this->_entity] = $new_acl;
 		update_post_meta( $post_id, 'memberful_acl', $current_acl );
 	}
