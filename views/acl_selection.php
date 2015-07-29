@@ -1,6 +1,6 @@
 		<div class="memberful-acl-block">
 			<label>
-				<input type="checkbox" name="memberful_viewable_by_any_registered_users" value="1" <?php if($viewable_by_any_registered_users): ?>checked="checked"<?php endif; ?> />
+				<input type="checkbox" name="memberful_viewable_by_any_registered_users" value="1"/>
 				Any registered user
 			</label>
 		</div>
