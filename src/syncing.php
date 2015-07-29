@@ -18,6 +18,11 @@ function memberful_wp_sync_member_from_memberful( $member_id, $mapping_context =
 	return memberful_wp_sync_member_account( $account, $mapping_context );
 }
 
+/**
+ * @param $account
+ * @param $mapping_context
+ * @return WP_User
+ */
 function memberful_wp_sync_member_account( $account, $mapping_context ) {
 	$mapper = new Memberful_User_Map( );
 

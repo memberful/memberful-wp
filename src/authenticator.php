@@ -93,7 +93,7 @@ class Memberful_Authenticator {
 			// For some reason we got an error code.
 			return $this->_error(
 				'memberful_oauth_error',
-				$_GET['error']
+        ( isset( $_GET['error'] ) ? $_GET['error'] : __( "Unknown error.", "memberful") )
 			);
 		}
 
@@ -143,7 +143,7 @@ class Memberful_Authenticator {
 			return $redirect;
 		}
 
-		return $redirect_to;
+		return $request_redirect;
 	}
 
 	/**
@@ -162,16 +162,25 @@ class Memberful_Authenticator {
 		$response = memberful_wp_post_data_to_api_as_json( self::oauth_member_url('token'), $params );
 
 		if ( is_wp_error($response) ) {
+			memberful_wp_record_wp_error( $response );
 			return $this->_error( 'could_not_get_tokens', $response );
 		}
 
 		$body = json_decode( $response['body'] );
 		$code = $response['response']['code'];
 
-		if ( $code != 200 OR $body === NULL OR empty( $body->access_token ) ) {
+		if ( $code != 200 || $body === NULL || empty( $body->access_token ) ) {
+			$payload = array(
+				'code' => 'oauth_access_fail',
+				'error' => 'Could not get access token from Memberful',
+				'response' => $response
+			);
+
+			memberful_wp_record_error( $payload );
+
 			return $this->_error(
-				'oauth_access_fail',
-				'Could not get access token from Memberful'
+				$payload['code'],
+				$payload['error']
 			);
 		}
 
@@ -281,7 +290,7 @@ function memberful_wp_add_nonce_check_to_login_form() {
 	if ( ! isset( $_COOKIE[ Memberful_Sync_Verification::NONCE_COOKIE_KEY ] ) )
 		return;
 
-	return memberful_wp_render(
+	memberful_wp_render(
 		'login_form_nonce_field',
 		array(
 			'nonce' => $_COOKIE[ Memberful_Sync_Verification::NONCE_COOKIE_KEY ]
@@ -293,10 +302,12 @@ function memberful_wp_display_check_account_message() {
 	if ( isset($_GET['memberful_account_check']) ) {
 		return '<p>'.__( 'We found an existing WordPress user account with your email address. Please sign in so we can sync the accounts.' ).'</p>';
 	}
+
+  return null;
 }
 
 function memberful_wp_link_accounts_if_appropriate($username, $user) {
-	if ( isset($_COOKIE[Memberful_Sync_Verification::NONCE_COOKIE_KEY]) ) { 
+	if ( isset($_COOKIE[Memberful_Sync_Verification::NONCE_COOKIE_KEY]) ) {
 		$cookie_nonce = $_COOKIE[Memberful_Sync_Verification::NONCE_COOKIE_KEY];
 
 		if ( ! empty( $_POST['memberful_wp_confirm_sync_nonce'] ) && $_POST['memberful_wp_confirm_sync_nonce'] === $cookie_nonce ) {
