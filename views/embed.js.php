@@ -1,6 +1,6 @@
 <script type="text/javascript">
 	window.MemberfulOptions = {
-		site: "<?php echo $home_url ?>",
+		site: "<?php echo $memberful_site_url; ?>",
 		intercept: [
 			<?php foreach( $intercepted_urls as $url ): ?>
 			"<?php echo $url; ?>",

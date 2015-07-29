@@ -12,9 +12,9 @@ function memberful_wp_render_embed() {
 	memberful_wp_render(
 		'embed.js',
 		array(
-			'script_src'       => memberful_wp_embed_script_src(),
-			'site_url'         => get_option( 'memberful_site' ),
-			'intercepted_urls' => apply_filters( 'memberful_wp_overlay_intercept_urls', $intercepted_urls ),
+			'script_src'          => memberful_wp_embed_script_src(),
+			'memberful_site_url'  => get_option( 'memberful_site' ),
+			'intercepted_urls'    => apply_filters( 'memberful_wp_overlay_intercept_urls', $intercepted_urls ),
 		)
 	);
 }
