@@ -159,5 +159,5 @@ function memberful_wp_webhook_url() {
 
 function memberful_wp_endpoint_url( $endpoint, $protocol = NULL ) {
 	$protocol = $protocol === NULL ? memberful_frontend_protocol() : $protocol;
-	return add_query_arg( array( 'memberful_endpoint' => $endpoint ), site_url( '', $protocol ) );
+	return add_query_arg( array( 'memberful_endpoint' => $endpoint ), home_url( '', $protocol ) );
 }
