@@ -405,7 +405,7 @@ function memberful_wp_bulk_protect() {
 		if( isset($_POST['memberful_make_default_marketing_content']) && $_POST['memberful_make_default_marketing_content'] )
 			memberful_wp_update_default_marketing_content( $marketing_content );
 
-		wp_redirect( admin_url( 'options-general.php?page=memberful_options' ) );
+		wp_redirect( memberful_wp_plugin_bulk_protect_url() . '&success=bulk' );
 	}
 
 	memberful_wp_render(
