@@ -93,7 +93,7 @@ class Memberful_Authenticator {
 			// For some reason we got an error code.
 			return $this->_error(
 				'memberful_oauth_error',
-				$_GET['error']
+        ( isset( $_GET['error'] ) ? $_GET['error'] : __( "Unknown error.", "memberful") )
 			);
 		}
 
@@ -143,7 +143,7 @@ class Memberful_Authenticator {
 			return $redirect;
 		}
 
-		return $redirect_to;
+		return $request_redirect;
 	}
 
 	/**
@@ -290,7 +290,7 @@ function memberful_wp_add_nonce_check_to_login_form() {
 	if ( ! isset( $_COOKIE[ Memberful_Sync_Verification::NONCE_COOKIE_KEY ] ) )
 		return;
 
-	return memberful_wp_render(
+	memberful_wp_render(
 		'login_form_nonce_field',
 		array(
 			'nonce' => $_COOKIE[ Memberful_Sync_Verification::NONCE_COOKIE_KEY ]
@@ -302,6 +302,8 @@ function memberful_wp_display_check_account_message() {
 	if ( isset($_GET['memberful_account_check']) ) {
 		return '<p>'.__( 'We found an existing WordPress user account with your email address. Please sign in so we can sync the accounts.' ).'</p>';
 	}
+
+  return null;
 }
 
 function memberful_wp_link_accounts_if_appropriate($username, $user) {
