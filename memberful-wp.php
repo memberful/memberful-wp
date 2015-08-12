@@ -57,6 +57,10 @@ require_once MEMBERFUL_DIR . '/vendor/reporting.php';
 require_once MEMBERFUL_DIR . '/src/private_user_feed.php';
 require_once MEMBERFUL_DIR . '/src/comments_protection.php';
 
+if ( in_array( 'sensei/woothemes-sensei.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
+  require_once MEMBERFUL_DIR . '/src/contrib/woothemes-sensei.php';
+}
+
 register_activation_hook( __FILE__, 'memberful_wp_plugin_activate' );
 
 function memberful_wp_plugin_activate() {
