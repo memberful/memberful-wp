@@ -60,10 +60,25 @@ class Memberful_Wp_Integration_WooThemes_Sensei {
   public function single_lesson_handler() {
     global $post;
 
+    // Preview Lessons shouldn't ignore this rule.
+    if( WooThemes_Sensei_Utils::is_preview_lesson( $post->ID ) )
+      return;
+
     // This happens if the lesson isn't locked itself.
     if ( memberful_can_user_access_post( wp_get_current_user()->ID, $post->ID ) ) {
-      remove_action( 'the_content', 'memberful_wp_protect_content' );
-      add_action( 'the_content', array( $this, 'single_lesson_special_content_filter' ), -10 );
+      $course_id = get_post_meta( $post->ID, '_lesson_course', true );
+
+      if ( !memberful_can_user_access_post( wp_get_current_user()->ID, $course_id ) ) {
+        // The user doesn't have access to this post, so he shouldn't have actions on it.
+        remove_all_actions( 'sensei_lesson_single_meta' );
+
+        // Now the funky filtering part.
+        remove_action( 'the_content', 'memberful_wp_protect_content' );
+        add_action( 'the_content', array( $this, 'single_lesson_special_content_filter' ), -10 );
+      }
+    } else {
+      // The user doesn't have access to this post, so he shouldn't have actions on it.
+      remove_all_actions( 'sensei_lesson_single_meta' );
     }
   }
 
