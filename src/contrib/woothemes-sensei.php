@@ -42,17 +42,19 @@ class Memberful_Wp_Integration_WooThemes_Sensei {
   }
 
   public function single_course_handler() {
-    if( $this->hide_course_lesson_list == false )
-      return false;
+    global $post;
 
     if( is_user_logged_in() ) {
-      global $post;
-
-      if( WooThemes_Sensei_Utils::user_started_course( $post->ID, get_current_user_id() ) )
+      if( WooThemes_Sensei_Utils::user_started_course( $post->ID, wp_get_current_user()->ID ) )
         return false;
     }
 
-    remove_all_actions( 'sensei_course_single_lessons' );
+    // The user doesn't have access to this, so we won't allow him to start the course.
+    if ( !memberful_can_user_access_post( wp_get_current_user()->ID, $post->ID ) )
+      remove_all_actions( 'sensei_course_single_meta' );
+
+    if( $this->hide_course_lesson_list )
+      remove_all_actions( 'sensei_course_single_lessons' );
 
     return true;
   }
@@ -64,10 +66,14 @@ class Memberful_Wp_Integration_WooThemes_Sensei {
     if( WooThemes_Sensei_Utils::is_preview_lesson( $post->ID ) )
       return;
 
+    $course_id = get_post_meta( $post->ID, '_lesson_course', true );
+
+    // User already started this course, so ideally, we shouldn't restrict access.
+    if( WooThemes_Sensei_Utils::user_started_course( $post->ID, wp_get_current_user()->ID ) )
+      return;
+
     // This happens if the lesson isn't locked itself.
     if ( memberful_can_user_access_post( wp_get_current_user()->ID, $post->ID ) ) {
-      $course_id = get_post_meta( $post->ID, '_lesson_course', true );
-
       if ( !memberful_can_user_access_post( wp_get_current_user()->ID, $course_id ) ) {
         // The user doesn't have access to this post, so he shouldn't have actions on it.
         remove_all_actions( 'sensei_lesson_single_meta' );
