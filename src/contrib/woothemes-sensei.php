@@ -14,7 +14,7 @@ class Memberful_Wp_Integration_WooThemes_Sensei {
     return self::$_instance;
   }
 
-  public $hide_course_lesson_list = false;
+  public $hide_course_lesson_list = true;
 
   /**
    * This should be handled with care, if used wrong, may cause an infinite loop.
