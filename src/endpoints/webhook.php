@@ -21,6 +21,14 @@ class Memberful_Wp_Endpoint_Webhook implements Memberful_Wp_Endpoint {
 			$member = (int) $payload->member->id;
 
 			echo 'Processing member webhook for member '.$member;
+		} elseif ( strpos( $payload->event, 'subscription_plan' ) !== FALSE ) {
+			memberful_wp_sync_subscription_plans();
+
+			echo 'Syncing subscription plans';
+		} elseif ( strpos( $payload->event, 'download' ) !== FALSE ) {
+			memberful_wp_sync_downloads();
+
+			echo 'Syncing downloads';
 		} else {
 			echo 'Ignoring webhook';
 		}
