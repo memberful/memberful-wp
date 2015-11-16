@@ -57,7 +57,7 @@ function memberful_checkout_for_subscription_url( $plan_id ) {
 }
 
 function memberful_checkout_for_download_url( $download_id ) {
-	return add_query_arg( 'download', $download_id, memberful_url( 'checkout' ) );
+	return add_query_arg( 'product', $download_id, memberful_url( 'checkout' ) );
 }
 
 function memberful_wp_update_plugin_settings_on_memberful_url() {
