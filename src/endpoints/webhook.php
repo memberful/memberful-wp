@@ -10,17 +10,17 @@ class Memberful_Wp_Endpoint_Webhook implements Memberful_Wp_Endpoint {
 	}
 
 	public function process( array $request_params, array $server_params ) {
-		$member  = NULL;
+		$member_id  = NULL;
 		$payload = json_decode($this->raw_request_body());
 
 		if ( strpos( $payload->event, 'order' ) !== FALSE ) {
-			$member = (int) $payload->order->member->id;
+			$member_id = (int) $payload->order->member->id;
 
-			echo 'Processing order webhook for member '.$member;
+			echo 'Processing order webhook for member '.$member_id;
 		} elseif ( strpos( $payload->event, 'member' ) !== FALSE ) {
-			$member = (int) $payload->member->id;
+			$member_id = (int) $payload->member->id;
 
-			echo 'Processing member webhook for member '.$member;
+			echo 'Processing member webhook for member '.$member_id;
 		} elseif ( strpos( $payload->event, 'subscription_plan' ) !== FALSE ) {
 			memberful_wp_sync_subscription_plans();
 
@@ -33,8 +33,8 @@ class Memberful_Wp_Endpoint_Webhook implements Memberful_Wp_Endpoint {
 			echo 'Ignoring webhook';
 		}
 
-		if ( $member !== NULL )
-			memberful_wp_sync_member_from_memberful( $member );
+		if ( $member_id !== NULL )
+			memberful_wp_sync_member_from_memberful( $member_id );
 	}
 
 	private function raw_request_body() {
