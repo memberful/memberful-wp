@@ -48,7 +48,7 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 == Changelog ==
 
-= 1.20.1 =
+= 1.21.0 =
 * Improve syncing of member access.
 
 = 1.20.0 =
