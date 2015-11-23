@@ -3,7 +3,7 @@ Contributors: matt-button, drewstrojny, dwestendorf, rusuandreirobert, sumobi
 Tags: memberful, member, memberships, recurring payments, recurring billing, paywall, subscriptions, stripe, oauth, oauth2
 Requires at least: 3.6
 Tested up to: 4.3.1
-Stable tag: 1.21.0
+Stable tag: 1.21.1
 License: GPLv2 or later
 
 Sell memberships and restrict access to content with WordPress and Memberful.
@@ -47,6 +47,10 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 3. Simple sign in and account management widget.
 
 == Changelog ==
+
+= 1.21.1 =
+* Fix bug with "Any registered user" checkbox.
+* Fix plugin version in Changelog.
 
 = 1.21.0 =
 * Improve syncing of member access.
