@@ -69,4 +69,3 @@ function memberful_wp_send_site_options_to_memberful() {
 		$options
 	);
 }
-
