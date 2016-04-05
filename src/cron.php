@@ -1,12 +1,12 @@
 <?php
 
 if ( ! wp_next_scheduled( 'memberful_wp_cron_sync' ) ) {
-	  wp_schedule_event( time(), 'twicedaily', 'memberful_wp_cron_sync' );
+	wp_schedule_event( time(), 'twicedaily', 'memberful_wp_cron_sync' );
 }
 
 if( get_option( 'memberful_api_key' , '') != '' ) {
-  add_action( 'memberful_wp_cron_sync', 'memberful_wp_cron_sync_users' );
-  add_action( 'memberful_wp_cron_sync', 'memberful_wp_cron_sync_entities' );
+	add_action( 'memberful_wp_cron_sync', 'memberful_wp_cron_sync_users' );
+	add_action( 'memberful_wp_cron_sync', 'memberful_wp_cron_sync_entities' );
 }
 
 function memberful_clear_cron_jobs() {
