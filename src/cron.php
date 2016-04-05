@@ -9,6 +9,10 @@ if( get_option( 'memberful_api_key' , '') != '' ) {
   add_action( 'memberful_wp_cron_sync', 'memberful_wp_cron_sync_entities' );
 }
 
+function memberful_clear_cron_jobs() {
+	wp_clear_scheduled_hook("memberful_wp_cron_sync");
+}
+
 function memberful_wp_cron_sync_users() {
 	set_time_limit( 0 );
 
@@ -36,10 +40,6 @@ function memberful_wp_cron_sync_entities() {
 	memberful_wp_sync_subscription_plans();
 
 	echo "<pre>library=memberful_wp method=memberful_wp_cron_sync_entities at=finish\n</pre>";
-}
-
-function memberful_clear_cron_jobs() {
-	wp_clear_scheduled_hook("memberful_wp_cron_sync");
 }
 
 // We don't need this function forever. But in the past we were not cleaning up
