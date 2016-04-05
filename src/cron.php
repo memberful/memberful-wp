@@ -37,3 +37,11 @@ function memberful_wp_cron_sync_entities() {
 
 	echo "<pre>library=memberful_wp method=memberful_wp_cron_sync_entities at=finish\n</pre>";
 }
+
+// We don't need this function forever. But in the past we were not cleaning up
+// our cron jobs on plugin deactivation, so we want to be sure that this
+// obsolete cron job is deactivated. Feel free to remove this (also from
+// memberful-wp.php) if you are working on memberful-wp 1.24 and later.
+function memberful_clear_obsolete_cron_jobs() {
+	wp_clear_scheduled_hook("memberful_wp_cron_sync_settings");
+}

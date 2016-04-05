@@ -65,4 +65,5 @@ register_activation_hook( __FILE__, 'memberful_wp_plugin_activate' );
 
 function memberful_wp_plugin_activate() {
 	add_option( 'memberful_wp_activation_redirect' , true );
+	memberful_clear_obsolete_cron_jobs();
 }
