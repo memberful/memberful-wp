@@ -61,9 +61,13 @@ if ( in_array( 'sensei/woothemes-sensei.php', apply_filters( 'active_plugins', g
   require_once MEMBERFUL_DIR . '/src/contrib/woothemes-sensei.php';
 }
 
-register_activation_hook( __FILE__, 'memberful_wp_plugin_activate' );
-
 function memberful_wp_plugin_activate() {
 	add_option( 'memberful_wp_activation_redirect' , true );
 	memberful_clear_obsolete_cron_jobs();
 }
+register_activation_hook( __FILE__, 'memberful_wp_plugin_activate' );
+
+function memberful_wp_plugin_deactivate() {
+	memberful_clear_cron_jobs();
+}
+register_deactivation_hook( __FILE__, 'memberful_wp_plugin_deactivate' );
