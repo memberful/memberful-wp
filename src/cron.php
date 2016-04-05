@@ -1,17 +1,16 @@
 <?php
 
 if ( ! wp_next_scheduled( 'memberful_wp_cron_sync' ) ) {
-	  wp_schedule_event( time(), 'twicedaily', 'memberful_wp_cron_sync' );
-}
-
-if ( ! wp_next_scheduled( 'memberful_wp_cron_sync_settings' ) ) {
-	  wp_schedule_event( time(), 'twicedaily', 'memberful_wp_cron_sync_settings' );
+	wp_schedule_event( time(), 'twicedaily', 'memberful_wp_cron_sync' );
 }
 
 if( get_option( 'memberful_api_key' , '') != '' ) {
-  add_action( 'memberful_wp_cron_sync', 'memberful_wp_cron_sync_users' );
-  add_action( 'memberful_wp_cron_sync', 'memberful_wp_cron_sync_entities' );
-  add_action( 'memberful_wp_cron_sync_settings', 'memberful_wp_cron_sync_settings' );
+	add_action( 'memberful_wp_cron_sync', 'memberful_wp_cron_sync_users' );
+	add_action( 'memberful_wp_cron_sync', 'memberful_wp_cron_sync_entities' );
+}
+
+function memberful_clear_cron_jobs() {
+	wp_clear_scheduled_hook("memberful_wp_cron_sync");
 }
 
 function memberful_wp_cron_sync_users() {
@@ -43,25 +42,10 @@ function memberful_wp_cron_sync_entities() {
 	echo "<pre>library=memberful_wp method=memberful_wp_cron_sync_entities at=finish\n</pre>";
 }
 
-function memberful_wp_cron_sync_settings() {
-	set_time_limit( 0 );
-
-	echo "<pre>library=memberful_wp method=memberful_wp_cron_sync_settings at=start\n</pre>";
-
-	$new_settings = array(
-		'oauth' => array(
-			'website' => home_url(),
-			'redirect_uri' => memberful_wp_oauth_callback_url(),
-		),
-		'webhook' => array(
-			'url' => memberful_wp_webhook_url(),
-		),
-	);
-
-	memberful_wp_put_data_to_api_as_json(
-		memberful_wp_update_plugin_settings_on_memberful_url(),
-		$new_settings
-	);
-
-	echo "<pre>library=memberful_wp method=memberful_wp_cron_sync_settings at=finish\n</pre>";
+// We don't need this function forever. But in the past we were not cleaning up
+// our cron jobs on plugin deactivation, so we want to be sure that this
+// obsolete cron job is deactivated. Feel free to remove this (also from
+// memberful-wp.php) if you are working on memberful-wp 1.24 and later.
+function memberful_clear_obsolete_cron_jobs() {
+	wp_clear_scheduled_hook("memberful_wp_cron_sync_settings");
 }
