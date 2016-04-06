@@ -273,7 +273,7 @@ function memberful_wp_options() {
 
 	$products = get_option( 'memberful_products', array() );
 	$subscriptions = get_option( 'memberful_subscriptions', array() );
-	$extend_auth_cookie_expiration = get_option( 'memberful_extend_auth_cookie_expiration' ) == "1";
+	$extend_auth_cookie_expiration = get_option( 'memberful_extend_auth_cookie_expiration' ) == '1';
 
 	memberful_wp_render (
 		'options',

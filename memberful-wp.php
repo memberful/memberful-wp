@@ -73,7 +73,7 @@ function memberful_wp_plugin_deactivate() {
 register_deactivation_hook( __FILE__, 'memberful_wp_plugin_deactivate' );
 
 function memberful_extend_auth_cookie_expiration( $expirein ) {
-	if ( get_option( 'memberful_extend_auth_cookie_expiration' ) == "1" ) {
+	if ( get_option( 'memberful_extend_auth_cookie_expiration' ) == '1' ) {
 		return 60 * 60 * 24 * 365; // 1 year
 	} else {
 		return $expirein;
