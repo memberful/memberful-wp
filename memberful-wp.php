@@ -71,3 +71,12 @@ function memberful_wp_plugin_deactivate() {
 	memberful_clear_cron_jobs();
 }
 register_deactivation_hook( __FILE__, 'memberful_wp_plugin_deactivate' );
+
+function memberful_extend_auth_cookie_expiration( $expirein ) {
+	if ( get_option( 'memberful_extend_auth_cookie_expiration' ) ) {
+		return 60 * 60 * 24 * 365; // 1 year
+	} else {
+		return $expirein;
+	}
+}
+add_filter( 'auth_cookie_expiration', 'memberful_extend_auth_cookie_expiration' );
