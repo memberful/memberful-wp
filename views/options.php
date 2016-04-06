@@ -4,7 +4,7 @@
 	<div id="memberful-wrap">
 		<div id="memberful-registered" class="postbox">
 			<h1><?php _e( 'Integration Active', 'memberful' ); ?></h1>
-			<h2><?php printf( __( 'Syncing %d products and %d subscriptions.', 'memberful' ), count( $products ), count( $subscriptions ) ); ?></h2>
+			<h2><?php printf( __( 'Syncing %d plans and %d downloads.', 'memberful' ), count( $subscriptions ), count( $products ) ); ?></h2>
 			<p><?php printf( __( '<a href="%s">Sign in to your Memberful account</a> to manage products, subscriptions, members, and orders.' ), memberful_url( 'admin' ) ) ?></p>
 			<form method="POST" action="<?php echo memberful_wp_plugin_settings_url(TRUE) ?>">
 				<?php memberful_wp_nonce_field( 'memberful_options' ); ?>
