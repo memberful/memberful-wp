@@ -18,6 +18,7 @@ class Memberful_WP_Profile_Widget extends WP_Widget {
 			'Memberful Profile',
 			array(
 				'description' => __( 'Display Memberful profile information.', 'memberful' ),
+				'customize_selective_refresh' => true
 			)
 		);
 	}
