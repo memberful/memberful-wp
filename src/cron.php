@@ -10,7 +10,7 @@ if( get_option( 'memberful_api_key' , '') != '' ) {
 }
 
 function memberful_clear_cron_jobs() {
-	wp_clear_scheduled_hook("memberful_wp_cron_sync");
+	wp_clear_scheduled_hook( 'memberful_wp_cron_sync' );
 }
 
 function memberful_wp_cron_sync_users() {
