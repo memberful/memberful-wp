@@ -20,7 +20,7 @@
 		<?php memberful_wp_nonce_field( 'memberful_options' ); ?>
 		<p>
 			<label for="extended_login_period_checkbox">
-				<input id="extended_login_period_checkbox" type="checkbox" name="extend_auth_cookie_expiration" <?php if($extend_auth_cookie_expiration): ?>checked="checked"<?php endif; ?>>
+				<input id="extended_login_period_checkbox" type="checkbox" name="extend_auth_cookie_expiration" <?php if( $extend_auth_cookie_expiration ): ?>checked="checked"<?php endif; ?>>
 				Keep all WordPress users logged in for 1 year (Memberful default).
 			</label>
 		</p>
