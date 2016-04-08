@@ -1,6 +1,6 @@
 === Memberful WP ===
 Contributors: matt-button, drewstrojny, dwestendorf, rusuandreirobert, sumobi
-Tags: memberful, member, memberships, recurring payments, recurring billing, paywall, subscriptions, stripe, oauth, oauth2
+Tags: memberful, member, membership, memberships, recurring payments, recurring billing, paywall, subscriptions, stripe, oauth, oauth2
 Requires at least: 3.6
 Tested up to: 4.5
 Stable tag: 1.22.0
@@ -10,15 +10,15 @@ Sell memberships and restrict access to content with WordPress and Memberful.
 
 == Description ==
 
-A simple WordPress membership plugin that integrates your site with [Memberful](https://memberful.com). Memberful is a service for selling subscriptions to your website with [Stripe](https://stripe.com).
+A reliable WordPress membership plugin that integrates your site with [Memberful](https://memberful.com). Memberful is a service for selling subscriptions to your website with [Stripe](https://stripe.com).
 
 Features include:
 
-* Automatic syncing of your Memberful member data to WordPress.
+* Automatic syncing of your Memberful membership data to WordPress.
 * Single sign on: Members are automatically signed into WordPress when they sign in to Memberful.
-* Create a paywall and restrict access to content. Quickly protect any posts or pages right from your WordPress edit screen.
-* A widget with links to sign in and manage your account (update credit card, cancel subscription, etc.).
-* Ability to create Private RSS feeds
+* Create a paywall and restrict access to content based on membership level. Quickly protect any posts or pages right from your WordPress edit screen.
+* A widget with links for members to sign in and manage their account (update credit card, cancel subscription, etc.).
+* Option to create Private RSS feeds and protect bbPress forums.
 
 == Installation ==
 
@@ -30,11 +30,11 @@ Features include:
 
 = Do I need a Memberful account to use the plugin? =
 
-Yes. Memberful is online [membership software](https://memberful.com), and the plugin connects with the Memberful service to bring content protection and single sign on features to your WordPress website.
+Yes. [Memberful](https://memberful.com) is a hosted membership service, and the plugin connects with Memberful to bring content protection, membership management, and single sign on features to your WordPress website.
 
 = Can I protect content on my WordPress website? =
 
-Yes, you can [protect WordPress content](https://memberful.com/help/integrate/services/wordpress/protect-wordpress-content/) with Memberful. Every page and post features an meta box where you can set permissions. We also include [several helpful functions](https://memberful.com/help/integrate/services/wordpress/wordpress-functions/) for use in WordPress themes or plugins.
+Yes, you can [protect WordPress content](https://memberful.com/help/integrate/services/wordpress/protect-wordpress-content/) with Memberful. Every page and post features a restrict access meta box where you can set specific permissions. We also include [several helpful functions](https://memberful.com/help/integrate/services/wordpress/wordpress-functions/) for use in WordPress themes or plugins.
 
 = How do I contribute to Memberful WP or report bugs? =
 
@@ -42,7 +42,7 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 == Screenshots ==
 
-1. Sync your members and their permissions.
+1. Sync your members and their membership information.
 2. Restrict access to posts or pages.
 3. Simple sign in and account management widget.
 
@@ -93,19 +93,19 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 * Fix the formatting in the Private RSS Feeds.
 
 = 1.17.1 =
-* Bug fixes for private RSS feeds
+* Bug fixes for private RSS feeds.
 
 = 1.17.0 =
-* Add support for private RSS feeds
+* Add support for private RSS feeds.
 
 = 1.16.2 =
-* Version bump
+* Version bump.
 
 = 1.16.1 =
-* Make sure the UI properly reflects the ACL status #128
+* Make sure the UI properly reflects the ACL status. #128
 
 = 1.16.0 =
-* Simplified the way the plugin initially activates itself with Memberful.com
+* Simplified the way the plugin initially activates itself with Memberful.com.
 
 = 1.15.0 =
 * Fix some PHP warnings when interacting with WP_Error messages. #104
@@ -114,7 +114,7 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 * Regularly sync the current OAuth/Webhook URL to Memberful in a cronjob. #57
 
 = 1.14.0 =
-* Add a WP filter to allow other plugins to modify Memberful members prior to their creation in WP #116
+* Add a WP filter to allow other plugins to modify Memberful members prior to their creation in WP. #116
 * Fix bug that caused special characters in site name to be sent to Memberful in escaped form. #112
 
 = 1.13.0 =
