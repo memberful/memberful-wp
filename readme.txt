@@ -16,7 +16,7 @@ Features include:
 
 * Automatic syncing of your Memberful membership data to WordPress.
 * Single sign on: Members are automatically signed into WordPress when they sign in to Memberful.
-* Create a paywall and restrict access to content based on membership level. Quickly protect any posts or pages right from your WordPress edit screen.
+* Create a paywall and restrict access to content based on membership level. Protect any posts or pages right from your WordPress edit screen.
 * A widget with links for members to sign in and manage their account (update credit card, cancel subscription, etc.).
 * Option to create Private RSS feeds and protect bbPress forums.
 
