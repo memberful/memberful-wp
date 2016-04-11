@@ -1,3 +1,5 @@
 .vagrant
 wordpress
 latest.tar.gz
+.DS_Store
+
