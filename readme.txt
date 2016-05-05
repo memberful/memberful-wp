@@ -3,7 +3,7 @@ Contributors: matt-button, drewstrojny, dwestendorf, rusuandreirobert, sumobi
 Tags: memberful, member, membership, memberships, recurring payments, recurring billing, paywall, subscriptions, stripe, oauth, oauth2
 Requires at least: 3.6
 Tested up to: 4.5
-Stable tag: 1.22.0
+Stable tag: 1.22.1
 License: GPLv2 or later
 
 Sell memberships and restrict access to content with WordPress and Memberful.
@@ -47,6 +47,9 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 3. Simple sign in and account management widget.
 
 == Changelog ==
+
+= 1.22.1 =
+* Improve compatibility with OptimizePress.
 
 = 1.22.0 =
 * Add new option to extend the WordPress user logged in time to 1 year. This matches the Memberful default and provides a better member experience. If you're an existing customer, and would like to use this new option, you must manually enable it from the plugin settings screen.
