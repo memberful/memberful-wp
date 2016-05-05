@@ -142,7 +142,7 @@
 	 /* Register the buttons */
 	 tinymce.create('tinymce.plugins.memberful_wp', {
 		init : function(editor, url) {
-			if ( ! window.MemberfulData.connectedToMemberful) {
+			if (!((ref = window.MemberfulData) != null ? ref.connectedToMemberful : void 0)) {
 				return;
 			}
 
