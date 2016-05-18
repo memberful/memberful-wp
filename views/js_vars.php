@@ -1,3 +1,3 @@
 <script type="text/javascript">
-	window.MemberfulData = <?php echo json_encode($data); ?>
+window.MemberfulData = <?php echo json_encode($data); ?>
 </script>

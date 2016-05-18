@@ -5,78 +5,78 @@ define( 'MEMBERFUL_JSON', 'json' );
 
 
 function memberful_sign_in_url($protocol = NULL) {
-	return memberful_wp_endpoint_url( 'auth', $protocol );
+  return memberful_wp_endpoint_url( 'auth', $protocol );
 }
 
 function memberful_sign_out_url() {
-	return memberful_url( 'auth/sign_out' );
+  return memberful_url( 'auth/sign_out' );
 }
 
 function memberful_activation_url() {
-	return MEMBERFUL_APPS_HOST.'/activate-app';
+  return MEMBERFUL_APPS_HOST.'/activate-app';
 }
 
 function memberful_account_url( $format = MEMBERFUL_HTML ) {
-	return memberful_url( 'account', $format );
+  return memberful_url( 'account', $format );
 }
 
 function memberful_registration_page_url() {
-	return memberful_url( 'register' );
+  return memberful_url( 'register' );
 }
 
 function memberful_account_get_download_url( $download_slug ) {
-	return memberful_url( 'account/downloads/get/'.memberful_wp_extract_id_from_slug( $download_slug ) );
+  return memberful_url( 'account/downloads/get/'.memberful_wp_extract_id_from_slug( $download_slug ) );
 }
 
 function memberful_admin_member_url( $member_id, $format = MEMBERFUL_HTML ) {
-	return memberful_url( 'admin/members/'.$member_id, $format );
+  return memberful_url( 'admin/members/'.$member_id, $format );
 }
 
 function memberful_admin_downloads_url( $format = MEMBERFUL_HTML ) {
-	return memberful_url( 'admin/products', $format );
+  return memberful_url( 'admin/products', $format );
 }
 
 function memberful_admin_subscription_plans_url( $format = MEMBERFUL_HTML ) {
-	return memberful_url( 'admin/subscriptions', $format );
+  return memberful_url( 'admin/subscriptions', $format );
 }
 
 function memberful_admin_product_url( $product_id, $format = MEMBERFUL_HTML ) {
-	return memberful_admin_download_url( $product_id, $format );
+  return memberful_admin_download_url( $product_id, $format );
 }
 
 function memberful_admin_download_url( $download_id, $format = MEMBERFUL_HTML ) {
-	return memberful_url( 'admin/products/'.( int) $download_id, $format );
+  return memberful_url( 'admin/products/'.( int) $download_id, $format );
 }
 
 function memberful_order_completed_url( $order ) {
-	return add_query_arg( 'id', $order, memberful_url( 'orders/completed' ) );
+  return add_query_arg( 'id', $order, memberful_url( 'orders/completed' ) );
 }
 
 function memberful_checkout_for_subscription_url( $plan_id ) {
-	return add_query_arg( 'plan', $plan_id, memberful_url( 'checkout' ) );
+  return add_query_arg( 'plan', $plan_id, memberful_url( 'checkout' ) );
 }
 
 function memberful_checkout_for_download_url( $download_id ) {
-	return add_query_arg( 'product', $download_id, memberful_url( 'checkout' ) );
+  return add_query_arg( 'product', $download_id, memberful_url( 'checkout' ) );
 }
 
 function memberful_wp_update_plugin_settings_on_memberful_url() {
-	return memberful_url( 'admin/settings/integrate/website/wordpress' );
+  return memberful_url( 'admin/settings/integrate/website/wordpress' );
 }
 
 function memberful_wp_plugin_settings_url($no_header = FALSE, $subpage='') {
-	$header_parameter  = $no_header === TRUE ? "&noheader=true" : "";
-	$subpage_parameter = $subpage !== '' ? '&subpage='.$subpage : '';
+  $header_parameter  = $no_header === TRUE ? "&noheader=true" : "";
+  $subpage_parameter = $subpage !== '' ? '&subpage='.$subpage : '';
 
-	return admin_url('options-general.php?page=memberful_options'.$header_parameter.$subpage_parameter);
+  return admin_url('options-general.php?page=memberful_options'.$header_parameter.$subpage_parameter);
 }
 
 function memberful_wp_plugin_bulk_protect_url($no_header = FALSE) {
-	return memberful_wp_plugin_settings_url($no_header, 'bulk_protect');
+  return memberful_wp_plugin_settings_url($no_header, 'bulk_protect');
 }
 
 function memberful_wp_plugin_advanced_settings_url($no_header = FALSE) {
-	return memberful_wp_plugin_settings_url($no_header, 'advanced_settings');
+  return memberful_wp_plugin_settings_url($no_header, 'advanced_settings');
 }
 
 function memberful_wp_plugin_private_user_feed_settings_url($no_header = FALSE) {
@@ -84,7 +84,7 @@ function memberful_wp_plugin_private_user_feed_settings_url($no_header = FALSE) 
 }
 
 function memberful_wp_plugin_protect_bbpress_url($no_header = FALSE) {
-	return memberful_wp_plugin_settings_url($no_header, 'protect_bbpress');
+  return memberful_wp_plugin_settings_url($no_header, 'protect_bbpress');
 }
 
 /**
@@ -95,13 +95,13 @@ function memberful_wp_plugin_protect_bbpress_url($no_header = FALSE) {
  * @return string URL
  */
 function memberful_url( $uri = '', $format = MEMBERFUL_HTML ) {
-	$endpoint = '/'.trim( $uri,'/' );
+  $endpoint = '/'.trim( $uri,'/' );
 
-	if ( $format !== MEMBERFUL_HTML ) {
-		$endpoint .= '.'.$format;
-	}
+  if ( $format !== MEMBERFUL_HTML ) {
+    $endpoint .= '.'.$format;
+  }
 
-	return rtrim( get_option( 'memberful_site' ),'/' ).$endpoint;
+  return rtrim( get_option( 'memberful_site' ),'/' ).$endpoint;
 }
 
 // Private generator methods
@@ -120,23 +120,23 @@ function memberful_url( $uri = '', $format = MEMBERFUL_HTML ) {
  * @return string 'http' | 'https'
  */
 function memberful_frontend_protocol() {
-	if ( strpos( get_option( 'siteurl' ), 'https://' ) === 0 ) {
-		return 'https';
-	}
+  if ( strpos( get_option( 'siteurl' ), 'https://' ) === 0 ) {
+    return 'https';
+  }
 
-	return 'http';
+  return 'http';
 }
 
 function memberful_wp_wrap_api_token( $url ) {
-	if ( strpos($url, 'access_token') !== FALSE || strpos($url, 'auth_token') !== FALSE ) {
-		return $url;
-	}
+  if ( strpos($url, 'access_token') !== FALSE || strpos($url, 'auth_token') !== FALSE ) {
+    return $url;
+  }
 
-	if ( strpos($url, 'oauth/token') !== FALSE ) {
-		return $url;
-	}
+  if ( strpos($url, 'oauth/token') !== FALSE ) {
+    return $url;
+  }
 
-	return add_query_arg( 'auth_token', get_option( 'memberful_api_key' ), $url );
+  return add_query_arg( 'auth_token', get_option( 'memberful_api_key' ), $url );
 }
 
 /**
@@ -145,7 +145,7 @@ function memberful_wp_wrap_api_token( $url ) {
  * @return string
  */
 function memberful_wp_oauth_callback_url() {
-	return memberful_wp_endpoint_url( 'auth' );
+  return memberful_wp_endpoint_url( 'auth' );
 }
 
 /**
@@ -154,10 +154,10 @@ function memberful_wp_oauth_callback_url() {
  * @return string
  */
 function memberful_wp_webhook_url() {
-	return memberful_wp_endpoint_url( 'webhook' );
+  return memberful_wp_endpoint_url( 'webhook' );
 }
 
 function memberful_wp_endpoint_url( $endpoint, $protocol = NULL ) {
-	$protocol = $protocol === NULL ? memberful_frontend_protocol() : $protocol;
-	return add_query_arg( array( 'memberful_endpoint' => $endpoint ), home_url( '', $protocol ) );
+  $protocol = $protocol === NULL ? memberful_frontend_protocol() : $protocol;
+  return add_query_arg( array( 'memberful_endpoint' => $endpoint ), home_url( '', $protocol ) );
 }

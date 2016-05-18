@@ -4,49 +4,49 @@
  * @deprecated 1.6.0
  */
 function memberful_wp_current_user_products() {
-	return memberful_wp_current_user_downloads();
+  return memberful_wp_current_user_downloads();
 }
 
 /**
  * @deprecated 1.6.0
  */
 function has_memberful_subscription( $slug, $user_id = NULL ) {
-	return is_subscribed_to_memberful_plan( $slug, $user_id );
+  return is_subscribed_to_memberful_plan( $slug, $user_id );
 }
 
 /**
  * @deprecated 1.6.0
  */
 function has_memberful_product( $slug, $user_id = NULL ) {
-	return has_memberful_download( $slug, $user_id );
+  return has_memberful_download( $slug, $user_id );
 }
 
 /**
  * @deprecated 1.6.0
  */
 function memberful_wp_user_products( $user_id ) {
-	return memberful_wp_user_downloads( $user_id );
+  return memberful_wp_user_downloads( $user_id );
 }
 
 /**
  * @deprecated 1.6.0
  */
 function memberful_wp_user_subscriptions( $user_id ) {
-	return memberful_wp_user_plans_subscribed_to( $user_id );
+  return memberful_wp_user_plans_subscribed_to( $user_id );
 }
 
 /**
  * @deprecated 1.6.0
  */
 function memberful_wp_user_has_products( $user_id, array $products ) {
-	return memberful_wp_user_has_downloads( $user_id, $products );
+  return memberful_wp_user_has_downloads( $user_id, $products );
 }
 
 /**
  * @deprecated 1.6.0
  */
 function memberful_wp_user_has_subscriptions( $user_id, array $subscriptions ) {
-	return memberful_wp_user_has_subscription_to_plans( $user_id, $subscriptions );
+  return memberful_wp_user_has_subscription_to_plans( $user_id, $subscriptions );
 }
 
 /**
@@ -57,9 +57,9 @@ function memberful_wp_user_has_subscriptions( $user_id, array $subscriptions ) {
  * @return bool
  */
 function is_subscribed_to_memberful_plan( $slug, $user_id = NULL ) {
-	list( $required_plans , $user_id ) = memberful_wp_extract_slug_ids_and_user( func_get_args() );
+  list( $required_plans , $user_id ) = memberful_wp_extract_slug_ids_and_user( func_get_args() );
 
-	return memberful_wp_user_has_subscription_to_plans( $user_id, $required_plans );
+  return memberful_wp_user_has_subscription_to_plans( $user_id, $required_plans );
 }
 
 /**
@@ -70,29 +70,29 @@ function is_subscribed_to_memberful_plan( $slug, $user_id = NULL ) {
  * @return bool
  */
 function has_memberful_download( $slug, $user_id = NULL ) {
-	list( $required_downloads, $user_id ) = memberful_wp_extract_slug_ids_and_user( func_get_args() );
+  list( $required_downloads, $user_id ) = memberful_wp_extract_slug_ids_and_user( func_get_args() );
 
-	return memberful_wp_user_has_downloads( $user_id, $required_downloads );
+  return memberful_wp_user_has_downloads( $user_id, $required_downloads );
 }
 
 function memberful_wp_posts_that_are_protected() {
-	static $post_ids = NULL;
+  static $post_ids = NULL;
 
-	if ( $post_ids !== NULL ) {
-		return $post_ids;
-	}
+  if ( $post_ids !== NULL ) {
+    return $post_ids;
+  }
 
-	$global_acl = get_option( 'memberful_acl' );
-	$post_ids   = array();
+  $global_acl = get_option( 'memberful_acl' );
+  $post_ids   = array();
 
-	// Loops in loops aren't good, but at least we cache this with the static call
-	foreach( $global_acl as $entity_type => $acl ) {
-		foreach( $acl as $purchasable_id => $posts_this_item_grants_access_to) {
-			$post_ids = array_merge( $post_ids, array_values($posts_this_item_grants_access_to) );
-		}
-	}
+  // Loops in loops aren't good, but at least we cache this with the static call
+  foreach( $global_acl as $entity_type => $acl ) {
+    foreach( $acl as $purchasable_id => $posts_this_item_grants_access_to) {
+      $post_ids = array_merge( $post_ids, array_values($posts_this_item_grants_access_to) );
+    }
+  }
 
-	$post_ids = array_unique( $post_ids );
+  $post_ids = array_unique( $post_ids );
 
-	return empty( $post_ids ) ? array() : $post_ids;
+  return empty( $post_ids ) ? array() : $post_ids;
 }
