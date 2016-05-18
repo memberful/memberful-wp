@@ -16,14 +16,14 @@ add_action( 'plugins_loaded', 'memberful_wp_endpoint_filter' );
  * If the user is, then the request is dispatched to that endpoint
  */
 function memberful_wp_endpoint_filter() {
-	if ( $endpoint = memberful_wp_endpoint_for_request() ) {
-		if ( ! $endpoint->verify_request( $_SERVER['REQUEST_METHOD'] ) )
-			die( 'Invalid request' );
+  if ( $endpoint = memberful_wp_endpoint_for_request() ) {
+    if ( ! $endpoint->verify_request( $_SERVER['REQUEST_METHOD'] ) )
+      die( 'Invalid request' );
 
-		header('Cache-Control: private');
-		$endpoint->process( $_REQUEST, $_SERVER );
-		exit();
-	}
+    header('Cache-Control: private');
+    $endpoint->process( $_REQUEST, $_SERVER );
+    exit();
+  }
 }
 
 /**
@@ -32,34 +32,34 @@ function memberful_wp_endpoint_filter() {
  * @return Memberful_Wp_Endpoint
  */
 function memberful_wp_endpoint_for_request() {
-	$endpoint = NULL;
+  $endpoint = NULL;
 
-	if ( ! empty( $_GET['memberful_endpoint'] ) ) {
-		switch( strtolower( $_GET['memberful_endpoint'] ) ) {
-			case 'auth':
-				$endpoint = new Memberful_Wp_Endpoint_Auth;
-				break;
-			case 'webhook':
-				$endpoint = new Memberful_Wp_Endpoint_Webhook;
-				break;
-		}
-	}
+  if ( ! empty( $_GET['memberful_endpoint'] ) ) {
+    switch( strtolower( $_GET['memberful_endpoint'] ) ) {
+    case 'auth':
+      $endpoint = new Memberful_Wp_Endpoint_Auth;
+      break;
+    case 'webhook':
+      $endpoint = new Memberful_Wp_Endpoint_Webhook;
+      break;
+    }
+  }
 
-	return $endpoint;
+  return $endpoint;
 }
 
 interface Memberful_Wp_Endpoint {
-	/**
-	 * Allow the endpoint to process the request
-	 */
-	public function process( array $request_params, array $server_params );
+  /**
+   * Allow the endpoint to process the request
+   */
+  public function process( array $request_params, array $server_params );
 
-	/**
-	 * Checks if the request method is acceptable for this endpoint
-	 *
-	 * If false is returned the request should be cancelled
-	 *
-	 * @return boolean True if request method is acceptable, else false
-	 */
-	public function verify_request( $request_method );
+  /**
+   * Checks if the request method is acceptable for this endpoint
+   *
+   * If false is returned the request should be cancelled
+   *
+   * @return boolean True if request method is acceptable, else false
+   */
+  public function verify_request( $request_method );
 }

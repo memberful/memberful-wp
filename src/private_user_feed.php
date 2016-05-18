@@ -12,51 +12,51 @@
 add_action('init', 'memberful_private_user_feed_init');
 
 function memberful_private_user_feed_init() {
-	// In case this is not available, just don't carry on with the logic, it should always be here.
-	if(!isset($_SERVER['REQUEST_URI']))
-		return;
+  // In case this is not available, just don't carry on with the logic, it should always be here.
+  if(!isset($_SERVER['REQUEST_URI']))
+    return;
 
-	// This is not a case we can verify, so we'll skip
-	if(strpos($_SERVER['REQUEST_URI'], memberful_private_user_feed_get_url_identifier()) === false)
-		return;
+  // This is not a case we can verify, so we'll skip
+  if(strpos($_SERVER['REQUEST_URI'], memberful_private_user_feed_get_url_identifier()) === false)
+    return;
 
-	// Extract the token from the URL
-	$feedUserToken = substr($_SERVER['REQUEST_URI'],
-													strpos($_SERVER['REQUEST_URI'], memberful_private_user_feed_get_url_identifier())
-														+ strlen(memberful_private_user_feed_get_url_identifier())
-												 );
+  // Extract the token from the URL
+  $feedUserToken = substr($_SERVER['REQUEST_URI'],
+    strpos($_SERVER['REQUEST_URI'], memberful_private_user_feed_get_url_identifier())
+    + strlen(memberful_private_user_feed_get_url_identifier())
+  );
 
-	$requiredPlan = memberful_private_user_feed_settings_get_required_plan();
+  $requiredPlan = memberful_private_user_feed_settings_get_required_plan();
 
-	// We want to allow the private user feed only if the admin has configured it.
-	if($requiredPlan == false)
-		return;
+  // We want to allow the private user feed only if the admin has configured it.
+  if($requiredPlan == false)
+    return;
 
 
-	// The only reliable way to make sure it works on all WP versions
-	// We'll take "all" users with the token match.
-	$user_query = new WP_User_Query(
-			array(
-					'meta_key'	  =>	'memberful_private_user_feed_token',
-					'meta_value'	=>	$feedUserToken
-			)
-	);
+  // The only reliable way to make sure it works on all WP versions
+  // We'll take "all" users with the token match.
+  $user_query = new WP_User_Query(
+    array(
+      'meta_key'	  =>	'memberful_private_user_feed_token',
+      'meta_value'	=>	$feedUserToken
+    )
+  );
 
-	// Get the results from the query
-	$users = $user_query->get_results();
+  // Get the results from the query
+  $users = $user_query->get_results();
 
-	// We have no results.
-	if(empty($users))
-		return;
+  // We have no results.
+  if(empty($users))
+    return;
 
-	// In case somebody actually maps this with their plugin with a hook, we still need to get the first one.
-	$user = array_shift($users);
+  // In case somebody actually maps this with their plugin with a hook, we still need to get the first one.
+  $user = array_shift($users);
 
-	if(!is_subscribed_to_memberful_plan($requiredPlan, $user->ID))
-		return;
+  if(!is_subscribed_to_memberful_plan($requiredPlan, $user->ID))
+    return;
 
-	// Everything is in order, we'll deliver the feed.
-	memberful_private_user_feed_deliver();
+  // Everything is in order, we'll deliver the feed.
+  memberful_private_user_feed_deliver();
 }
 
 /**
@@ -64,12 +64,12 @@ function memberful_private_user_feed_init() {
  * This Function should be used only within the "init" wordpress hook.
  */
 function memberful_private_user_feed_deliver() {
-	header('Content-Type: '.feed_content_type('rss-http').'; charset='.get_option('blog_charset'), true);
-	memberful_private_user_feed_disable_caching();
+  header('Content-Type: '.feed_content_type('rss-http').'; charset='.get_option('blog_charset'), true);
+  memberful_private_user_feed_disable_caching();
 
-	require(MEMBERFUL_DIR . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'private_user_feed_content.php');
+  require(MEMBERFUL_DIR . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'private_user_feed_content.php');
 
-	exit;
+  exit;
 }
 
 /**
@@ -126,42 +126,42 @@ function memberful_private_rss_feed_link_response_helper($response, $return = fa
  * @return void
  */
 function memberful_private_user_feed_settings_set_required_plan($option) {
-	update_option('memberful_private_user_feed_plan', $option);
+  update_option('memberful_private_user_feed_plan', $option);
 }
 
 /**
  * @return mixed|string|array|false
  */
 function memberful_private_user_feed_settings_get_required_plan() {
-	return get_option('memberful_private_user_feed_plan', false);
+  return get_option('memberful_private_user_feed_plan', false);
 }
 
 // General Functionality
 
 if(!function_exists('memberful_private_user_feed_disable_caching'))  {
 
-	/**
-	 * Disable All Caching Options for the feed page.
-	 * @return void
-	 */
-	function memberful_private_user_feed_disable_caching() {
-		// Tell Browsers and Various caching plugins to not cache this. Also Varnish should listen to this.
-		nocache_headers();
-		// We want to make sure that caching plugins know this page doesn't need to be cached
-		if(!defined('DONOTCACHEPAGE')) define('DONOTCACHEPAGE', TRUE);
-	}
+  /**
+   * Disable All Caching Options for the feed page.
+   * @return void
+   */
+  function memberful_private_user_feed_disable_caching() {
+    // Tell Browsers and Various caching plugins to not cache this. Also Varnish should listen to this.
+    nocache_headers();
+    // We want to make sure that caching plugins know this page doesn't need to be cached
+    if(!defined('DONOTCACHEPAGE')) define('DONOTCACHEPAGE', TRUE);
+  }
 
 }
 
 if(!function_exists('memberful_private_user_feed_get_url_identifier'))  {
 
-	/**
-	 * Get the URL Prefix used to verify if it's an feed request, optionally you can provide the user token
-	 * @param string $user_token
-	 * @return string
-	 */
-	function memberful_private_user_feed_get_url_identifier($user_token = '') {
-		return '?member-feed=' . $user_token;
-	}
+  /**
+   * Get the URL Prefix used to verify if it's an feed request, optionally you can provide the user token
+   * @param string $user_token
+   * @return string
+   */
+  function memberful_private_user_feed_get_url_identifier($user_token = '') {
+    return '?member-feed=' . $user_token;
+  }
 
 }
