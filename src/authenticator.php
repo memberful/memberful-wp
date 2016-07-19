@@ -98,16 +98,19 @@ class Memberful_Authenticator {
     }
 
     // Store where the user came from in a cookie
-    $expire  = time() + ( 30 * 60 ); // 30 minutes
-    $referer = $_SERVER['HTTP_REFERER'];
+    if ( isset( $_SERVER['HTTP_REFERER'] ) ) {
+      $referer = $_SERVER['HTTP_REFERER'];
+    }
 
     // Allow overriding of redirect location
     if ( isset( $_REQUEST['redirect_to'] ) ) {
       $referer = $_REQUEST['redirect_to'];
     }
 
-    setcookie( 'memberful_redirect', $referer, $expire, '/', COOKIE_DOMAIN, is_ssl(), true );
-
+    if ( isset( $referer ) ) {
+      $expire  = time() + ( 30 * 60 ); // 30 minutes
+      setcookie( 'memberful_redirect', $referer, $expire, '/', COOKIE_DOMAIN, is_ssl(), true );
+    }
 
     // Send the user to Memberful
     wp_redirect( self::oauth_auth_url(), 302 );

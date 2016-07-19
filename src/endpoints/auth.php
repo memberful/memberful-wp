@@ -54,11 +54,10 @@ class Memberful_Wp_Endpoint_Auth implements Memberful_Wp_Endpoint {
   }
 
   private function clear_redirect_cookie() {
-    // If redirect_to was specified but a cookie also exists
     if ( isset( $_COOKIE['memberful_redirect'] ) ) {
       setcookie(
         'memberful_redirect',
-        $_SERVER['HTTP_REFERER'],
+        '',
         time() - 3600,
         COOKIEPATH,
         COOKIE_DOMAIN,
