@@ -83,6 +83,10 @@ function memberful_wp_plugin_private_user_feed_settings_url($no_header = FALSE) 
   return memberful_wp_plugin_settings_url($no_header, 'private_user_feed_settings');
 }
 
+function memberful_wp_plugin_cookies_test_url($no_header = FALSE) {
+  return memberful_wp_plugin_settings_url($no_header, 'cookies_test');
+}
+
 function memberful_wp_plugin_protect_bbpress_url($no_header = FALSE) {
   return memberful_wp_plugin_settings_url($no_header, 'protect_bbpress');
 }

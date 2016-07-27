@@ -5,6 +5,8 @@
  */
 
 require MEMBERFUL_DIR . '/src/endpoints/auth.php';
+require MEMBERFUL_DIR . '/src/endpoints/set_test_cookie.php';
+require MEMBERFUL_DIR . '/src/endpoints/check_test_cookie.php';
 require MEMBERFUL_DIR . '/src/endpoints/webhook.php';
 
 add_action( 'plugins_loaded', 'memberful_wp_endpoint_filter' );
@@ -38,6 +40,12 @@ function memberful_wp_endpoint_for_request() {
     switch( strtolower( $_GET['memberful_endpoint'] ) ) {
     case 'auth':
       $endpoint = new Memberful_Wp_Endpoint_Auth;
+      break;
+    case 'set_test_cookie':
+      $endpoint = new Memberful_Wp_Endpoint_Set_Test_Cookie;
+      break;
+    case 'check_test_cookie':
+      $endpoint = new Memberful_Wp_Endpoint_Check_Test_Cookie;
       break;
     case 'webhook':
       $endpoint = new Memberful_Wp_Endpoint_Webhook;

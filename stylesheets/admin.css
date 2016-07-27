@@ -184,11 +184,11 @@ p.memberful-access-label {
 /*---------------------------------------------------------
 	Private RSS Feeds
 ------------------------------------------------------------ */
-.postbox.plans-for-rss {
+.postbox.memberful-postbox {
 	margin-top: 20px;
 	padding: 10px 20px 20px 20px;
 }
-.plans-for-rss ul {
+.memberful-postbox ul {
 	margin: 10px 0 20px 0;
 }
 .postbox.memberful-private-feed-instructions {
