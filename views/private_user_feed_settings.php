@@ -4,7 +4,7 @@
   <div id="memberful-wrap">
     <form method="POST" action="<?php echo $form_target ?>">
       <div class="memberful-private-rss-feed-settings-box">
-        <div class="postbox plans-for-rss">
+        <div class="postbox memberful-postbox">
           <fieldset>
             <?php if ( ! empty( $subscription_plans ) ) : ?>
               <div id="memberful-private-user-feed-subscription-list">

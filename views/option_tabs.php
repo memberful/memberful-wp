@@ -20,6 +20,11 @@ $links = array(
     'title' => __('Private RSS Feeds'),
     'url'   => memberful_wp_plugin_private_user_feed_settings_url()
   ),
+  array(
+    'id'    => 'cookies_test',
+    'title' => __('Cookies Test'),
+    'url'   => memberful_wp_plugin_cookies_test_url()
+  ),
 );
 if ( is_plugin_active( 'bbpress/bbpress.php' ) ) {
   $links[] = array(

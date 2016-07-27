@@ -268,6 +268,8 @@ function memberful_wp_options() {
       return memberful_wp_protect_bbpress();
     case 'private_user_feed_settings':
       return memberful_wp_private_rss_feed_settings();
+    case 'cookies_test':
+      return memberful_wp_render('cookies_test');
     }
   }
 
