@@ -3,9 +3,9 @@
   <?php memberful_wp_render('flash'); ?>
   <div class="postbox memberful-postbox">
     <p>
-      Some web hosts aren't compatible with Memberful WP plugin, because they block cookies set by Memberful WP. You can perform a cookies test on this page to see if everything is working as expected.
+      Some web hosting services may block cookies or use extensive caching. This prevents Memberful from working properly. If the cookies test fails, please ask your hosting service to allow cookies from Memberful and also ask them to disable caching of URLs that start with <code>https://yoursite.com?memberful_endpoint</code>. 
     </p>
 
-    <a href="<?php echo memberful_wp_endpoint_url('set_test_cookie') ?>" class="button">Perform Cookies Test</a>
+    <a href="<?php echo memberful_wp_endpoint_url('set_test_cookie') ?>" class="button">Run Cookies Test</a>
   </div>
 </div>
