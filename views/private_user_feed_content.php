@@ -14,9 +14,6 @@ query_posts(array(
   'posts_per_page'  => get_option( 'posts_per_rss', 10 )
 ));
 
-global $more;
-$more = 1;
-
 echo '<?xml version="1.0" encoding="'.get_option('blog_charset').'"?'.'>';
 
 do_action( 'rss_tag_pre', 'rss2' );
@@ -71,6 +68,9 @@ echo apply_filters( 'rss_update_frequency', $frequency );
 do_action( 'rss2_head');
 
 while( have_posts()) : the_post();
+
+global $more;
+$more = 1;
 ?>
       <item>
         <title><?php the_title_rss() ?></title>
