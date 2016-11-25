@@ -53,7 +53,7 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 * More fixes for private RSS feeds.
 
 = 1.22.4 =
-* Do not trim content in feed when <!-- more --> tag is used.
+* Do not trim content in feed when `<!-- more -->` tag is used.
 
 = 1.22.3 =
 * Add possibility to perform cookies test in admin interface to identify web host incompatible with Memberful WP.
