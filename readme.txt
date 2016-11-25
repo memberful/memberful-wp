@@ -49,7 +49,7 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 == Changelog ==
 
 = 1.23.0 =
-* Improve compatibility with beaver builder.
+* Improve compatibility with Beaver Builder.
 
 = 1.22.5 =
 * Improve cookies test description.
