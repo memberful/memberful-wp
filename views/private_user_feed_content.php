@@ -7,7 +7,7 @@ remove_all_filters('the_excerpt');
 remove_all_filters('the_excerpt_rss');
 
 // For the content parse, we want to remove only the memberful part.
-remove_filter('the_content', 'memberful_wp_protect_content');
+remove_filter('the_content', 'memberful_wp_protect_content', -10);
 
 query_posts(array(
   'post_type'       => 'post',
