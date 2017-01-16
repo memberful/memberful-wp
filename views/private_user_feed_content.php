@@ -9,8 +9,10 @@ remove_all_filters('the_excerpt_rss');
 // For the content parse, we want to remove only the memberful part.
 remove_filter('the_content', 'memberful_wp_protect_content', -10);
 
+$post_types = array("post");
+
 query_posts(array(
-  'post_type'       => 'post',
+  'post_type'       => apply_filters( 'memberful_private_rss_post_types', $post_types ),
   'posts_per_page'  => get_option( 'posts_per_rss', 10 )
 ));
 
