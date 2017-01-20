@@ -411,7 +411,9 @@ function memberful_wp_bulk_protect() {
     foreach($query->posts as $id) {
       $product_acl_manager->set_acl($id, $acl_for_products);
       $subscription_acl_manager->set_acl($id, $acl_for_subscriptions);
-      memberful_wp_update_post_marketing_content($id, $marketing_content);
+      if ( !empty($marketing_content) ) {
+        memberful_wp_update_post_marketing_content($id, $marketing_content);
+      }
       memberful_wp_set_post_available_to_any_registered_users($id, $viewable_by_any_registered_user);
     }
 
