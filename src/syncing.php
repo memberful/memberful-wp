@@ -29,10 +29,15 @@ function memberful_wp_sync_member_account( $account, $mapping_context ) {
   $user = $mapper->map( $account->member, $mapping_context );
 
   if ( ! is_wp_error( $user ) ) {
-    Memberful_Wp_User_Downloads::sync($user->ID, $account->products);
-    Memberful_Wp_User_Subscriptions::sync($user->ID, $account->subscriptions);
+    if ( $account->member->deleted ) {
+      wp_delete_user( $user->ID );
+      Memberful_User_Mapping_Repository::delete_mapping( $user->id );
+    } else {
+      Memberful_Wp_User_Downloads::sync($user->ID, $account->products);
+      Memberful_Wp_User_Subscriptions::sync($user->ID, $account->subscriptions);
 
-    Memberful_Wp_User_Role_Decision::ensure_user_role_is_correct( $user );
+      Memberful_Wp_User_Role_Decision::ensure_user_role_is_correct( $user );
+    }
   } else {
     memberful_wp_record_error(array(
       'error' => $user->get_error_messages(),
