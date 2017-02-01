@@ -419,6 +419,12 @@ class Memberful_User_Mapping_Repository {
     return $wp_user->ID;
   }
 
+  public function delete_mapping( $user_id ) {
+    global $wpdb;
+
+    return $wpdb->delete(self::table(), array( "wp_user_id" => $user_id ) );
+  }
+
   /**
    * Restricts the set of columns that the mapper can change
    *
