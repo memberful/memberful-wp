@@ -21,6 +21,7 @@ class Memberful_Wp_User_Subscriptions extends Memberful_Wp_User_Entity {
       'id'         => $entity->subscription->id,
       'expires'    => $entity->expires,
       'expires_at' => $entity->expires_at,
+      'autorenew'  => $entity->renew_at_end_of_period
     );
   }
 }
