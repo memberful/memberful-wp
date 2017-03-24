@@ -1,5 +1,5 @@
 127.0.0.1 localhost
-192.168.33.2 ttf.memberful.dev apps.memberful.dev
+10.0.2.2 ttf.memberful.dev apps.memberful.dev
 
 # The following lines are desirable for IPv6 capable hosts
 ::1 ip6-localhost ip6-loopback
