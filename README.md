@@ -1,0 +1,59 @@
+# Information for Developers
+
+## Development environment
+
+Install [Vagrant](http://vagrantup.com) and [Virtualbox](http://virtualbox.org), then run `vagrant up` in the plugin's root directory.
+
+You should add the following to `/etc/hosts` on the host machine:
+
+```
+192.168.33.3 wordpress.dev
+```
+
+You should then be able to access the WP admin panel - http://wordpress.dev/wp-admin.
+
+The default username/password is admin/vagrant.
+
+Once signed in you'll need to go to your local Memberful site, and setup a WordPress integration
+(Memberful Admin -> Settings -> Integrate -> I'm using WordPress), then copy and paste the activation
+code into the WordPress admin panel (WP admin -> Settings -> Memberful). Submit the form and then
+WordPress should be connected to your local vm, ready for development!
+
+## Versioning
+
+The plugin is versioned using [Semantic Versioning](http://semver.org).
+
+The gist of it is as follows:
+
+```
+                                                                        
+                    +---+ Increment this number on every normal release 
+                    |     that adds features and is not intended to     
+                    v     break/remove existing features.               
+                 1.12.0                                                 
+                 ^    ^                                                 
+                 |    |                                                 
+      +----------+    +----------+ Change this number if you need to    
+      +                            release an update that ONLY includes 
+  Increment this number            bug fixes.                           
+  if you change compatibility                                           
+  or stop supprting an old                                              
+  version of WordPress.                                                 
+                                                                        
+```
+
+It's worth noting that the version number is not a decimal number, and each
+segment is a separate number. i.e. `1.12.0` > `1.11.0`.
+
+## Releasing a new version of the plugin.
+
+* Ensure all changes are merged into `master`.
+* Set correct version number and add change changelog entries to `readme.txt`.
+* Run `./release.sh`.
+* A copy of the wordpress.org svn repo will be downloaded into `/tmp`, the version you tagged will be copied across to the `tags` and `trunk` directories, (sans development files) and then committed to the svn repo, causing wordpress.org to release a new version.
+* The script will remove the svn directory.
+
+## Rolling back
+
+* Revert your changes.
+* Release a new version with a version number greater than the current one, e.g. if the current version is `1.15.0` then release `1.16.0`.

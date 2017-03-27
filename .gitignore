@@ -1,5 +1,12 @@
 .vagrant
-wordpress
-latest.tar.gz
 .DS_Store
+.ansible
 
+# Manage wordpress/wp-content/plugins/memberful-wp and ignore everything else
+# from the wordpress/ folder.
+/wordpress/*
+!/wordpress/wp-content/
+/wordpress/wp-content/*
+!/wordpress/wp-content/plugins
+/wordpress/wp-content/plugins/*
+!/wordpress/wp-content/plugins/memberful-wp
