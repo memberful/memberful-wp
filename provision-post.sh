@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-
 echo "Activating Memberful WP plugin"
 /usr/local/bin/wp --path=/vagrant/wordpress plugin activate memberful-wp
 
