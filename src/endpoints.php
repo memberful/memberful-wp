@@ -10,6 +10,7 @@ require MEMBERFUL_DIR . '/src/endpoints/check_test_cookie.php';
 require MEMBERFUL_DIR . '/src/endpoints/webhook.php';
 
 add_action( 'plugins_loaded', 'memberful_wp_endpoint_filter' );
+add_action( 'plugins_loaded', 'memberful_show_apple_pay_domain_verification_file' );
 
 /**
  * Listens to all requests and checks to see if the user is trying to access one of
@@ -54,6 +55,13 @@ function memberful_wp_endpoint_for_request() {
   }
 
   return $endpoint;
+}
+
+function memberful_show_apple_pay_domain_verification_file() {
+  if ( $_SERVER["REQUEST_URI"] == "/.well-known/apple-developer-merchantid-domain-association" ) {
+    readfile( dirname( __FILE__ ) . "/misc/apple-developer-merchantid-domain-association");
+    exit();
+  }
 }
 
 interface Memberful_Wp_Endpoint {
