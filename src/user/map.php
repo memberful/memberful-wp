@@ -172,8 +172,6 @@ class Memberful_User_Mapping_Ensure_User {
     $user_data['ID']            = $this->wp_user->ID;
     $user_data['user_login']    = $this->wp_user->user_login;
     $user_data['user_nicename'] = $this->wp_user->user_nicename;
-    $user_data['nickname']      = $this->wp_user->nickname;
-    $user_data['display_name']  = $this->wp_user->display_name;
 
     return wp_update_user( apply_filters( 'memberful.map_user.update', $user_data, $this->wp_user, $this->member ) );
   }
@@ -185,17 +183,17 @@ class Memberful_User_Mapping_Ensure_User {
     $user_data['show_admin_bar_front']    = FALSE;
     $user_data['user_login']              = $this->member->username;
     $user_data['user_nicename']           = $this->member->username;
-    $user_data['nickname']                = $this->member->full_name;
-    $user_data['display_name']            = $this->member->full_name;
 
     return wp_insert_user( apply_filters( 'memberful.map_user.create', $user_data, $this->member ) );
   }
 
   private function fields_that_always_sync_from_memberful() {
     return array(
-      'user_email' => $this->member->email,
-      'first_name' => $this->member->first_name,
-      'last_name'  => $this->member->last_name
+      'display_name' => $this->member->full_name,
+      'first_name'   => $this->member->first_name,
+      'last_name'    => $this->member->last_name,
+      'nickname'     => $this->member->full_name,
+      'user_email'   => $this->member->email
     );
   }
 
