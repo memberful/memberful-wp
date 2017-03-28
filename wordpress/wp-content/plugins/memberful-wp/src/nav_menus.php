@@ -12,6 +12,7 @@ function memberful_nav_menu_items_meta_box() {
   <div data-behaviour="memberful_nav_menu_links">
     <ul>
       <?php memberful_nav_menu_link_item(memberful_sign_in_url(), "Sign in") ?>
+      <?php memberful_nav_menu_link_item(memberful_sign_out_url(), "Sign out") ?>
       <?php memberful_nav_menu_link_item(memberful_account_url(), "Account") ?>
     </ul>
 
