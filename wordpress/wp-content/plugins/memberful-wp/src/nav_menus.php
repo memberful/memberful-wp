@@ -11,8 +11,8 @@ function memberful_nav_menu_items_meta_box() {
   ?>
   <div data-behaviour="memberful_nav_menu_links">
     <ul>
-      <?php memberfu_nav_menu_link_item(memberful_sign_in_url(), "Sign in") ?>
-      <?php memberfu_nav_menu_link_item(memberful_account_url(), "Account") ?>
+      <?php memberful_nav_menu_link_item(memberful_sign_in_url(), "Sign in") ?>
+      <?php memberful_nav_menu_link_item(memberful_account_url(), "Account") ?>
     </ul>
 
     <p class="button-controls wp-clearfix">
@@ -25,7 +25,7 @@ function memberful_nav_menu_items_meta_box() {
   <?php
 }
 
-function memberfu_nav_menu_link_item($url, $label) { ?>
+function memberful_nav_menu_link_item($url, $label) { ?>
   <li>
     <label class="menu-item-title">
       <input type="checkbox" name="memberful_link" class="menu-item-checkbox" data-url="<?php echo esc_attr($url); ?>" data-label="<?php echo esc_attr($label); ?>"> <?php echo($label); ?>
