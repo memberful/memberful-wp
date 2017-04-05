@@ -7,7 +7,7 @@
 PLUGIN_SLUG=memberful-wp
 
 CURRENT_BRANCH=`git branch | grep \* | cut -f 2 -d ' '`
-DEVELOPMENT_BRANCH=develop
+DEVELOPMENT_BRANCH=development
 PLUGIN_DIR="$PWD/wordpress/wp-content/plugins/memberful-wp"
 VERSION=`grep "Stable tag" $PLUGIN_DIR/readme.txt | awk '{print $3}'`
 
