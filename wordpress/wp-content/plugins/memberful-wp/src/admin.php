@@ -323,7 +323,7 @@ function memberful_wp_activate( $code ) {
   }
 
   if ( $response_code !== 200 || empty( $response_body ) ) {
-    return new WP_Error( 'memberful_activation_fail', "We couldn't connect to Memberful, please email info@memberful.com" );
+    return new WP_Error( 'memberful_activation_fail', "We couldn't connect to Memberful, please email info@memberful.com." );
   }
 
   $credentials = json_decode( $response_body );
