@@ -51,6 +51,7 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 = 1.28.0 =
 
 * Add Memberful links to the menu builder.
+* Fix plugin registration with empty registration key.
 
 = 1.27.0 =
 
