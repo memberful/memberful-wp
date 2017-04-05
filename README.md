@@ -4,15 +4,9 @@
 
 Install [Vagrant](http://vagrantup.com) and [Virtualbox](http://virtualbox.org), then run `vagrant up` in the plugin's root directory.
 
-You should add the following to `/etc/hosts` on the host machine:
-
-```
-192.168.33.3 wordpress.dev
-```
-
 You should then be able to access the WP admin panel - http://wordpress.dev/wp-admin.
 
-The default username/password is admin/vagrant.
+The default username/password is admin/admin.
 
 Once signed in you'll need to go to your local Memberful site, and setup a WordPress integration
 (Memberful Admin -> Settings -> Integrate -> I'm using WordPress), then copy and paste the activation
@@ -47,8 +41,9 @@ segment is a separate number. i.e. `1.12.0` > `1.11.0`.
 
 ## Releasing a new version of the plugin.
 
-* Ensure all changes are merged into `master`.
-* Set correct version number and add change changelog entries to `readme.txt`.
+* Make sure that every change has an appropriate changelog entry in `readme.txt`.
+* Set correct version number in `readme.txt`.
+* Ensure that all changes are ready in the `development` branch.
 * Run `./release.sh`.
 * A copy of the wordpress.org svn repo will be downloaded into `/tmp`, the version you tagged will be copied across to the `tags` and `trunk` directories, (sans development files) and then committed to the svn repo, causing wordpress.org to release a new version.
 * The script will remove the svn directory.

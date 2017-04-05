@@ -1,0 +1,11 @@
+<IfModule mod_rewrite.c>
+	RewriteEngine On
+</IfModule>
+<FilesMatch ".*\.php$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+<FilesMatch "^wrapper_(adminer|editor)\.php$">
+    Order Allow,Deny
+    Allow from all
+</FilesMatch>
