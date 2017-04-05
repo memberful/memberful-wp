@@ -40,7 +40,7 @@ push_to_git_origin() {
   echo "GIT: Tagging version $VERSION and pushing to origin"
   git tag "$VERSION"
   git checkout master
-  git reset --hard "$TAG"
+  git reset --hard "$VERSION"
   git push --all origin
   git push --tags origin
 }
