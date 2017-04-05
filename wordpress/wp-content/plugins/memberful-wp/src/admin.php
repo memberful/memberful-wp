@@ -91,11 +91,6 @@ function memberful_wp_menu() {
   add_options_page( 'Memberful', 'Memberful', 'manage_options', 'memberful_options', 'memberful_wp_options' );
 }
 
-
-/**
- * Enqueues the Memberful admin screen CSS, only on the settings page.
- * Hooked on admin_enqueue_scripts.
- */
 function memberful_wp_admin_enqueue_scripts() {
   $screen = get_current_screen();
 
@@ -111,6 +106,13 @@ function memberful_wp_admin_enqueue_scripts() {
       MEMBERFUL_VERSION
     );
   }
+
+  wp_enqueue_script(
+    'memberful-menu',
+    plugins_url( 'js/menu.js', dirname( __FILE__ ) ),
+    array('jquery'),
+    MEMBERFUL_VERSION
+  );
 }
 
 /**
@@ -258,7 +260,7 @@ function memberful_wp_options() {
 
   if ( ! empty( $_GET['subpage'] ) ) {
     switch ( $_GET['subpage'] ) {
-    case 'bulk_protect': 
+    case 'bulk_protect':
       return memberful_wp_bulk_protect();
     case 'debug':
       return memberful_wp_debug();
