@@ -1,0 +1,401 @@
+# WordPress Blank Pot
+# Copyright (C) 2014 ...
+# This file is distributed under the GNU General Public License v2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: ARI Adminer v 1.0.0\n"
+"Report-Msgid-Bugs-To: Translator Name <translations@example.com>\n"
+"POT-Creation-Date: 2016-12-29 15:01+0300\n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: ARI Soft <info@ari-soft.com>\n"
+"Language: ru_RU\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Textdomain-Support: yesX-Generator: Poedit 1.6.4\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;esc_html_e;esc_html_x:1,2c;esc_html__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_attr__;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;"
+"_x:1,2c;_n:1,2;_n_noop:1,2;__ngettext:1,2;__ngettext_noop:1,2;_c,_nc:4c,1,2\n"
+"X-Poedit-Basepath: ..\n"
+"X-Generator: Poedit 1.8.11\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: adminer\n"
+"X-Poedit-SearchPathExcluded-1: assets\n"
+"X-Poedit-SearchPathExcluded-2: install\n"
+"X-Poedit-SearchPathExcluded-3: languages\n"
+
+#: ari-adminer.php:72
+#, php-format
+msgid "update PHP version on your server from v. %s to at least v. %s"
+msgstr ""
+"PHP версии %s используется на Вашем сервере, обновите его минимум до версии "
+"%s"
+
+#: ari-adminer.php:78
+msgid "install PHP SPL extension"
+msgstr "установите SPL расширение для PHP"
+
+#: ari-adminer.php:82
+#, php-format
+msgid "update WordPress v. %s to at least v. %s"
+msgstr "Вы используете WordPress версии %s, обновите его до версии %s или выше"
+
+#: ari-adminer.php:89
+#, php-format
+msgid ""
+"\"ARI Adminer\" can not be activated. It requires PHP version 5.4.0+ with "
+"SPL extension and WordPress 4.0+.<br /><br /><b>Recommendations:</b> %s.<br /"
+"><br /><a href=\"%s\" class=\"button button-primary\">Back</a>"
+msgstr ""
+"“ARI Adminer” не может быть установлен. Требуется PHP версии 5.4.0 или выше "
+"с установленным расширением SPL и WordPress версии 4.0 или выше.<br /><br /"
+"><b>Рекомендации:</b> %s.<br /><br /><a href=\"%s\" class=\"button button-"
+"primary\">Назад</a>"
+
+#: includes/class-plugin.php:38 includes/class-plugin.php:39
+#: includes/views/adminer-runner/class-html.php:8
+msgid "ARI Adminer"
+msgstr "ARI Adminer"
+
+#: includes/class-plugin.php:48 includes/class-plugin.php:49
+msgid "Run Adminer"
+msgstr "Запустить Adminer"
+
+#: includes/class-plugin.php:57 includes/class-plugin.php:58
+#: includes/views/connections/class-html.php:12
+msgid "Connections"
+msgstr "Подключения к БД"
+
+#: includes/class-plugin.php:66 includes/class-plugin.php:67
+msgid "Settings"
+msgstr "Настройки"
+
+#: includes/controllers/adminer-runner/class-run.php:17
+msgid "You do not have permissions to run Adminer"
+msgstr "У вас недостаточно прав для запуска Adminer"
+
+#: includes/controllers/adminer-runner/class-run.php:31
+msgid "The selected connection is not available."
+msgstr "Выбранное подключение не доступно"
+
+#: includes/controllers/adminer-runner/class-run.php:47
+msgid "Connection parameters are invalid."
+msgstr "Введены некорректные параметры подключения"
+
+#: includes/controllers/connections/class-bulk-delete.php:31
+msgid "The connection(s) deleted successfully"
+msgstr "Подключения удалены успешно"
+
+#: includes/controllers/connections/class-bulk-delete.php:45
+msgid "The connection(s) can not be deleted"
+msgstr "Подключения не могут быть удалены"
+
+#: includes/controllers/connections/class-delete.php:29
+msgid "The connection deleted successfully"
+msgstr "Подключение было удалено"
+
+#: includes/controllers/connections/class-delete.php:43
+msgid "The connection can not be deleted"
+msgstr "Подключение не может быть удалено"
+
+#: includes/controllers/connections/class-reload.php:23
+msgid "The connection is saved successfully"
+msgstr "Параметры подключения к БД сохранены"
+
+#: includes/controls/grid/class-grid.php:13
+msgid "No results found"
+msgstr "Записей не найдено"
+
+#: includes/helpers/class-helper.php:90
+msgid "MySQL"
+msgstr "MySQL"
+
+#: includes/helpers/class-helper.php:94
+msgid "SQLite"
+msgstr "SQLite"
+
+#: includes/helpers/class-helper.php:98
+msgid "PostgreSQL"
+msgstr "PostgreSQL"
+
+#: includes/helpers/class-screen.php:11
+msgid "Help"
+msgstr "Помощь"
+
+#: includes/helpers/class-screen.php:13
+#, php-format
+msgid "User's guide is available <a href=\"%s\" target=\"_blank\">here</a>."
+msgstr ""
+"Руководство пользователя доступно <a href=\"%s\" target=\"_blank\">здесь</a>."
+
+#: includes/helpers/class-settings.php:44
+msgid "Adminer theme"
+msgstr "Adminer тема"
+
+#: includes/helpers/class-settings.php:46
+msgid "The selected theme will be used in Adminer application."
+msgstr "Выбранная тема будет использована в приложении Adminer"
+
+#: includes/helpers/class-settings.php:56
+msgid "Mode"
+msgstr "Режим работы"
+
+#: includes/helpers/class-settings.php:58
+msgid ""
+"If \"Advanced\" mode is selected, \"Adminer\" application will be used. It "
+"full-featured application for database management. When \"Simple\" option is "
+"chosen, \"Adminer Editor\" will be used. It has limited functionality."
+msgstr ""
+"Если выбран “Продвинутый” режим, будет использоваться приложение Adminer. "
+"Это многофункциональное приложение для управления базами данных. Adminer "
+"Editor используется, если выбран “Простой” режим. Adminer Editor "
+"поддерживает меньше возможностей."
+
+#: includes/helpers/class-settings.php:68
+msgid "Stop \"Adminer\" on logout"
+msgstr "Останавливать Adminer при выходе из WordPress"
+
+#: includes/helpers/class-settings.php:70
+msgid ""
+"If the parameter is enabled, all \"Adminer\" sessions will be terminated "
+"when user is logged out from WordPress."
+msgstr ""
+"Используйте этот параметр, если хотите прервать все запущенные сессии "
+"текущим пользователем в Adminer при выходе из WordPress."
+
+#: includes/helpers/class-settings.php:80
+msgid "Roles"
+msgstr "Роли пользователей"
+
+#: includes/helpers/class-settings.php:82
+msgid "Only users with the selected user role will have access to the plugin."
+msgstr "Только пользователи с выбранными ролями будут иметь доступ к Adminer"
+
+#: includes/helpers/class-settings.php:162
+msgid "Advanced"
+msgstr "Продвинутый"
+
+#: includes/helpers/class-settings.php:164
+msgid "Simple"
+msgstr "Простой"
+
+#: includes/helpers/class-settings.php:193
+msgid "Stop on logout"
+msgstr "Прервать при выходе из WordPress"
+
+#: includes/utils/dbcheck/class-db-check.php:25
+#, php-format
+msgid ""
+"It is not possible to test connection. \"%s\" DB driver is not implemented."
+msgstr "Невозможно проверить подключение к БД. “%s” БД драйвер отсутствует."
+
+#: includes/views/adminer-runner/class-html.php:25
+#: includes/views/connections/class-html.php:35
+msgid "Connection parameters are valid."
+msgstr "Введены корректные параметры подключения"
+
+#: includes/views/adminer-runner/class-html.php:27
+#: includes/views/connections/class-html.php:37
+msgid "Could not connect to DB. The following error occurs: "
+msgstr "Не получилось подключиться к БД. Произошла следующая ошибка: "
+
+#: includes/views/adminer-runner/tmpl/default.php:18
+msgid "How can I help?"
+msgstr ""
+
+#: includes/views/adminer-runner/tmpl/default.php:22
+msgid "Share feedback or idea"
+msgstr "Поделитесь идеей"
+
+#: includes/views/adminer-runner/tmpl/default.php:25
+msgid "Write a review and give a rating"
+msgstr "Напишите отзыв"
+
+#: includes/views/adminer-runner/tmpl/default.php:28
+msgid "Follow us on Twitter"
+msgstr "Присоединяйтесь в Twitter"
+
+#: includes/views/adminer-runner/tmpl/default.php:31
+msgid "Try our WordPress plugins"
+msgstr ""
+
+#: includes/views/adminer-runner/tmpl/default.php:40
+msgid "DB Connection parameters"
+msgstr "Параметры подключения к БД"
+
+#: includes/views/adminer-runner/tmpl/default.php:45
+msgid "Connection"
+msgstr "Подключение"
+
+#: includes/views/adminer-runner/tmpl/default.php:47
+msgid "- Custom parameters -"
+msgstr "- Ввести параметры -"
+
+#: includes/views/adminer-runner/tmpl/default.php:48
+msgid "- WordPress database -"
+msgstr "- WordPress БД -"
+
+#: includes/views/adminer-runner/tmpl/default.php:63
+#: includes/views/connections/tmpl/default.php:43
+msgid "DB Type"
+msgstr "Тип БД"
+
+#: includes/views/adminer-runner/tmpl/default.php:72
+#: includes/views/connections/tmpl/default.php:52
+msgid "Host"
+msgstr "Имя сервера с БД"
+
+#: includes/views/adminer-runner/tmpl/default.php:73
+#: includes/views/connections/tmpl/default.php:53
+msgid "Eg. localhost"
+msgstr "localhost"
+
+#: includes/views/adminer-runner/tmpl/default.php:77
+#: includes/views/connections/tmpl/default.php:57
+msgid "Path to DB file"
+msgstr "Пусть к файлу БД"
+
+#: includes/views/adminer-runner/tmpl/default.php:78
+#: includes/views/connections/tmpl/default.php:58
+msgid "DB name"
+msgstr "Имя БД"
+
+#: includes/views/adminer-runner/tmpl/default.php:79
+#: includes/views/connections/tmpl/default.php:59
+msgid "Specify database"
+msgstr "Укажите БД"
+
+#: includes/views/adminer-runner/tmpl/default.php:83
+#: includes/views/connections/tmpl/default.php:63
+msgid "User"
+msgstr "Пользователь"
+
+#: includes/views/adminer-runner/tmpl/default.php:88
+#: includes/views/connections/tmpl/default.php:68
+msgid "Password"
+msgstr "Пароль"
+
+#: includes/views/adminer-runner/tmpl/default.php:93
+#: includes/views/connections/tmpl/default.php:74
+msgid "Test Connection"
+msgstr "Проверить соединение"
+
+#: includes/views/adminer-runner/tmpl/default.php:98
+msgid "Run Adminer in modal window"
+msgstr "Запустить Adminer в модальном окне"
+
+#: includes/views/adminer-runner/tmpl/default.php:99
+msgid "Run Adminer in a new window"
+msgstr "Запустить Adminer в новом окне"
+
+#: includes/views/class-base.php:27
+msgid "Yes"
+msgstr "Да"
+
+#: includes/views/class-base.php:29
+msgid "No"
+msgstr "Нет"
+
+#: includes/views/class-base.php:31
+msgid "OK"
+msgstr "ОК"
+
+#: includes/views/class-base.php:33
+msgid "Cancel"
+msgstr "Отмена"
+
+#: includes/views/class-base.php:35
+msgid "Close"
+msgstr "Закрыть"
+
+#: includes/views/connections/class-html.php:31
+msgid "Do you want to delete the selected item?"
+msgstr "Вы действительно хотите удалить выбранную запись?"
+
+#: includes/views/connections/class-html.php:33
+msgid "Do you want to delete the selected items?"
+msgstr "Вы действительно хотите удалить выбранные записи?"
+
+#: includes/views/connections/class-html.php:39
+msgid "The connection could not be saved. Try again please."
+msgstr "Параметры подключения к БД не были сохранены. Попробуйте ещё раз."
+
+#: includes/views/connections/class-html.php:41
+msgid "The connection could not be tested. Try again please."
+msgstr "Не удалось проверить параметры подключения. Попробуйте ещё раз."
+
+#: includes/views/connections/class-html.php:43
+msgid "Select an action"
+msgstr "Выберите действие"
+
+#: includes/views/connections/class-html.php:45
+msgid "Select at least one item"
+msgstr "Выберите хотя бы одну запись"
+
+#: includes/views/connections/class-html.php:114
+#: includes/views/connections/tmpl/default.php:38
+msgid "Title"
+msgstr "Название"
+
+#: includes/views/connections/class-html.php:129
+msgid "Edit"
+msgstr "Редактировать"
+
+#: includes/views/connections/class-html.php:135
+#: includes/views/connections/tmpl/toolbar.php:9
+msgid "Delete"
+msgstr "Удалить"
+
+#: includes/views/connections/class-html.php:144
+msgid "Show more details"
+msgstr "Показать больше данных"
+
+#: includes/views/connections/class-html.php:154
+msgid "Type"
+msgstr "Тип"
+
+#: includes/views/connections/tmpl/default.php:16
+msgid "Add New"
+msgstr "Добавить"
+
+#: includes/views/connections/tmpl/default.php:34
+msgid "Connection settings"
+msgstr "Параметры подключения"
+
+#: includes/views/connections/tmpl/default.php:39
+msgid "Specify title"
+msgstr "Введите название"
+
+#: includes/views/connections/tmpl/default.php:73
+msgid "Save"
+msgstr "Сохранить"
+
+#: includes/views/connections/tmpl/toolbar.php:6
+msgid "Select bulk action"
+msgstr "Выберите массовое действие"
+
+#: includes/views/connections/tmpl/toolbar.php:8
+msgid "- Bulk Actions -"
+msgstr "- Действие -"
+
+#: includes/views/connections/tmpl/toolbar.php:11
+msgid "Apply"
+msgstr "Применить"
+
+#: includes/views/settings/class-html.php:8
+msgid "ARI Adminer - Settings"
+msgstr "ARI Adminer - Настройки"
+
+#: includes/views/settings/tmpl/default.php:6
+msgid "Save Changes"
+msgstr "Сохранить изменения"
+
+#~ msgid "What's next?"
+#~ msgstr "Как помочь проекту?"
+
+#~ msgid "Other our WordPress plugins"
+#~ msgstr "Наши WordPress плагины"
