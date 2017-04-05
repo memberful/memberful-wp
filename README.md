@@ -2,14 +2,14 @@
 
 ## Development environment
 
-Install [Vagrant](http://vagrantup.com) and [Virtualbox](http://virtualbox.org), then run `vagrant up` in the plugin's root directory.
+This project uses [VCCW](http://vccw.cc/). To get up and running install [Vagrant](http://vagrantup.com) and [Virtualbox](http://virtualbox.org), then run `vagrant up` in the plugin's root directory.
 
 You should then be able to access the WP admin panel - http://wordpress.dev/wp-admin.
 
 The default username/password is admin/admin.
 
 Once signed in you'll need to go to your local Memberful site, and setup a WordPress integration
-(Memberful Admin -> Settings -> Integrate -> I'm using WordPress), then copy and paste the activation
+(`Memberful Admin -> Settings -> Integrate -> I'm using WordPress`), then copy and paste the activation
 code into the WordPress admin panel (WP admin -> Settings -> Memberful). Submit the form and then
 WordPress should be connected to your local vm, ready for development!
 
