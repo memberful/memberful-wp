@@ -29,7 +29,7 @@ function memberful_wp_plugin_migrate_db() {
       );
 
     if ( $result === false ) {
-      echo 'Could not create the memberful mapping table\n';
+      echo 'Could not create the memberful mapping table. Please email info@memberful.com.';
       $wpdb->print_error();
       exit();
     }
