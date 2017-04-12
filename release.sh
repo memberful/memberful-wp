@@ -9,7 +9,9 @@ PLUGIN_SLUG=memberful-wp
 CURRENT_BRANCH=`git branch | grep \* | cut -f 2 -d ' '`
 DEVELOPMENT_BRANCH=development
 PLUGIN_DIR="$PWD/wordpress/wp-content/plugins/memberful-wp"
-VERSION=`grep "Stable tag" $PLUGIN_DIR/readme.txt | awk '{print $3}'`
+MAIN_PLUGIN_FILE="$PLUGIN_DIR/memberful-wp.php"
+README_FILE="$PLUGIN_DIR/readme.txt"
+VERSION=`grep "^Stable tag" "$README_FILE" | awk '{ print $3 }'`
 
 SVN_COMMIT_MESSAGE="Tagging version $VERSION"
 SVN_LOCAL_PATH="/tmp/$PLUGIN_SLUG"
@@ -20,6 +22,16 @@ SVN_USER=memberful
 check_current_branch() {
   if [ "$CURRENT_BRANCH" != "$DEVELOPMENT_BRANCH" ]; then
     echo "Please switch to branch $DEVELOPMENT_BRANCH before releasing a new version."
+    exit
+  fi
+}
+
+check_version_definitions() {
+  MAIN_PLUGIN_FILE_VERSION=`grep "^Version" $MAIN_PLUGIN_FILE | awk '{ print $2 }'`
+  MEMBERFUL_VERSION=`grep MEMBERFUL_VERSION $MAIN_PLUGIN_FILE | grep -v defined | cut -f 4 -d "'"`
+
+  if [ "$VERSION" != "$MAIN_PLUGIN_FILE_VERSION" -o "$MAIN_PLUGIN_FILE_VERSION" != "$MEMBERFUL_VERSION" ]; then
+    echo "Plugin version definitions in $README_FILE and $MAIN_PLUGIN_FILE must match! Please fix them."
     exit
   fi
 }
@@ -78,6 +90,7 @@ push_to_wordpress_svn() {
 }
 
 check_current_branch
+check_version_definitions
 ask_for_release_confirmation
 push_to_git_origin
 push_to_wordpress_svn
