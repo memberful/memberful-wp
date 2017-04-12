@@ -56,9 +56,10 @@ push_to_wordpress_svn() {
 
   echo "Removing old files from trunk"
   cd $SVN_TRUNK_PATH
+
   find . -type f | while read FILE; do
     if [ ! -e $PLUGIN_DIR/$FILE ]; then
-      echo "Removing $FILE"
+      svn remove "$FILE"
     fi
   done
 
@@ -67,8 +68,7 @@ push_to_wordpress_svn() {
 
   echo "Tagging version $VERSION"
   cd $SVN_LOCAL_PATH
-  mkdir -p tags/$VERSION
-  svn remove tags/$VERSION
+  svn remove --force tags/$VERSION
   svn copy trunk tags/$VERSION
   cd tags/$VERSION
   svn commit --username "$SVN_USER" -m "$SVN_COMMIT_MESSAGE"
