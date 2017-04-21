@@ -4,6 +4,9 @@
 #
 # Usage: ./release.sh
 
+# Automatically exit on any error.
+set -e
+
 PLUGIN_SLUG=memberful-wp
 
 CURRENT_BRANCH=`git branch | grep \* | cut -f 2 -d ' '`
@@ -50,8 +53,7 @@ ask_for_release_confirmation() {
 
 push_to_git_origin() {
   echo "GIT: Tagging version $VERSION and pushing to origin"
-  git tag --delete "$VERSION" 2> /dev/null
-  git tag "$VERSION"
+  git tag --force "$VERSION"
   git checkout master
   git reset --hard "$VERSION"
   git push --all origin
@@ -81,7 +83,9 @@ push_to_wordpress_svn() {
 
   echo "Tagging version $VERSION"
   cd $SVN_LOCAL_PATH
-  svn remove --force tags/$VERSION
+  if [ -e "tags/$VERSION" ]; then
+    svn remove --force "tags/$VERSION"
+  fi
   svn copy trunk tags/$VERSION
   cd tags/$VERSION
   svn commit --username "$SVN_USER" -m "$SVN_COMMIT_MESSAGE"
