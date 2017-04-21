@@ -29,7 +29,7 @@ function memberful_wp_sync_member_account( $account, $mapping_context ) {
   $user = $mapper->map( $account->member, $mapping_context );
 
   if ( ! is_wp_error( $user ) ) {
-    if ( $account->member->deleted ) {
+    if ( isset( $account->member->deleted ) ) {
       wp_delete_user( $user->ID );
       Memberful_User_Mapping_Repository::delete_mapping( $user->id );
     } else {
