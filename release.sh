@@ -50,7 +50,7 @@ ask_for_release_confirmation() {
 
 push_to_git_origin() {
   echo "GIT: Tagging version $VERSION and pushing to origin"
-  git tag --delete "$VERSION" > /dev/null
+  git tag --delete "$VERSION" 2> /dev/null
   git tag "$VERSION"
   git checkout master
   git reset --hard "$VERSION"
