@@ -56,8 +56,8 @@ push_to_git_origin() {
   git tag --force "$VERSION"
   git checkout master
   git reset --hard "$VERSION"
-  git push --all origin
-  git push --tags origin
+  git push --force --all origin
+  git push --force --tags origin
 }
 
 push_to_wordpress_svn() {
