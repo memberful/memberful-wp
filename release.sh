@@ -10,7 +10,7 @@ set -e
 PLUGIN_SLUG=memberful-wp
 
 CURRENT_BRANCH=`git branch | grep \* | cut -f 2 -d ' '`
-DEVELOPMENT_BRANCH=development
+MASTER_BRANCH=master
 PLUGIN_DIR="$PWD/wordpress/wp-content/plugins/memberful-wp"
 MAIN_PLUGIN_FILE="$PLUGIN_DIR/memberful-wp.php"
 README_FILE="$PLUGIN_DIR/readme.txt"
@@ -23,8 +23,8 @@ SVN_URL="https://plugins.svn.wordpress.org/$PLUGIN_SLUG/"
 SVN_USER=memberful
 
 check_current_branch() {
-  if [ "$CURRENT_BRANCH" != "$DEVELOPMENT_BRANCH" ]; then
-    echo "Please switch to branch $DEVELOPMENT_BRANCH before releasing a new version."
+  if [ "$CURRENT_BRANCH" != "$MASTER_BRANCH" ]; then
+    echo "Please switch to branch $MASTER_BRANCH before releasing a new version."
     exit
   fi
 }
@@ -49,15 +49,6 @@ ask_for_release_confirmation() {
     echo "Exiting..."
     exit
   fi
-}
-
-push_to_git_origin() {
-  echo "GIT: Tagging version $VERSION and pushing to origin"
-  git tag --force "$VERSION"
-  git checkout master
-  git reset --hard "$VERSION"
-  git push --force --all origin
-  git push --force --tags origin
 }
 
 push_to_wordpress_svn() {
@@ -97,7 +88,6 @@ push_to_wordpress_svn() {
 check_current_branch
 check_version_definitions
 ask_for_release_confirmation
-push_to_git_origin
 push_to_wordpress_svn
 
 echo "Done!"
