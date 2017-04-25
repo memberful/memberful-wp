@@ -44,10 +44,13 @@ segment is a separate number. i.e. `1.12.0` > `1.11.0`.
 ## Releasing a new version of the plugin
 
 * Make sure that every change has an appropriate changelog entry in `readme.txt`.
-* Set correct version number in `readme.txt`.
-* Ensure that all changes are ready in the `development` branch.
+* Set correct version number in `readme.txt` and `memberful-wp.php`.
+* Ensure that all changes are ready in the `master` branch.
 * Run `./release.sh`.
-* A copy of the wordpress.org svn repo will be downloaded into `/tmp`, the version you tagged will be copied across to the `tags` and `trunk` directories, (sans development files) and then committed to the svn repo, causing wordpress.org to release a new version.
+* A copy of the wordpress.org svn repo will be downloaded into `/tmp`, the
+  version you tagged will be copied across to the `tags` and `trunk`
+  directories, (sans development files) and then committed to the svn repo,
+  causing wordpress.org to release a new version.
 * The script will remove the svn directory.
 
 ### Updating WordPress SVN without a new plugin version
