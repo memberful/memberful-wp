@@ -124,7 +124,7 @@ function memberful_wp_format_widget_links( $links ) {
     $links[$key] = '<a href="'.$link['href'].'" class="'.$link['class'].'">'.$link['text'].'</a>';
   }
 
-  return implode( ' | ', $links );
+  return implode( ' <span class="memberful-links-separator">|</span> ', $links );
 }
 
 add_action( 'wp_enqueue_scripts', 'memberful_wp_add_stylesheet_if_action' );

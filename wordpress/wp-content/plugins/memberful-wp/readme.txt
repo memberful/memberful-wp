@@ -48,6 +48,10 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 == Changelog ==
 
+= Development =
+
+* Add class to the profile widget. Allows for more CSS modifications.
+
 = 1.28.0 =
 
 * Add Memberful links to the menu builder.
