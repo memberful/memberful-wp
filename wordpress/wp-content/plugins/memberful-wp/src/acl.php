@@ -55,7 +55,13 @@ function memberful_wp_user_disallowed_post_ids( $user_id ) {
 }
 
 function memberful_wp_filter_active_subscriptions($subscription) {
-  return empty($subscription['expires_at']) || $subscription['expires_at'] > time();
+  /**
+   * We can check only the `active` attribute once all of our customers use
+   * Memberful WP >= 1.29.
+   */
+  return ( isset( $subscription['active'] ) && $subscription['active'] )
+    || empty($subscription['expires_at'])
+    || $subscription['expires_at'] > time();
 }
 
 /**
@@ -135,7 +141,13 @@ function memberful_wp_user_has_subscription_to_plans( $user_id, array $required_
     if ( isset( $plans_user_is_subscribed_to[ $plan ] ) ) {
       $subscription = $plans_user_is_subscribed_to[ $plan ];
 
-      if ( empty( $subscription['expires_at'] ) || $subscription['expires_at'] > time() )
+      /**
+       * We can check only the `active` attribute once all of our customers use
+       * Memberful WP >= 1.29.
+       */
+      if ( ( isset( $subscription['active'] ) && $subscription['active'] )
+        || empty( $subscription['expires_at'] )
+        || $subscription['expires_at'] > time() )
         return TRUE;
     }
   }
