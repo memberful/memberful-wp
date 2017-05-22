@@ -30,9 +30,6 @@ function memberful_wp_user_disallowed_post_ids( $user_id ) {
   $user_products = memberful_wp_user_downloads( $user_id );
   $user_subs     = memberful_wp_user_plans_subscribed_to( $user_id );
 
-  if ( ! empty( $user_subs ) )
-    $user_subs     = array_filter( $user_subs, 'memberful_wp_filter_active_subscriptions' );
-
   // Work out the set of posts the user is and isn't allowed to access
   $user_product_acl      = memberful_wp_generate_user_specific_acl_from_global_acl( $user_products, $global_product_acl );
   $user_subscription_acl = memberful_wp_generate_user_specific_acl_from_global_acl( $user_subs, $global_subscription_acl );
@@ -52,10 +49,6 @@ function memberful_wp_user_disallowed_post_ids( $user_id ) {
   }
 
   return $ids[$user_id] = ( empty( $posts_user_is_not_allowed_to_access ) ) ? array() : array_combine( $posts_user_is_not_allowed_to_access, $posts_user_is_not_allowed_to_access );
-}
-
-function memberful_wp_filter_active_subscriptions($subscription) {
-  return empty($subscription['expires_at']) || $subscription['expires_at'] > time();
 }
 
 /**
@@ -133,10 +126,7 @@ function memberful_wp_user_has_subscription_to_plans( $user_id, array $required_
 
   foreach ( $required_plans as $plan ) {
     if ( isset( $plans_user_is_subscribed_to[ $plan ] ) ) {
-      $subscription = $plans_user_is_subscribed_to[ $plan ];
-
-      if ( empty( $subscription['expires_at'] ) || $subscription['expires_at'] > time() )
-        return TRUE;
+      return TRUE;
     }
   }
 
