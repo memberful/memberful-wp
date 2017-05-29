@@ -24,7 +24,7 @@ function memberful_wp_sync_member_from_memberful( $member_id, $mapping_context =
  * @return WP_User
  */
 function memberful_wp_sync_member_account( $account, $mapping_context ) {
-  $mapper = new Memberful_User_Map( );
+  $mapper = new Memberful_User_Map();
 
   $user = $mapper->map( $account->member, $mapping_context );
 
@@ -42,7 +42,7 @@ function memberful_wp_sync_member_account( $account, $mapping_context ) {
     memberful_wp_record_error(array(
       'error' => $user->get_error_messages(),
       'code'  => $user->get_error_code(),
-      'data'  => $user->get_error_data()
+      'member_email' => $account->member->email
     ));
   }
 
