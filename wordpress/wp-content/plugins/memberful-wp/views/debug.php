@@ -51,7 +51,7 @@ Unmapped users:
 <?php echo str_pad($unmapped_user->ID, 6) ?> <?php echo str_pad($unmapped_user->user_email, 30) ?> <?php echo $unmapped_user->user_registered; ?>
 <?php endforeach; ?>
 
-<? endif; ?>
+<?php endif; ?>
 
 <?php if ( ! empty( $mapping_records ) ): ?>
 Mapping records:
