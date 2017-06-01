@@ -55,6 +55,7 @@ db_pass: wordpress
 #
 plugins:
   - ari-adminer
+  - wordpress-beta-tester
 
 #
 # WordPress Default Theme
