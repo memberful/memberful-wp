@@ -187,7 +187,6 @@ function memberful_wp_debug() {
   $config                = memberful_wp_option_values();
   $acl_for_all_posts     = _memberful_wp_debug_all_post_meta();
   $plugins               = get_plugins();
-  $error_log             = memberful_wp_error_log();
 
   if($total_users != $total_mapped_users) {
     $mapping_records = $mapping_stats->mapping_records();

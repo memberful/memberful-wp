@@ -165,7 +165,6 @@ class Memberful_Authenticator {
     $response = memberful_wp_post_data_to_api_as_json( self::oauth_member_url('token'), $params );
 
     if ( is_wp_error($response) ) {
-      memberful_wp_record_wp_error( $response );
       return $this->_error( 'could_not_get_tokens', $response );
     }
 
@@ -178,8 +177,6 @@ class Memberful_Authenticator {
         'error' => 'Could not get access token from Memberful',
         'response' => $response
       );
-
-      memberful_wp_record_error( $payload );
 
       return $this->_error(
         $payload['code'],

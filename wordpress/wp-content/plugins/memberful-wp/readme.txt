@@ -48,6 +48,10 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 == Changelog ==
 
+= DEVELOPMENT =
+
+* Fix login failures in some WordPress environments.
+
 = 1.29.1 =
 
 * Improve error handling.
