@@ -48,6 +48,10 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 == Changelog ==
 
+= Development =
+
+* Make automatic user deletion safer.
+
 = 1.29.2 =
 
 * Fix login failures in some WordPress environments.

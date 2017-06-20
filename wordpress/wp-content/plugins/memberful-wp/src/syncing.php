@@ -26,15 +26,50 @@ function memberful_wp_sync_member_account( $account, $mapping_context ) {
 
   if ( ! is_wp_error( $user ) ) {
     if ( isset( $account->member->deleted ) ) {
-      wp_delete_user( $user->ID );
-      Memberful_User_Mapping_Repository::delete_mapping( $user->id );
+      if ( memberful_is_safe_to_delete( $user ) ) {
+        wp_delete_user( $user->ID );
+        Memberful_User_Mapping_Repository::delete_mapping( $user->ID );
+      } else {
+        Memberful_Wp_User_Downloads::sync($user->ID, array());
+        Memberful_Wp_User_Subscriptions::sync($user->ID, array());
+        Memberful_Wp_User_Role_Decision::ensure_user_role_is_correct( $user );
+      }
     } else {
       Memberful_Wp_User_Downloads::sync($user->ID, $account->products);
       Memberful_Wp_User_Subscriptions::sync($user->ID, $account->subscriptions);
-
       Memberful_Wp_User_Role_Decision::ensure_user_role_is_correct( $user );
     }
   }
 
   return $user;
+}
+
+function memberful_is_safe_to_delete( $user ) {
+  if ( memberful_is_admin( $user ) )
+    return false;
+
+  if ( memberful_has_content( $user ) ) {
+    return false;
+  }
+
+  return true;
+}
+
+function memberful_is_admin( $user ) {
+  return $user->has_cap( "delete_users" );
+}
+
+function memberful_has_content( $user ) {
+  $wp_query = new WP_Query( array( "post_type" => "any", "author" => $user->ID ) );
+
+  if ( $wp_query->have_posts() )
+    return true;
+
+  $comments_query = new WP_Comment_Query();
+  $comments = $comments_query->query( array( "user_id" => $user->ID ) );
+
+  if ( !empty( $comments ) )
+    return true;
+
+  return false;
 }
