@@ -56,6 +56,10 @@ function memberful_checkout_for_subscription_url( $plan_id ) {
   return add_query_arg( 'plan', $plan_id, memberful_url( 'checkout' ) );
 }
 
+function memberful_gift_url( $plan_id ) {
+  return add_query_arg( 'plan', $plan_id, memberful_url( 'gift' ) );
+}
+
 function memberful_checkout_for_download_url( $download_id ) {
   return add_query_arg( 'product', $download_id, memberful_url( 'checkout' ) );
 }

@@ -48,6 +48,10 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 == Changelog ==
 
+= Unreleased version =
+
+* Add gift links to the visual editor.
+
 = 1.30.0 =
 
 * Make automatic user deletion safer.
