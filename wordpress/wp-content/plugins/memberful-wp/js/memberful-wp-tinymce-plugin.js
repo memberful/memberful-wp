@@ -165,12 +165,14 @@
       var menu = [];
 
       if (window.MemberfulData.plans.length > 0) {
-        menu.push({text: 'Buy Subscription Plan', onclick: function() { insertSubscriptionCheckoutLink(editor); }});
-        menu.push({text: 'Buy Gift', onclick: function() { insertGiftLink(editor); }});
+        menu.push({text: 'Buy Plan', onclick: function() { insertSubscriptionCheckoutLink(editor); }});
       }
 
       menu.push({text: 'Sign in link', onclick: function() { insertSignInShortcode(editor); }});
-      menu.push({text: 'Free signup link', onclick: function() { insertRegistrationShortcode(editor); }});
+
+      if (window.MemberfulData.plans.length > 0) {
+        menu.push({text: 'Buy Gift', onclick: function() { insertGiftLink(editor); }});
+      }
 
       if (window.MemberfulData.downloads.length > 0) {
         menu.push(
@@ -178,6 +180,8 @@
           {text: 'Link to Download', onClick: function() { insertLinkToDownload(editor); }}
         );
       }
+
+      menu.push({text: 'Free sign up link', onclick: function() { insertRegistrationShortcode(editor); }});
 
       menu.push({text: 'Private RSS Feed link', onclick: function() { insertPrivateRSSFeedShortcode(editor); }});
 
