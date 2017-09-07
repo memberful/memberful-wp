@@ -74,7 +74,6 @@
     checkoutItemCtrl = {
       name: "item",
       type: "listbox",
-      text: options.prompt,
       label: options.label,
       values: options.choices.map(optionsForPurchasables)
     };
@@ -108,7 +107,6 @@
     insertCheckoutLinkDialog(
       editor,
       {
-        prompt: "Choose a plan",
         label: "Plan to subscribe to",
         choices: window.MemberfulData.plans,
         onSubmit: handleDialogSubmit
@@ -130,7 +128,6 @@
         dialogTitle: "Link to gift",
         label: "Plan",
         onSubmit: handleDialogSubmit,
-        prompt: "Choose a plan"
       }
     );
   };
@@ -147,7 +144,6 @@
     insertCheckoutLinkDialog(
       editor,
       {
-        prompt: "Choose a download",
         label: "Download to buy",
         choices: window.MemberfulData.downloads,
         onSubmit: handleDialogSubmit
