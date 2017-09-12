@@ -20,7 +20,10 @@ function memberful_wp_sync_member_from_memberful( $member_id, $mapping_context =
  * @return WP_User
  */
 function memberful_wp_sync_member_account( $account, $mapping_context ) {
+  global $wpdb;
   $mapper = new Memberful_User_Map();
+
+  $wpdb->query( "START TRANSACTION" );
 
   $user = $mapper->map( $account->member, $mapping_context );
 
@@ -39,6 +42,9 @@ function memberful_wp_sync_member_account( $account, $mapping_context ) {
       Memberful_Wp_User_Subscriptions::sync($user->ID, $account->subscriptions);
       Memberful_Wp_User_Role_Decision::ensure_user_role_is_correct( $user );
     }
+    $wpdb->query( "COMMIT" );
+  } else {
+    $wpdb->query( "ROLLBACK" );
   }
 
   return $user;
