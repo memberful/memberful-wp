@@ -78,14 +78,18 @@ class Memberful_Authenticator {
 
       $user = memberful_wp_sync_member_account( $account,  array( 'refresh_token' => $tokens->refresh_token ) );
 
-      if ( is_wp_error( $user ) && $user->get_error_code() === 'user_already_exists' ) {
-        $error_data = $user->get_error_data();
+      if ( is_wp_error( $user ) ) {
+        if ( $user->get_error_code() === 'user_already_exists' ) {
+          $error_data = $user->get_error_data();
 
-        return $this->ask_user_to_verify_they_want_to_sync_accounts(
-          $error_data['existing_user'],
-          $error_data['member'],
-          $error_data['context']
-        );
+          return $this->ask_user_to_verify_they_want_to_sync_accounts(
+            $error_data['existing_user'],
+            $error_data['member'],
+            $error_data['context']
+          );
+        } else {
+          return $this->_error( 'memberful_oauth_error' );
+        }
       }
 
       return $user;
