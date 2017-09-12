@@ -42,7 +42,7 @@ class Memberful_User_Map {
     $wp_user     = $ensure_user->ensure_present();
 
     if ( is_wp_error( $wp_user ) ) {
-      $this->add_data_to_wp_error( $wp_user, array( 'member' => $member, 'wp_user' => $canonical_user ) );
+      $this->add_data_to_wp_error( $wp_user, array( 'member' => $member ) );
 
       return $wp_user;
     }
