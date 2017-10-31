@@ -142,22 +142,17 @@ function memberful_wp_record_wp_error( $wp_error ) {
   ));
 }
 
-function memberful_wp_record_error( $new_payload ) {
-  if ( ! isset( $new_payload['caller'] ) ) {
-    $new_payload['caller'] = array_map('memberful_wp_strip_args_from_backtrace', array_slice(debug_backtrace(), 1, 10));
-  }
+function memberful_wp_record_error( $payload ) {
+  $payload['backtrace'] = memberful_get_backtrace_as_string();
+  $payload['date'] = gmdate('c');
 
-  if ( ! isset( $new_payload['date'] ) ) {
-    $new_payload['date'] = gmdate('c');
-  }
-
-  return memberful_wp_store_error( $new_payload );
+  return memberful_wp_store_error( $payload );
 }
 
-function memberful_wp_strip_args_from_backtrace( $line ) {
-  unset($line['args']);
-
-  return $line;
+function memberful_get_backtrace_as_string() {
+  ob_start();
+  debug_print_backtrace();
+  return ob_get_clean();
 }
 
 function memberful_wp_store_error( $new_payload ) {
@@ -170,5 +165,3 @@ function memberful_wp_store_error( $new_payload ) {
 
   return true;
 }
-
-
