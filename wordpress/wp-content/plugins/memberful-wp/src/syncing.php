@@ -8,6 +8,10 @@ function memberful_wp_sync_member_from_memberful( $member_id, $mapping_context =
   $account = memberful_api_member( $member_id );
 
   if ( is_wp_error( $account ) ) {
+    memberful_wp_record_error(array(
+      'error'  => $account->get_error_messages()
+    ));
+
     return $account;
   }
 
@@ -45,6 +49,11 @@ function memberful_wp_sync_member_account( $account, $mapping_context ) {
     $wpdb->query( "COMMIT" );
   } else {
     $wpdb->query( "ROLLBACK" );
+    memberful_wp_record_error(array(
+      'error' => $user->get_error_messages(),
+      'code'  => $user->get_error_code(),
+      'member_email' => $account->member->email
+    ));
   }
 
   return $user;

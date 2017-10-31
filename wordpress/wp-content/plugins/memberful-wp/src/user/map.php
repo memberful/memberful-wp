@@ -104,6 +104,10 @@ class Memberful_User_Map {
 
     if ( is_wp_error( $outcome_of_mapping ) ) {
       if ( $outcome_of_mapping->get_error_code() === "duplicate_user_for_member" && ! $wp_user_existed_before_request ) {
+        // We only record this error as others will be passed up and recorded
+        // by something else, whereas here we're working around the error.
+        memberful_wp_record_wp_error( $outcome_of_mapping );
+
         wp_delete_user( $wp_user->ID );
 
         $error_data = $outcome_of_mapping->get_error_data();
