@@ -5,8 +5,9 @@
  */
 
 require MEMBERFUL_DIR . '/src/endpoints/auth.php';
-require MEMBERFUL_DIR . '/src/endpoints/set_test_cookie.php';
 require MEMBERFUL_DIR . '/src/endpoints/check_test_cookie.php';
+require MEMBERFUL_DIR . '/src/endpoints/debug.php';
+require MEMBERFUL_DIR . '/src/endpoints/set_test_cookie.php';
 require MEMBERFUL_DIR . '/src/endpoints/webhook.php';
 
 add_action( 'plugins_loaded', 'memberful_wp_endpoint_filter' );
@@ -49,6 +50,9 @@ function memberful_wp_endpoint_for_request() {
       break;
     case 'webhook':
       $endpoint = new Memberful_Wp_Endpoint_Webhook;
+      break;
+    case 'debug':
+      $endpoint = new Memberful_Wp_Endpoint_Debug;
       break;
     }
   }
