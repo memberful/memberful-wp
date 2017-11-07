@@ -10,7 +10,7 @@ require MEMBERFUL_DIR . '/src/endpoints/debug.php';
 require MEMBERFUL_DIR . '/src/endpoints/set_test_cookie.php';
 require MEMBERFUL_DIR . '/src/endpoints/webhook.php';
 
-add_action( 'plugins_loaded', 'memberful_wp_endpoint_filter' );
+add_action( 'wp_loaded', 'memberful_wp_endpoint_filter' );
 
 /**
  * Listens to all requests and checks to see if the user is trying to access one of
