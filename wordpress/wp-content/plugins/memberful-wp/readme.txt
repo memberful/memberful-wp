@@ -48,6 +48,10 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 == Changelog ==
 
+= Development =
+
+* Improve member synchronization with Memberful.
+
 = 1.33.0 =
 
 * Make debugging of plugin issues easier.
