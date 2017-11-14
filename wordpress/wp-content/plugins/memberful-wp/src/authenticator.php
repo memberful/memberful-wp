@@ -134,7 +134,7 @@ class Memberful_Authenticator {
     setcookie('memberful_account_link_nonce', $nonce, time()+3600, COOKIEPATH, COOKIE_DOMAIN, false, true);
 
     wp_safe_redirect(
-      add_query_arg( 'memberful_account_check', '1', wp_login_url() )
+      add_query_arg( array( 'memberful_account_check' => '1', 'redirect_to' => get_site_url() ), wp_login_url() )
     );
     die();
   }
@@ -307,7 +307,8 @@ function memberful_wp_add_nonce_check_to_login_form() {
 
 function memberful_wp_display_check_account_message() {
   if ( isset($_GET['memberful_account_check']) ) {
-    return '<p>'.__( 'We found an existing WordPress user account with your email address. Please sign in so we can sync the accounts.' ).'</p>';
+    $message = apply_filters( 'memberful_account_check_message', __( 'We found an existing account with the same email address. To confirm you own the account, please sign in with your pre-existing password.' ) );
+    return '<p>' . $message . '</p>';
   }
 
   return null;
