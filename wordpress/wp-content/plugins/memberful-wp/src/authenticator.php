@@ -307,7 +307,8 @@ function memberful_wp_add_nonce_check_to_login_form() {
 
 function memberful_wp_display_check_account_message() {
   if ( isset($_GET['memberful_account_check']) ) {
-    return '<p>'.__( 'We found an existing account with the same email address. To confirm you own the account, please sign in with your pre-existing password.' ).'</p>';
+    $message = apply_filters( 'memberful_account_check', __( 'We found an existing account with the same email address. To confirm you own the account, please sign in with your pre-existing password.' ) );
+    return '<p>' . $message . '</p>';
   }
 
   return null;
