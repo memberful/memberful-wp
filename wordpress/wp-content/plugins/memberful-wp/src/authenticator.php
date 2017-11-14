@@ -134,7 +134,7 @@ class Memberful_Authenticator {
     setcookie('memberful_account_link_nonce', $nonce, time()+3600, COOKIEPATH, COOKIE_DOMAIN, false, true);
 
     wp_safe_redirect(
-      add_query_arg( 'memberful_account_check', '1', wp_login_url() )
+      add_query_arg( array( 'memberful_account_check' => '1', 'redirect_to' => get_site_url() ), wp_login_url() )
     );
     die();
   }
