@@ -17,11 +17,7 @@
 
     setup = function() { window.MemberfulEmbedded.setup(); }
 
-    if(s.addEventListener) {
-      s.addEventListener("load", setup, false);
-    } else {
-      s.attachEvent("onload", setup);
-    }
+    s.addEventListener("load", setup, false);
 
     ( document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0] ).appendChild( s );
   })();
