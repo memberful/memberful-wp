@@ -19,6 +19,15 @@ class Memberful_Wp_Integration_Sfwd_Learndash {
   		add_filter( 'the_content', array( $this, 'protect_learndash_content' ), 1001 );
   	}
 
+    /**
+     * Filter subtypes
+     *
+     * Excludes LD subtypes like lessons from having a Memberful protection metabox
+     *
+     * @since 1.35.0
+     * @access public
+     * @return array
+    */
   	function filter_learndash_subtypes( $types ) {
   		global $learndash_post_types;
   		foreach( $learndash_post_types as $post_type ) {
@@ -29,6 +38,15 @@ class Memberful_Wp_Integration_Sfwd_Learndash {
   		return $types;
   	}
 
+    /**
+     * Protect content
+     *
+     * Adds protection to content after making sure it is LD content
+     *
+     * @since 1.35.0
+     * @access public
+     * @return string
+    */
   	function protect_learndash_content( $content ) {
   		global $learndash_post_types, $post;
 
