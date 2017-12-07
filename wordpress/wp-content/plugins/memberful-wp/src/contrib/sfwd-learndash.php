@@ -38,7 +38,6 @@ class Memberful_Wp_Integration_Sfwd_Learndash {
 
   		if (in_array( $post->post_type, $learndash_post_types )) {
   			$post_id = $post->post_type != 'sfwd-courses' ? (int) get_post_meta( $post->ID, 'course_id', true ) : $post->ID;
-
   		}
 
   		return !memberful_can_user_access_post( get_current_user_id(), $post_id ) ? $this->memberful_wp_protect_learndash_content( $content, $post_id ) : $content;
@@ -58,7 +57,8 @@ class Memberful_Wp_Integration_Sfwd_Learndash {
   		$memberful_marketing_content = wp_kses_post( memberful_marketing_content( $post_id ) );
     	return apply_filters( 'memberful_wp_protect_content', $memberful_marketing_content );
   	}
-	/**
+	 
+    /**
      * Throw error on object clone
      *
      * The whole idea of the singleton design pattern is that there is a single
