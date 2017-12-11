@@ -17,13 +17,36 @@ class Memberful_Wp_Integration_Sfwd_Learndash {
   	function __construct() {
   		add_filter( 'memberful_metabox_post_types', array( $this, 'filter_learndash_subtypes' ) );
   		add_filter( 'the_content', array( $this, 'protect_learndash_content' ), 1001 );
+      add_filter( 'comments_open', array( $this, 'hide_comments_on_protected_content', 200, 2 ) );
   	}
 
     /**
-     * Filter subtypes
+     * hide_comments_on_protected_content
+     *
+     * Filter hook to close comments on protected courses and related subtypes
+     *
+     * @param bool $comments_open - are comments open coming into the filter
+     * @param int $post_id - ID of WP_Post the comments should be open or closed for
+     * @since 1.35.0
+     * @access public
+     * @return boolean
+    */
+    function hide_comments_on_protected_content($comments_open, $post_id) {
+      $post = get_post( $post_id );
+      if ( ! in_array( $post->post_type, $learndash_post_types ) ) {
+        return $comments_open;
+      }
+      $post_id = $post->post_type != 'sfwd-courses' ? (int) get_post_meta( $post->ID, 'course_id', true ) : $post_id;
+
+      return memberful_can_user_access_post( get_current_user_id(), $post_id ); 
+    }
+
+    /**
+     * filter_learndash_subtypes
      *
      * Excludes LD subtypes like lessons from having a Memberful protection metabox
      *
+     * @param array $types post_types that get Memberful metabox
      * @since 1.35.0
      * @access public
      * @return array
