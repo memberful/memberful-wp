@@ -9,7 +9,7 @@ function memberful_wp_metabox_types() {
 
   unset( $types['attachment'], $types['revision'], $types['nav_menu_item'], $types['forum'], $types['topic'], $types['reply'] );
 
-  return $types;
+  return apply_filters( 'memberful_metabox_post_types', $types );
 }
 
 function memberful_wp_add_metabox() {
