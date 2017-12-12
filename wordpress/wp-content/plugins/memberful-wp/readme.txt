@@ -50,7 +50,7 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 = 1.35.0 =
 
-* Adds Learndash support. Protection is added to a course, and this protects all sub-types
+* Adds Learndash support. Protection is added to a course, and this protects all sub-types.
 
 = 1.34.0 =
 
