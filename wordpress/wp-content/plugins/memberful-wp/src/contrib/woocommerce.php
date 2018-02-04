@@ -51,14 +51,14 @@ class Memberful_Wp_Integration_WooCommerce {
    */
   function block_cart_add( $passed, $product_id, $quantity ) {
     if (!memberful_can_user_access_post( get_current_user_id(), $product_id ) ) {
-      wc_add_notice( $this->memberful_wp_protect_woo_content( $product_id, 'error' ) );
+      wc_add_notice( $this->memberful_wp_protect_woo_content( $product_id ), 'error' );
       return false;
     }
     return (bool)$passed;
   }
 
   function memberful_wp_protect_woo_content( $post_id ) {
-    $memberful_marketing_content = memberful_marketing_content( $post_id );
+    $memberful_marketing_content = wp_kses_post( memberful_marketing_content( $post_id ) );
     return apply_filters( 'memberful_wp_protect_content', $memberful_marketing_content );
   }
 
