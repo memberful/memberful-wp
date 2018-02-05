@@ -66,6 +66,10 @@ if ( in_array( 'sfwd-lms/sfwd_lms.php', apply_filters( 'active_plugins', get_opt
   require_once MEMBERFUL_DIR . '/src/contrib/sfwd-learndash.php';
 }
 
+if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
+  require_once MEMBERFUL_DIR . '/src/contrib/woocommerce.php';
+}
+
 function memberful_wp_plugin_activate() {
 	add_option( 'memberful_wp_activation_redirect' , true );
 	memberful_clear_obsolete_cron_jobs();
