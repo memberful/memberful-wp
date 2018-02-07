@@ -18,10 +18,11 @@ class Memberful_Wp_User_Subscriptions extends Memberful_Wp_User_Entity {
 
   protected function format( $entity ) {
     return array(
-      'autorenew'  => $entity->renew_at_end_of_period,
-      'expires'    => $entity->expires,
-      'expires_at' => $entity->expires_at,
-      'id'         => $entity->subscription->id
+      'activated_at' => $entity->activated_at,
+      'autorenew'    => $entity->renew_at_end_of_period,
+      'expires'      => $entity->expires,
+      'expires_at'   => $entity->expires_at,
+      'id'           => $entity->subscription->id
     );
   }
 }
