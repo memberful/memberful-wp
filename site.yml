@@ -15,7 +15,7 @@ cpus: 2
 #
 # Network Settings
 #
-hostname: wordpress.dev
+hostname: wordpress.localhost
 ip: 192.168.33.3
 
 #

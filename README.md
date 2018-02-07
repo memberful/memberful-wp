@@ -6,7 +6,7 @@ This project uses [VCCW](http://vccw.cc/).
 
 To get up and running install [Vagrant](http://vagrantup.com) and [Virtualbox](http://virtualbox.org), then run `vagrant up` in the plugin's root directory.
 
-You should then be able to access the WP admin panel - http://wordpress.dev/wp-admin.
+You should then be able to access the WP admin panel - http://wordpress.localhost/wp-admin.
 
 The default username/password is admin/admin.
 
