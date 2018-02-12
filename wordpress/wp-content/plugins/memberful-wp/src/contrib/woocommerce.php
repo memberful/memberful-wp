@@ -38,7 +38,7 @@ class Memberful_Wp_Integration_WooCommerce {
    * Archive (loop) pages
    */
   function is_purchasable( $purchasable, $product ) {
-    return !current_user_can('administrator') && !memberful_can_user_access_post( get_current_user_id(), $product->get_id() ) ? false : $purchasable;
+    return !memberful_is_admin( wp_get_current_user() ) && !memberful_can_user_access_post( get_current_user_id(), $product->get_id() ) ? false : $purchasable;
   }
 
   /**
@@ -47,7 +47,7 @@ class Memberful_Wp_Integration_WooCommerce {
   function hide_add_to_cart_button() {
     global $post;
 
-    if (!current_user_can('administrator') && !memberful_can_user_access_post( get_current_user_id(), $post->ID ) ) {
+    if ( !memberful_is_admin( wp_get_current_user() ) && !memberful_can_user_access_post( get_current_user_id(), $post->ID ) ) {
       remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_add_to_cart', 30 );
       echo $this->memberful_wp_protect_woo_content( $post->ID );
     }
@@ -62,7 +62,7 @@ class Memberful_Wp_Integration_WooCommerce {
    * @return bool
    */
   function block_cart_add( $passed, $product_id, $quantity ) {
-    if (!current_user_can('administrator') && !memberful_can_user_access_post( get_current_user_id(), $product_id ) ) {
+    if ( !memberful_is_admin( wp_get_current_user() ) && !memberful_can_user_access_post( get_current_user_id(), $product_id ) ) {
       wc_add_notice( $this->memberful_wp_protect_woo_content( $product_id ), 'error' );
       return false;
     }
