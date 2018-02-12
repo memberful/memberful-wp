@@ -10,7 +10,7 @@ License: GPLv2 or later
 */
 
 if ( ! defined( 'MEMBERFUL_VERSION' ) )
-	define( 'MEMBERFUL_VERSION', '1.37.0' );
+	define( 'MEMBERFUL_VERSION', '1.37.1' );
 
 if ( ! defined( 'MEMBERFUL_PLUGIN_FILE' ) )
 	define( 'MEMBERFUL_PLUGIN_FILE', __FILE__ );
