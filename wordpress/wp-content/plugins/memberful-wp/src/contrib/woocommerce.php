@@ -18,15 +18,27 @@ class Memberful_Wp_Integration_WooCommerce {
   function __construct() {
     add_action( 'woocommerce_single_product_summary', array( $this, 'hide_add_to_cart_button' ), 25);
     add_filter( 'woocommerce_add_to_cart_validation', array( $this, 'block_cart_add' ), 30, 3 );
-    add_filter( 'woocommerce_is_purchasable', array( $this, 'not_purchasable'), 20, 2 );
+    add_filter( 'woocommerce_is_purchasable', array( $this, 'is_purchasable'), 20, 2 );
+    add_filter( 'the_content', array( $this, 'remove_erroneous_protection' ), -20 );
+  }
+
+  /**
+   * Removes filtering on the content from other functionalities
+   */
+  function remove_erroneous_protection( $content ) {
+    global $post;
+    if ($post->post_type == "product") {
+      remove_filter( 'the_content', 'memberful_wp_protect_content', -10 );
+    }
+    return $content;
   }
 
   /**
    * Makes it so that the add to cart button on archive page will show Read More and link to product on
    * Archive (loop) pages
    */
-  function not_purchasable( $purchasable, $product ) {
-    return !memberful_can_user_access_post( get_current_user_id(), $product->get_id() ) ? false : $purchasable;
+  function is_purchasable( $purchasable, $product ) {
+    return !memberful_is_admin( wp_get_current_user() ) && !memberful_can_user_access_post( get_current_user_id(), $product->get_id() ) ? false : $purchasable;
   }
 
   /**
@@ -35,7 +47,7 @@ class Memberful_Wp_Integration_WooCommerce {
   function hide_add_to_cart_button() {
     global $post;
 
-    if (!memberful_can_user_access_post( get_current_user_id(), $post->ID ) ) {
+    if ( !memberful_is_admin( wp_get_current_user() ) && !memberful_can_user_access_post( get_current_user_id(), $post->ID ) ) {
       remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_add_to_cart', 30 );
       echo $this->memberful_wp_protect_woo_content( $post->ID );
     }
@@ -50,7 +62,7 @@ class Memberful_Wp_Integration_WooCommerce {
    * @return bool
    */
   function block_cart_add( $passed, $product_id, $quantity ) {
-    if (!memberful_can_user_access_post( get_current_user_id(), $product_id ) ) {
+    if ( !memberful_is_admin( wp_get_current_user() ) && !memberful_can_user_access_post( get_current_user_id(), $product_id ) ) {
       wc_add_notice( $this->memberful_wp_protect_woo_content( $product_id ), 'error' );
       return false;
     }
