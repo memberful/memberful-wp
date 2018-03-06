@@ -86,8 +86,8 @@ savequeries: false
 # Addtional PHP code in the wp-config.php
 #
 extra_wp_config: |
-  define('MEMBERFUL_APPS_HOST', 'https://apps.memberful.dev');
-  define('MEMBERFUL_EMBED_HOST', 'https://apps.memberful.dev');
+  define('MEMBERFUL_APPS_HOST', 'http://apps.memberful.localhost');
+  define('MEMBERFUL_EMBED_HOST', 'http://apps.memberful.localhost');
   define('MEMBERFUL_SSL_VERIFY', FALSE);
 
 #
