@@ -48,6 +48,10 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 == Changelog ==
 
+= unreleased version =
+
+* Add support for Elementor page builder.
+
 = 1.37.1 =
 
 * Improve WooCommerce support.
