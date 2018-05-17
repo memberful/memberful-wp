@@ -48,6 +48,10 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 == Changelog ==
 
+= unreleased version =
+
+* Fix "Restrict Content Tool" for WooCommerce products.
+
 = 1.38.0 =
 
 * Add support for Elementor page builder.

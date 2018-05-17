@@ -19,18 +19,6 @@ class Memberful_Wp_Integration_WooCommerce {
     add_action( 'woocommerce_single_product_summary', array( $this, 'hide_add_to_cart_button' ), 25);
     add_filter( 'woocommerce_add_to_cart_validation', array( $this, 'block_cart_add' ), 30, 3 );
     add_filter( 'woocommerce_is_purchasable', array( $this, 'is_purchasable'), 20, 2 );
-    add_filter( 'the_content', array( $this, 'remove_erroneous_protection' ), -20 );
-  }
-
-  /**
-   * Removes filtering on the content from other functionalities
-   */
-  function remove_erroneous_protection( $content ) {
-    global $post;
-    if ($post->post_type == "product") {
-      remove_filter( 'the_content', 'memberful_wp_protect_content', -10 );
-    }
-    return $content;
   }
 
   /**
