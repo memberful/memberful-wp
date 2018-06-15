@@ -5,6 +5,9 @@ define( 'MEMBERFUL_JSON', 'json' );
 
 
 function memberful_sign_in_url($protocol = NULL) {
+  if ( $protocol === NULL ) {
+    $protocol = is_ssl() ? "https" : "http";
+  }
   return memberful_wp_endpoint_url( 'auth', $protocol );
 }
 
