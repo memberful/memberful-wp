@@ -7,7 +7,12 @@ function memberful_wp_render_embed() {
     return;
 
   $script_src       = memberful_wp_embed_script_src();
-  $intercepted_urls = array(memberful_sign_in_url( 'http' ), memberful_sign_in_url( 'https' ));
+  $intercepted_urls = array(
+    memberful_sign_in_url( 'http' ),
+    memberful_sign_in_url( 'https' ),
+    memberful_obsolete_sign_in_url( 'http' ),
+    memberful_obsolete_sign_in_url( 'https' ),
+  );
 
   memberful_wp_render(
     'embed.js',
