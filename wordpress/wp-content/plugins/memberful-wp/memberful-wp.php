@@ -74,6 +74,10 @@ if ( in_array( 'elementor/elementor.php', apply_filters( 'active_plugins', get_o
   require_once MEMBERFUL_DIR . '/src/contrib/elementor.php';
 }
 
+if ( in_array( 'wp-ultimate-recipe/wp-ultimate-recipe.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
+  require_once MEMBERFUL_DIR . '/src/contrib/wp-ultimate-recipe.php';
+}
+
 function memberful_wp_plugin_activate() {
   add_option( 'memberful_wp_activation_redirect' , true );
   memberful_clear_obsolete_cron_jobs();
