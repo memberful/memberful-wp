@@ -175,6 +175,10 @@ function _memberful_wp_debug_all_post_meta() {
 function memberful_wp_debug() {
   global $wp_version;
 
+  if ( ! function_exists( 'get_plugins' ) ) {
+    require_once ABSPATH . 'wp-admin/includes/plugin.php';
+  }
+
   $mapping_stats = new Memberful_User_Map_Stats(Memberful_User_Mapping_Repository::table());
   $counts = count_users();
 
