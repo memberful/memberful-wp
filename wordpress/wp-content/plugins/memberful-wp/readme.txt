@@ -48,6 +48,10 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 == Changelog ==
 
+= unreleased =
+
+* Improve WordPress debugging.
+
 = 1.39.0 =
 
 * Add support for WP Ultimate Recipe.

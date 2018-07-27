@@ -25,20 +25,9 @@ class Memberful_Wp_Endpoint_Debug implements Memberful_Wp_Endpoint {
   }
 
   public function process( array $request_params, array $server_params ) {
-    $mapping_stats = new Memberful_User_Map_Stats(Memberful_User_Mapping_Repository::table());
-    $unmapped_users = $mapping_stats->unmapped_users();
-
-    if( count($unmapped_users) > 0 ) {
-      echo "Unmapped users:\n";
-      echo str_pad('WP ID', 6), ' ', str_pad('Email', 30), ' ', "Date registered\n";
-      foreach($unmapped_users as $unmapped_user) {
-        echo str_pad($unmapped_user->ID, 6), ' ', str_pad($unmapped_user->user_email, 30), ' ', $unmapped_user->user_registered, "\n";
-      }
-      echo "\n";
-    }
-
-    echo "Error log:\n";
-    var_export( memberful_wp_error_log() );
+    ob_start();
+    memberful_wp_debug();
+    print html_entity_decode( strip_tags( ob_get_clean() ), ENT_QUOTES );
     exit;
   }
 }
