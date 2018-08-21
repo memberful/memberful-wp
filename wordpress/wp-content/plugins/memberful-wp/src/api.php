@@ -161,7 +161,7 @@ function memberful_wp_store_error( $new_payload ) {
 
   array_unshift( $error_log, $new_payload );
 
-  update_option( 'memberful_error_log', $error_log );
+  update_option( 'memberful_error_log', $error_log, false );
 
   return true;
 }
