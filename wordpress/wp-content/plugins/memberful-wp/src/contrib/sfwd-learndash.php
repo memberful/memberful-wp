@@ -17,7 +17,7 @@ class Memberful_Wp_Integration_Sfwd_Learndash {
   function __construct() {
     add_filter( 'memberful_metabox_post_types', array( $this, 'filter_learndash_subtypes' ) );
     add_filter( 'the_content', array( $this, 'protect_learndash_content' ), 1001 );
-    add_filter( 'comments_open', array( $this, 'hide_comments_on_protected_content', 200, 2 ) );
+    add_filter( 'comments_open', array( $this, 'hide_comments_on_protected_content' ), 200, 2 );
   }
 
   /**
@@ -32,6 +32,7 @@ class Memberful_Wp_Integration_Sfwd_Learndash {
    * @return boolean
    */
   function hide_comments_on_protected_content($comments_open, $post_id) {
+    global $learndash_post_types;
     $post = get_post( $post_id );
     if ( ! in_array( $post->post_type, $learndash_post_types ) ) {
       return $comments_open;
