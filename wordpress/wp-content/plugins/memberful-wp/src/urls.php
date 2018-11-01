@@ -68,10 +68,6 @@ function memberful_checkout_for_download_url( $download_id ) {
   return add_query_arg( 'product', $download_id, memberful_url( 'checkout' ) );
 }
 
-function memberful_wp_update_plugin_settings_on_memberful_url() {
-  return memberful_url( 'admin/settings/integrate/website/wordpress' );
-}
-
 function memberful_wp_plugin_settings_url($no_header = FALSE, $subpage='') {
   $header_parameter  = $no_header === TRUE ? "&noheader=true" : "";
   $subpage_parameter = $subpage !== '' ? '&subpage='.$subpage : '';

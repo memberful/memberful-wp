@@ -60,12 +60,3 @@ function memberful_wp_site_name() {
 
   return empty( $blog_name ) ? 'WordPress Blog' : $blog_name;
 }
-
-function memberful_wp_send_site_options_to_memberful() {
-  $options = array('site' => array('name' => memberful_wp_site_name(), 'main_website_url' => home_url()));
-
-  memberful_wp_put_data_to_api_as_json( 
-    memberful_url( 'admin/settings/integrate/website/settings' ),
-    $options
-  );
-}

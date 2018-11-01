@@ -340,9 +340,6 @@ function memberful_wp_activate( $code ) {
   update_option( 'memberful_site', $credentials->site );
   update_option( 'memberful_webhook_secret', $credentials->webhook->secret );
 
-  // Ideally we'd modify the activation payload to send this info, but it's easier to do this "short-term".
-  memberful_wp_send_site_options_to_memberful();
-
   return TRUE;
 }
 
