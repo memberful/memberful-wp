@@ -305,10 +305,11 @@ function memberful_wp_options() {
  */
 function memberful_wp_activate( $code ) {
   $params = array(
-    'requirements'       => array('oauth', 'api_key', 'webhook'),
     'activation_code'    => trim($code),
     'app_name'           => trim(memberful_wp_site_name()),
+    'app_url'            => home_url(),
     'oauth_redirect_url' => memberful_wp_oauth_callback_url(),
+    'requirements'       => array('oauth', 'api_key', 'webhook'),
     'webhook_url'        => memberful_wp_webhook_url()
   );
 
