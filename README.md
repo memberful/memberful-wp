@@ -15,6 +15,15 @@ Once signed in you'll need to go to your local Memberful site, and setup a WordP
 code into the WordPress admin panel (WP admin -> Settings -> Memberful). Submit the form and then
 WordPress should be connected to your local vm, ready for development!
 
+### Memberful WP with puma-dev
+
+If you use [puma-dev](https://github.com/puma/puma-dev), then you have to tell it to not handle http://wordpress.localhost and redirect to the Memberful WP Vagrant box instead:
+
+```
+cd ~/.puma-dev
+echo "http://192.168.33.3:80" > wordpress
+```
+
 ## Versioning
 
 The plugin is versioned using [Semantic Versioning](http://semver.org).
