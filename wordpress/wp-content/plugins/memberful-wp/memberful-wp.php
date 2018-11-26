@@ -3,14 +3,14 @@
 Plugin Name: Memberful WP
 Plugin URI: http://github.com/memberful/memberful-wp
 Description: Sell memberships and restrict access to content with WordPress and Memberful.
-Version: 1.42.1
+Version: 1.43.0
 Author: Memberful
 Author URI: http://memberful.com
 License: GPLv2 or later
  */
 
 if ( ! defined( 'MEMBERFUL_VERSION' ) )
-  define( 'MEMBERFUL_VERSION', '1.42.1' );
+  define( 'MEMBERFUL_VERSION', '1.43.0' );
 
 if ( ! defined( 'MEMBERFUL_PLUGIN_FILE' ) )
   define( 'MEMBERFUL_PLUGIN_FILE', __FILE__ );
@@ -76,6 +76,10 @@ if ( in_array( 'elementor/elementor.php', apply_filters( 'active_plugins', get_o
 
 if ( in_array( 'wp-ultimate-recipe/wp-ultimate-recipe.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
   require_once MEMBERFUL_DIR . '/src/contrib/wp-ultimate-recipe.php';
+}
+
+if ( in_array( 'wp-ultimate-recipe/wp-ultimate-recipe-premium.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
+  require_once MEMBERFUL_DIR . '/src/contrib/wp-ultimate-recipe-premium.php';
 }
 
 function memberful_wp_plugin_activate() {
