@@ -21,7 +21,10 @@ function memberful_wp_add_metabox() {
       'memberful_acl',
       'Memberful: Restrict Access',
       'memberful_wp_metabox',
-      $type
+      $type,
+      'advanced',
+      'default',
+      array('__block_editor_compatible_meta_box' => false)
     );
   }
 }
