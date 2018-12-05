@@ -13,6 +13,9 @@ function memberful_wp_protect_content( $content ) {
     // Disable Beaver Builder
     remove_action( "the_content", "FLBuilder::render_content" );
 
+    // Remove media enclosures from the RSS feed
+    add_filter("rss_enclosure", "__return_empty_string");
+
     $memberful_marketing_content = memberful_marketing_content( $post->ID );
     return apply_filters( 'memberful_wp_protect_content', $memberful_marketing_content );
   }
