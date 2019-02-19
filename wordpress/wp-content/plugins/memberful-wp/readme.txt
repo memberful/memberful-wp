@@ -2,7 +2,7 @@
 Contributors: matt-button, drewstrojny, dwestendorf, rusuandreirobert, sumobi, Webby Scots
 Tags: memberful, member, membership, memberships, recurring payments, recurring billing, paywall, subscriptions, stripe, oauth, oauth2
 Requires at least: 3.6
-Tested up to: 5.0
+Tested up to: 5.1
 Stable tag: 1.45.0
 License: GPLv2 or later
 
