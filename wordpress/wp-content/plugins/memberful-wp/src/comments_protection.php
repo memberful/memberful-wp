@@ -41,21 +41,25 @@ function memberful_user_can_access_comments(){
 }
 
 
+add_action( 'do_feed_rss2', 'memberful_single_feed_comments_protection', 9, 1 );
+add_action( 'do_feed_atom', 'memberful_single_feed_comments_protection', 9, 1 );
+
 /**
 *Function checks to see if this is a comments feed that should be removed
 *@return null
 */
 function memberful_single_feed_comments_protection($for_comments){
-    if(!$for_comments) return;
-    if(!is_singular()) return;
+    if(!$for_comments)
+      return;
+      
+    if(!is_singular())
+      return;
 
-    if(is_singular() && !memberful_post_is_protected()) return;
+    if(is_singular() && !memberful_post_is_protected())
+      return;
 
     memberful_remove_feed();
 }
-
-add_action( 'do_feed_rss2', 'memberful_single_feed_comments_protection', 9, 1 );
-add_action( 'do_feed_atom', 'memberful_single_feed_comments_protection', 9, 1 );
 
 /**
 *Function to see if memberful protects the current post id'd by $post_id
@@ -64,7 +68,8 @@ add_action( 'do_feed_atom', 'memberful_single_feed_comments_protection', 9, 1 );
 */
 function memberful_post_is_protected($post_id=null){
 
-  if(!isset($post_id)) $post_id=get_the_ID();
+  if(!isset($post_id))
+    $post_id=get_the_ID();
 
   $acl= get_option( 'memberful_acl', array());
   $restricted=memberful_get_protected_post_IDS();
@@ -85,15 +90,20 @@ function memberful_remove_feed(){
 */
 function memberful_get_protected_post_IDS(){
   $acl= get_option( 'memberful_acl', array());
-  $output=array();
+  $registered=get_option('memberful_posts_available_to_any_registered_user', array());
+  $private=array();
   foreach($acl as $restricted){
-    if(!is_array($restricted)) continue;
+    if(!is_array($restricted))
+      continue;
     foreach($restricted as $protected_posts){
-      $output=array_merge($output, $protected_posts);
+      $private=array_merge($private, $protected_posts);
     }
   }
-  return array_unique($output);
+  return array_unique(array_merge($private, $registered));
 }
+
+
+add_filter('comment_feed_where', 'memberful_comment_feed_cwhere_filter', 10, 2);
 
 /**
 * Filter function to directly edit WP_Query's WHERE statement
@@ -101,12 +111,12 @@ function memberful_get_protected_post_IDS(){
 */
 
 function memberful_comment_feed_cwhere_filter($cwhere, $query){
-  if(!$query->is_feed() || is_singular()) return $cwhere;
+  if(!$query->is_feed() || is_singular())
+    return $cwhere;
 
   global $wpdb;
   $restricted=implode(',', memberful_get_protected_post_IDS());
   $cwhere.= "AND {$wpdb->posts}.ID NOT IN ($restricted)";
   return $cwhere;
 }
-add_filter('comment_feed_where', 'memberful_comment_feed_cwhere_filter', 10, 2);
 ?>
