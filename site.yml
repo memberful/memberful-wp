@@ -88,6 +88,7 @@ extra_wp_config: |
   define('MEMBERFUL_APPS_HOST', 'http://apps.memberful.localhost');
   define('MEMBERFUL_EMBED_HOST', 'http://apps.memberful.localhost');
   define('MEMBERFUL_SSL_VERIFY', FALSE);
+  define('WP_MEMORY_LIMIT', '128M');
 
 #
 # Theme unit testing
@@ -161,6 +162,7 @@ php_ini:
   xdebug.idekey: VCCWDEBUG
   xdebug.remote_connect_back: true
   xdebug.remote_autostart: true
+  max_input_vars: 3000
 
 synced_folder: wordpress
 document_root: /var/www/html
