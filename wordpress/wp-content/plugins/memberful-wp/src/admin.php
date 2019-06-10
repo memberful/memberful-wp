@@ -22,10 +22,10 @@ function memberful_wp_plugin_migrate_db() {
   if ( $db_version < 1 ) {
     $result = $wpdb->query(
       'CREATE TABLE `'.Memberful_User_Mapping_Repository::table().'`(
-        `wp_user_id` INT UNSIGNED NULL DEFAULT NULL UNIQUE KEY,
-        `member_id` INT UNSIGNED NOT NULL PRIMARY KEY,
+        `wp_user_id` BIGINT(20) UNSIGNED NULL DEFAULT NULL UNIQUE KEY,
+        `member_id` BIGINT(20) UNSIGNED NOT NULL PRIMARY KEY,
         `refresh_token` VARCHAR( 45 ) NULL DEFAULT NULL,
-        `last_sync_at` INT UNSIGNED NOT NULL DEFAULT 0)'
+        `last_sync_at` BIGINT(20) UNSIGNED NOT NULL DEFAULT 0)'
       );
 
     if ( $result === false ) {

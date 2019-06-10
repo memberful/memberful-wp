@@ -48,6 +48,10 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 == Changelog ==
 
+= unreleased version =
+
+* Improve plugin's internal database table structure.
+
 = 1.47.0 =
 
 * Improve support for Elementor page builder.
