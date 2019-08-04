@@ -48,6 +48,10 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 == Changelog ==
 
+= unreleased =
+
+* Add "Anybody subscribed to a plan" option to the restrict access tool.
+
 = 1.48.0 =
 
 * Improve plugin's internal database table structure.

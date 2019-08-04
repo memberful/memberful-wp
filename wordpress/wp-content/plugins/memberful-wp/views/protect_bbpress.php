@@ -18,7 +18,8 @@
         array(
           'subscriptions' => $plans,
           'products' => $downloads,
-          'viewable_by_any_registered_users' => $restricted_to_registered_users
+          'viewable_by_any_registered_users' => $restricted_to_registered_users,
+          'viewable_by_anybody_subscribed_to_a_plan' => $restricted_to_subscribed_users
         )
       );
       ?>

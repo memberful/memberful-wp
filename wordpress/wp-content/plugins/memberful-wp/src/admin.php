@@ -385,16 +385,16 @@ function memberful_wp_advanced_settings() {
 
 function memberful_wp_bulk_protect() {
   if ( ! empty( $_POST ) ) {
-    $categories_to_protect           = empty( $_POST['memberful_protect_categories'] ) ? array() : (array) $_POST['memberful_protect_categories'];
-    $acl_for_products                = empty( $_POST['memberful_product_acl'] ) ? array() : (array) $_POST['memberful_product_acl'];
-    $acl_for_subscriptions           = empty( $_POST['memberful_subscription_acl'] ) ? array() : (array) $_POST['memberful_subscription_acl'];
-    $marketing_content               = empty( $_POST['memberful_marketing_content'] ) ? '' : $_POST['memberful_marketing_content'];
-    $things_to_protect               = empty( $_POST['target_for_restriction']) ? '' : $_POST['target_for_restriction'];
+    $categories_to_protect = empty( $_POST['memberful_protect_categories'] ) ? array() : (array) $_POST['memberful_protect_categories'];
+    $acl_for_products = empty( $_POST['memberful_product_acl'] ) ? array() : (array) $_POST['memberful_product_acl'];
+    $acl_for_subscriptions = empty( $_POST['memberful_subscription_acl'] ) ? array() : (array) $_POST['memberful_subscription_acl'];
+    $marketing_content = empty( $_POST['memberful_marketing_content'] ) ? '' : $_POST['memberful_marketing_content'];
+    $things_to_protect = empty( $_POST['target_for_restriction']) ? '' : $_POST['target_for_restriction'];
     $viewable_by_any_registered_user = empty( $_POST['memberful_viewable_by_any_registered_users'] ) ? '' : $_POST['memberful_viewable_by_any_registered_users'];
+    $viewable_by_anybody_subscribed_to_a_plan = empty( $_POST['memberful_viewable_by_anybody_subscribed_to_a_plan'] ) ? '' : $_POST['memberful_viewable_by_anybody_subscribed_to_a_plan'];
 
-    $product_acl_manager   = new Memberful_Post_ACL( 'product' );
+    $product_acl_manager = new Memberful_Post_ACL( 'product' );
     $subscription_acl_manager = new Memberful_Post_ACL( 'subscription' );
-
 
     $query_params = array('nopaging' => true, 'fields' => 'ids');
 
@@ -423,6 +423,7 @@ function memberful_wp_bulk_protect() {
         memberful_wp_update_post_marketing_content($id, $marketing_content);
       }
       memberful_wp_set_post_available_to_any_registered_users($id, $viewable_by_any_registered_user);
+      memberful_wp_set_post_available_to_anybody_subscribed_to_a_plan($id, $viewable_by_anybody_subscribed_to_a_plan);
     }
 
     if( isset($_POST['memberful_make_default_marketing_content']) && $_POST['memberful_make_default_marketing_content'] )
@@ -444,12 +445,13 @@ function memberful_wp_bulk_protect() {
 
 function memberful_wp_protect_bbpress() {
   if ( ! empty( $_POST ) ) {
-    $protection_enabled     = empty( $_POST['memberful_protect_bbpress'] ) ? FALSE : ( $_POST['memberful_protect_bbpress'] == '1');
-    $required_downloads     = empty( $_POST['memberful_product_acl'] ) ? array() : (array) $_POST['memberful_product_acl'];
+    $protection_enabled = empty( $_POST['memberful_protect_bbpress'] ) ? FALSE : ( $_POST['memberful_protect_bbpress'] == '1');
+    $required_downloads = empty( $_POST['memberful_product_acl'] ) ? array() : (array) $_POST['memberful_product_acl'];
     $required_subscription_plans = empty( $_POST['memberful_subscription_acl'] ) ? array() : (array) $_POST['memberful_subscription_acl'];
-    $viewable_by_any_user   = empty( $_POST['memberful_viewable_by_any_registered_users'] ) ? FALSE : ($_POST['memberful_viewable_by_any_registered_users'] == '1');
-    $redirect_to_homepage   = empty( $_POST['memberful_send_unauthorized_users'] ) ? TRUE : ($_POST['memberful_send_unauthorized_users'] == 'homepage');
-    $redirect_to_url        = empty( $_POST['memberful_send_unauthorized_users_to_url'] ) ? '' : $_POST['memberful_send_unauthorized_users_to_url'];
+    $viewable_by_any_registered_user = empty( $_POST['memberful_viewable_by_any_registered_users'] ) ? FALSE : ($_POST['memberful_viewable_by_any_registered_users'] == '1');
+    $viewable_by_anybody_subscribed_to_a_plan = empty( $_POST['memberful_viewable_by_anybody_subscribed_to_a_plan'] ) ? FALSE : ($_POST['memberful_viewable_by_anybody_subscribed_to_a_plan'] == '1');
+    $redirect_to_homepage = empty( $_POST['memberful_send_unauthorized_users'] ) ? TRUE : ($_POST['memberful_send_unauthorized_users'] == 'homepage');
+    $redirect_to_url = empty( $_POST['memberful_send_unauthorized_users_to_url'] ) ? '' : $_POST['memberful_send_unauthorized_users_to_url'];
 
     if ( ! empty( $required_subscription_plans ) )
       $required_subscription_plans = array_combine( $required_subscription_plans, $required_subscription_plans );
@@ -459,7 +461,8 @@ function memberful_wp_protect_bbpress() {
 
     memberful_wp_bbpress_update_send_unauthorized_users_to_homepage( $redirect_to_homepage );
     memberful_wp_bbpress_update_protect_forums( $protection_enabled );
-    memberful_wp_bbpress_update_restricted_to_registered_user( $viewable_by_any_user );
+    memberful_wp_bbpress_update_restricted_to_registered_user( $viewable_by_any_registered_user );
+    memberful_wp_bbpress_update_restricted_to_subscribed_users( $viewable_by_anybody_subscribed_to_a_plan );
     memberful_wp_bbpress_update_required_downloads( $required_downloads );
     memberful_wp_bbpress_update_required_subscription_plans( $required_subscription_plans );
     memberful_wp_bbpress_update_send_unauthorized_users_to_url( $redirect_to_url );
@@ -486,6 +489,7 @@ function memberful_wp_protect_bbpress() {
     array(
       'protect_bbpress'                     => memberful_wp_bbpress_protect_forums(),
       'restricted_to_registered_users'      => memberful_wp_bbpress_restricted_to_registered_users(),
+      'restricted_to_subscribed_users'      => memberful_wp_bbpress_restricted_to_subscribed_users(),
       'plans'                               => $plans,
       'downloads'                           => $downloads,
       'send_unauthorized_users_to_homepage' => memberful_wp_bbpress_send_unauthorized_users_to_homepage(),
