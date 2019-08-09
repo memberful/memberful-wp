@@ -133,7 +133,7 @@ Restrict Access Metabox
   background: #fff;
   border: 1px solid #dedede;
 }
-p.memberful-access-label {
+p.memberful-access-header {
   padding-bottom: 3px;
   font-style: italic;
   border-bottom: 1px solid #dedede;
@@ -143,6 +143,14 @@ p.memberful-access-label {
 }
 .memberful-acl-block label {
   display: block;
+}
+.memberful-access-label__checkbox--multiline {
+  float: left;
+  margin-top: 1px!important;
+}
+.memberful-access-label__text--multiline {
+  display: block;
+  margin-left: 25px;
 }
 .memberful-marketing-content {
   float: left;
