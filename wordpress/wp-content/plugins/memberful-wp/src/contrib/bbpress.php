@@ -12,8 +12,14 @@ function memberful_wp_regulate_access_to_bbpress() {
   if ( current_user_can( 'moderate' ) )
     return;
 
-  if ( memberful_wp_bbpress_restricted_to_registered_users() && is_user_logged_in() ) {
-    return;
+  if( is_user_logged_in() ) {
+    if ( memberful_wp_bbpress_restricted_to_registered_users() ) {
+      return;
+    }
+
+    if ( memberful_wp_bbpress_restricted_to_subscribed_users() && !empty( memberful_wp_user_plans_subscribed_to( get_current_user_id() ) ) ) {
+      return;
+    }
   }
 
   $has_required_plan     = memberful_wp_user_has_subscription_to_plans( get_current_user_id(), memberful_wp_bbpress_required_subscription_plans() );
@@ -41,6 +47,14 @@ function memberful_wp_bbpress_update_restricted_to_registered_user( $new_value )
 
 function memberful_wp_bbpress_restricted_to_registered_users() {
   return get_option( 'memberful_bbpress_restricted_registered_users', FALSE );
+}
+
+function memberful_wp_bbpress_update_restricted_to_subscribed_users( $new_value ) {
+  return update_option( 'memberful_bbpress_restricted_subscribed_users', ( $new_value == true ? 1 : 0 ) );
+}
+
+function memberful_wp_bbpress_restricted_to_subscribed_users() {
+  return get_option( 'memberful_bbpress_restricted_subscribed_users', FALSE );
 }
 
 function memberful_wp_bbpress_update_protect_forums( $new_value ) {

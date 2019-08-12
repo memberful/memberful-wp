@@ -1,200 +1,211 @@
 #memberful-wrap {
-	max-width: 360px;
+  max-width: 360px;
 }
 
 /*---------------------------------------------------------
-	Sign up for Memberful or Register
+Sign up for Memberful or Register
 ------------------------------------------------------------ */
 .memberful-sign-up,
 .memberful-protect-help {
-	margin-top: 20px;
-	padding: 10px 20px;
+  margin-top: 20px;
+  padding: 10px 20px;
 }
 .memberful-sign-up h1 {
-	font-size: 16px;
-	font-weight: normal;
+  font-size: 16px;
+  font-weight: normal;
 }
 .memberful-register-plugin {
-	margin-top: 30px;
+  margin-top: 30px;
 }
 .memberful-register-plugin h3 {
-	font-weight: normal;
+  font-weight: normal;
 }
 .memberful-register-plugin textarea {
-	width: 100%;
-	min-height: 60px;
-	border-radius: 3px;
+  width: 100%;
+  min-height: 60px;
+  border-radius: 3px;
 }
 
 /*---------------------------------------------------------
-	Integration Active
+Integration Active
 ------------------------------------------------------------ */
 #memberful-registered {
-	margin-top: 20px;
-	padding: 10px 20px 20px 20px;
+  margin-top: 20px;
+  padding: 10px 20px 20px 20px;
 }
 #memberful-registered h1 {
-	margin: .67em 0 10px 0;
-	padding: 0;
-	font-weight: normal;
-	font-size: 22px;
-	color: #2e922e;
+  margin: .67em 0 10px 0;
+  padding: 0;
+  font-weight: normal;
+  font-size: 22px;
+  color: #2e922e;
 }
 #memberful-registered h2 {
-	margin: 0;
-	padding: 0;
-	font-size: 14px;
-	line-height: 20px;
+  margin: 0;
+  padding: 0;
+  font-size: 14px;
+  line-height: 20px;
 }
 #memberful-registered form {
-	display: inline;
+  display: inline;
 }
 
 /*---------------------------------------------------------
-	Shared
+Shared
 ------------------------------------------------------------ */
 .memberful-sign-up p,
 #memberful-registered p,
 .memberful-protect-help {
-	color: #666;
-	line-height: 18px;
+  color: #666;
+  line-height: 18px;
 }
 .memberful-red-button {
-	float: right;
-	cursor: pointer;
-	text-shadow: 0 -1px 0 #a23b25;
-	color: #fff;
-	background: #ef2f39;
-	background-image: -webkit-gradient(linear,left top,left bottom,from(#ff6b64),to(#ef2f39));
-	background-image: -webkit-linear-gradient(top,#ff6b64,#ef2f39);
-	background-image: -moz-linear-gradient(top,#ff6b64,#ef2f39);
-	background-image: -o-linear-gradient(top,#ff6b64,#ef2f39);
-	background-image: linear-gradient(to bottom,#ff6b64,#ef2f39);
-	border: 1px solid #ce262f;
-	border-color: #ce262f;
-	border-radius: 3px;
+  float: right;
+  cursor: pointer;
+  text-shadow: 0 -1px 0 #a23b25;
+  color: #fff;
+  background: #ef2f39;
+  background-image: -webkit-gradient(linear,left top,left bottom,from(#ff6b64),to(#ef2f39));
+  background-image: -webkit-linear-gradient(top,#ff6b64,#ef2f39);
+  background-image: -moz-linear-gradient(top,#ff6b64,#ef2f39);
+  background-image: -o-linear-gradient(top,#ff6b64,#ef2f39);
+  background-image: linear-gradient(to bottom,#ff6b64,#ef2f39);
+  border: 1px solid #ce262f;
+  border-color: #ce262f;
+  border-radius: 3px;
 }
 .memberful-red-button:hover {
-	text-shadow: 0 -1px 0 #a23b25;
-	color: #fff;
-	background: #f4424b;
-	background-image: -webkit-gradient(linear,left top,left bottom,from(#ff7972),to(#f4424b));
-	background-image: -webkit-linear-gradient(top,#ff7972,#f4424b);
-	background-image: -moz-linear-gradient(top,#ff7972,#f4424b);
-	background-image: -o-linear-gradient(top,#ff7972,#f4424b);
-	background-image: linear-gradient(to bottom,#ff7972,#f4424b);
-	border: 1px solid #ce262f;
+  text-shadow: 0 -1px 0 #a23b25;
+  color: #fff;
+  background: #f4424b;
+  background-image: -webkit-gradient(linear,left top,left bottom,from(#ff7972),to(#f4424b));
+  background-image: -webkit-linear-gradient(top,#ff7972,#f4424b);
+  background-image: -moz-linear-gradient(top,#ff7972,#f4424b);
+  background-image: -o-linear-gradient(top,#ff7972,#f4424b);
+  background-image: linear-gradient(to bottom,#ff7972,#f4424b);
+  border: 1px solid #ce262f;
 }
 .memberful-red-button:active {
-	text-shadow: 0 -1px 0 #a23b25;
-	color: #fff;
-	background: #f4424b;
-	border: 1px solid #ce262f;
+  text-shadow: 0 -1px 0 #a23b25;
+  color: #fff;
+  background: #f4424b;
+  border: 1px solid #ce262f;
 }
 /*---------------------------------------------------------
-	Bulk restrict access tool
+Bulk restrict access tool
 ------------------------------------------------------------ */
 form.memberful-bulk-restrict-access-form {
-	margin-top: 20px;
+  margin-top: 20px;
 }
 ul.memberful-global-restrict-access-category-list {
-	margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 ul.memberful-global-restrict-access-required-list {
-	margin: 0;
+  margin: 0;
 }
 .memberful-bulk-apply-box {
-	clear: both;
-	max-width: 670px;
-	margin-top: 20px;
-	padding: 10px 20px;
-	background: #fff;
-	border: 1px solid #dedede
+  clear: both;
+  max-width: 670px;
+  margin-top: 20px;
+  padding: 10px 20px;
+  background: #fff;
+  border: 1px solid #dedede
 }
 .memberful-bulk-apply-box label {
-	margin-right: 5px;
+  margin-right: 5px;
 }
 /*---------------------------------------------------------
-	Restrict Access Metabox
+Restrict Access Metabox
 ------------------------------------------------------------ */
 #memberful_acl:before,
 #memberful_acl:after {
-	content: " ";
-	display: table;
+  content: " ";
+  display: table;
 }
 #memberful_acl:after {
-	clear: both;
+  clear: both;
 }
 .memberful-restrict-access-options {
-	float: left;
-	width: 160px;
-	margin: 10px 20px 0 0;
-	padding: 0 20px;
-	background: #fff;
-	border: 1px solid #dedede;
+  float: left;
+  width: 205px;
+  margin: 10px 20px 0 0;
+  padding: 0 20px;
+  background: #fff;
+  border: 1px solid #dedede;
 }
-p.memberful-access-label {
-	padding-bottom: 3px;
-	font-style: italic;
-	border-bottom: 1px solid #dedede;
+p.memberful-access-header {
+  padding-bottom: 3px;
+  font-style: italic;
+  border-bottom: 1px solid #dedede;
 }
 .memberful-acl-block {
-	margin-bottom: 20px;
+  margin-bottom: 20px;
+}
+.memberful-acl-block label {
+  display: block;
+}
+.memberful-access-label__checkbox--multiline {
+  float: left;
+  margin-top: 1px!important;
+}
+.memberful-access-label__text--multiline {
+  display: block;
+  margin-left: 25px;
 }
 .memberful-marketing-content {
-	float: left;
-	margin: 10px 0;
+  float: left;
+  margin: 10px 0;
 }
 #memberful_marketing_content_ifr {
-	background: #fff;
+  background: #fff;
 }
 .memberful-marketing-content-description {
-	padding: 5px;
-	font-size: 12px;
-	background: #efefef;
-	border: 1px solid #dedede;
+  padding: 5px;
+  font-size: 12px;
+  background: #efefef;
+  border: 1px solid #dedede;
 }
 /*---------------------------------------------------------
-	bbPress
+bbPress
 ------------------------------------------------------------ */
 .memberful-bbpress-enable {
-	margin: 20px;
+  margin: 20px;
 }
 .memberful-bbpress-redirect {
-	float: left;
-	margin: 10px 0px;
-	padding-top: 1px;
+  float: left;
+  margin: 10px 0px;
+  padding-top: 1px;
 }
 .memberful-bbpress-redirect-custom-url {
-	margin: 5px 22px;
+  margin: 5px 22px;
 }
 
 .memberful-bbpress-redirect-custom-url input[type="text"] {
-	min-width: 300px;
+  min-width: 300px;
 }
 
 .memberful-bbpress-submit-buttons::before {
-	clear: both;
-	content: ' '
+  clear: both;
+  content: ' '
 }
 .memberful-bbpress-submit-buttons {
-	clear: both;
-	margin: 30px 20px;
+  clear: both;
+  margin: 30px 20px;
 }
 /*---------------------------------------------------------
-	Private RSS Feeds
+Private RSS Feeds
 ------------------------------------------------------------ */
 .postbox.memberful-postbox {
-	margin-top: 20px;
-	padding: 10px 20px 20px 20px;
+  margin-top: 20px;
+  padding: 10px 20px 20px 20px;
 }
 .memberful-postbox ul {
-	margin: 10px 0 20px 0;
+  margin: 10px 0 20px 0;
 }
 .postbox.memberful-private-feed-instructions {
-	width: 640px;
-	padding: 10px 20px 10px 20px;
+  width: 640px;
+  padding: 10px 20px 10px 20px;
 }
 .postbox.memberful-private-feed-instructions code {
-	font-size: 12px;
+  font-size: 12px;
 }

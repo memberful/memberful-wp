@@ -47,7 +47,7 @@ function memberful_wp_metabox( $post ) {
 
   $view_vars['marketing_content'] = reset($marketing_content);
   $view_vars['viewable_by_any_registered_users'] = memberful_wp_get_post_available_to_any_registered_users( $post->ID );
-
+  $view_vars['viewable_by_anybody_subscribed_to_a_plan'] = memberful_wp_get_post_available_to_anybody_subscribed_to_a_plan( $post->ID );
 
   memberful_wp_render( 'metabox', $view_vars );
 }
@@ -107,8 +107,10 @@ function memberful_wp_save_postdata( $post_id ) {
   }
 
   $viewable_by_any_registered_users = isset($_POST['memberful_viewable_by_any_registered_users']) && $_POST['memberful_viewable_by_any_registered_users'] === '1';
-
   memberful_wp_set_post_available_to_any_registered_users( $post_id, $viewable_by_any_registered_users );
+
+  $viewable_by_anybody_subscribed_to_a_plan = isset($_POST['memberful_viewable_by_anybody_subscribed_to_a_plan']) && $_POST['memberful_viewable_by_anybody_subscribed_to_a_plan'] === '1';
+  memberful_wp_set_post_available_to_anybody_subscribed_to_a_plan( $post_id, $viewable_by_anybody_subscribed_to_a_plan );
 
   if(!isset($_POST['memberful_marketing_content']))
     return;
