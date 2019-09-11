@@ -536,7 +536,11 @@ function memberful_wp_announce_plans_and_download_in_head() {
 function memberful_wp_add_protected_state_to_post_list($states, $post) {
   $ids_of_protected_posts = memberful_wp_posts_that_are_protected();
 
-  if ( in_array( $post->ID, $ids_of_protected_posts ) ) {
+  $restricted_to_specific_plan = in_array( $post->ID, $ids_of_protected_posts );
+  $restricted_to_any_subscribers = memberful_wp_get_post_available_to_anybody_subscribed_to_a_plan( $post->ID );
+  $restricted_to_any_registered_users = memberful_wp_get_post_available_to_any_registered_users( $post->ID );
+
+  if ( $restricted_to_specific_plan || $restricted_to_any_subscribers || $restricted_to_any_registered_users ) {
     $states[] = __('Protected by Memberful');
   }
 
