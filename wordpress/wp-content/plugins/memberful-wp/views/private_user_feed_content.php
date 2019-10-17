@@ -12,6 +12,7 @@ remove_filter('the_content', 'memberful_wp_protect_content', -10);
 $post_types = array("post");
 
 query_posts(array(
+  'category__in'    => apply_filters( 'memberful_private_rss_category_ids', array() ),
   'post_type'       => apply_filters( 'memberful_private_rss_post_types', $post_types ),
   'posts_per_page'  => get_option( 'posts_per_rss', 10 )
 ));
