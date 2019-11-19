@@ -13,9 +13,6 @@ function memberful_wp_protect_content( $content ) {
     // Disable Beaver Builder
     remove_action( "the_content", "FLBuilder::render_content" );
 
-    // Remove Elementor action hook
-    remove_action("elementor/frontend/the_content", "memberful_wp_protect_content");
-
     // Remove media enclosures from the RSS feed
     add_filter("rss_enclosure", "__return_empty_string");
 
