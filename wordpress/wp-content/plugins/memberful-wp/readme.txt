@@ -3,7 +3,7 @@ Contributors: matt-button, drewstrojny, dwestendorf, rusuandreirobert, sumobi, W
 Tags: memberful, member, membership, memberships, recurring payments, recurring billing, paywall, subscriptions, stripe, oauth, oauth2
 Requires at least: 3.6
 Tested up to: 5.2
-Stable tag: 1.50.1
+Stable tag: 1.50.2
 License: GPLv2 or later
 
 Sell memberships and restrict access to content with WordPress and Memberful.
@@ -48,13 +48,17 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 == Changelog ==
 
+= 1.50.2 =
+
+* Fix a compatibility issue with Elementor Pro.
+
 = 1.50.1 =
 
-* Revert to simple Elementor hook
+* Revert to simple Elementor hook.
 
 = 1.50.0 =
 
-* Support filtering private RSS feed by category
+* Support filtering private RSS feed by category.
 
 = 1.49.2 =
 
