@@ -21,10 +21,7 @@ function memberful_private_user_feed_init() {
     return;
 
   // Extract the token from the URL
-  $feedUserToken = substr($_SERVER['REQUEST_URI'],
-    strpos($_SERVER['REQUEST_URI'], memberful_private_user_feed_get_url_identifier())
-    + strlen(memberful_private_user_feed_get_url_identifier())
-  );
+  $feedUserToken = $_GET['member-feed'];
 
   $requiredPlan = memberful_private_user_feed_settings_get_required_plan();
 
@@ -78,7 +75,7 @@ function memberful_private_user_feed_deliver() {
  * @param bool $return
  * @return string
  */
-function memberful_private_rss_feed_link($success_message = '', $error_message = "You don’t have access to this RSS feed.", $return = false) {
+function memberful_private_rss_feed_link($success_message = '', $error_message = "You don’t have access to this RSS feed.", $return = false, $category = false) {
   $error_message = apply_filters( 'memberful_private_rss_feed_error_message', $error_message );
 
   if(!is_user_logged_in())
@@ -103,6 +100,9 @@ function memberful_private_rss_feed_link($success_message = '', $error_message =
   }
 
   $link = (get_home_url() . '/' . memberful_private_user_feed_get_url_identifier($feedToken) );
+
+  if($category)
+    $link .= '&category=' . $category;
 
   if($success_message != '')
     $link = '<a href="' . $link . '">' . do_shortcode($success_message) . '</a>';
