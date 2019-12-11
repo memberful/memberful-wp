@@ -102,7 +102,7 @@ function memberful_private_rss_feed_link($success_message = '', $error_message =
   $link = (get_home_url() . '/' . memberful_private_user_feed_get_url_identifier($feedToken) );
 
   if($category)
-    $link .= '&category=' . $category;
+    $link = add_query_arg('category', $category, $link);
 
   if($success_message != '')
     $link = '<a href="' . $link . '">' . do_shortcode($success_message) . '</a>';
