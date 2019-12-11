@@ -50,7 +50,7 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 = 1.50.3 =
 
-* Add ability to filter by category on the private member RSS feed.
+* Add ability to filter by category on the private member RSS feed. Thanks to Ryan Tvenge (ryantvenge.com) for contributing this feature.
 
 = 1.50.2 =
 
