@@ -129,7 +129,9 @@ function memberful_wp_shortcode( $atts, $content ) {
 }
 
 function memberful_wp_shortcode_private_user_feed_link($atts = array(), $content = '') {
-  return memberful_private_rss_feed_link($content, __("You don’t have access to this RSS feed."), true);
+  $category = $atts['category'] ?? '';
+
+  return memberful_private_rss_feed_link($content, __("You don’t have access to this RSS feed."), true, $category);
 }
 
 function memberful_wp_slugs_to_ids( $slugs ) {
