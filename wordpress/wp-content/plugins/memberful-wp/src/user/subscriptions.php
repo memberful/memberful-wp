@@ -23,7 +23,9 @@ class Memberful_Wp_User_Subscriptions extends Memberful_Wp_User_Entity {
       'expires'         => $entity->expires,
       'expires_at'      => $entity->expires_at,
       'id'              => $entity->subscription->id,
-      'in_trial_period' => $entity->in_trial_period
+      'in_trial_period' => $entity->in_trial_period,
+      'trial_start_at'  => $entity->trial_start_at,
+      'trial_end_at'    => $entity->trial_end_at
     );
   }
 }
