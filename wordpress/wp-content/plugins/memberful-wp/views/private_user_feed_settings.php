@@ -28,6 +28,13 @@
             <?php else : ?>
               <p class="memberful-private-feed-error"><?php _e( "There are no available Subscription Plans.", 'memberful' ); ?></p>
             <?php endif; ?>
+            <hr>
+            <div class="memberful-add-block-tags">
+              <label for="memberful_add_block_tags_to_rss_feed">
+                <input id="memberful_add_block_tags_to_rss_feed" type="checkbox" name="memberful_add_block_tags_to_rss_feed" <?php if( $add_block_tags_to_rss_feed ): ?>checked="checked"<?php endif; ?>>
+                Hide feed from iTunes and Google Podcasts.
+              </label>
+            </div>
             <input type="submit" name="memberful_private_feed_subscriptions_submit" class="button button-primary" value="<?php _e( "Save Changes", 'memberful' ); ?>" />
           </fieldset>
         </div>
