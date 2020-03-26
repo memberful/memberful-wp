@@ -502,8 +502,10 @@ function memberful_wp_protect_bbpress() {
 function memberful_wp_private_rss_feed_settings() {
   if(isset($_POST['memberful_private_feed_subscriptions_submit'])) {
     $private_feed_subscriptions = isset($_POST['memberful_private_feed_subscriptions']) ? $_POST['memberful_private_feed_subscriptions'] : false;
+    $add_block_tags = isset($_POST['memberful_add_block_tags_to_rss_feed']);
 
     memberful_private_user_feed_settings_set_required_plan($private_feed_subscriptions);
+    update_option('memberful_add_block_tags_to_rss_feed', $add_block_tags);
   }
 
   $current_feed_subscriptions = memberful_private_user_feed_settings_get_required_plan();
@@ -512,10 +514,11 @@ function memberful_wp_private_rss_feed_settings() {
   memberful_wp_render(
     'private_user_feed_settings',
     array(
-      'form_target'               => memberful_wp_plugin_private_user_feed_settings_url(),
-      'subscription_plans'        => memberful_subscription_plans(),
-      'available_subscriptions'   => memberful_private_user_feed_settings_get_required_plan(),
-      'current_feed_subscriptions'=> $current_feed_subscriptions
+      'form_target'                => memberful_wp_plugin_private_user_feed_settings_url(),
+      'subscription_plans'         => memberful_subscription_plans(),
+      'available_subscriptions'    => memberful_private_user_feed_settings_get_required_plan(),
+      'current_feed_subscriptions' => $current_feed_subscriptions,
+      'add_block_tags_to_rss_feed' => get_option('memberful_add_block_tags_to_rss_feed')
     )
   );
 }

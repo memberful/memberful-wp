@@ -30,6 +30,10 @@ do_action( 'rss_tag_pre', 'rss2' );
      xmlns:atom="http://www.w3.org/2005/Atom"
      xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
      xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+    <?php if(get_option('memberful_add_block_tags_to_rss_feed')): ?>
+      xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd"
+      xmlns:googleplay="http://www.google.com/schemas/play-podcasts/1.0"
+    <?php endif; ?>
     <?php do_action('rss2_ns'); ?>>
   <channel>
     <title><?php bloginfo_rss('name'); ?> Member Feed</title>
@@ -38,6 +42,10 @@ do_action( 'rss_tag_pre', 'rss2' );
     <description><?php bloginfo_rss("description") ?></description>
     <lastBuildDate><?php echo mysql2date('D, d M Y H:i:s +0000', get_lastpostmodified('GMT'), false); ?></lastBuildDate>
     <language><?php bloginfo_rss( 'language' ); ?></language>
+    <?php if (get_option('memberful_add_block_tags_to_rss_feed')): ?>
+      <itunes:block>Yes</itunes:block>
+      <googleplay:block>yes</googleplay:block>
+    <?php endif; ?>
     <sy:updatePeriod><?php
 $duration = 'hourly';
 

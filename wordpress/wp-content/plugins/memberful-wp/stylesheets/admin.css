@@ -151,6 +151,7 @@ p.memberful-access-header {
 .memberful-access-label__text--multiline {
   display: block;
   margin-left: 25px;
+  line-height: 1.4em;
 }
 .memberful-marketing-content {
   float: left;
@@ -208,4 +209,7 @@ Private RSS Feeds
 }
 .postbox.memberful-private-feed-instructions code {
   font-size: 12px;
+}
+.memberful-add-block-tags {
+  margin: 15px 0;
 }
