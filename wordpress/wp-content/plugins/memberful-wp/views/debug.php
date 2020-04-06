@@ -11,6 +11,8 @@ Site URL: <?php echo site_url(); ?>
 
 Home URL: <?php echo home_url(); ?>
 
+PHP version: <?php echo phpversion(); ?>
+
 
 # Plugins
 <?php $chars_in_longest_name = 0; foreach($plugins as $plugin) { $chars_in_longest_name = max( $chars_in_longest_name, strlen( $plugin['Name'] ) ); } ?>
