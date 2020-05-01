@@ -34,6 +34,15 @@
     );
   }
 
+  var insertPodcastsShortcode = function(editor) {
+    wrapContentsWithShortcode(
+      editor,
+      "[memberful_podcasts_link]",
+      "[/memberful_podcasts_link]",
+      "Access your Podcasts"
+    );
+  }
+
   function insertLinkToDownload(editor) {
     downloadItemCtrl = {
       name: "downloadSlug",
@@ -179,7 +188,9 @@
 
       menu.push({text: 'Free sign up link', onclick: function() { insertRegistrationShortcode(editor); }});
 
-      menu.push({text: 'Private RSS Feed link', onclick: function() { insertPrivateRSSFeedShortcode(editor); }});
+      menu.push({text: 'Private Wordpress RSS Feed link', onclick: function() { insertPrivateRSSFeedShortcode(editor); }});
+
+      menu.push({text: 'Link to all Podcasts', onclick: function() { insertPodcastsShortcode(editor); }});
 
       editor.addButton('memberful_wp', {
         type: 'menubutton',

@@ -32,6 +32,10 @@ function memberful_account_get_download_url( $download_slug ) {
   return memberful_url( 'account/downloads/get/'.memberful_wp_extract_id_from_slug( $download_slug ) );
 }
 
+function memberful_feeds_url() {
+  return memberful_url( 'account/feeds' );
+}
+
 function memberful_admin_member_url( $member_id, $format = MEMBERFUL_HTML ) {
   return memberful_url( 'admin/members/'.$member_id, $format );
 }
