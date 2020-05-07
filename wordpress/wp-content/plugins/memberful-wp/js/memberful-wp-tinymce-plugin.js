@@ -213,7 +213,9 @@
 
       menu.push({text: 'Private RSS Feed link', onclick: function() { insertPrivateRSSFeedShortcode(editor); }});
 
-      menu.push({text: 'Podcast URL', onclick: function() { insertPodcastUrl(editor); }});
+      if (window.MemberfulData.podcasts.length > 0) {
+        menu.push({text: 'Show Podcast URL', onclick: function() { insertPodcastUrl(editor); }});
+      }
 
       editor.addButton('memberful_wp', {
         type: 'menubutton',
