@@ -25,6 +25,10 @@ function memberful_downloads() {
   return get_option( 'memberful_products', array() );
 }
 
+function memberful_podcasts() {
+  return get_option( 'memberful_feeds', array() );
+}
+
 function memberful_subscription_plans() {
   return get_option( 'memberful_subscriptions', array() );
 }
@@ -35,6 +39,12 @@ function memberful_wp_sync_downloads() {
   return memberful_wp_update_entities( 'memberful_products', $url );
 }
 
+function memberful_wp_sync_podcasts() {
+  $url = memberful_admin_podcasts_url();
+
+  return memberful_wp_update_entities( 'memberful_feeds', $url );
+}
+
 function memberful_wp_sync_subscription_plans() {
   $url = memberful_admin_subscription_plans_url( MEMBERFUL_JSON );
 
@@ -42,7 +52,7 @@ function memberful_wp_sync_subscription_plans() {
 }
 
 function memberful_wp_update_entities( $type, $url ) {
-  $entities = memberful_wp_fetch_entities( $url );
+  $entities = memberful_wp_fetch_entities( $type, $url );
 
   if ( is_wp_error($entities) ) {
     return $entities;
@@ -51,7 +61,7 @@ function memberful_wp_update_entities( $type, $url ) {
   return update_option( $type, $entities );
 }
 
-function memberful_wp_fetch_entities( $url ) {
+function memberful_wp_fetch_entities( $type, $url ) {
   $full_url = add_query_arg( 'auth_token', get_option( 'memberful_api_key' ), $url );
 
   $response = wp_remote_get( $full_url, array( 'sslverify' => MEMBERFUL_SSL_VERIFY ) );
@@ -71,7 +81,11 @@ function memberful_wp_fetch_entities( $url ) {
   $entities   = array();
 
   foreach ( $raw_entity as $entity ) {
-    $entities[$entity->id] = memberful_wp_format_entity( $entity );
+    if ( $type == "memberful_feeds" ) {
+      $entities[$entity->id] = memberful_wp_format_feed( $entity );
+    } else {
+      $entities[$entity->id] = memberful_wp_format_entity( $entity );
+    }
   }
 
   return $entities;
@@ -89,6 +103,15 @@ function memberful_wp_format_entity( $entity ) {
   if ( isset( $entity->description ) ) {
     $payload['description'] = isset( $entity->description ) ? $entity->description : '';
   }
+
+  return $payload;
+}
+
+function memberful_wp_format_feed( $entity ) {
+  $payload = array(
+    'id'          => $entity->id,
+    'name'        => $entity->name
+  );
 
   return $payload;
 }

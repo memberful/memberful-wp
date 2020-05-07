@@ -40,6 +40,10 @@ function memberful_admin_downloads_url( $format = MEMBERFUL_HTML ) {
   return memberful_url( 'admin/products', $format );
 }
 
+function memberful_admin_podcasts_url( $format = MEMBERFUL_JSON ) {
+  return memberful_url( 'admin/feeds', $format );
+}
+
 function memberful_admin_subscription_plans_url( $format = MEMBERFUL_HTML ) {
   return memberful_url( 'admin/subscriptions', $format );
 }

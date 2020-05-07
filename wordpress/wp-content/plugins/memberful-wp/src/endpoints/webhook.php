@@ -33,6 +33,10 @@ class Memberful_Wp_Endpoint_Webhook implements Memberful_Wp_Endpoint {
       memberful_wp_sync_downloads();
 
       echo 'Syncing downloads';
+    } elseif ( strpos( $payload->event, 'feed' ) !== FALSE ) {
+      memberful_wp_sync_podcasts();
+
+      echo 'Syncing podcasts';
     } else {
       echo 'Ignoring webhook';
     }
