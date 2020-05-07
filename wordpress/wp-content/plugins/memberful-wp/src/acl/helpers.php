@@ -75,6 +75,15 @@ function has_memberful_download( $slug, $user_id = NULL ) {
   return memberful_wp_user_has_downloads( $user_id, $required_downloads );
 }
 
+function has_memberful_podcast($ids) {
+  $user_id = wp_get_current_user()->ID;
+  if (!is_array($ids)) {
+    $ids = array($ids);
+  }
+
+  return memberful_wp_user_has_podcasts($user_id, $ids);
+}
+
 function memberful_wp_posts_that_are_protected() {
   static $post_ids = NULL;
 

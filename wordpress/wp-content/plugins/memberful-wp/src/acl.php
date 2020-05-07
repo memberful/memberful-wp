@@ -98,6 +98,10 @@ function memberful_wp_user_downloads( $user_id ) {
   return get_user_meta( $user_id, 'memberful_product', TRUE );
 }
 
+function memberful_wp_user_podcasts($user_id) {
+  return get_user_meta($user_id, 'memberful_feed', TRUE);
+}
+
 /**
  * Gets the plans that the member with $member_id is currently subscribed to
  * If the member had a subscription to a plan, but it has expired then it
@@ -150,6 +154,17 @@ function memberful_wp_user_has_downloads( $user_id, $required_downloads ) {
 
   foreach ( $required_downloads as $download ) {
     if ( isset( $downloads_user_has[ $download ] ) )
+      return TRUE;
+  }
+
+  return FALSE;
+}
+
+function memberful_wp_user_has_podcasts($user_id, $podcasts) {
+  $user_podcasts = memberful_wp_user_podcasts($user_id);
+
+  foreach ($podcasts as $podcast) {
+    if (isset($user_podcasts[$podcast]))
       return TRUE;
   }
 
