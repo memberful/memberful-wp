@@ -151,6 +151,38 @@
     );
   }
 
+  function insertPodcastUrl(editor) {
+    function handleDialogSubmit(editor, id) {
+      editor.insertContent(
+        "[memberful_podcast_url podcast='"+id+"']"
+      );
+    }
+
+    function podcastOptions(podcast) {
+      return {text: podcast.name, value: podcast.id};
+    };
+
+    var podcasts = window.MemberfulData.podcasts;
+    var podcastList = {
+      name: "item",
+      type: "listbox",
+      label: "Podcast",
+      values: podcasts.map(podcastOptions)
+    };
+
+    editor.windowManager.open({
+      title: "Choose a podcast",
+      width: 350,
+      height: 60,
+      body: [
+        podcastList,
+      ],
+      onSubmit: function(e) {
+        handleDialogSubmit(editor, e.data.item);
+      }
+    });
+  }
+
   /* Register the buttons */
   tinymce.create('tinymce.plugins.memberful_wp', {
     init : function(editor, url) {
@@ -180,6 +212,8 @@
       menu.push({text: 'Free sign up link', onclick: function() { insertRegistrationShortcode(editor); }});
 
       menu.push({text: 'Private RSS Feed link', onclick: function() { insertPrivateRSSFeedShortcode(editor); }});
+
+      menu.push({text: 'Podcast URL', onclick: function() { insertPodcastUrl(editor); }});
 
       editor.addButton('memberful_wp', {
         type: 'menubutton',

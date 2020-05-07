@@ -84,6 +84,14 @@ function has_memberful_podcast($ids) {
   return memberful_wp_user_has_podcasts($user_id, $ids);
 }
 
+function memberful_wp_podcast_url($id) {
+  $user_id = wp_get_current_user()->ID;
+  $podcasts = memberful_wp_user_podcasts($user_id);
+
+  if (isset($podcasts[$id]))
+    return $podcasts[$id]["url"];
+}
+
 function memberful_wp_posts_that_are_protected() {
   static $post_ids = NULL;
 
