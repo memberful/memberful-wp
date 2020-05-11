@@ -61,8 +61,8 @@ function memberful_wp_shortcode_download_link( $atts, $content) {
 }
 
 function memberful_wp_shortcode_feed_url($atts) {
-  if (isset($atts['feed'])) {
-    $id = $atts['feed'];
+  if (isset($atts['podcast'])) {
+    $id = $atts['podcast'];
     return memberful_wp_feed_url($id);
   }
 }
