@@ -36,12 +36,8 @@ function memberful_admin_member_url( $member_id, $format = MEMBERFUL_HTML ) {
   return memberful_url( 'admin/members/'.$member_id, $format );
 }
 
-function memberful_admin_downloads_url( $format = MEMBERFUL_HTML ) {
+function memberful_admin_products_url( $format = MEMBERFUL_HTML ) {
   return memberful_url( 'admin/products', $format );
-}
-
-function memberful_admin_feeds_url( $format = MEMBERFUL_JSON ) {
-  return memberful_url( 'admin/feeds', $format );
 }
 
 function memberful_admin_subscription_plans_url( $format = MEMBERFUL_HTML ) {

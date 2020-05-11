@@ -35,8 +35,7 @@ function memberful_wp_cron_sync_entities() {
 
   echo "<pre>library=memberful_wp method=memberful_wp_cron_sync_entities at=start\n</pre>";
 
-  memberful_wp_sync_downloads();
-  memberful_wp_sync_feeds();
+  memberful_wp_sync_products();
   memberful_wp_sync_subscription_plans();
 
   echo "<pre>library=memberful_wp method=memberful_wp_cron_sync_entities at=finish\n</pre>";

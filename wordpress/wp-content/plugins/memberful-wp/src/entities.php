@@ -33,16 +33,10 @@ function memberful_subscription_plans() {
   return get_option( 'memberful_subscriptions', array() );
 }
 
-function memberful_wp_sync_downloads() {
-  $url = memberful_admin_downloads_url( MEMBERFUL_JSON );
+function memberful_wp_sync_products() {
+  $url = memberful_admin_products_url( MEMBERFUL_JSON );
 
   return memberful_wp_update_entities( 'memberful_products', $url );
-}
-
-function memberful_wp_sync_feeds() {
-  $url = memberful_admin_feeds_url();
-
-  return memberful_wp_update_entities( 'memberful_feeds', $url );
 }
 
 function memberful_wp_sync_subscription_plans() {
@@ -52,16 +46,20 @@ function memberful_wp_sync_subscription_plans() {
 }
 
 function memberful_wp_update_entities( $type, $url ) {
-  $entities = memberful_wp_fetch_entities( $type, $url );
+  $entities = memberful_wp_fetch_entities( $url );
 
   if ( is_wp_error($entities) ) {
     return $entities;
   }
 
-  return update_option( $type, $entities );
+  if ( $type == "memberful_products") {
+    return update_products($entities);
+  } else {
+    return update_option( $type, $entities );
+  }
 }
 
-function memberful_wp_fetch_entities( $type, $url ) {
+function memberful_wp_fetch_entities( $url ) {
   $full_url = add_query_arg( 'auth_token', get_option( 'memberful_api_key' ), $url );
 
   $response = wp_remote_get( $full_url, array( 'sslverify' => MEMBERFUL_SSL_VERIFY ) );
@@ -81,11 +79,7 @@ function memberful_wp_fetch_entities( $type, $url ) {
   $entities   = array();
 
   foreach ( $raw_entity as $entity ) {
-    if ( $type == "memberful_feeds" ) {
-      $entities[$entity->id] = memberful_wp_format_feed( $entity );
-    } else {
-      $entities[$entity->id] = memberful_wp_format_entity( $entity );
-    }
+    $entities[$entity->id] = memberful_wp_format_entity( $entity );
   }
 
   return $entities;
@@ -104,14 +98,29 @@ function memberful_wp_format_entity( $entity ) {
     $payload['description'] = isset( $entity->description ) ? $entity->description : '';
   }
 
+  if ( isset( $entity->type ) ) {
+    $payload['type'] = $entity->type;
+  }
+
   return $payload;
 }
 
-function memberful_wp_format_feed( $entity ) {
-  $payload = array(
-    'id'          => $entity->id,
-    'name'        => $entity->name
-  );
+function update_products($entities) {
+  $feeds = array();
+  $downloads = array();
 
-  return $payload;
+  foreach ($entities as $entity) {
+    $id = $entity['id'];
+
+    if ($entity['type'] == "feed") {
+      $feeds[$id] = $entity;
+    } else {
+      $downloads[$id] = $entity;
+    }
+  }
+
+  $update_feed = update_option('memberful_feeds', $feeds);
+  $update_download = update_option('memberful_products', $downloads);
+
+  return ($update_feed && $update_download);
 }
