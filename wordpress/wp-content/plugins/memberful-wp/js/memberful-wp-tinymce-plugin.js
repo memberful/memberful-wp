@@ -151,23 +151,23 @@
     );
   }
 
-  function insertPodcastUrl(editor) {
+  function insertFeedUrl(editor) {
     function handleDialogSubmit(editor, id) {
       editor.insertContent(
         "[memberful_podcast_url podcast='"+id+"']"
       );
     }
 
-    function podcastOptions(podcast) {
-      return {text: podcast.name, value: podcast.id};
+    function feedOptions(feed) {
+      return {text: feed.name, value: feed.id};
     };
 
-    var podcasts = window.MemberfulData.podcasts;
-    var podcastList = {
+    var feeds = window.MemberfulData.feeds;
+    var feedList = {
       name: "item",
       type: "listbox",
       label: "Podcast",
-      values: podcasts.map(podcastOptions)
+      values: feeds.map(feedOptions)
     };
 
     editor.windowManager.open({
@@ -175,7 +175,7 @@
       width: 350,
       height: 60,
       body: [
-        podcastList,
+        feedList,
       ],
       onSubmit: function(e) {
         handleDialogSubmit(editor, e.data.item);
@@ -213,8 +213,8 @@
 
       menu.push({text: 'Private RSS Feed link', onclick: function() { insertPrivateRSSFeedShortcode(editor); }});
 
-      if (window.MemberfulData.podcasts.length > 0) {
-        menu.push({text: 'Show Podcast URL', onclick: function() { insertPodcastUrl(editor); }});
+      if (window.MemberfulData.feeds.length > 0) {
+        menu.push({text: 'Show Podcast URL', onclick: function() { insertFeedUrl(editor); }});
       }
 
       editor.addButton('memberful_wp', {

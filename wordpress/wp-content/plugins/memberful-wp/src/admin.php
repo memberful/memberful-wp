@@ -128,7 +128,7 @@ function memberful_wp_register() {
       if ( $activation === TRUE ) {
         update_option( 'memberful_embed_enabled', TRUE );
         memberful_wp_sync_downloads();
-        memberful_wp_sync_podcasts();
+        memberful_wp_sync_feeds();
         memberful_wp_sync_subscription_plans();
       }
       else {
@@ -240,7 +240,7 @@ function memberful_wp_options() {
         return wp_redirect( admin_url( 'options-general.php?page=memberful_options' ) );
       }
 
-      if ( is_wp_error( $error = memberful_wp_sync_podcasts() ) ) {
+      if ( is_wp_error( $error = memberful_wp_sync_feeds() ) ) {
         Memberful_Wp_Reporting::report( $error, 'error' );
 
         return wp_redirect( admin_url( 'options-general.php?page=memberful_options' ) );
@@ -537,7 +537,7 @@ function memberful_wp_announce_plans_and_download_in_head() {
       'data' => array(
         'plans' => array_values(memberful_subscription_plans()),
         'downloads' => array_values(memberful_downloads()),
-        'podcasts' => array_values(memberful_podcasts()),
+        'feeds' => array_values(memberful_feeds()),
         'connectedToMemberful' => memberful_wp_is_connected_to_site(),
       )
     )

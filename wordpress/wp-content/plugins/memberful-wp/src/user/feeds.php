@@ -1,10 +1,10 @@
 <?php
 require_once MEMBERFUL_DIR.'/src/user/entity.php';
 
-class Memberful_Wp_User_Podcasts extends Memberful_Wp_User_Entity { 
+class Memberful_Wp_User_Feeds extends Memberful_Wp_User_Entity { 
 
   static public function sync( $user_id, $entities ) {
-    $syncer = new Memberful_Wp_User_Podcasts($user_id);
+    $syncer = new Memberful_Wp_User_Feeds($user_id);
     return $syncer->set($entities);
   }
 

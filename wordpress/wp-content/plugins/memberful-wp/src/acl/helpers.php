@@ -75,21 +75,21 @@ function has_memberful_download( $slug, $user_id = NULL ) {
   return memberful_wp_user_has_downloads( $user_id, $required_downloads );
 }
 
-function has_memberful_podcast($ids) {
+function has_memberful_feed($ids) {
   $user_id = wp_get_current_user()->ID;
   if (!is_array($ids)) {
     $ids = array($ids);
   }
 
-  return memberful_wp_user_has_podcasts($user_id, $ids);
+  return memberful_wp_user_has_feeds($user_id, $ids);
 }
 
-function memberful_wp_podcast_url($id) {
+function memberful_wp_feed_url($id) {
   $user_id = wp_get_current_user()->ID;
-  $podcasts = memberful_wp_user_podcasts($user_id);
+  $feeds = memberful_wp_user_feeds($user_id);
 
-  if (isset($podcasts[$id]))
-    return $podcasts[$id]["url"];
+  if (isset($feeds[$id]))
+    return $feeds[$id]["url"];
 }
 
 function memberful_wp_posts_that_are_protected() {

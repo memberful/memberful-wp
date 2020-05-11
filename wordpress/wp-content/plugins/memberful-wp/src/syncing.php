@@ -1,6 +1,6 @@
 <?php
 require_once MEMBERFUL_DIR.'/src/user/downloads.php';
-require_once MEMBERFUL_DIR.'/src/user/podcasts.php';
+require_once MEMBERFUL_DIR.'/src/user/feeds.php';
 require_once MEMBERFUL_DIR.'/src/user/subscriptions.php';
 
 function memberful_wp_sync_member_from_memberful( $member_id, $mapping_context = array() ) {
@@ -39,13 +39,13 @@ function memberful_wp_sync_member_account( $account, $mapping_context ) {
         Memberful_User_Mapping_Repository::delete_mapping( $user->ID );
       } else {
         Memberful_Wp_User_Downloads::sync($user->ID, array());
-        Memberful_Wp_User_Podcasts::sync($user->ID, array());
+        Memberful_Wp_User_Feeds::sync($user->ID, array());
         Memberful_Wp_User_Subscriptions::sync($user->ID, array());
         Memberful_Wp_User_Role_Decision::ensure_user_role_is_correct( $user );
       }
     } else {
       Memberful_Wp_User_Downloads::sync($user->ID, $account->products);
-      Memberful_Wp_User_Podcasts::sync($user->ID, $account->feeds);
+      Memberful_Wp_User_Feeds::sync($user->ID, $account->feeds);
       Memberful_Wp_User_Subscriptions::sync($user->ID, $account->subscriptions);
       Memberful_Wp_User_Role_Decision::ensure_user_role_is_correct( $user );
     }

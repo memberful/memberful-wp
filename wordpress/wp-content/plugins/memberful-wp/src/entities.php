@@ -25,7 +25,7 @@ function memberful_downloads() {
   return get_option( 'memberful_products', array() );
 }
 
-function memberful_podcasts() {
+function memberful_feeds() {
   return get_option( 'memberful_feeds', array() );
 }
 
@@ -39,8 +39,8 @@ function memberful_wp_sync_downloads() {
   return memberful_wp_update_entities( 'memberful_products', $url );
 }
 
-function memberful_wp_sync_podcasts() {
-  $url = memberful_admin_podcasts_url();
+function memberful_wp_sync_feeds() {
+  $url = memberful_admin_feeds_url();
 
   return memberful_wp_update_entities( 'memberful_feeds', $url );
 }

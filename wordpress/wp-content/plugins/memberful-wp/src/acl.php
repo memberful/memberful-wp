@@ -98,7 +98,7 @@ function memberful_wp_user_downloads( $user_id ) {
   return get_user_meta( $user_id, 'memberful_product', TRUE );
 }
 
-function memberful_wp_user_podcasts($user_id) {
+function memberful_wp_user_feeds($user_id) {
   return get_user_meta($user_id, 'memberful_feed', TRUE);
 }
 
@@ -160,11 +160,11 @@ function memberful_wp_user_has_downloads( $user_id, $required_downloads ) {
   return FALSE;
 }
 
-function memberful_wp_user_has_podcasts($user_id, $podcasts) {
-  $user_podcasts = memberful_wp_user_podcasts($user_id);
+function memberful_wp_user_has_feeds($user_id, $feeds) {
+  $user_feeds = memberful_wp_user_feeds($user_id);
 
-  foreach ($podcasts as $podcast) {
-    if (isset($user_podcasts[$podcast]))
+  foreach ($feeds as $feed) {
+    if (isset($user_feeds[$feed]))
       return TRUE;
   }
 
