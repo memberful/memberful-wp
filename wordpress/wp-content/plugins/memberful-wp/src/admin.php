@@ -285,12 +285,14 @@ function memberful_wp_options() {
 
   $products = get_option( 'memberful_products', array() );
   $subscriptions = get_option( 'memberful_subscriptions', array() );
+  $feeds = get_option( 'memberful_feeds', array() );
   $extend_auth_cookie_expiration = get_option( 'memberful_extend_auth_cookie_expiration' );
 
   memberful_wp_render (
     'options',
     array(
       'products' => $products,
+      'feeds' => $feeds,
       'subscriptions' => $subscriptions,
       'extend_auth_cookie_expiration' => $extend_auth_cookie_expiration
     )
