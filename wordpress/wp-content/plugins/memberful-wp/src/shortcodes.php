@@ -9,7 +9,8 @@ add_shortcode( 'memberful_private_rss_feed_link', 'memberful_wp_shortcode_privat
 add_shortcode( 'memberful_register_link', 'memberful_wp_shortcode_register_link' );
 add_shortcode( 'memberful_sign_in_link',  'memberful_wp_shortcode_sign_in_link' );
 add_shortcode( 'memberful_sign_out_link', 'memberful_wp_shortcode_sign_out_link' );
-add_shortcode( 'memberful_podcasts_link',  'memberful_wp_shortcode_podcasts_link' );
+add_shortcode( 'memberful_podcasts_link',  'memberful_wp_shortcode_feeds_link' );
+add_shortcode( 'memberful_podcast_url', 'memberful_wp_shortcode_feed_url' );
 
 function memberful_wp_shortcode_buy_download_link( $atts, $content ) {
   $url = memberful_checkout_for_download_url(
@@ -50,7 +51,7 @@ function memberful_wp_shortcode_account_link( $atts, $content ) {
   return '<a href="'.memberful_account_url().'" role="account">'.do_shortcode($content).'</a>';
 }
 
-function memberful_wp_shortcode_podcasts_link( $atts, $content ) {
+function memberful_wp_shortcode_feeds_link( $atts, $content ) {
   return '<a href="'.memberful_feeds_url().'">'.do_shortcode($content).'</a>';
 }
 
@@ -62,6 +63,13 @@ function memberful_wp_shortcode_download_link( $atts, $content) {
     return $content;
 
   return '<a href="'.memberful_account_get_download_url( $atts['download'] ).'" rel="download">'.do_shortcode($content).'</a>';
+}
+
+function memberful_wp_shortcode_feed_url($atts) {
+  if (isset($atts['podcast'])) {
+    $id = $atts['podcast'];
+    return memberful_wp_feed_url($id);
+  }
 }
 
 function memberful_wp_normalize_shortcode_args( $atts ) {

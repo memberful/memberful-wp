@@ -127,7 +127,7 @@ function memberful_wp_register() {
 
       if ( $activation === TRUE ) {
         update_option( 'memberful_embed_enabled', TRUE );
-        memberful_wp_sync_downloads();
+        memberful_wp_sync_products();
         memberful_wp_sync_subscription_plans();
       }
       else {
@@ -182,8 +182,9 @@ function memberful_wp_debug() {
   $mapping_stats = new Memberful_User_Map_Stats(Memberful_User_Mapping_Repository::table());
   $counts = count_users();
 
-  $unmapped_users = $mapping_stats->unmapped_users();
+  $mapping_records       = $mapping_stats->mapping_records();
   $total_mapping_records = $mapping_stats->count_mapping_records();
+  $unmapped_users        = $mapping_stats->unmapped_users();
 
   $total_users           = $counts['total_users'];
   $total_unmapped_users  = count($unmapped_users);
@@ -194,13 +195,6 @@ function memberful_wp_debug() {
   $error_log             = memberful_wp_error_log();
 
   unset( $config['memberful_error_log'] );
-
-  if($total_users != $total_mapped_users) {
-    $mapping_records = $mapping_stats->mapping_records();
-  }
-  else {
-    $mapping_records = array();
-  }
 
   memberful_wp_render(
     'debug',
@@ -233,7 +227,7 @@ function memberful_wp_options() {
       return;
 
     if ( isset( $_POST['manual_sync'] ) ) {
-      if ( is_wp_error( $error = memberful_wp_sync_downloads() ) ) {
+      if ( is_wp_error( $error = memberful_wp_sync_products() ) ) {
         Memberful_Wp_Reporting::report( $error, 'error' );
 
         return wp_redirect( admin_url( 'options-general.php?page=memberful_options' ) );
@@ -285,12 +279,14 @@ function memberful_wp_options() {
 
   $products = get_option( 'memberful_products', array() );
   $subscriptions = get_option( 'memberful_subscriptions', array() );
+  $feeds = get_option( 'memberful_feeds', array() );
   $extend_auth_cookie_expiration = get_option( 'memberful_extend_auth_cookie_expiration' );
 
   memberful_wp_render (
     'options',
     array(
       'products' => $products,
+      'feeds' => $feeds,
       'subscriptions' => $subscriptions,
       'extend_auth_cookie_expiration' => $extend_auth_cookie_expiration
     )
@@ -530,6 +526,7 @@ function memberful_wp_announce_plans_and_download_in_head() {
       'data' => array(
         'plans' => array_values(memberful_subscription_plans()),
         'downloads' => array_values(memberful_downloads()),
+        'feeds' => array_values(memberful_feeds()),
         'connectedToMemberful' => memberful_wp_is_connected_to_site(),
       )
     )
