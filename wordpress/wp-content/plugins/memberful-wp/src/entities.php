@@ -25,12 +25,16 @@ function memberful_downloads() {
   return get_option( 'memberful_products', array() );
 }
 
+function memberful_feeds() {
+  return get_option( 'memberful_feeds', array() );
+}
+
 function memberful_subscription_plans() {
   return get_option( 'memberful_subscriptions', array() );
 }
 
-function memberful_wp_sync_downloads() {
-  $url = memberful_admin_downloads_url( MEMBERFUL_JSON );
+function memberful_wp_sync_products() {
+  $url = memberful_admin_products_url( MEMBERFUL_JSON );
 
   return memberful_wp_update_entities( 'memberful_products', $url );
 }
@@ -48,7 +52,11 @@ function memberful_wp_update_entities( $type, $url ) {
     return $entities;
   }
 
-  return update_option( $type, $entities );
+  if ( $type == "memberful_products") {
+    return update_products($entities);
+  } else {
+    return update_option( $type, $entities );
+  }
 }
 
 function memberful_wp_fetch_entities( $url ) {
@@ -90,5 +98,29 @@ function memberful_wp_format_entity( $entity ) {
     $payload['description'] = isset( $entity->description ) ? $entity->description : '';
   }
 
+  if ( isset( $entity->type ) ) {
+    $payload['type'] = $entity->type;
+  }
+
   return $payload;
+}
+
+function update_products($entities) {
+  $feeds = array();
+  $downloads = array();
+
+  foreach ($entities as $entity) {
+    $id = $entity['id'];
+
+    if ($entity['type'] == "feed") {
+      $feeds[$id] = $entity;
+    } else {
+      $downloads[$id] = $entity;
+    }
+  }
+
+  $update_feed = update_option('memberful_feeds', $feeds);
+  $update_download = update_option('memberful_products', $downloads);
+
+  return ($update_feed && $update_download);
 }

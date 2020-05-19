@@ -75,6 +75,29 @@ function has_memberful_download( $slug, $user_id = NULL ) {
   return memberful_wp_user_has_downloads( $user_id, $required_downloads );
 }
 
+/**
+ * Check that the current member has at least one of the specified feeds
+ *
+ * @param string|array $ids ID of the feed the user should have. Can pass an array of IDs
+ * @return bool
+ */
+function has_memberful_feed($ids) {
+  $user_id = wp_get_current_user()->ID;
+  if (!is_array($ids)) {
+    $ids = array($ids);
+  }
+
+  return memberful_wp_user_has_feeds($user_id, $ids);
+}
+
+function memberful_wp_feed_url($id) {
+  $user_id = wp_get_current_user()->ID;
+  $feeds = memberful_wp_user_feeds($user_id);
+
+  if (isset($feeds[$id]))
+    return $feeds[$id]["url"];
+}
+
 function memberful_wp_posts_that_are_protected() {
   static $post_ids = NULL;
 
