@@ -4,7 +4,7 @@ Tags: memberful, member, membership, memberships, recurring payments, recurring 
 Requires at least: 3.6
 Tested up to: 5.3
 Requires PHP: 7.0
-Stable tag: 1.53.0
+Stable tag: 1.54.0
 License: GPLv2 or later
 
 Sell memberships and restrict access to content with WordPress and Memberful.
@@ -48,6 +48,11 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 3. Simple sign in and account management widget.
 
 == Changelog ==
+
+= 1.54.0 =
+
+* Sync Podcasts with Memberful
+* Add shortcode to render link to All Podcasts in Memberful
 
 = 1.53.0 =
 
