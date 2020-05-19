@@ -222,9 +222,8 @@
 
       menu.push({text: 'Private Wordpress RSS Feed link', onclick: function() { insertPrivateRSSFeedShortcode(editor); }});
 
-      menu.push({text: 'Link to all Podcasts', onclick: function() { insertPodcastsShortcode(editor); }});
-
       if (window.MemberfulData.feeds.length > 0) {
+        menu.push({text: 'Link to all Podcasts', onclick: function() { insertPodcastsShortcode(editor); }});
         menu.push({text: 'Show Podcast URL', onclick: function() { insertFeedUrl(editor); }});
       }
 
