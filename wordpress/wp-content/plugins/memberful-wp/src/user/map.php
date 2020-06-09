@@ -103,6 +103,10 @@ class Memberful_User_Map {
     $result = $this->repository()->$method( $wp_user, $member, $context );
 
     if ( is_wp_error( $result ) ) {
+      if ( $result->get_error_code() === "duplicate_user_for_member" && ! $wp_user_existed_before_request ) {
+        wp_delete_user( $wp_user->ID );
+      }
+
       return $result;
     } else {
       return $wp_user;

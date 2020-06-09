@@ -67,12 +67,6 @@ function memberful_wp_sync_user( $account, $mapping_context ) {
     $wpdb->query( "COMMIT" );
   } else {
     $wpdb->query( "ROLLBACK" );
-
-    // Prevent WP from caching a user created by the failed transaction
-    $error_data = $user->get_error_data();
-    if ( $error_data['wp_user'] ) {
-      clean_user_cache( $error_data['wp_user'] );
-    }
   }
 
   return $user;
