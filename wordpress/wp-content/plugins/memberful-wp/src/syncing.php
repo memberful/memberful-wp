@@ -25,6 +25,21 @@ function memberful_wp_sync_member_from_memberful( $member_id, $mapping_context =
  * @return WP_User
  */
 function memberful_wp_sync_member_account( $account, $mapping_context ) {
+  $user = memberful_wp_sync_user( $account, $mapping_context );
+
+  if ( is_wp_error( $user ) ) {
+    memberful_wp_record_wp_error( $user );
+
+    if ( $user->get_error_code() === "duplicate_user_for_member" ) {
+      $user = memberful_wp_sync_user( $account, $mapping_context );
+      return $user;
+    }
+  }
+
+  return $user;
+}
+
+function memberful_wp_sync_user( $account, $mapping_context ) {
   global $wpdb;
   $mapper = new Memberful_User_Map();
 
@@ -52,11 +67,6 @@ function memberful_wp_sync_member_account( $account, $mapping_context ) {
     $wpdb->query( "COMMIT" );
   } else {
     $wpdb->query( "ROLLBACK" );
-    memberful_wp_record_error(array(
-      'error' => $user->get_error_messages(),
-      'code'  => $user->get_error_code(),
-      'member_email' => $account->member->email
-    ));
   }
 
   return $user;

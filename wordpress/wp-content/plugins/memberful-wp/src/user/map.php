@@ -100,25 +100,17 @@ class Memberful_User_Map {
       $method = 'create_mapping';
     }
 
-    $outcome_of_mapping = $this->repository()->$method( $wp_user, $member, $context );
+    $result = $this->repository()->$method( $wp_user, $member, $context );
 
-    if ( is_wp_error( $outcome_of_mapping ) ) {
-      if ( $outcome_of_mapping->get_error_code() === "duplicate_user_for_member" && ! $wp_user_existed_before_request ) {
-        // We only record this error as others will be passed up and recorded
-        // by something else, whereas here we're working around the error.
-        memberful_wp_record_wp_error( $outcome_of_mapping );
-
+    if ( is_wp_error( $result ) ) {
+      if ( $result->get_error_code() === "duplicate_user_for_member" && ! $wp_user_existed_before_request ) {
         wp_delete_user( $wp_user->ID );
-
-        $error_data = $outcome_of_mapping->get_error_data();
-
-        return $error_data['canonical_user'];
-      } else {
-        return $outcome_of_mapping;
       }
-    }
 
-    return $wp_user;
+      return $result;
+    } else {
+      return $wp_user;
+    }
   }
 
   private function add_data_to_wp_error( WP_Error $error, array $data ) {
@@ -139,7 +131,7 @@ class Memberful_User_Map {
 
 }
 
-class Memberful_User_Mapping_Ensure_User { 
+class Memberful_User_Mapping_Ensure_User {
 
   private $wp_user;
   private $member;
@@ -151,7 +143,7 @@ class Memberful_User_Mapping_Ensure_User {
   }
 
   public function ensure_present() {
-    $user_id = $this->user_exists ? $this->update_user() : $this->create_user(); 
+    $user_id = $this->user_exists ? $this->update_user() : $this->create_user();
 
     if ( is_wp_error( $user_id ) ) {
       $user_id->add_data( array_merge( (array) $user_id->get_error_data(), compact('user_data') ) );
@@ -390,16 +382,13 @@ class Memberful_User_Mapping_Repository {
     if ( $result === FALSE ) {
       // Race condition, some other process has reserved the mapping
       if ( strpos( strtolower( $wpdb->last_error ), 'duplicate entry' ) !== FALSE ) {
-        $real_mapping = $this->find_user_member_is_mapped_to( $member );
-
         return new WP_Error(
           "duplicate_user_for_member",
           "Some other process created the user and mapping before we could. Use the earlier version",
           array(
-            'canonical_user' => $real_mapping['user'],
-            'member'         => $member,
-            'context'        => $context,
-            'our_user'       => $wp_user,
+            'context' => $context,
+            'member'  => $member,
+            'wp_user' => $wp_user
           )
         );
       } else {
