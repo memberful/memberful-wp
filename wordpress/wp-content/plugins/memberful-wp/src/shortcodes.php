@@ -21,9 +21,12 @@ function memberful_wp_shortcode_buy_download_link( $atts, $content ) {
 }
 
 function memberful_wp_shortcode_buy_subscription_link( $atts, $content ) {
-  $url = memberful_checkout_for_subscription_url(
-    memberful_wp_extract_id_from_slug( $atts['plan'] )
-  );
+  $plan_id = memberful_wp_extract_id_from_slug( $atts['plan'] );
+  $url = add_query_arg( 'plan', $plan_id, memberful_url( 'checkout' ) );
+
+  if( isset( $atts['price'] ) ) {
+    $url = add_query_arg( 'price', $atts['price'], $url );
+  }
 
   return '<a href="'.$url.'">'.do_shortcode($content).'</a>';
 }
