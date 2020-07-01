@@ -96,7 +96,7 @@
         name: "price",
         type: "textbox",
         label: "Price (optional)",
-        tooltip: "Works only with plans where members are allowed to set price."
+        tooltip: "Works only with plans where members can choose what they pay."
       };
 
       body.push(priceCtrl);
