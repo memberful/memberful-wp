@@ -4,7 +4,7 @@ Tags: memberful, member, membership, memberships, recurring payments, recurring 
 Requires at least: 3.6
 Tested up to: 5.4
 Requires PHP: 7.0
-Stable tag: 1.54.1
+Stable tag: 1.55.0
 License: GPLv2 or later
 
 Sell memberships and restrict access to content with WordPress and Memberful.
@@ -49,7 +49,7 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 == Changelog ==
 
-= not released =
+= 1.55.0 =
 
 * Add possibility to set price in "Choose what you pay" checkout links.
 
