@@ -60,10 +60,6 @@ function memberful_order_completed_url( $order ) {
   return add_query_arg( 'id', $order, memberful_url( 'orders/completed' ) );
 }
 
-function memberful_checkout_for_subscription_url( $plan_id ) {
-  return add_query_arg( 'plan', $plan_id, memberful_url( 'checkout' ) );
-}
-
 function memberful_gift_url( $plan_id ) {
   return add_query_arg( 'plan', $plan_id, memberful_url( 'gift' ) );
 }

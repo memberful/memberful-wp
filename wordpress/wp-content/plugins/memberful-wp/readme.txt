@@ -49,6 +49,10 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 == Changelog ==
 
+= not released =
+
+* Add possibility to set price in "Choose what you pay" checkout links.
+
 = 1.54.1 =
 
 * Fix a bug affecting login after checkout.

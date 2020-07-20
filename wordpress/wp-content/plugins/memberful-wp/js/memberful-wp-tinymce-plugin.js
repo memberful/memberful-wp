@@ -72,43 +72,53 @@
   }
 
   function insertCheckoutLinkDialog(editor, options) {
-    var checkoutItemCtrl = {}, linkTextCtrl = {};
-
     function optionsForPurchasables(current) {
       return {text: current.name, value: current.slug};
     };
 
-    options = options || {};
-
-    checkoutItemCtrl = {
+    var checkoutItemCtrl = {
       name: "item",
       type: "listbox",
       label: options.label,
       values: options.choices.map(optionsForPurchasables)
     };
 
-    linkTextCtrl = {
+    var linkTextCtrl = {
       name: "linkText",
       type: "textbox",
       label: "Link text"
     };
 
+    var body = [checkoutItemCtrl, linkTextCtrl];
+
+    if(options.showPrice) {
+      var priceCtrl = {
+        name: "price",
+        type: "textbox",
+        label: "Price (optional)",
+        tooltip: "Works only with plans where members can choose what they pay."
+      };
+
+      body.push(priceCtrl);
+    }
+
     editor.windowManager.open({
       title: options.dialogTitle || "Link to checkout",
-      body: [
-        checkoutItemCtrl,
-        linkTextCtrl
-      ],
+      body: body,
       onSubmit: function(e) {
-        (options.onSubmit || function() {})(editor, e.data.item, e.data.linkText);
+        (options.onSubmit || function() {})(editor, e.data.item, e.data.linkText, e.data.price);
       }
     });
 
   }
 
   function insertSubscriptionCheckoutLink(editor) {
-    handleDialogSubmit = function(editor, plan, linkText) {
-      var shortcode = "[memberful_buy_subscription_link plan='" + plan + "']" + linkText + "[/memberful_buy_subscription_link]";
+    handleDialogSubmit = function(editor, plan, linkText, price = null) {
+      let shortcode = `[memberful_buy_subscription_link plan=${plan}`;
+      if(price) {
+        shortcode += ` price=${price}`
+      }
+      shortcode += `]${linkText}[/memberful_buy_subscription_link]`;
 
       editor.insertContent(shortcode);
     };
@@ -118,7 +128,8 @@
       {
         label: "Plan to subscribe to",
         choices: window.MemberfulData.plans,
-        onSubmit: handleDialogSubmit
+        onSubmit: handleDialogSubmit,
+        showPrice: true
       }
     );
   };
