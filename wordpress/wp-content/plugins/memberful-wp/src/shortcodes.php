@@ -52,7 +52,13 @@ function memberful_wp_shortcode_account_link( $atts, $content ) {
 }
 
 function memberful_wp_shortcode_feeds_link( $atts, $content ) {
-  return '<a href="'.memberful_feeds_url().'">'.do_shortcode($content).'</a>';
+  $url = memberful_feeds_url();
+
+  if (!empty($atts['podcast'])) {
+    $url = add_query_arg('id', $atts['podcast'], $url);
+  }
+
+  return '<a href="'.$url.'">'.do_shortcode($content).'</a>';
 }
 
 function memberful_wp_shortcode_download_link( $atts, $content) {
