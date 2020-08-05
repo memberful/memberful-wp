@@ -35,12 +35,55 @@
   }
 
   var insertPodcastsShortcode = function(editor) {
-    wrapContentsWithShortcode(
-      editor,
-      "[memberful_podcasts_link]",
-      "[/memberful_podcasts_link]",
-      "Access your Podcasts"
-    );
+    function handleDialogSubmit(editor, id) {
+      var content;
+      var openingTag;
+
+      if (id) {
+        content = "Access the podcast"
+        openingTag = "[memberful_podcasts_link podcast=" + id + "]"
+      } else {
+        content = "Access your Podcasts"
+        openingTag = "[memberful_podcasts_link]"
+      }
+
+      wrapContentsWithShortcode(
+        editor,
+        openingTag,
+        "[/memberful_podcasts_link]",
+        content
+      );
+    }
+
+    function feedSelectOptions(feed) {
+      return { text: feed.name, value: feed.id };
+    };
+
+    var feeds = window.MemberfulData.feeds;
+    if (feeds.length > 1) {
+      var allPodcasts = { name: "All podcasts", id: null }
+      feeds = [allPodcasts].concat(feeds);
+    }
+
+    var feedOptions = feeds.map(feedSelectOptions);
+    var feedList = {
+      name: "item",
+      type: "listbox",
+      label: "Podcast",
+      values: feedOptions
+    };
+
+    editor.windowManager.open({
+      title: "Choose a podcast",
+      width: 350,
+      height: 60,
+      body: [
+        feedList,
+      ],
+      onSubmit: function(e) {
+        handleDialogSubmit(editor, e.data.item);
+      }
+    });
   }
 
   function insertLinkToDownload(editor) {
@@ -234,7 +277,7 @@
       menu.push({text: 'Private Wordpress RSS Feed link', onclick: function() { insertPrivateRSSFeedShortcode(editor); }});
 
       if (window.MemberfulData.feeds.length > 0) {
-        menu.push({text: 'Link to all Podcasts', onclick: function() { insertPodcastsShortcode(editor); }});
+        menu.push({text: 'Link to Podcasts', onclick: function() { insertPodcastsShortcode(editor); }});
         menu.push({text: 'Show Podcast URL', onclick: function() { insertFeedUrl(editor); }});
       }
 
