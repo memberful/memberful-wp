@@ -125,13 +125,16 @@ Restrict Access Metabox
 #memberful_acl:after {
   clear: both;
 }
+.memberful-restrict-access {
+  display: flex;
+}
 .memberful-restrict-access-options {
-  float: left;
   width: 205px;
   margin: 10px 20px 0 0;
   padding: 0 20px;
   background: #fff;
   border: 1px solid #dedede;
+  flex: none;
 }
 p.memberful-access-header {
   padding-bottom: 3px;
@@ -154,8 +157,8 @@ p.memberful-access-header {
   line-height: 1.4em;
 }
 .memberful-marketing-content {
-  float: left;
   margin: 10px 0;
+  flex-grow: 999;
 }
 #memberful_marketing_content_ifr {
   background: #fff;

@@ -49,6 +49,10 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 == Changelog ==
 
+= unreleased =
+
+* Improve UI for the Restrict Acess tool
+
 = 1.56.0 =
 
 * Add an optional `podcast` attribute to the `memberful_podcasts_link` shortcode, allowing you to link to a specific Podcast using its ID.
