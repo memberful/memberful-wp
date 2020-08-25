@@ -1,6 +1,10 @@
 #memberful-wrap {
   max-width: 360px;
 }
+.mce-listbox button {
+  text-overflow: ellipsis!important;
+  overflow: hidden!important;
+}
 
 /*---------------------------------------------------------
 Sign up for Memberful or Register
