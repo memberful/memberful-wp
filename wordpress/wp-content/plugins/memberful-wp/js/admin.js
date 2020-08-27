@@ -21,7 +21,7 @@ jQuery(document).ready(function($){
 
     var callback = function() {
       var self = $(this);
-      var field_value = self.attr('value');
+      var field_value = self.val();
       var dependent_can_be_shown = false;
       var fieldType = self.prop('tagName') == 'SELECT' ? 'select' : self.prop('type');
       var checked = self.is(':checked');
