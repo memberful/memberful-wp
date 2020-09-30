@@ -11,6 +11,7 @@ add_shortcode( 'memberful_sign_in_link',  'memberful_wp_shortcode_sign_in_link' 
 add_shortcode( 'memberful_sign_out_link', 'memberful_wp_shortcode_sign_out_link' );
 add_shortcode( 'memberful_podcasts_link',  'memberful_wp_shortcode_feeds_link' );
 add_shortcode( 'memberful_podcast_url', 'memberful_wp_shortcode_feed_url' );
+add_shortcode( 'memberful_if_has_active_subscription', 'memberful_wp_shortcode_if_has_active_subscription' );
 
 function memberful_wp_shortcode_buy_download_link( $atts, $content ) {
   $url = memberful_checkout_for_download_url(
@@ -154,6 +155,16 @@ function memberful_wp_shortcode_private_user_feed_link($atts = array(), $content
   $category = $atts['category'] ?? '';
 
   return memberful_private_rss_feed_link($content, __("You don’t have access to this RSS feed."), true, $category);
+}
+
+function memberful_wp_shortcode_if_has_active_subscription( $atts, $content ) {
+  $user_id = wp_get_current_user()->ID;
+
+  if ( is_subscribed_to_any_memberful_plan( $user_id ) ) {
+    return do_shortcode($content);
+  } else {
+    return '';
+  }
 }
 
 function memberful_wp_slugs_to_ids( $slugs ) {
