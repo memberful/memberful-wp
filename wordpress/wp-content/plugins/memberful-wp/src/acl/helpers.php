@@ -50,6 +50,17 @@ function memberful_wp_user_has_subscriptions( $user_id, array $subscriptions ) {
 }
 
 /**
+ * Check if the given user has an active subscription to any plan
+ *
+ * @param int          $user_id ID of the user who should have the subscription
+ * @return bool
+ */
+function is_subscribed_to_any_memberful_plan( $user_id ) {
+  $plans = memberful_wp_user_plans_subscribed_to( $user_id );
+  return !empty( $plans );
+}
+
+/**
  * Check that the current member has a subscription to at least least one of the required plans
  *
  * @param string|array $slug    Slug of the plan the user should have. Can pass an array of slugs
