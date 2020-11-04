@@ -39,7 +39,12 @@ do_action( 'rss_tag_pre', 'rss2' );
     <title><?php bloginfo_rss('name'); ?> Member Feed</title>
     <atom:link href="<?php self_link(); ?>" rel="self" type="application/rss+xml" />
     <link><?php bloginfo_rss('url') ?></link>
-    <description><?php bloginfo_rss("description") ?></description>
+    <description>
+      <?php
+        $default_description = apply_filters( 'bloginfo_rss', get_bloginfo_rss( 'description' ), 'description' );
+        echo apply_filters( 'memberful_private_rss_description', $default_description )
+      ?>
+    </description>
     <lastBuildDate><?php echo mysql2date('D, d M Y H:i:s +0000', get_lastpostmodified('GMT'), false); ?></lastBuildDate>
     <language><?php bloginfo_rss( 'language' ); ?></language>
     <?php if (get_option('memberful_add_block_tags_to_rss_feed')): ?>
