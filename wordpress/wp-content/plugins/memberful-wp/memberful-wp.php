@@ -57,6 +57,7 @@ require_once MEMBERFUL_DIR . '/vendor/reporting.php';
 require_once MEMBERFUL_DIR . '/src/private_user_feed.php';
 require_once MEMBERFUL_DIR . '/src/comments_protection.php';
 require_once MEMBERFUL_DIR . '/src/nav_menus.php';
+require_once MEMBERFUL_DIR . '/src/bulk_protect.php';
 
 if ( in_array( 'sensei/woothemes-sensei.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
   require_once MEMBERFUL_DIR . '/src/contrib/woothemes-sensei.php';

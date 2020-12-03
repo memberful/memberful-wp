@@ -407,7 +407,8 @@ function memberful_wp_bulk_protect() {
     case 'all_posts_from_category':
       $query_params['category__in'] = $categories_to_protect;
       break;
-
+    default:
+      $query_params['post_type'] = $things_to_protect;
     }
 
     $query = new WP_Query($query_params);
