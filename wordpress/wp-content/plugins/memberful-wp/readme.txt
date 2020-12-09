@@ -49,6 +49,10 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 == Changelog ==
 
+= unreleased =
+
+* Add custom post types support to Bulk restrict access tool.
+
 = 1.59.0 =
 
 * Add shortcode that checks for lack of active subscription

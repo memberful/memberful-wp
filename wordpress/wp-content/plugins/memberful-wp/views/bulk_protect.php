@@ -22,6 +22,9 @@
           <option value="all_pages"><?php _e( "All Pages", 'memberful' ); ?></option>
           <option value="all_posts"><?php _e( "All Posts", 'memberful' ); ?></option>
           <option value="all_posts_from_category"><?php _e( "All Posts from a category or categories", 'memberful' ); ?></option>
+          <?php foreach(memberful_additional_post_types_to_protect() as $post_type): ?>
+            <option value="<?php echo $post_type->name ?>"><?php echo $post_type->labels->all_items ?></option>
+          <?php endforeach; ?>
         </select>
         <ul data-depends-on="global-restrict-target" data-depends-value="all_posts_from_category" class="memberful-global-restrict-access-category-list">
           <?php foreach(get_categories() as $category): ?>
