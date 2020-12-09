@@ -15,7 +15,7 @@
     s.async = true;
     s.src = '<?php echo $script_src; ?>';
 
-    setup = function() { window.MemberfulEmbedded.setup(); }
+    setup = function() { window.MemberfulEmbedded.setup(); };
 
     s.addEventListener("load", setup, false);
 

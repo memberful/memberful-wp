@@ -52,6 +52,7 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 = unreleased =
 
 * Add custom post types support to Bulk restrict access tool.
+* Add support for SG Optimizer frontend optimization
 
 = 1.59.0 =
 
