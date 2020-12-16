@@ -165,3 +165,16 @@ if(!function_exists('memberful_private_user_feed_get_url_identifier'))  {
   }
 
 }
+function memberful_private_user_feed_description() {
+  $description = memberful_get_bloginfo_rss( 'description' );
+  return apply_filters( 'memberful_private_rss_description', $description );
+}
+
+function memberful_private_user_feed_title() {
+  $title = memberful_get_bloginfo_rss( 'name' ) . ' Member Feed';
+  return apply_filters( 'memberful_private_rss_title', $title );
+}
+
+function memberful_get_bloginfo_rss( $attribute ) {
+  return apply_filters( 'bloginfo_rss', get_bloginfo_rss( $attribute ), $attribute );
+}

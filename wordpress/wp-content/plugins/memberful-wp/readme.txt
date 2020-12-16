@@ -49,6 +49,10 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 == Changelog ==
 
+= unreleased =
+
+* Allow filtering of private feed title
+
 = 1.60.0 =
 
 * Add custom post types support to Bulk restrict access tool.
