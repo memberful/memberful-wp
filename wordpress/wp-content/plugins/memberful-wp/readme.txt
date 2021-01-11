@@ -49,6 +49,10 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 == Changelog ==
 
+= Unreleased =
+
+* Fix "Link to download" select box
+
 = 1.61.0 =
 
 * Allow filtering of private feed title
