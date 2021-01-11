@@ -90,7 +90,6 @@
     downloadItemCtrl = {
       name: "downloadSlug",
       type: "listbox",
-      text: "Choose download",
       label: "Link to this download",
       values: window.MemberfulData.downloads.map(function(x) { return {text: x.name, value: x.slug} })
     };
