@@ -95,6 +95,15 @@ Shared
   background: #f4424b;
   border: 1px solid #ce262f;
 }
+.memberful-label__checkbox--multiline {
+  float: left;
+  margin-top: 1px!important;
+}
+.memberful-label__text--multiline {
+  display: block;
+  margin-left: 25px;
+  line-height: 1.4em;
+}
 /*---------------------------------------------------------
 Bulk restrict access tool
 ------------------------------------------------------------ */
@@ -150,15 +159,6 @@ p.memberful-access-header {
 }
 .memberful-acl-block label {
   display: block;
-}
-.memberful-access-label__checkbox--multiline {
-  float: left;
-  margin-top: 1px!important;
-}
-.memberful-access-label__text--multiline {
-  display: block;
-  margin-left: 25px;
-  line-height: 1.4em;
 }
 .memberful-marketing-content {
   margin: 10px 0;
