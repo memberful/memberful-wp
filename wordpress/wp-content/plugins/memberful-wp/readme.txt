@@ -52,6 +52,7 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 = Unreleased =
 
 * Fix "Link to download" select box
+* Add option to hide admin toolbar from members 
 
 = 1.61.0 =
 

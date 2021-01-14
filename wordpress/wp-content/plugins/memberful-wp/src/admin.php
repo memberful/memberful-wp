@@ -247,11 +247,9 @@ function memberful_wp_options() {
     }
 
     if ( isset( $_POST['save_changes'] ) ) {
-      if ( isset( $_POST['extend_auth_cookie_expiration'] ) ) {
-        update_option( 'memberful_extend_auth_cookie_expiration', true );
-      } else {
-        update_option( 'memberful_extend_auth_cookie_expiration', false );
-      }
+      update_option( 'memberful_extend_auth_cookie_expiration', isset( $_POST['extend_auth_cookie_expiration'] ));
+      update_option( 'memberful_hide_admin_toolbar', isset( $_POST['memberful_hide_admin_toolbar'] ));
+
       return wp_redirect( admin_url( 'options-general.php?page=memberful_options' ) );
     }
   }
@@ -281,6 +279,7 @@ function memberful_wp_options() {
   $subscriptions = get_option( 'memberful_subscriptions', array() );
   $feeds = get_option( 'memberful_feeds', array() );
   $extend_auth_cookie_expiration = get_option( 'memberful_extend_auth_cookie_expiration' );
+  $hide_admin_toolbar = get_option( 'memberful_hide_admin_toolbar' );
 
   memberful_wp_render (
     'options',
@@ -288,7 +287,8 @@ function memberful_wp_options() {
       'products' => $products,
       'feeds' => $feeds,
       'subscriptions' => $subscriptions,
-      'extend_auth_cookie_expiration' => $extend_auth_cookie_expiration
+      'extend_auth_cookie_expiration' => $extend_auth_cookie_expiration,
+      'hide_admin_toolbar' => $hide_admin_toolbar
     )
   );
 }
