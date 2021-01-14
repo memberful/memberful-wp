@@ -17,6 +17,7 @@ function memberful_wp_all_options() {
     'memberful_role_inactive_customer' => 'subscriber',
     'memberful_posts_available_to_any_registered_user' => array(),
     'memberful_hide_admin_toolbar' => TRUE,
+    'memberful_block_dashboard_access' => TRUE,
     MEMBERFUL_OPTION_DEFAULT_MARKETING_CONTENT => NULL
   );
 }

@@ -53,6 +53,7 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 * Fix "Link to download" select box
 * Add option to hide admin toolbar from members 
+* Add option to block Wordpress dashboard from members
 
 = 1.61.0 =
 
