@@ -40,6 +40,12 @@
               <span class="memberful-label__text--multiline">Block Wordpress dashboard access from members.</span>
           </label>
         </p>
+        <p>
+          <label for="filter_account_menu_items_checkbox">
+            <input id="filter_account_menu_items_checkbox" class="memberful-label__checkbox--multiline" type="checkbox" name="memberful_filter_account_menu_items" <?php if( $filter_account_menu_items): ?>checked="checked"<?php endif; ?>>
+              <span class="memberful-label__text--multiline">Conditionally show "Sign in," "Sign out," and "Account" menu items based on members' signed-in status.</span>
+          </label>
+        </p>
         <button type="submit" name="save_changes" class="button button-primary">Save Changes</button>
       </form>
     </div>
