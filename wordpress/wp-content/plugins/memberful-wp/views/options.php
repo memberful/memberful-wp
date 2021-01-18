@@ -25,7 +25,7 @@
         <p>
           <label for="extended_login_period_checkbox">
             <input id="extended_login_period_checkbox" class="memberful-label__checkbox--multiline" type="checkbox" name="extend_auth_cookie_expiration" <?php if( $extend_auth_cookie_expiration ): ?>checked="checked"<?php endif; ?>>
-              <span class="memberful-label__text--multiline">Keep all WordPress users logged in for 1 year (Memberful default).</span>
+              <span class="memberful-label__text--multiline">Keep all WordPress users logged in for 1 year.</span>
           </label>
         </p>
         <p>
