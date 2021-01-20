@@ -54,7 +54,7 @@ segment is a separate number. i.e. `1.12.0` > `1.11.0`.
 
 * Make sure that every change has an appropriate changelog entry in `readme.txt`.
 * Set correct version number in `readme.txt` and `memberful-wp.php`.
-* Ensure that all changes are ready in the `master` branch.
+* Ensure that all changes are ready in the `main` branch.
 * Run `./release.sh`.
 * A copy of the wordpress.org svn repo will be downloaded into `/tmp`, the
   version you tagged will be copied across to the `tags` and `trunk`
