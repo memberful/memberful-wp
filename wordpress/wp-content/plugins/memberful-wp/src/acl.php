@@ -1,6 +1,7 @@
 <?php
 require_once MEMBERFUL_DIR . '/src/acl/helpers.php';
 require_once MEMBERFUL_DIR . '/src/acl/post_options.php';
+require_once MEMBERFUL_DIR . '/src/acl/term_options.php';
 
 /**
  * Determines the set of post IDs that the current user cannot access
@@ -13,6 +14,16 @@ require_once MEMBERFUL_DIR . '/src/acl/post_options.php';
  * @return array Map of post ID => post ID
  */
 function memberful_wp_user_disallowed_post_ids( $user_id ) {
+  $acl = get_option( 'memberful_acl', array() );
+  return memberful_wp_user_disallowed_ids_from_acl( $user_id, $acl);
+}
+
+function memberful_wp_user_disallowed_term_ids( $user_id ) {
+  $acl = get_option( 'memberful_term_acl', array() );
+  return memberful_wp_user_disallowed_ids_from_acl( $user_id, $acl);
+}
+
+function memberful_wp_user_disallowed_ids_from_acl( $user_id, $acl ) {
   static $ids = array();
 
   $user_id        = (int) $user_id;
@@ -21,7 +32,6 @@ function memberful_wp_user_disallowed_post_ids( $user_id ) {
   if ( isset( $ids[$user_id] ) )
     return $ids[$user_id];
 
-  $acl = get_option( 'memberful_acl', array() );
   $global_product_acl = isset( $acl['product'] ) ? $acl['product'] : array();
   $global_subscription_acl = isset( $acl['subscription'] ) ? $acl['subscription'] : array();
   $posts_for_any_registered_users = memberful_wp_get_all_posts_available_to_any_registered_user();
@@ -195,7 +205,29 @@ function memberful_wp_extract_slug_ids_and_user($args) {
  * @param integer $post_id ID of the post that should have access checked
  */
 function memberful_can_user_access_post( $user, $post ) {
-  $restricted_posts = memberful_wp_user_disallowed_post_ids( $user );
+  if ( !empty( memberful_terms_restricting_post( $user, $post )))
+    return false;
 
+  $restricted_posts = memberful_wp_user_disallowed_post_ids( $user );
   return ! isset( $restricted_posts[$post] );
+}
+
+function memberful_terms_restricting_post( $user, $post ) {
+  $restricted_terms = array_values( memberful_wp_user_disallowed_term_ids( $user ));
+  return array_intersect( $restricted_terms, memberful_wp_get_category_and_tag_ids_for_post( $post ));
+}
+
+function memberful_wp_get_category_and_tag_ids_for_post( $post ) {
+  $categories = get_the_terms( $post, "category" );
+  $tags = get_the_terms( $post, "post_tag" );
+
+  $categories = $categories ? $categories : array();
+  $tags = $tags ? $tags : array();
+  $terms = array_merge( $categories, $tags );
+
+  if ( !empty( $terms )) {
+    $terms = wp_list_pluck( $terms, "term_id" );
+  }
+
+  return $terms;
 }

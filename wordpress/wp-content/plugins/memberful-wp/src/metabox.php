@@ -3,6 +3,10 @@
 add_action( 'add_meta_boxes', 'memberful_wp_add_metabox' );
 add_action( 'save_post', 'memberful_wp_save_postdata' );
 
+add_action( 'category_edit_form', 'memberful_wp_add_term_metabox' );
+add_action( 'post_tag_edit_form', 'memberful_wp_add_term_metabox' );
+add_action( 'edited_category', 'memberful_wp_save_term_metadata' );
+add_action( 'edited_post_tag', 'memberful_wp_save_term_metadata' );
 
 function memberful_wp_metabox_types() {
   $types = get_post_types();
@@ -124,7 +128,65 @@ function memberful_wp_save_postdata( $post_id ) {
   }
 }
 
+function memberful_wp_add_term_metabox( $term ) {
+  if ( ! get_option('memberful_site', FALSE) )
+    return;
 
+    wp_nonce_field( plugin_basename( __FILE__ ), 'memberful_nonce' );
+
+    $view_vars = array();
+    $entities = array( Memberful_Post_ACL::DOWNLOAD, Memberful_Post_ACL::SUBSCRIPTION );
+
+    foreach ( $entities as $entity ) {
+      $acl_manager = new Memberful_Term_ACL( $entity );
+
+      $view_vars[$entity.'s'] = memberful_wp_metabox_acl_format( $acl_manager->get_acl( $term->term_id ), $entity );
+    }
+
+    $marketing_content = array_filter(array(
+      memberful_term_marketing_content( $term->term_id ),
+      memberful_wp_default_marketing_content(),
+      memberful_wp_marketing_content_explanation()
+    ));
+
+    $view_vars['marketing_content'] = reset($marketing_content);
+    $view_vars['viewable_by_any_registered_users'] = memberful_wp_get_term_available_to_any_registered_users( $term->term_id );
+    $view_vars['viewable_by_anybody_subscribed_to_a_plan'] = memberful_wp_get_term_available_to_anybody_subscribed_to_a_plan( $term->term_id );
+
+    $acl_map = get_option( 'memberful_acl', array() );
+    memberful_wp_render( 'metabox', $view_vars );
+}
+
+function memberful_wp_save_term_metadata( $term_id ) {
+  $entities = array( Memberful_Post_ACL::DOWNLOAD, Memberful_Post_ACL::SUBSCRIPTION );
+
+  foreach ( $entities as $entity ) {
+    $field = 'memberful_'.$entity.'_acl';
+
+    $acl_list = empty($_POST[$field]) ? array() : (array) $_POST[$field];
+
+    $acl_manager = new Memberful_Term_ACL( $entity );
+
+    $acl_manager->set_acl( $term_id, $acl_list );
+  }
+
+  $viewable_by_any_registered_users = isset($_POST['memberful_viewable_by_any_registered_users']) && $_POST['memberful_viewable_by_any_registered_users'] === '1';
+  memberful_wp_set_term_available_to_any_registered_users( $term_id, $viewable_by_any_registered_users );
+
+  $viewable_by_anybody_subscribed_to_a_plan = isset($_POST['memberful_viewable_by_anybody_subscribed_to_a_plan']) && $_POST['memberful_viewable_by_anybody_subscribed_to_a_plan'] === '1';
+  memberful_wp_set_term_available_to_anybody_subscribed_to_a_plan( $term_id, $viewable_by_anybody_subscribed_to_a_plan );
+
+  if(!isset($_POST['memberful_marketing_content']))
+    return;
+
+  $marketing_content = trim( $_POST['memberful_marketing_content'] );
+
+  memberful_wp_update_term_marketing_content( $term_id, $marketing_content );
+
+  if ( ! empty( $_POST['memberful_make_default_marketing_content'] ) ) {
+    memberful_wp_update_default_marketing_content( $marketing_content );
+  }
+}
 
 /**
  * Class for managing ACLs on a post
@@ -181,7 +243,7 @@ class Memberful_Post_ACL {
     $acl_map = $this->_remove_deleted_entities( $post_id, $acl_map, $old_acl, $new_acl );
     $acl_map = $this->_add_new_entities(        $post_id, $acl_map, $old_acl, $new_acl );
 
-    $this->_update_post_acl( $post_id, $new_acl );
+    $this->_update_item_acl( $post_id, $new_acl );
     $this->_update_global_acl( $acl_map );
   }
 
@@ -203,14 +265,14 @@ class Memberful_Post_ACL {
   }
 
 
-  protected function _update_post_acl( $post_id, array $new_acl ) {
-    $current_acl = get_post_meta( $post_id, 'memberful_acl', TRUE );
+  protected function _update_item_acl( $item_id, array $new_acl ) {
+    $current_acl = get_post_meta( $item_id, 'memberful_acl', TRUE );
 
     if( !is_array( $current_acl ) )
       $current_acl = array();
 
     $current_acl[$this->_entity] = $new_acl;
-    update_post_meta( $post_id, 'memberful_acl', $current_acl );
+    update_post_meta( $item_id, 'memberful_acl', $current_acl );
   }
 
   /**
@@ -256,4 +318,42 @@ class Memberful_Post_ACL {
   protected function meta_field() {
     return 'memberful_'.$this->_entity;
   }
+}
+
+class Memberful_Term_ACL extends Memberful_Post_ACL {
+  public function get_acl( $item_id ) {
+    $restricted_acl = get_term_meta( $item_id, 'memberful_acl', TRUE );
+
+    $entity_acl = empty( $restricted_acl[$this->_entity] ) ? array() : $restricted_acl[$this->_entity];
+
+    return is_array($entity_acl) ? $entity_acl : array();
+  }
+
+  protected function _update_item_acl( $item_id, array $new_acl ) {
+    $current_acl = get_term_meta( $item_id, 'memberful_acl', TRUE );
+
+    if( !is_array( $current_acl ) )
+      $current_acl = array();
+
+    $current_acl[$this->_entity] = $new_acl;
+    update_term_meta( $item_id, 'memberful_acl', $current_acl );
+  }
+
+  protected function _update_global_acl( array $entity_acl ) {
+    $acl_map = get_option( 'memberful_term_acl', array() );
+
+    $acl_map[$this->_entity] = $entity_acl;
+
+    update_option( 'memberful_term_acl', $acl_map );
+  }
+
+  protected function _load_global_acl() {
+    $acl_map = get_option( 'memberful_term_acl', array() );
+
+    if ( ! isset( $acl_map[$this->_entity] ) )
+      $acl_map[$this->_entity] = array();
+
+    return $acl_map[$this->_entity];
+  }
+
 }
