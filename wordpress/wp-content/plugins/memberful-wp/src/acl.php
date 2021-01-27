@@ -20,7 +20,7 @@ function memberful_wp_user_disallowed_post_ids( $user_id ) {
 
 function memberful_wp_user_disallowed_term_ids( $user_id ) {
   $acl = get_option( 'memberful_term_acl', array() );
-  return memberful_wp_user_disallowed_ids_from_acl( $user_id, $acl);
+  return memberful_wp_user_disallowed_ids_from_acl( $user_id, $acl );
 }
 
 function memberful_wp_user_disallowed_ids_from_acl( $user_id, $acl ) {
@@ -214,7 +214,32 @@ function memberful_can_user_access_post( $user, $post ) {
 
 function memberful_terms_restricting_post( $user, $post ) {
   $restricted_terms = array_values( memberful_wp_user_disallowed_term_ids( $user ));
-  return array_intersect( $restricted_terms, memberful_wp_get_category_and_tag_ids_for_post( $post ));
+  $post_terms = memberful_wp_get_category_and_tag_ids_for_post( $post );
+  $restricting_terms_for_this_post = array();
+
+  if ( !$user ) {
+    $terms_requiring_any_user = array_intersect( $post_terms, memberful_wp_get_all_terms_available_to_any_registered_user() );
+
+    if ( !empty( $terms_requiring_any_user )) {
+      array_push( $restricting_terms_for_this_post, ...$terms_requiring_any_user);
+    }
+  } elseif ( empty( memberful_wp_user_plans_subscribed_to( $user ))) {
+    $terms_requiring_any_active_plan = array_intersect( $post_terms, memberful_wp_get_all_terms_available_to_anybody_subscribed_to_a_plan() );
+
+    if ( !empty( $terms_requiring_any_active_plan)) {
+      array_push( $restricting_terms_for_this_post, ...$terms_requiring_any_active_plan);
+    }
+  }
+
+  if ( !empty( $restricted_terms ) && !empty( $post_terms )) {
+    $terms_restricted_to_specific_plans = array_intersect( $restricted_terms, $post_terms );
+
+    if ( !empty( $terms_restricted_to_specific_plans )) {
+      array_push ( $restricting_terms_for_this_post, ...$terms_restricted_to_specific_plans );
+    }
+  }
+
+  return $restricting_terms_for_this_post;
 }
 
 function memberful_wp_get_category_and_tag_ids_for_post( $post ) {
