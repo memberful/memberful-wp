@@ -153,11 +153,13 @@ function memberful_wp_add_term_metabox( $term ) {
     $view_vars['viewable_by_any_registered_users'] = memberful_wp_get_term_available_to_any_registered_users( $term->term_id );
     $view_vars['viewable_by_anybody_subscribed_to_a_plan'] = memberful_wp_get_term_available_to_anybody_subscribed_to_a_plan( $term->term_id );
 
-    $acl_map = get_option( 'memberful_acl', array() );
     memberful_wp_render( 'metabox', $view_vars );
 }
 
 function memberful_wp_save_term_metadata( $term_id ) {
+  if ( ! memberful_wp_valid_nonce( plugin_basename( __FILE__ ) ) )
+    return;
+
   $entities = array( Memberful_Post_ACL::DOWNLOAD, Memberful_Post_ACL::SUBSCRIPTION );
 
   foreach ( $entities as $entity ) {

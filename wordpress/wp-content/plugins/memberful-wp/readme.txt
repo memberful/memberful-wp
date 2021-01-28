@@ -49,6 +49,10 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 == Changelog ==
 
+= Unreleased =
+
+* Add option to restrict content by category or tag
+
 = 1.62.0 =
 
 * Fix "Link to download" select box
