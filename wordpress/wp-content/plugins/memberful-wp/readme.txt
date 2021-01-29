@@ -49,6 +49,10 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 == Changelog ==
 
+= Unreleased =
+
+* Fix conflicts with plugins that require Ajax-based admin access when using the new "Block dashboard for members" feature. These include stats tracking plugins like Statify, as well as Wordfence Login Security.
+
 = 1.62.0 =
 
 * Fix "Link to download" select box
