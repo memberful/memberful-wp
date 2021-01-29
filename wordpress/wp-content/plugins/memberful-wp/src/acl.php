@@ -223,7 +223,9 @@ function memberful_terms_restricting_post( $user, $post ) {
     if ( !empty( $terms_requiring_any_user )) {
       array_push( $restricting_terms_for_this_post, ...$terms_requiring_any_user);
     }
-  } elseif ( empty( memberful_wp_user_plans_subscribed_to( $user ))) {
+  }
+
+  if ( !$user || empty( memberful_wp_user_plans_subscribed_to( $user ))) {
     $terms_requiring_any_active_plan = array_intersect( $post_terms, memberful_wp_get_all_terms_available_to_anybody_subscribed_to_a_plan() );
 
     if ( !empty( $terms_requiring_any_active_plan )) {
