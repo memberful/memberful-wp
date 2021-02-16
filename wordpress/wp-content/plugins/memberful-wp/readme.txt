@@ -49,6 +49,10 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 == Changelog ==
 
+= Unreleased =
+
+* Fix display of "Sign in" items in admin menu editor
+
 = 1.62.2 =
 
 * Improve unescaping of redirect_to param
