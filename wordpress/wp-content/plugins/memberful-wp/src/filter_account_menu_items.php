@@ -15,6 +15,6 @@ function filter_account_links( $items ) {
   return $items;
 }
 
-if ( get_option( 'memberful_filter_account_menu_items' )) {
+if ( get_option( 'memberful_filter_account_menu_items' ) && !is_admin() ) {
   add_filter( 'wp_get_nav_menu_items', 'filter_account_links' );
 }
