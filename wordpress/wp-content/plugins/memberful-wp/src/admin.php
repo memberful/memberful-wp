@@ -546,8 +546,9 @@ function memberful_wp_add_protected_state_to_post_list($states, $post) {
   $restricted_to_specific_plan = in_array( $post->ID, $ids_of_protected_posts );
   $restricted_to_any_subscribers = memberful_wp_get_post_available_to_anybody_subscribed_to_a_plan( $post->ID );
   $restricted_to_any_registered_users = memberful_wp_get_post_available_to_any_registered_users( $post->ID );
+  $restricted_by_term = !empty( memberful_terms_restricting_post( 0, $post->ID ));
 
-  if ( $restricted_to_specific_plan || $restricted_to_any_subscribers || $restricted_to_any_registered_users ) {
+  if ( $restricted_to_specific_plan || $restricted_to_any_subscribers || $restricted_to_any_registered_users || $restricted_by_term ) {
     $states[] = __('Protected by Memberful');
   }
 
