@@ -150,8 +150,8 @@ function memberful_wp_add_term_metabox( $term ) {
     ));
 
     $view_vars['marketing_content'] = reset($marketing_content);
-    $view_vars['viewable_by_any_registered_users'] = memberful_wp_get_term_available_to_any_registered_users( $term->term_id );
-    $view_vars['viewable_by_anybody_subscribed_to_a_plan'] = memberful_wp_get_term_available_to_anybody_subscribed_to_a_plan( $term->term_id );
+    $view_vars['viewable_by_any_registered_users'] = memberful_wp_is_term_available_to_any_registered_users( $term->term_id );
+    $view_vars['viewable_by_anybody_subscribed_to_a_plan'] = memberful_wp_is_term_available_to_anybody_subscribed_to_a_plan( $term->term_id );
 
     memberful_wp_render( 'metabox', $view_vars );
 }

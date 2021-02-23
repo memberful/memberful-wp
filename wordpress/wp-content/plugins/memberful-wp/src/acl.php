@@ -245,11 +245,8 @@ function memberful_terms_restricting_post( $user, $post ) {
 }
 
 function memberful_wp_get_category_and_tag_ids_for_post( $post ) {
-  $categories = get_the_terms( $post, "category" );
-  $tags = get_the_terms( $post, "post_tag" );
-
-  $categories = $categories ? $categories : array();
-  $tags = $tags ? $tags : array();
+  $categories = get_the_category();
+  $tags = wp_get_post_tags( $post );
   $terms = array_merge( $categories, $tags );
 
   if ( !empty( $terms )) {

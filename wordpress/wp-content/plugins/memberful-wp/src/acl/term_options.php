@@ -1,6 +1,6 @@
 <?php
 
-function memberful_wp_get_term_available_to_any_registered_users( $term_id ) {
+function memberful_wp_is_term_available_to_any_registered_users( $term_id ) {
   return get_term_meta( $term_id, 'memberful_available_to_any_registered_user', TRUE ) === "1";
 }
 
@@ -22,7 +22,7 @@ function memberful_wp_get_all_terms_available_to_any_registered_user() {
   return get_option( 'memberful_terms_available_to_any_registered_user', array() );
 }
 
-function memberful_wp_get_term_available_to_anybody_subscribed_to_a_plan( $term_id ) {
+function memberful_wp_is_term_available_to_anybody_subscribed_to_a_plan( $term_id ) {
   return get_term_meta( $term_id, 'memberful_available_to_anybody_subscribed_to_a_plan', TRUE ) === "1";
 }
 
