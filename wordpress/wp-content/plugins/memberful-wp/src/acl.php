@@ -14,23 +14,32 @@ require_once MEMBERFUL_DIR . '/src/acl/term_options.php';
  * @return array Map of post ID => post ID
  */
 function memberful_wp_user_disallowed_post_ids( $user_id ) {
-  $acl = get_option( 'memberful_acl', array() );
-  return memberful_wp_user_disallowed_ids_from_acl( $user_id, $acl);
+  if ( isset( $disallowed_post_ids )) {
+    return $disallowed_post_ids;
+  } else {
+    static $disallowed_post_ids = array();
+    $acl = get_option( 'memberful_acl', array() );
+    $disallowed_post_ids = memberful_wp_user_disallowed_ids_from_acl( $user_id, $acl);
+
+    return $disallowed_post_ids;
+  }
 }
 
 function memberful_wp_user_disallowed_term_ids( $user_id ) {
-  $acl = get_option( 'memberful_term_acl', array() );
-  return memberful_wp_user_disallowed_ids_from_acl( $user_id, $acl );
+  if ( isset( $disallowed_term_ids )) {
+    return $disallowed_term_ids;
+  } else {
+    static $disallowed_term_ids = array();
+    $acl = get_option( 'memberful_term_acl', array() );
+    $disallowed_term_ids = memberful_wp_user_disallowed_ids_from_acl( $user_id, $acl);
+
+    return $disallowed_term_ids;
+  }
 }
 
 function memberful_wp_user_disallowed_ids_from_acl( $user_id, $acl ) {
-  static $ids = array();
-
   $user_id        = (int) $user_id;
   $user_signed_in = $user_id !== 0;
-
-  if ( isset( $ids[$user_id] ) )
-    return $ids[$user_id];
 
   $global_product_acl = isset( $acl['product'] ) ? $acl['product'] : array();
   $global_subscription_acl = isset( $acl['subscription'] ) ? $acl['subscription'] : array();
@@ -63,7 +72,7 @@ function memberful_wp_user_disallowed_ids_from_acl( $user_id, $acl ) {
     }
   }
 
-  return $ids[$user_id] = ( empty( $posts_user_is_not_allowed_to_access ) ) ? array() : array_combine( $posts_user_is_not_allowed_to_access, $posts_user_is_not_allowed_to_access );
+  return ( empty( $posts_user_is_not_allowed_to_access ) ) ? array() : array_combine( $posts_user_is_not_allowed_to_access, $posts_user_is_not_allowed_to_access );
 }
 
 /**
@@ -205,8 +214,9 @@ function memberful_wp_extract_slug_ids_and_user($args) {
  * @param integer $post_id ID of the post that should have access checked
  */
 function memberful_can_user_access_post( $user, $post ) {
-  if ( !empty( memberful_terms_restricting_post( $user, $post )))
+  if ( !empty( memberful_terms_restricting_post( $user, $post ))) {
     return false;
+  }
 
   $restricted_posts = memberful_wp_user_disallowed_post_ids( $user );
   return ! isset( $restricted_posts[$post] );
