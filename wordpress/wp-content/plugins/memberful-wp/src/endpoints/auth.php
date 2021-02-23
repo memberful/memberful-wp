@@ -43,7 +43,8 @@ class Memberful_Wp_Endpoint_Auth implements Memberful_Wp_Endpoint {
 
   private function after_login_redirect_url( $params ) {
     if ( isset( $params['redirect_to'] ) ) {
-      $url = urldecode($params['redirect_to']);
+      $url = $params['redirect_to'];
+      $url = preg_match('/^https?%/', $url) ? urldecode($url) : $url;
     } else if ( isset( $_COOKIE['memberful_redirect'] ) ) {
       $url = $_COOKIE['memberful_redirect'];
     } else {

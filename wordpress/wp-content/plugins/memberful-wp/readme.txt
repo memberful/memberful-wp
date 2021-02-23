@@ -4,7 +4,7 @@ Tags: memberful, member, membership, memberships, recurring payments, recurring 
 Requires at least: 3.6
 Tested up to: 5.6
 Requires PHP: 7.0
-Stable tag: 1.62.0
+Stable tag: 1.62.3
 License: GPLv2 or later
 
 Sell memberships and restrict access to content with WordPress and Memberful.
@@ -53,10 +53,22 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 * Add option to restrict content by category or tag
 
+= 1.62.3 =
+
+* Fix display of "Sign in" items in admin menu editor
+
+= 1.62.2 =
+
+* Improve unescaping of redirect_to param
+
+= 1.62.1 =
+
+* Fix conflicts with plugins that require Ajax-based admin access when using the new "Block dashboard for members" feature. These include stats tracking plugins like Statify, as well as Wordfence Login Security.
+
 = 1.62.0 =
 
 * Fix "Link to download" select box
-* Add option to hide admin toolbar from members 
+* Add option to hide admin toolbar from members
 * Add option to block Wordpress dashboard from members
 * Add option to filter account links in menus based on signed-in state
 

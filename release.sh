@@ -10,7 +10,7 @@ set -e
 PLUGIN_SLUG=memberful-wp
 
 CURRENT_BRANCH=`git branch | grep \* | cut -f 2 -d ' '`
-MASTER_BRANCH=master
+MAIN_BRANCH=main
 PLUGIN_DIR="$PWD/wordpress/wp-content/plugins/memberful-wp"
 MAIN_PLUGIN_FILE="$PLUGIN_DIR/memberful-wp.php"
 README_FILE="$PLUGIN_DIR/readme.txt"
@@ -23,8 +23,8 @@ SVN_URL="https://plugins.svn.wordpress.org/$PLUGIN_SLUG/"
 SVN_USER=memberful
 
 check_current_branch() {
-  if [ "$CURRENT_BRANCH" != "$MASTER_BRANCH" ]; then
-    echo "Please switch to branch $MASTER_BRANCH before releasing a new version."
+  if [ "$CURRENT_BRANCH" != "$MAIN_BRANCH" ]; then
+    echo "Please switch to branch $MAIN_BRANCH before releasing a new version."
     exit
   fi
 }
