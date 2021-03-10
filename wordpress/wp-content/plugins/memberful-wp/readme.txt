@@ -49,6 +49,10 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 == Changelog ==
 
+= unreleased =
+
+* Fix content filter running on private member RSS feed
+
 = 1.62.5 =
 
 * Fix Memberful connection issue
