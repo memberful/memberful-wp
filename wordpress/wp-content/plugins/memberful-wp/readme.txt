@@ -49,6 +49,10 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 == Changelog ==
 
+= unreleased =
+
+* Use configured Memberful user role when checking password reset permission
+
 = 1.62.5 =
 
 * Fix Memberful connection issue
