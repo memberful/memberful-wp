@@ -39,10 +39,6 @@ add_filter( 'memberful_wp_protect_content','wpautop');
 add_filter( 'memberful_wp_protect_content','shortcode_unautop');
 add_filter( 'memberful_wp_protect_content','prepend_attachment');
 
-<<<<<<< HEAD
 
 add_filter('memberful_wp_protect_content','do_blocks',15);
-=======
-add_filter('memberful_wp_protect_content','do_blocks',1);
->>>>>>> Update content_filter.php
 add_filter( 'memberful_wp_protect_content', 'do_shortcode', 11 );
