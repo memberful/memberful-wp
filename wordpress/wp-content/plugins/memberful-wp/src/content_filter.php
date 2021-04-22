@@ -39,6 +39,9 @@ add_filter( 'memberful_wp_protect_content','wpautop');
 add_filter( 'memberful_wp_protect_content','shortcode_unautop');
 add_filter( 'memberful_wp_protect_content','prepend_attachment');
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> reset priority
 add_filter('memberful_wp_protect_content','do_blocks',15);
 add_filter( 'memberful_wp_protect_content', 'do_shortcode', 11 );
