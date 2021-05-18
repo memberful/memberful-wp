@@ -161,7 +161,7 @@ function memberful_wp_shortcode_private_user_feed_link($atts = array(), $content
 function memberful_wp_shortcode_if_has_active_subscription( $atts, $content ) {
   $user_id = wp_get_current_user()->ID;
 
-  if ( is_subscribed_to_any_memberful_plan( $user_id ) ) {
+  if ( is_subscribed_to_any_memberful_plan( $user_id ) || current_user_can( 'publish_posts' ) ) {
     return do_shortcode($content);
   } else {
     return '';
@@ -171,7 +171,7 @@ function memberful_wp_shortcode_if_has_active_subscription( $atts, $content ) {
 function memberful_wp_shortcode_if_does_not_have_active_subscription( $atts, $content ) {
   $user_id = wp_get_current_user()->ID;
 
-  if ( is_subscribed_to_any_memberful_plan( $user_id ) ) {
+  if ( is_subscribed_to_any_memberful_plan( $user_id ) || current_user_can( 'publish_posts' ) ) {
     return '';
   } else {
     return do_shortcode($content);

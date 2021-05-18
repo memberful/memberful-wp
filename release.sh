@@ -29,6 +29,12 @@ check_current_branch() {
   fi
 }
 
+check_for_uncommitted_changes() {
+  if [[ $(git status -s $PLUGIN_DIR) ]]; then
+    echo "\033[0;31mWARNING - Uncommitted changes found in the plugin folder, please remove or they will be released \033[0m"
+  fi
+}
+
 check_version_definitions() {
   MAIN_PLUGIN_FILE_VERSION=`grep "^Version" $MAIN_PLUGIN_FILE | awk '{ print $2 }'`
   MEMBERFUL_VERSION=`grep MEMBERFUL_VERSION $MAIN_PLUGIN_FILE | grep -v defined | cut -f 4 -d "'"`
@@ -86,6 +92,7 @@ push_to_wordpress_svn() {
 }
 
 check_current_branch
+check_for_uncommitted_changes
 check_version_definitions
 ask_for_release_confirmation
 push_to_wordpress_svn

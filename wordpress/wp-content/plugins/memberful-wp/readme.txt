@@ -2,9 +2,9 @@
 Contributors: matt-button, drewstrojny, dwestendorf, rusuandreirobert, sumobi, Webby Scots
 Tags: memberful, member, membership, memberships, recurring payments, recurring billing, paywall, subscriptions, stripe, oauth, oauth2
 Requires at least: 3.6
-Tested up to: 5.6
+Tested up to: 5.7
 Requires PHP: 7.0
-Stable tag: 1.62.3
+Stable tag: 1.62.10
 License: GPLv2 or later
 
 Sell memberships and restrict access to content with WordPress and Memberful.
@@ -52,6 +52,35 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 = Unreleased =
 
 * Add option to restrict content by category or tag
+
+= 1.62.10 =
+
+* Change `do_blocks` priority
+
+= 1.62.9 =
+
+* Run `do_blocks` when protecting content to enable compatibility with some Gutenberg blocks
+
+= 1.62.8 =
+
+* Consider admins as active members when using restriction shortcodes
+
+= 1.62.7 =
+
+* Fix missing text filters on marketing content
+
+= 1.62.6 =
+
+* Fix content filter running on private member RSS feed
+* Use configured Memberful user role when checking password reset permission
+
+= 1.62.5 =
+
+* Fix Memberful connection issue
+
+= 1.62.4 =
+
+* Fix support for restricting content made with the Elementor plugin
 
 = 1.62.3 =
 

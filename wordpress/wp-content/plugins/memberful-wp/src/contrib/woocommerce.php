@@ -28,7 +28,7 @@ class Memberful_Wp_Integration_WooCommerce {
   function remove_erroneous_protection( $content ) {
     global $post;
     if ($post->post_type == "product") {
-      remove_filter( 'the_content', 'memberful_wp_protect_content', -10 );
+      remove_filter( 'the_content', 'memberful_wp_protect_content', 100 );
     }
     return $content;
   }
