@@ -106,7 +106,6 @@ class Memberful_Authenticator {
       );
     }
 
-    // Store where the user came from in a cookie
     if ( isset( $_SERVER['HTTP_REFERER'] ) ) {
       $redirect_to = $_SERVER['HTTP_REFERER'];
     }
