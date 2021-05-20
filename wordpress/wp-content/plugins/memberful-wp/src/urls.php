@@ -8,10 +8,6 @@ function memberful_sign_in_url($protocol = NULL) {
   return memberful_wp_endpoint_url( 'auth', $protocol );
 }
 
-function memberful_obsolete_sign_in_url($protocol) {
-  return add_query_arg( array( "memberful_endpoint" => "auth" ), home_url( "", $protocol ) );
-}
-
 function memberful_sign_out_url() {
   return memberful_url( 'auth/sign_out' );
 }
