@@ -14,9 +14,3 @@ wp_create_page --post_title="Checkout page" --post_content="[memberful_buy_subsc
 wp_create_page --post_title="After sign in page"
 wp_create_page --post_title="After sign out page"
 wp widget add memberful_wp_profile_widget sidebar-1 1
-
-if ! grep "memberful.localhost" /etc/hosts; then
-  echo "Adding hosts entries for Memberful"
-  DEFAULT_GATEWAY=`ip route | grep default | awk '{print $3}'`
-  sudo sh -c "echo \"$DEFAULT_GATEWAY ttf.memberful.localhost apps.memberful.localhost\" >> /etc/hosts"
-fi
