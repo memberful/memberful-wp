@@ -214,12 +214,40 @@ function memberful_wp_extract_slug_ids_and_user($args) {
  * @param integer $post_id ID of the post that should have access checked
  */
 function memberful_can_user_access_post( $user, $post ) {
-  if ( !empty( memberful_terms_restricting_post( $user, $post ))) {
-    return false;
+  // Get the set of restrictions for all posts
+  $posts_acl = get_option( 'memberful_acl', array() );
+  $global_subscription_acl = isset( $posts_acl['subscription'] ) ? $posts_acl['subscription'] : array();
+
+  $plans_for_post = array();
+
+  // Find specific plans required to view this post
+  foreach ( $global_subscription_acl as $plan => $posts ) {
+    if ( in_array( $post, $posts)) {
+      $plans_for_post[] = $plan;
+    }
   }
 
-  $restricted_posts = memberful_wp_user_disallowed_post_ids( $user );
-  return ! isset( $restricted_posts[$post] );
+  // Get the term-level restrictions for all posts
+  $terms_acl = get_option( 'memberful_term_acl', array() );
+  $global_subscription_term_acl = isset( $terms_acl['subscription'] ) ? $terms_acl['subscription'] : array();
+  $terms_for_post = memberful_wp_get_category_and_tag_ids_for_post($post);
+
+  // Find plans required to view the terms attached to this post
+  foreach ( $global_subscription_term_acl as $plan => $terms ) {
+    if ( array_intersect( $terms, $terms_for_post )) {
+      $plans_for_post[] = $plan;
+    }
+  }
+
+  $user_subs = array_keys( memberful_wp_user_plans_subscribed_to( $user ));
+  $plan_intersect = array_intersect( $plans_for_post, $user_subs );
+
+  // If a post has any plans required to view and the user has none of these plans then block access
+  if (( ! empty( $plans_for_post )) &&  ( empty( $plan_intersect ))) {
+    return false;
+  } else {
+    return true;
+  }
 }
 
 function memberful_terms_restricting_post( $user, $post ) {
