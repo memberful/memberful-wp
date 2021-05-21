@@ -214,11 +214,32 @@ function memberful_wp_extract_slug_ids_and_user($args) {
  * @param integer $post_id ID of the post that should have access checked
  */
 function memberful_can_user_access_post( $user, $post ) {
+  $user_subs = array_keys( memberful_wp_user_plans_subscribed_to( $user ));
+  $terms_for_post = memberful_wp_get_category_and_tag_ids_for_post( $post );
+
+  // Get posts and terms restricted to any registered user or plan subscriber
+  $posts_for_any_registered_users = memberful_wp_get_all_posts_available_to_any_registered_user();
+  $posts_for_anybody_subscribed_to_a_plan = memberful_wp_get_all_posts_available_to_anybody_subscribed_to_a_plan();
+  $terms_for_any_registered_users = memberful_wp_get_all_terms_available_to_any_registered_user();
+  $terms_for_anybody_subscribed_to_a_plan = memberful_wp_get_all_terms_available_to_anybody_subscribed_to_a_plan();
+
+  // Grant access if registered user and post or one of its terms allows any registered user
+  if ( $user && ( in_array( $post, $posts_for_any_registered_users ) || array_intersect( $terms_for_post, $terms_for_any_registered_users ))) {
+    return true;
+  }
+
+  // Grant access if user has a subscription and post or one of its terms allows access with any subscription
+  if (( ! empty( $user_subs )) && ( in_array( $post, $posts_for_anybody_subscribed_to_a_plan ) || array_intersect( $terms_for_post, $terms_for_anybody_subscribed_to_a_plan ))) {
+    return true;
+  }
+
   // Get the set of restrictions for all posts
   $posts_acl = get_option( 'memberful_acl', array() );
   $global_subscription_acl = isset( $posts_acl['subscription'] ) ? $posts_acl['subscription'] : array();
+  $global_product_acl = isset( $posts_acl['product'] ) ? $posts_acl['product'] : array();
 
   $plans_for_post = array();
+  $products_for_post = array();
 
   // Find specific plans required to view this post
   foreach ( $global_subscription_acl as $plan => $posts ) {
@@ -227,10 +248,17 @@ function memberful_can_user_access_post( $user, $post ) {
     }
   }
 
+  // Find specific products required to view this post
+  foreach ( $global_product_acl as $product=> $posts ) {
+    if ( in_array( $post, $posts)) {
+      $products_for_post[] = $product;
+    }
+  }
+
   // Get the term-level restrictions for all posts
   $terms_acl = get_option( 'memberful_term_acl', array() );
   $global_subscription_term_acl = isset( $terms_acl['subscription'] ) ? $terms_acl['subscription'] : array();
-  $terms_for_post = memberful_wp_get_category_and_tag_ids_for_post($post);
+  $global_product_term_acl = isset( $terms_acl['product'] ) ? $terms_acl['product'] : array();
 
   // Find plans required to view the terms attached to this post
   foreach ( $global_subscription_term_acl as $plan => $terms ) {
@@ -239,14 +267,32 @@ function memberful_can_user_access_post( $user, $post ) {
     }
   }
 
-  $user_subs = array_keys( memberful_wp_user_plans_subscribed_to( $user ));
+  // Find products required to view the terms attached to this post
+  foreach ( $global_product_term_acl as $product=> $terms ) {
+    if ( array_intersect( $terms, $terms_for_post )) {
+      $products_for_post[] = $product;
+    }
+  }
+
+  // Find any of the required plans that the current user has
   $plan_intersect = array_intersect( $plans_for_post, $user_subs );
 
-  // If a post has any plans required to view and the user has none of these plans then block access
-  if (( ! empty( $plans_for_post )) &&  ( empty( $plan_intersect ))) {
-    return false;
-  } else {
+  // Find any of the required products that the current user has
+  $user_products = array_keys( memberful_wp_user_products( $user ));
+  $product_intersect = array_intersect( $products_for_post, $user_products );
+
+  if (( empty($plans_for_post) ) && ( empty($products_for_post))) {
+    // Grant access if no restrictions
     return true;
+  } elseif ( ! empty( $plan_intersect )) {
+    // Grant access if any plans required and the user has at least one
+    return true;
+  } elseif ( ! empty( $product_intersect )) {
+    // Grant access if any products required and the user has at least one
+    return true;
+  } else {
+    // The post requires at least one plan or product to access and the user has none of those specified
+    return false;
   }
 }
 
