@@ -233,27 +233,10 @@ function memberful_can_user_access_post( $user, $post ) {
     return memberful_wp_cache_post_access( $user, $post, true );
   }
 
-  // Get the set of restrictions for all posts
-  $posts_acl = get_option( 'memberful_acl', array() );
-  $global_subscription_acl = isset( $posts_acl['subscription'] ) ? $posts_acl['subscription'] : array();
-  $global_product_acl = isset( $posts_acl['product'] ) ? $posts_acl['product'] : array();
-
-  $plans_for_post = array();
-  $products_for_post = array();
-
-  // Find specific plans required to view this post
-  foreach ( $global_subscription_acl as $plan => $posts ) {
-    if ( in_array( $post, $posts)) {
-      $plans_for_post[] = $plan;
-    }
-  }
-
-  // Find specific products required to view this post
-  foreach ( $global_product_acl as $product=> $posts ) {
-    if ( in_array( $post, $posts)) {
-      $products_for_post[] = $product;
-    }
-  }
+  // Get the set of restrictions for this post
+  $post_acl = get_post_meta( $post, 'memberful_acl', TRUE );
+  $plans_for_post = isset( $post_acl['subscription'] ) ? $post_acl['subscription'] : array();
+  $products_for_post = isset( $post_acl['product'] ) ? $post_acl['product'] : array();
 
   // Get the term-level restrictions for all posts
   $terms_acl = get_option( 'memberful_term_acl', array() );
