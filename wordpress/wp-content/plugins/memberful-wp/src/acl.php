@@ -224,13 +224,21 @@ function memberful_can_user_access_post( $user, $post ) {
   $terms_for_post = memberful_wp_get_category_and_tag_ids_for_post( $post );
 
   // Grant access if registered user and post or one of its terms allows any registered user
-  if ( $user && memberful_wp_post_viewable_by_any_registered_user( $post, $terms_for_post )) {
-    return memberful_wp_cache_post_access( $user, $post, true );
+  if ( memberful_wp_post_viewable_by_any_registered_user( $post, $terms_for_post )) {
+    if ( $user ) {
+      return memberful_wp_cache_post_access( $user, $post, true );
+    } else {
+      return memberful_wp_cache_post_access( $user, $post, false );
+    }
   }
 
   // Grant access if user has a subscription and post or one of its terms allows access with any subscription
-  if (( ! empty( $user_subs )) && memberful_wp_post_viewable_by_any_subscriber( $post, $terms_for_post )) {
-    return memberful_wp_cache_post_access( $user, $post, true );
+  if ( memberful_wp_post_viewable_by_any_subscriber( $post, $terms_for_post )) {
+    if ( empty( $user_subs )) {
+      return memberful_wp_cache_post_access( $user, $post, false );
+    } else {
+      return memberful_wp_cache_post_access( $user, $post, true );
+    }
   }
 
   // Get the set of restrictions for this post
