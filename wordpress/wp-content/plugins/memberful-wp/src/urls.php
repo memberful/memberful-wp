@@ -99,13 +99,21 @@ function memberful_wp_plugin_protect_bbpress_url($no_header = FALSE) {
  * @return string URL
  */
 function memberful_url( $uri = '', $format = MEMBERFUL_HTML ) {
-  $endpoint = '/'.trim( $uri,'/' );
+  $custom_domain = get_option( 'memberful_custom_domain' );
 
-  if ( $format !== MEMBERFUL_HTML ) {
-    $endpoint .= '.'.$format;
+  if ( $custom_domain && $format == MEMBERFUL_HTML ) {
+    $base_url = 'https://' . $custom_domain;
+  } else {
+    $base_url = get_option( 'memberful_site' );
   }
 
-  return rtrim( get_option( 'memberful_site' ),'/' ).$endpoint;
+  $path = '/'.trim( $uri, '/' );
+
+  if ( $format !== MEMBERFUL_HTML ) {
+    $path .= '.'.$format;
+  }
+
+  return rtrim( $base_url,'/' ).$path;
 }
 
 // Private generator methods
