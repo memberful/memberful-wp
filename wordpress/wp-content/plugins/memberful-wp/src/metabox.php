@@ -35,7 +35,7 @@ function memberful_wp_metabox( $post ) {
 
   $view_vars = array();
 
-  $entities = array( Memberful_Post_ACL::DOWNLOAD, Memberful_Post_ACL::SUBSCRIPTION );
+  $entities = array( Memberful_ACL::DOWNLOAD, Memberful_ACL::SUBSCRIPTION );
 
   foreach ( $entities as $entity ) {
     $acl_manager = new Memberful_Post_ACL( $entity );
@@ -98,7 +98,7 @@ function memberful_wp_save_postdata( $post_id ) {
     $post_id = $parent_id;
   }
 
-  $entities = array( Memberful_Post_ACL::DOWNLOAD, Memberful_Post_ACL::SUBSCRIPTION );
+  $entities = array( Memberful_ACL::DOWNLOAD, Memberful_ACL::SUBSCRIPTION );
 
   foreach ( $entities as $entity ) {
     $field = 'memberful_'.$entity.'_acl';
@@ -135,7 +135,7 @@ function memberful_wp_add_term_metabox( $term ) {
     wp_nonce_field( plugin_basename( __FILE__ ), 'memberful_nonce' );
 
     $view_vars = array();
-    $entities = array( Memberful_Post_ACL::DOWNLOAD, Memberful_Post_ACL::SUBSCRIPTION );
+    $entities = array( Memberful_ACL::DOWNLOAD, Memberful_ACL::SUBSCRIPTION );
 
     foreach ( $entities as $entity ) {
       $acl_manager = new Memberful_Term_ACL( $entity );
@@ -160,7 +160,7 @@ function memberful_wp_save_term_metadata( $term_id ) {
   if ( ! memberful_wp_valid_nonce( plugin_basename( __FILE__ ) ) )
     return;
 
-  $entities = array( Memberful_Post_ACL::DOWNLOAD, Memberful_Post_ACL::SUBSCRIPTION );
+  $entities = array( Memberful_ACL::DOWNLOAD, Memberful_ACL::SUBSCRIPTION );
 
   foreach ( $entities as $entity ) {
     $field = 'memberful_'.$entity.'_acl';
@@ -191,24 +191,24 @@ function memberful_wp_save_term_metadata( $term_id ) {
 }
 
 /**
- * Class for managing ACLs on a post
+ * Base class for managing ACLs on an item (a post or a term).
  *
- * Essentially this class creates two acl maps, one at the post level, and one at
+ * Essentially this class creates two acl maps, one at the item level, and one at
  * the global level.
  *
- * The post level map is simply one of $entity_id => $entity_id (where $entity_id
+ * The item level map is simply one of $entity_id => $entity_id (where $entity_id
  * is the id of a download or subscription plan)
  *
- * The global lvel map is $entity_id => array($post_id => $post_id)
+ * The global level map is $entity_id => array($item_id => $item_id)
  *
  * When filtering posts on the frontend later on we simply find all the posts that the
  * user is allowed to access (by merging all of the global maps for the entities they have)
  * and then subtract that from the set of acl maps for downloads they don't own.
  *
- * We then use this as a post id exclusion
+ * We then use this as a post id exclusion.
  *
  */
-class Memberful_Post_ACL {
+class Memberful_ACL {
   // This is left over from deprecating
   // When the plugin hits 2.0 write a converter for product -> download
   const DOWNLOAD = 'product';
@@ -220,21 +220,13 @@ class Memberful_Post_ACL {
     $this->_entity = $entity;
   }
 
-  public function get_acl( $post_id ) {
-    $restricted_acl = get_post_meta( $post_id, 'memberful_acl', TRUE );
-
-    $entity_acl = empty( $restricted_acl[$this->_entity] ) ? array() : $restricted_acl[$this->_entity];
-
-    return is_array($entity_acl) ? $entity_acl : array();
-  }
-
   /**
-   * Set a new ACL for this post, based on the entity type.
+   * Set a new ACL for this item, based on the entity type.
    *
    * @param array $entity_ids An array of numerical ids, indicating the required enitities
    */
-  public function set_acl( $post_id, array $entity_ids ) {
-    $old_acl = $this->get_acl( $post_id );
+  public function set_acl( $item_id, array $entity_ids ) {
+    $old_acl = $this->get_acl( $item_id );
     $new_acl = array();
 
     if ( ! empty( $entity_ids ) )
@@ -242,11 +234,65 @@ class Memberful_Post_ACL {
 
     $acl_map = $this->_load_global_acl();
 
-    $acl_map = $this->_remove_deleted_entities( $post_id, $acl_map, $old_acl, $new_acl );
-    $acl_map = $this->_add_new_entities(        $post_id, $acl_map, $old_acl, $new_acl );
+    $acl_map = $this->_remove_deleted_entities( $item_id, $acl_map, $old_acl, $new_acl );
+    $acl_map = $this->_add_new_entities(        $item_id, $acl_map, $old_acl, $new_acl );
 
-    $this->_update_item_acl( $post_id, $new_acl );
+    $this->_update_item_acl( $item_id, $new_acl );
     $this->_update_global_acl( $acl_map );
+  }
+
+  /**
+   * Remove any entities that were unchecked in the metabox from the global ACL map
+   *
+   */
+  protected function _remove_deleted_entities( $item_id, array $map, array $old_acl, array $new_acl ) {
+    if ( empty( $map ) || empty( $old_acl ) )
+      return $map;
+
+    $deleted = array_diff_key( $old_acl, $new_acl );
+
+    if ( empty( $deleted ) )
+      return $map;
+
+    foreach ( $deleted as $entity ) {
+      unset( $map[$entity][$item_id] );
+    }
+
+    return $map;
+  }
+
+  /**
+   * Adds any newly checked entities to the global ACL map
+   *
+   * @param array $map The current
+   */
+  protected function _add_new_entities( $item_id, array $map, array $old_acl, array $new_acl ) {
+    if ( empty( $new_acl ) )
+      return $map;
+
+    foreach ( $new_acl as $entity ) {
+      if ( ! isset( $map[$entity] ) ) {
+        $map[$entity] = array();
+      }
+
+      $map[$entity][$item_id] = $item_id;
+    }
+
+    return $map;
+  }
+
+  protected function meta_field() {
+    return 'memberful_'.$this->_entity;
+  }
+}
+
+class Memberful_Post_ACL extends Memberful_ACL {
+  public function get_acl( $post_id ) {
+    $restricted_acl = get_post_meta( $post_id, 'memberful_acl', TRUE );
+
+    $entity_acl = empty( $restricted_acl[$this->_entity] ) ? array() : $restricted_acl[$this->_entity];
+
+    return is_array($entity_acl) ? $entity_acl : array();
   }
 
   protected function _load_global_acl() {
@@ -276,53 +322,9 @@ class Memberful_Post_ACL {
     $current_acl[$this->_entity] = $new_acl;
     update_post_meta( $item_id, 'memberful_acl', $current_acl );
   }
-
-  /**
-   * Remove any entities that were unchecked in the metabox from the global ACL map
-   *
-   */
-  protected function _remove_deleted_entities( $post_id, array $map, array $old_acl, array $new_acl ) {
-    if ( empty( $map ) || empty( $old_acl ) )
-      return $map;
-
-    $deleted = array_diff_key( $old_acl, $new_acl );
-
-    if ( empty( $deleted ) )
-      return $map;
-
-    foreach ( $deleted as $entity ) {
-      unset( $map[$entity][$post_id] );
-    }
-
-    return $map;
-  }
-
-  /**
-   * Adds any newly checked entities to the global ACL map
-   *
-   * @param array $map The current
-   */
-  protected function _add_new_entities( $post_id, array $map, array $old_acl, array $new_acl ) {
-    if ( empty( $new_acl ) )
-      return $map;
-
-    foreach ( $new_acl as $entity ) {
-      if ( ! isset( $map[$entity] ) ) {
-        $map[$entity] = array();
-      }
-
-      $map[$entity][$post_id] = $post_id;
-    }
-
-    return $map;
-  }
-
-  protected function meta_field() {
-    return 'memberful_'.$this->_entity;
-  }
 }
 
-class Memberful_Term_ACL extends Memberful_Post_ACL {
+class Memberful_Term_ACL extends Memberful_ACL {
   public function get_acl( $item_id ) {
     $restricted_acl = get_term_meta( $item_id, 'memberful_acl', TRUE );
 
@@ -357,5 +359,4 @@ class Memberful_Term_ACL extends Memberful_Post_ACL {
 
     return $acl_map[$this->_entity];
   }
-
 }
