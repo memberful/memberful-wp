@@ -395,8 +395,8 @@ function memberful_wp_bulk_protect() {
     $viewable_by_any_registered_user = empty( $_POST['memberful_viewable_by_any_registered_users'] ) ? '' : $_POST['memberful_viewable_by_any_registered_users'];
     $viewable_by_anybody_subscribed_to_a_plan = empty( $_POST['memberful_viewable_by_anybody_subscribed_to_a_plan'] ) ? '' : $_POST['memberful_viewable_by_anybody_subscribed_to_a_plan'];
 
-    $product_acl_manager = new Memberful_Post_ACL( 'product' );
-    $subscription_acl_manager = new Memberful_Post_ACL( 'subscription' );
+    $product_acl_manager = new Memberful_Post_ACL( Memberful_ACL::SUBSCRIPTION );
+    $subscription_acl_manager = new Memberful_Post_ACL( Memberful_ACL::DOWNLOAD );
 
     $query_params = array('nopaging' => true, 'fields' => 'ids');
 
