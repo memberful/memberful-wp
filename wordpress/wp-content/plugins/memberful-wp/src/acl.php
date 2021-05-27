@@ -214,31 +214,17 @@ function memberful_wp_extract_slug_ids_and_user($args) {
  * @param integer $post_id ID of the post that should have access checked
  */
 function memberful_can_user_access_post( $user, $post ) {
-  $cache_result = wp_cache_get( "user-{$user}--post-{$post}", "memberful_post_access", $found = false );
-
-  if ( $found ) {
-    return $cache_result;
-  }
-
   $user_subs = $user ? array_keys( memberful_wp_user_plans_subscribed_to( $user )) : array();
   $terms_for_post = memberful_wp_get_category_and_tag_ids_for_post( $post );
 
   // Grant access if registered user and post or one of its terms allows any registered user
   if ( memberful_wp_post_viewable_by_any_registered_user( $post, $terms_for_post )) {
-    if ( $user ) {
-      return memberful_wp_cache_post_access( $user, $post, true );
-    } else {
-      return memberful_wp_cache_post_access( $user, $post, false );
-    }
+    return isset( $user );
   }
 
   // Grant access if user has a subscription and post or one of its terms allows access with any subscription
   if ( memberful_wp_post_viewable_by_any_subscriber( $post, $terms_for_post )) {
-    if ( empty( $user_subs )) {
-      return memberful_wp_cache_post_access( $user, $post, false );
-    } else {
-      return memberful_wp_cache_post_access( $user, $post, true );
-    }
+    return !empty( $user_subs );
   }
 
   // Get the set of restrictions for this post
@@ -274,13 +260,13 @@ function memberful_can_user_access_post( $user, $post ) {
 
   if (( empty( $plans_for_post ) ) && ( empty( $products_for_post ))) {
     // Grant access if no restrictions
-    return memberful_wp_cache_post_access( $user, $post, true );
+    return true;
   } elseif ( ! empty( $plan_intersect ) || ! empty( $product_intersect )) {
     // Grant access if any plans or products required and the user has at least one
-    return memberful_wp_cache_post_access( $user, $post, true );
+    return true;
   } else {
     // The post requires at least one plan or product to access and the user has none of those specified
-    return memberful_wp_cache_post_access( $user, $post, false );
+    return false;
   }
 }
 
@@ -296,11 +282,6 @@ function memberful_wp_post_viewable_by_any_subscriber( $post, $terms_for_post ) 
   $terms_for_anybody_subscribed_to_a_plan = memberful_wp_get_all_terms_available_to_anybody_subscribed_to_a_plan();
 
   return ( in_array( $post, $posts_for_anybody_subscribed_to_a_plan ) || array_intersect( $terms_for_post, $terms_for_anybody_subscribed_to_a_plan ));
-}
-
-function memberful_wp_cache_post_access( $user, $post, $access ) {
-  wp_cache_add( "user-{$user}--post-{$post}", $access, "memberful_post_access");
-  return $access;
 }
 
 function memberful_terms_restricting_post( $user, $post ) {
