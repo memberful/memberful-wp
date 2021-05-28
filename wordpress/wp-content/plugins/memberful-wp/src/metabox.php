@@ -44,7 +44,7 @@ function memberful_wp_metabox( $post ) {
   }
 
   $marketing_content = array_filter(array(
-    memberful_marketing_content( $post->ID ),
+    memberful_post_marketing_content( $post->ID ),
     memberful_wp_default_marketing_content(),
     memberful_wp_marketing_content_explanation()
   ));
