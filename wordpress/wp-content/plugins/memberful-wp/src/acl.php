@@ -219,7 +219,7 @@ function memberful_can_user_access_post( $user, $post ) {
 
   // Grant access if registered user and post or one of its terms allows any registered user
   if ( memberful_wp_post_viewable_by_any_registered_user( $post, $terms_for_post )) {
-    return isset( $user );
+    return $user ? true : false;
   }
 
   // Grant access if user has a subscription and post or one of its terms allows access with any subscription
