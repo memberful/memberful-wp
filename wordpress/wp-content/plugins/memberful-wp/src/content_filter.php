@@ -5,6 +5,10 @@ add_action( 'the_content', 'memberful_wp_protect_content', 100 );
 function memberful_wp_protect_content( $content ) {
   global $post;
 
+  if(doing_filter('memberful_wp_protect_content')){
+    return $content;
+  }
+
   if ( current_user_can( 'publish_posts' ) ) {
     return $content;
   }

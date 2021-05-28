@@ -54,7 +54,6 @@ db_pass: wordpress
 # Plugin's slug or url to the plugin's slug.
 #
 plugins:
-  - verify-domain-for-apple-pay-with-stripe
   - wordpress-beta-tester
 
 #

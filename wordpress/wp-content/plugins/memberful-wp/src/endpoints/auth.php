@@ -28,8 +28,6 @@ class Memberful_Wp_Endpoint_Auth implements Memberful_Wp_Endpoint {
       wp_signon( $credentials, is_ssl() );
 
       $redirect_to = $this->after_login_redirect_url( $request_params );
-
-      $this->clear_redirect_cookie();
     }
 
     wp_safe_redirect( $redirect_to );
@@ -45,26 +43,10 @@ class Memberful_Wp_Endpoint_Auth implements Memberful_Wp_Endpoint {
     if ( isset( $params['redirect_to'] ) ) {
       $url = $params['redirect_to'];
       $url = preg_match('/^https?%/', $url) ? urldecode($url) : $url;
-    } else if ( isset( $_COOKIE['memberful_redirect'] ) ) {
-      $url = $_COOKIE['memberful_redirect'];
     } else {
       $url = home_url();
     }
 
     return apply_filters( 'memberful_wp_after_sign_in_url', $url );
-  }
-
-  private function clear_redirect_cookie() {
-    if ( isset( $_COOKIE['memberful_redirect'] ) ) {
-      setcookie(
-        'memberful_redirect',
-        '',
-        time() - 3600,
-        COOKIEPATH,
-        COOKIE_DOMAIN,
-        is_ssl(),
-        true
-      );
-    }
   }
 }

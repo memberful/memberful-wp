@@ -29,11 +29,15 @@ class Memberful_Authenticator {
    *
    * @return string
    */
-  static function oauth_auth_url() {
+  static function oauth_auth_url( $redirect_to ) {
     $params = array(
       'response_type' => 'code',
       'client_id'     => get_option( 'memberful_client_id' ),
     );
+
+    if ( $redirect_to ) {
+      $params['redirect_to'] = urlencode($redirect_to);
+    }
 
     return add_query_arg( $params, self::oauth_member_url() );
   }
@@ -102,23 +106,17 @@ class Memberful_Authenticator {
       );
     }
 
-    // Store where the user came from in a cookie
     if ( isset( $_SERVER['HTTP_REFERER'] ) ) {
-      $referer = $_SERVER['HTTP_REFERER'];
+      $redirect_to = $_SERVER['HTTP_REFERER'];
     }
 
     // Allow overriding of redirect location
     if ( isset( $_REQUEST['redirect_to'] ) ) {
-      $referer = $_REQUEST['redirect_to'];
-    }
-
-    if ( isset( $referer ) ) {
-      $expire  = time() + ( 30 * 60 ); // 30 minutes
-      setcookie( 'memberful_redirect', $referer, $expire, '/', COOKIE_DOMAIN, is_ssl(), true );
+      $redirect_to = $_REQUEST['redirect_to'];
     }
 
     // Send the user to Memberful
-    wp_redirect( self::oauth_auth_url(), 302 );
+    wp_redirect( self::oauth_auth_url( $redirect_to ), 302 );
     exit();
   }
 
