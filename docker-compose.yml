@@ -29,7 +29,7 @@ services:
        - ".:/root"
        - "./site.conf:/etc/apache2/sites-available/000-default.conf"
      extra_hosts:
-       - "apps.memberful.localhost:host-gateway"
+       - "*.memberful.localhost:host-gateway"
 
 volumes:
     db_data: {}
