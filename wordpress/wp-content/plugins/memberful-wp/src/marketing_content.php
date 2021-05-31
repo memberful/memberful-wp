@@ -11,8 +11,8 @@ function memberful_marketing_content( $post_id ) {
   if ( isset( $restricted_posts[$post_id] )) {
     $marketing_content = memberful_post_marketing_content( $post_id );
   } else {
-    $terms = memberful_terms_restricting_post( $user_id, $post_id );
-    $marketing_content = memberful_term_marketing_content( reset( $terms ));
+    $term = memberful_first_term_restricting_post( $user_id, $post_id );
+    $marketing_content = memberful_term_marketing_content( $term );
   }
 
   return apply_filters( 'memberful_marketing_content', $marketing_content );
