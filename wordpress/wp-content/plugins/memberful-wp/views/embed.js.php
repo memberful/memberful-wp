@@ -1,11 +1,6 @@
 <script type="text/javascript">
   window.MemberfulOptions = {
     site: "<?php echo $memberful_site_url; ?>",
-    intercept: [
-      <?php foreach( $intercepted_urls as $url ): ?>
-      "<?php echo $url; ?>",
-      <?php endforeach; ?>
-    ],
     memberSignedIn: <?php echo is_user_logged_in() ? 'true' : 'false'; ?>
   };
 
