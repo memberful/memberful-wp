@@ -15,6 +15,11 @@
   <form method="POST" action="<?php echo $form_target ?>">
     <div class="memberful-bulk-apply-box">
       <h3><?php _e( "Bulk apply restrict access settings", 'memberful' ); ?></h3>
+      <p>
+        The Bulk Restrict Access Tool can be used to update multiple pages or posts <strong>one-time</strong>. e.g. You're a new Memberful user and you need to quickly restrict <strong>all</strong> of your posts.
+        <br /><br />
+        If you want to broadly control access to posts <strong>based on a tag or category</strong>, navigate to <em>Posts → Category or Posts → Tags</em>, and select a Category or Tag from the list.
+      </p>
       <fieldset>
         <label><?php _e( "Apply the restrict access settings specified below to:", 'memberful' ); ?></label>
         <select name="target_for_restriction" id="global-restrict-target" class="postform">
