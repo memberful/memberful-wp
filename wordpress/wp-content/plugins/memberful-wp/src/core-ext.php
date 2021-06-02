@@ -29,12 +29,12 @@ function memberful_wp_allowed_hosts( $hosts ) {
     $components = parse_url( $site );
 
     if ( $components ) {
-      $hosts[] = $components['host'];
+      array_push($hosts, $components['host']);
     }
   }
 
   if ( $custom_domain ) {
-    $hosts[] = $custom_domain;
+    array_push($hosts, $custom_domain);
   }
 
   return $hosts;
