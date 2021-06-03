@@ -21,17 +21,23 @@ function memberful_wp_nonce_field( $action ) {
  * @param array $content A set of websites that can be redirected to
  * @return array The $content plus Memberful domain
  */
-function memberful_wp_allowed_hosts( $content ) {
+function memberful_wp_allowed_hosts( $hosts ) {
   $site = get_option( 'memberful_site' );
+  $custom_domain = get_option( 'memberful_custom_domain' );
 
-  if ( !empty( $site ) ) {
-    $memberful_url = parse_url( $site );
+  if ( $site ) {
+    $components = parse_url( $site );
 
-    if ( $memberful_url !== false )
-      $content[] = $memberful_url['host'];
+    if ( $components ) {
+      array_push($hosts, $components['host']);
+    }
   }
 
-  return $content;
+  if ( $custom_domain ) {
+    array_push($hosts, $custom_domain);
+  }
+
+  return $hosts;
 }
 
 function memberful_wp_render( $template, array $vars = array() ) {

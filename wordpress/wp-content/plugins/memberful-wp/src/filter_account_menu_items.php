@@ -6,7 +6,18 @@ function filter_account_links( $items ) {
         unset( $items[$key] );
       }
     } else {
-      if ( in_array($item->url, [ memberful_sign_out_url(), memberful_account_url() ])) {
+      $urls = array( memberful_sign_out_url(), memberful_account_url() );
+      $custom_domain = get_option( 'memberful_custom_domain' );
+
+      if ( $custom_domain ) {
+        $site = get_option( 'memberful_site' );
+
+        foreach( $urls as $url ) {
+          array_push( $urls, str_replace( 'https://'.$custom_domain, $site, $url ) );
+        }
+      }
+
+      if ( in_array($item->url, $urls) ) {
         unset( $items[$key] );
       }
     }

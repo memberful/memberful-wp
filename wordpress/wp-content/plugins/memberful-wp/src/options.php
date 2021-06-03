@@ -6,6 +6,7 @@ function memberful_wp_all_options() {
     'memberful_client_id' => NULL,
     'memberful_client_secret' => NULL,
     'memberful_site' => NULL,
+    'memberful_custom_domain' => NULL,
     'memberful_api_key' => NULL,
     'memberful_webhook_secret' => NULL,
     'memberful_products' => array(),

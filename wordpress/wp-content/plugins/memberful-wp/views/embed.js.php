@@ -1,6 +1,6 @@
 <script type="text/javascript">
   window.MemberfulOptions = {
-    site: "<?php echo $memberful_site_url; ?>",
+    site: <?php echo json_encode($site_option); ?>,
     memberSignedIn: <?php echo is_user_logged_in() ? 'true' : 'false'; ?>
   };
 
