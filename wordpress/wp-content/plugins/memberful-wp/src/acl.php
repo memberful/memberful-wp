@@ -215,7 +215,7 @@ function memberful_wp_extract_slug_ids_and_user($args) {
  */
 function memberful_can_user_access_post( $user, $post ) {
   $user_subs = $user ? array_keys( memberful_wp_user_plans_subscribed_to( $user )) : array();
-  $terms_for_post = memberful_wp_get_category_and_tag_ids_for_post( $post );
+  $terms_for_post = memberful_wp_get_term_ids_for_post( $post );
 
   // Grant access if registered user and post or one of its terms allows any registered user
   if ( memberful_wp_post_viewable_by_any_registered_user( $post, $terms_for_post )) {
@@ -286,7 +286,7 @@ function memberful_wp_post_viewable_by_any_subscriber( $post, $terms_for_post ) 
 
 function memberful_first_term_restricting_post( $user, $post ) {
   $restricted_terms = array_values( memberful_wp_user_disallowed_term_ids( $user ));
-  $post_terms = memberful_wp_get_category_and_tag_ids_for_post( $post );
+  $post_terms = memberful_wp_get_term_ids_for_post( $post );
 
   if ( !$user ) {
     $terms_requiring_any_user = array_intersect( $post_terms, memberful_wp_get_all_terms_available_to_any_registered_user() );
@@ -313,14 +313,25 @@ function memberful_first_term_restricting_post( $user, $post ) {
   }
 }
 
-function memberful_wp_get_category_and_tag_ids_for_post( $post ) {
-  $categories = get_the_category();
-  $tags = wp_get_post_tags( $post );
-  $terms = array_merge( $categories, $tags );
+function memberful_wp_get_term_ids_for_post( $post ) {
+  $taxonomies = memberful_supported_taxonomies();
+  $terms = wp_get_post_terms( $post, $taxonomies );
 
   if ( !empty( $terms )) {
     $terms = wp_list_pluck( $terms, "term_id" );
   }
 
   return $terms;
+}
+
+function memberful_supported_taxonomies() {
+  static $taxonomies = NULL;
+
+  if ( $taxonomies !== NULL ) {
+    return $taxonomies;
+  }
+
+  $taxonomies = get_taxonomies( array( "public" => true, "show_in_menu" => true ) );
+
+  return $taxonomies;
 }
