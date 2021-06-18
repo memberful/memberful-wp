@@ -25,7 +25,8 @@ class Memberful_Wp_Endpoint_Auth implements Memberful_Wp_Endpoint {
       $authenticator = new Memberful_Authenticator;
       $authenticator->hook_into_wordpress();
 
-      wp_signon( $credentials, is_ssl() );
+      $user = wp_signon( $credentials, is_ssl() );
+      wp_set_current_user( $user->ID );
 
       $redirect_to = $this->after_login_redirect_url( $request_params );
     }
