@@ -3,10 +3,13 @@
 add_action( 'add_meta_boxes', 'memberful_wp_add_metabox' );
 add_action( 'save_post', 'memberful_wp_save_postdata' );
 
-add_action( 'category_edit_form', 'memberful_wp_add_term_metabox' );
-add_action( 'post_tag_edit_form', 'memberful_wp_add_term_metabox' );
-add_action( 'edited_category', 'memberful_wp_save_term_metadata' );
-add_action( 'edited_post_tag', 'memberful_wp_save_term_metadata' );
+function memberful_setup_taxonomy_hooks( $taxonomy, $object_type, $arguments ) {
+  if ( $arguments['public'] && $arguments['show_in_menu'] ) {
+    add_action( "${taxonomy}_edit_form", 'memberful_wp_add_term_metabox' );
+    add_action( "edited_${taxonomy}", 'memberful_wp_save_term_metadata' );
+  }
+}
+add_action( 'registered_taxonomy', 'memberful_setup_taxonomy_hooks', 10, 3 );
 
 function memberful_wp_metabox_types() {
   $types = get_post_types();

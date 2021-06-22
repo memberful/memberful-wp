@@ -51,6 +51,7 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 = unreleased =
 
+* Add possibility to restrict access by custom taxonomies
 * Improve the `memberful_wp_after_sign_in_url` filter
 
 = 1.64.0 =
