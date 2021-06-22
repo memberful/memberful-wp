@@ -4,7 +4,7 @@ Tags: memberful, member, membership, memberships, recurring payments, recurring 
 Requires at least: 3.6
 Tested up to: 5.7
 Requires PHP: 7.0
-Stable tag: 1.64.0
+Stable tag: 1.65.0
 License: GPLv2 or later
 
 Sell memberships and restrict access to content with WordPress and Memberful.
@@ -49,7 +49,7 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 == Changelog ==
 
-= unreleased =
+= 1.65.0 =
 
 * Add possibility to restrict access by custom taxonomies
 * Improve the `memberful_wp_after_sign_in_url` filter
