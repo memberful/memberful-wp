@@ -49,6 +49,10 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 == Changelog ==
 
+= unreleased =
+
+* Add possibility to restrict access by custom taxonomies
+
 = 1.64.0 =
 
 * Add custom domain option
