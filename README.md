@@ -2,9 +2,11 @@
 
 ## Development environment
 
-This project uses [VCCW](http://vccw.cc/). 
+This project uses [Docker](https://www.docker.com/) for development.
 
-To get up and running install [Vagrant](http://vagrantup.com) and [Virtualbox](http://virtualbox.org), then run `vagrant up` in the plugin's root directory.
+To get up and running install [Docker](https://www.docker.com/get-started), then run `docker-compose up -d` in the plugin's root directory.
+
+For the inital Wordpress setup run `chmod +x docker-provision.sh` and `./docker-provision.sh`.
 
 You should then be able to access the WP admin panel - http://wordpress.localhost/wp-admin.
 
@@ -14,15 +16,6 @@ Once signed in you'll need to go to your local Memberful site, and setup a WordP
 (`Memberful Admin -> Settings -> Integrate -> I'm using WordPress`), then copy and paste the activation
 code into the WordPress admin panel (WP admin -> Settings -> Memberful). Submit the form and then
 WordPress should be connected to your local vm, ready for development!
-
-### Memberful WP with puma-dev
-
-If you use [puma-dev](https://github.com/puma/puma-dev), then you have to tell it to not handle http://wordpress.localhost and redirect to the Memberful WP Vagrant box instead:
-
-```
-cd ~/.puma-dev
-echo "http://192.168.33.3:80" > wordpress
-```
 
 ## Versioning
 
