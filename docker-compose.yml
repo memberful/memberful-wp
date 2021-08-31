@@ -29,7 +29,8 @@ services:
        - ".:/root"
        - "./site.conf:/etc/apache2/sites-available/000-default.conf"
      extra_hosts:
-       - "*.memberful.localhost:host-gateway"
+       - "apps.memberful.localhost:host-gateway"
+       - "ttf.memberful.localhost:host-gateway"
 
 volumes:
     db_data: {}
