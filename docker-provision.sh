@@ -4,6 +4,8 @@ wp() {
   docker run -it --rm \
     --volumes-from memberful-wp_wordpress_1 \
     --network container:memberful-wp_wordpress_1 \
+    --env-file envfile \
+    --user 33:33 \
     wordpress:cli wp $@
 }
 
