@@ -6,7 +6,7 @@ This project uses [Docker](https://www.docker.com/) for development.
 
 To get up and running install [Docker](https://www.docker.com/get-started), then run `docker-compose up -d` in the plugin's root directory.
 
-For the inital Wordpress setup run `chmod +x docker-provision.sh` and `./docker-provision.sh`.
+For the inital Wordpress setup run `./docker-provision.sh`.
 
 You should then be able to access the WP admin panel - http://wordpress.localhost/wp-admin.
 
