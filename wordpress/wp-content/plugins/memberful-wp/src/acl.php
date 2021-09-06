@@ -129,7 +129,7 @@ function memberful_wp_user_feeds($user_id) {
  * @return array member's subscriptions
  */
 function memberful_wp_user_plans_subscribed_to( $user_id ) {
-  return get_user_meta( $user_id, 'memberful_subscription', TRUE );
+  return get_user_meta( $user_id, 'memberful_subscription', TRUE ) ?: array();
 }
 
 /**
