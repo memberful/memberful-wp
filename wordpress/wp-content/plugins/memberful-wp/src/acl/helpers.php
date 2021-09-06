@@ -25,7 +25,7 @@ function has_memberful_product( $slug, $user_id = NULL ) {
  * @deprecated 1.6.0
  */
 function memberful_wp_user_products( $user_id ) {
-  return memberful_wp_user_downloads( $user_id );
+  return memberful_wp_user_downloads( $user_id ) ?: array();
 }
 
 /**
