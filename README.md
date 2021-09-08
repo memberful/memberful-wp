@@ -2,13 +2,14 @@
 
 ## Development environment
 
-This project uses [Docker](https://www.docker.com/) for development.
+### Setup instructions
 
-To get up and running install [Docker](https://www.docker.com/get-started), then run `docker-compose up -d` in the plugin's root directory.
+- Install [Docker](https://www.docker.com/get-started).
+- Run `docker-compose up` to start all needed containers. You can stop them with Ctrl+C.
+  - Alternatively, you can run `docker-compose up -d` to start them in the detached mode and `docker-compose stop` to stop them.
+- Run ./docker-provision.sh` for the initial WordPress setup.
 
-For the inital Wordpress setup run `./docker-provision.sh`.
-
-You should then be able to access the WP admin panel - http://wordpress.localhost/wp-admin.
+You should be able to access the WP admin panel now: http://wordpress.localhost/wp-admin
 
 The default username/password is admin/admin.
 
@@ -16,6 +17,10 @@ Once signed in you'll need to go to your local Memberful site, and setup a WordP
 (`Memberful Admin -> Settings -> Integrate -> I'm using WordPress`), then copy and paste the activation
 code into the WordPress admin panel (WP admin -> Settings -> Memberful). Submit the form and then
 WordPress should be connected to your local vm, ready for development!
+
+### Resetting the local environment
+
+Run `docker-compose down` to remove the Docker containers and follow the previous section to start them again.
 
 ## Versioning
 
