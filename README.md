@@ -7,7 +7,7 @@
 - Install [Docker](https://www.docker.com/get-started).
 - Run `docker-compose up` to start all needed containers. You can stop them with Ctrl+C.
   - Alternatively, you can run `docker-compose up -d` to start them in the detached mode and `docker-compose stop` to stop them.
-- Run ./docker-provision.sh` for the initial WordPress setup.
+- Run `./docker-provision.sh` for the initial WordPress setup.
 
 You should be able to access the WP admin panel now: http://wordpress.localhost/wp-admin
 
