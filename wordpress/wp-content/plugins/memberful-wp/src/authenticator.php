@@ -81,7 +81,8 @@ class Memberful_Authenticator {
 
       $account = $this->get_member_data( $tokens->access_token );
 
-      $user = memberful_wp_sync_member_account( $account,  array( 'refresh_token' => $tokens->refresh_token ) );
+      $lock_timeout = 10;
+      $user = memberful_wp_sync_member_account( $account,  array( 'refresh_token' => $tokens->refresh_token ), $lock_timeout );
 
       if ( is_wp_error( $user ) ) {
         if ( $user->get_error_code() === 'user_already_exists' ) {
