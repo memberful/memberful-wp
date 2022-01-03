@@ -22,6 +22,34 @@ WordPress should be connected to your local vm, ready for development!
 
 Run `docker-compose down` to remove the Docker containers and follow the previous section to start them again.
 
+To clear the database (for a clean new installation) you should first remove the data volume:
+`docker volume rm memberful-wp_db_data`
+
+If the volume is not named as above you can find it from the full list with:
+`docker volume ls`
+
+### Using the WP-CLI
+
+The command-line interface from Wordpress can be useful in debugging plugin issues and reading/editing the database.
+
+An easy way to work with the CLI from outside the container is to take the `wp()` bash function from the provision script:
+```bash
+wp() {
+  docker run -it --rm \
+    --volumes-from memberful-wp_wordpress_1 \
+    --network container:memberful-wp_wordpress_1 \
+    --env-file envfile \
+    --user 33:33 \
+    wordpress:cli wp $@
+}
+```
+
+If your volume and container names match you can take the above function, copy/paste it into your command prompt, and then run `wp` commands as if Wordpress was installed directly (outside a container).
+
+For example, to see all the metadata for user 2 directly from the db:
+`wp user meta list 2`
+
+
 ## Versioning
 
 The plugin is versioned using [Semantic Versioning](http://semver.org).
