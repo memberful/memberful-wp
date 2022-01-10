@@ -114,11 +114,11 @@ function memberful_wp_generate_user_specific_acl_from_global_acl( $users_entitie
  * @return array member's products
  */
 function memberful_wp_user_downloads( $user_id ) {
-  return get_user_meta( $user_id, 'memberful_product', TRUE );
+  return memberful_wp_get_user_meta_for_acl( $user_id, 'memberful_product' );
 }
 
 function memberful_wp_user_feeds($user_id) {
-  return get_user_meta($user_id, 'memberful_feed', TRUE);
+  return memberful_wp_get_user_meta_for_acl($user_id, 'memberful_feed');
 }
 
 /**
@@ -129,7 +129,21 @@ function memberful_wp_user_feeds($user_id) {
  * @return array member's subscriptions
  */
 function memberful_wp_user_plans_subscribed_to( $user_id ) {
-  return get_user_meta( $user_id, 'memberful_subscription', TRUE );
+  return memberful_wp_get_user_meta_for_acl( $user_id, 'memberful_subscription' );
+}
+
+/**
+ * `get_user_meta` may return `false` or `""` if the given $user_id
+ * doesn't exist or is invalid. Because the expected ACL interface is an array,
+ * we return an empty one.
+ */
+function memberful_wp_get_user_meta_for_acl($user_id, $meta_key, $single = TRUE) {
+  $meta = get_user_meta($user_id, $meta_key, $single);
+
+  if ($meta == false || $meta == "")
+    $meta = array();
+
+  return $meta;
 }
 
 /**
