@@ -11,6 +11,7 @@ remove_filter('the_content', 'memberful_wp_protect_content', 100);
 
 $post_types = array("post");
 $category = $_GET['category'] ?? '';
+$user_id = wp_get_current_user()->ID;
 
 query_posts(array(
   'category__in'    => apply_filters( 'memberful_private_rss_category_ids', array() ),
