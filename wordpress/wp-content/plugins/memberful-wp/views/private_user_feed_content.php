@@ -82,6 +82,10 @@ do_action( 'rss2_head');
 
 while( have_posts()) : the_post();
 
+if (!memberful_can_user_access_post( $user_id, get_the_id() )) {
+  continue;
+}
+
 global $more;
 $more = 1;
 ?>
