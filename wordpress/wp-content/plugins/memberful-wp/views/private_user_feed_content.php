@@ -11,7 +11,16 @@ remove_filter('the_content', 'memberful_wp_protect_content', 100);
 
 $post_types = array("post");
 $category = $_GET['category'] ?? '';
-$user_id = wp_get_current_user()->ID;
+
+$feedUserToken = $_GET['member-feed'];
+$user_query = new WP_User_Query(
+  array(
+    'meta_key'	  =>	'memberful_private_user_feed_token',
+    'meta_value'	=>	$feedUserToken
+  )
+);
+$users = $user_query->get_results();
+$user = array_shift($users);
 
 query_posts(array(
   'category__in'    => apply_filters( 'memberful_private_rss_category_ids', array() ),
@@ -83,7 +92,7 @@ do_action( 'rss2_head');
 
 while( have_posts()) : the_post();
 
-if (!memberful_can_user_access_post( $user_id, get_the_id() )) {
+if (!memberful_can_user_access_post( $user->ID, get_the_id() )) {
   continue;
 }
 
