@@ -92,7 +92,7 @@ do_action( 'rss2_head');
 
 while( have_posts()) : the_post();
 
-if (!memberful_can_user_access_post( $user->ID, get_the_id() )) {
+if (!memberful_can_user_access_rss_post( $user->ID, get_the_id() )) {
   continue;
 }
 
