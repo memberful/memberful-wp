@@ -53,18 +53,18 @@ function memberful_private_user_feed_init() {
     return;
 
   // Everything is in order, we'll deliver the feed.
-  memberful_private_user_feed_deliver();
+  memberful_private_user_feed_deliver($user->ID);
 }
 
 /**
  * Deliver the Memberful Private User Feed.
  * This Function should be used only within the "init" wordpress hook.
  */
-function memberful_private_user_feed_deliver() {
+function memberful_private_user_feed_deliver($user_id) {
   header('Content-Type: '.feed_content_type('rss-http').'; charset='.get_option('blog_charset'), true);
   memberful_private_user_feed_disable_caching();
 
-  require(MEMBERFUL_DIR . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'private_user_feed_content.php');
+  memberful_wp_render('private_user_feed_content', array('user_id' => $user_id));
 
   exit;
 }
