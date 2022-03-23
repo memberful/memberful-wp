@@ -60,7 +60,7 @@ class Memberful_Authenticator {
 
     array_push($message, htmlentities($code));
 
-    wp_die(implode($message, '<br/>'));
+    wp_die(implode('<br/>', $message));
   }
 
   /**
