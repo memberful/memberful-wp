@@ -107,6 +107,8 @@ class Memberful_Authenticator {
       );
     }
 
+    $redirect_to = get_home_url();
+
     if ( isset( $_SERVER['HTTP_REFERER'] ) ) {
       $redirect_to = $_SERVER['HTTP_REFERER'];
     }
