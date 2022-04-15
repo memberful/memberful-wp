@@ -146,11 +146,7 @@ class Memberful_User_Mapping_Ensure_User {
     $user_id = $this->user_exists ? $this->update_user() : $this->create_user();
 
     if ( is_wp_error( $user_id ) ) {
-      if (isset($user_data)) {
-        $user_id->add_data( array_merge( (array) $user_id->get_error_data(), compact('user_data') ) );
-      } else {
-        $user_id->add_data( array_merge( (array) $user_id->get_error_data(), array() ) );
-      }
+      $user_id->add_data( (array) $user_id->get_error_data() );
 
       return $user_id;
     }
