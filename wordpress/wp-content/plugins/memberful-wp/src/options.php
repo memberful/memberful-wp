@@ -20,6 +20,10 @@ function memberful_wp_all_options() {
     'memberful_hide_admin_toolbar' => TRUE,
     'memberful_block_dashboard_access' => TRUE,
     'memberful_filter_account_menu_items' => TRUE,
+    'memberful_auto_sync_display_names' => FALSE,
+    'memberful_use_global_marketing' => FALSE,
+    'memberful_global_marketing_override' => TRUE,
+    'memberful_global_marketing_content' => '',
     MEMBERFUL_OPTION_DEFAULT_MARKETING_CONTENT => NULL
   );
 }

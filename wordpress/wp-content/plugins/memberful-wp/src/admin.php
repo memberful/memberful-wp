@@ -251,6 +251,7 @@ function memberful_wp_options() {
       update_option( 'memberful_hide_admin_toolbar', isset( $_POST['memberful_hide_admin_toolbar'] ));
       update_option( 'memberful_block_dashboard_access', isset( $_POST['memberful_block_dashboard_access'] ));
       update_option( 'memberful_filter_account_menu_items', isset( $_POST['memberful_filter_account_menu_items'] ));
+      update_option( 'memberful_auto_sync_display_names', isset( $_POST['memberful_auto_sync_display_names'] ) );
 
       return wp_redirect( admin_url( 'options-general.php?page=memberful_options' ) );
     }
@@ -274,6 +275,8 @@ function memberful_wp_options() {
       return memberful_wp_private_rss_feed_settings();
     case 'cookies_test':
       return memberful_wp_render('cookies_test');
+    case 'global_marketing':
+      return memberful_wp_global_marketing();
     }
   }
 
@@ -283,7 +286,8 @@ function memberful_wp_options() {
   $extend_auth_cookie_expiration = get_option( 'memberful_extend_auth_cookie_expiration' );
   $hide_admin_toolbar = get_option( 'memberful_hide_admin_toolbar' );
   $block_dashboard_access = get_option( 'memberful_block_dashboard_access' );
-  $filter_account_menu_items= get_option( 'memberful_filter_account_menu_items' );
+  $filter_account_menu_items = get_option( 'memberful_filter_account_menu_items' );
+  $auto_sync_display_names = get_option( 'memberful_auto_sync_display_names' );
 
   memberful_wp_render (
     'options',
@@ -294,7 +298,8 @@ function memberful_wp_options() {
       'extend_auth_cookie_expiration' => $extend_auth_cookie_expiration,
       'hide_admin_toolbar' => $hide_admin_toolbar,
       'block_dashboard_access' => $block_dashboard_access,
-      'filter_account_menu_items' => $filter_account_menu_items
+      'filter_account_menu_items' => $filter_account_menu_items,
+      'auto_sync_display_names' => $auto_sync_display_names
     )
   );
 }
@@ -547,4 +552,30 @@ function memberful_wp_add_protected_state_to_post_list($states, $post) {
   }
 
   return $states;
+}
+
+function memberful_wp_global_marketing() {
+  if ( isset( $_POST['save_global_marketting'] ) && memberful_wp_valid_nonce( 'memberful_options' ) ) {
+    if ( isset( $_POST['memberful_use_global_marketing'] ) ) {
+      update_option( 'memberful_use_global_marketing', true );
+      update_option( 'memberful_global_marketing_override', filter_input( INPUT_POST, 'memberful_global_marketing_override', FILTER_SANITIZE_NUMBER_INT ) );
+      update_option( 'memberful_global_marketing_content', filter_input( INPUT_POST, 'memberful_global_marketing_content' ) );
+    } else {
+      update_option( 'memberful_use_global_marketing', false );
+    }
+  }
+
+  $use_global_marketing = get_option( 'memberful_use_global_marketing' );
+  $global_marketing_content = get_option( 'memberful_global_marketing_content' );
+  $global_marketing_override = get_option( 'memberful_global_marketing_override', true );
+
+  memberful_wp_render(
+    'global_marketing',
+    array(
+      'use_global_marketing' => $use_global_marketing,
+      'global_marketing_content' => $global_marketing_content,
+      'global_marketing_override' => $global_marketing_override,
+      'form_target' => memberful_wp_plugin_global_marketing_url()
+    )
+  );
 }

@@ -41,3 +41,7 @@ add_filter( 'memberful_wp_protect_content','prepend_attachment');
 
 add_filter('memberful_wp_protect_content','do_blocks',15);
 add_filter( 'memberful_wp_protect_content', 'do_shortcode', 11 );
+
+if ( get_option( 'memberful_use_global_marketing' ) ) {
+  include_once 'global_marketing.php';
+}
