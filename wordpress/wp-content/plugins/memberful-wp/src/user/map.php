@@ -160,12 +160,14 @@ class Memberful_User_Mapping_Ensure_User {
 
   private function update_user() {
     $user_data = $this->fields_that_always_sync_from_memberful();
+    $sync_display_name = get_option( 'memberful_auto_sync_display_names' );
 
     $user_data['ID']            = $this->wp_user->ID;
     $user_data['user_login']    = $this->wp_user->user_login;
     $user_data['user_nicename'] = $this->wp_user->user_nicename;
     $user_data['nickname']      = $this->wp_user->nickname;
     $user_data['display_name']  = $this->wp_user->display_name;
+    $user_data['display_name']  = $sync_display_name ? $this->member->full_name : $this->wp_user->display_name;
 
     return wp_update_user( apply_filters( 'memberful.map_user.update', $user_data, $this->wp_user, $this->member ) );
   }

@@ -11,6 +11,11 @@ $links = array(
     'url'   => memberful_wp_plugin_bulk_protect_url()
   ),
   array(
+    'id'    => 'global_marketing',
+    'title' => __('Global marketing content'),
+    'url'   => memberful_wp_plugin_global_marketing_url()
+  ),
+  array(
     'id'    => 'advanced_settings',
     'title' => __('Advanced Role Mapping'),
     'url'   => memberful_wp_plugin_advanced_settings_url()

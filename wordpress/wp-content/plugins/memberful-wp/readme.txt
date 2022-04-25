@@ -49,6 +49,11 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 == Changelog ==
 
+= Unreleased version =
+
+* Add optional display name synchronization with Memberful
+* Add possibility to automatically generate marketing content
+
 = 1.67.2 =
 
 * Remove deprecated `compact` call in `ensure_present`

@@ -54,6 +54,22 @@ Integration Active
   display: inline;
 }
 
+#session_limit_number {
+  width: 50px;
+  margin: 0 0.5em;
+}
+
+label[for="session_limit_number"] {
+  display: block;
+  padding-left: 2em;
+  margin-top: 1.0em;
+}
+
+label[for="session_limit_number"] .memberful-label__text--multiline{
+  line-height: 3;
+}
+
+
 /*---------------------------------------------------------
 Shared
 ------------------------------------------------------------ */
@@ -122,11 +138,28 @@ ul.memberful-global-restrict-access-required-list {
   margin-top: 20px;
   padding: 10px 20px;
   background: #fff;
-  border: 1px solid #dedede
+  border: 1px solid #dedede;
+  margin-bottom: 1.5em;
 }
 .memberful-bulk-apply-box label {
   margin-right: 5px;
 }
+
+/*---------------------------------------------------------
+Global Marketing Tools
+------------------------------------------------------------ */
+
+#global_marketing_options label {
+  display: block;
+  font-size: 1.2em;
+  margin-bottom: 0.5em;
+}
+
+#global_marketing_options {
+  margin-bottom: 3em;
+  padding-left: 2em;
+}
+
 /*---------------------------------------------------------
 Restrict Access Metabox
 ------------------------------------------------------------ */
