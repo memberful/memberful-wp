@@ -28,7 +28,7 @@
         echo 'checked="checked"';}
       ?>
       >
-      Override all marketing content
+      Override all marketing content.
       </label>
       <label for="global_marketing_override_radio_false">
       <input id="global_marketing_override_radio_false" type="radio" name="memberful_global_marketing_override" value="0"
@@ -37,7 +37,7 @@
         echo 'checked="checked"';}
       ?>
       >
-      Only use the global marketting content when other content doesn't exist.
+      Only use the global marketing content when other content doesn't exist.
       </label>
     </div>
 
