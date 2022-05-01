@@ -61,7 +61,7 @@ function memberful_wp_sync_user( $account, $mapping_context, $lock_timeout ) {
     if ( isset( $member->deleted ) ) {
       if ( memberful_is_safe_to_delete( $user ) ) {
         wp_delete_user( $user->ID );
-        Memberful_User_Mapping_Repository::delete_mapping( $user->ID );
+        (new Memberful_User_Mapping_Repository())->delete_mapping( $user->ID );
       } else {
         Memberful_Wp_User_Downloads::sync($user->ID, array());
         Memberful_Wp_User_Feeds::sync($user->ID, array());
