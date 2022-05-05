@@ -4,7 +4,7 @@ if ( ! defined( 'MEMBERFUL_PARAGRAPH_COUNT' ) ) {
   define( 'MEMBERFUL_PARAGRAPH_COUNT', 2 );
 }
 
-add_filter( 'memberful_wp_protect_content', 'memberful_apply_global_marketing_content_filter', 15, 1 );
+add_filter( 'memberful_wp_protect_content', 'memberful_apply_global_marketing_content_filter', 1, 1 );
 
 /**
  * Filter the paywall to return a "teaser".
