@@ -49,6 +49,10 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 == Changelog ==
 
+= unreleased =
+
+* Fix shortcode support in global marketing content
+
 = 1.68.2 =
 
 * Fixed calling `Memberful_User_Mapping_Repository#delete_mapping` as a static method
