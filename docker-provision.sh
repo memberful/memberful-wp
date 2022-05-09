@@ -9,7 +9,7 @@ wp() {
     wordpress:cli wp $@
 }
 
-wp code download
+wp core download
 wp core install \
   --url=http://wordpress.localhost \
   --title='ttf' \
