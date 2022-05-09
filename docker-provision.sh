@@ -2,19 +2,23 @@
 
 wp() {
   docker run -it --rm \
-    --volumes-from memberful-wp_wordpress_1 \
-    --network container:memberful-wp_wordpress_1 \
+    --volumes-from memberful-wp-wordpress-1 \
+    --network container:memberful-wp-wordpress-1 \
     --env-file envfile \
     --user 33:33 \
     wordpress:cli wp $@
 }
 
+wp core download
 wp core install \
   --url=http://wordpress.localhost \
   --title='ttf' \
   --admin_user=admin \
   --admin_password=admin \
   --admin_email=admin@example.com \
+
+echo "Installing twentytwentyone theme"
+wp theme install twentytwentyone --activate
 
 echo "Activating Memberful WP plugin"
 wp plugin activate memberful-wp
