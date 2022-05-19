@@ -14,7 +14,9 @@ class Memberful_Wp_Endpoint_Webhook implements Memberful_Wp_Endpoint {
     $payload = json_decode($this->raw_request_body());
 
     if ( strpos( $payload->event, 'order' ) !== FALSE ) {
-      $member_id = (int) $payload->order->member->id;
+      if (isset($payload->order->member)) {
+        $member_id = (int) $payload->order->member->id;
+      }
 
       echo 'Processing order webhook for member '.$member_id;
     } elseif ( strpos( $payload->event, 'member' ) !== FALSE ) {
