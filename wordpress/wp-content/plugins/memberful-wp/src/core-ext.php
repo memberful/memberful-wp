@@ -8,6 +8,34 @@
 
 add_filter( 'allowed_redirect_hosts', 'memberful_wp_allowed_hosts' );
 
+/**
+ * Returns a member-specific RSS URL for a provided podcast ID
+ * This is specific to the Podcast Player plugin
+ */
+add_filter( 'podcast_player_display_args', function( $args ) {
+    
+    // Website owner will enter podcast ID in the feed URL field.
+    $url_id = isset( $args[ 'url' ] ) ? $args[ 'url' ] : false;
+    if ( ! $url_id ) {
+        return $args;
+    }
+
+    // Get private URL from the feed ID.
+    $actual_url = memberful_wp_feed_url( $url_id );
+    if ( ! $actual_url ) {
+        return $args;
+    }
+
+    // Replace ID with actual private URL in display args.
+    $args[ 'url' ] = esc_url_raw( $actual_url );
+
+    // Let's not allow sharing and download the audio.
+    $args[ 'hide-download' ] = 'true';
+    $args[ 'hide-social' ]   = 'true';
+
+    return $args;
+} );
+
 function memberful_wp_valid_nonce( $action ) {
   return isset( $_POST['memberful_nonce'] ) && wp_verify_nonce( $_POST['memberful_nonce'], $action );
 }
