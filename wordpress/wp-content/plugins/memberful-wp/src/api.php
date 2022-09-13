@@ -4,7 +4,6 @@ global $wp_version;
 
 define( 'MEMBERFUL_API_USER_AGENT', 'WordPress/'.$wp_version.' (PHP '.phpversion().') memberful-wp/'.MEMBERFUL_VERSION );
 
-// s
 /* Get details about a specific member via the API */
 function memberful_api_member( $member_id ) {
   $response = memberful_wp_get_data_from_api( memberful_admin_member_url( $member_id, MEMBERFUL_JSON ) );
