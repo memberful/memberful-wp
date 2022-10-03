@@ -18,6 +18,27 @@ function memberful_api_member( $member_id ) {
   return json_decode( $response_body );
 }
 
+/* Disconnect the WP integration in Memberful */
+function memberful_api_disconnect() {
+  $url = memberful_wp_wrap_api_token(memberful_disconnect_url());
+
+  $request = array(
+    "method"    => "DELETE",
+    "sslverify" => MEMBERFUL_SSL_VERIFY,
+    "headers"   => array(
+      "User-Agent" => MEMBERFUL_API_USER_AGENT,
+      "Accept" => "application/json"
+    ),
+    "timeout"   => 15
+  );
+
+  $response = wp_remote_request( $url, $request );
+
+  memberful_wp_instrument_api_call( $url, $request, $response );
+
+  return $response;
+}
+
 function memberful_wp_get_data_from_api( $url ) {
   $url = memberful_wp_wrap_api_token( $url );
 

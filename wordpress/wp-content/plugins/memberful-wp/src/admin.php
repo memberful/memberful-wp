@@ -150,8 +150,6 @@ function memberful_wp_reset() {
   foreach ( memberful_wp_connection_options() as $option ) {
     update_option( $option, $defaults[$option] );
   }
-
-  wp_redirect( admin_url( 'options-general.php?page=memberful_options' ) );
 }
 
 function _memberful_wp_debug_all_post_meta() {
@@ -243,7 +241,10 @@ function memberful_wp_options() {
     }
 
     if ( isset( $_POST['reset_plugin'] ) ) {
-      return memberful_wp_reset();
+      memberful_api_disconnect();
+      memberful_wp_reset();
+
+      return wp_redirect( admin_url( 'options-general.php?page=memberful_options' ) );
     }
 
     if ( isset( $_POST['save_changes'] ) ) {
