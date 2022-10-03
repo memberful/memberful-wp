@@ -17,7 +17,7 @@ function memberful_activation_url() {
 }
 
 function memberful_disconnect_url() {
-  $url = memberful_url("admin/settings/integrate/website/wordpress", MEMBERFUL_JSON);
+  $url = MEMBERFUL_APPS_HOST.'/wordpress';
   return add_query_arg("client_id", get_option("memberful_client_id"), $url);
 }
 
