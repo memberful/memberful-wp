@@ -5,8 +5,8 @@
 ### Setup instructions
 
 - Install [Docker](https://www.docker.com/get-started).
-- Run `docker-compose up` to start all needed containers. You can stop them with Ctrl+C.
-  - Alternatively, you can run `docker-compose up -d` to start them in the detached mode and `docker-compose stop` to stop them.
+- Run `docker compose up` to start all needed containers. You can stop them with Ctrl+C.
+  - Alternatively, you can run `docker compose up -d` to start them in the detached mode and `docker compose stop` to stop them.
 - Run `./docker-provision.sh` for the initial WordPress setup.
 
 You should be able to access the WP admin panel now: http://wordpress.localhost/wp-admin
@@ -20,7 +20,7 @@ WordPress should be connected to your local vm, ready for development!
 
 ### Resetting the local environment
 
-Run `docker-compose down` to remove the Docker containers and follow the previous section to start them again.
+Run `docker compose down` to remove the Docker containers and follow the previous section to start them again.
 
 To clear the database (for a clean new installation) you should first remove the data volume:
 `docker volume rm memberful-wp_db_data`
