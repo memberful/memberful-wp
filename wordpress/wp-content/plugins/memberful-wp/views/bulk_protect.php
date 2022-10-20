@@ -42,7 +42,7 @@
       </fieldset>
     </div>
     <div>
-    <?php memberful_wp_render( 'metabox', compact( 'subscriptions', 'products', 'marketing_content' ) ); ?>
+    <?php memberful_wp_render( 'metabox', compact( 'subscriptions', 'products', 'marketing_content', 'viewable_by_any_registered_users', 'viewable_by_anybody_subscribed_to_a_plan' ) ); ?>
   </div>
     <?php memberful_wp_nonce_field( 'memberful_options' ); ?>
   </form>
