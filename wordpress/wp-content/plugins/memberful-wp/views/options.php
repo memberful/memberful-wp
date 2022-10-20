@@ -37,7 +37,7 @@
         <p>
           <label for="block_dashboard_access_checkbox">
             <input id="block_dashboard_access_checkbox" class="memberful-label__checkbox--multiline" type="checkbox" name="memberful_block_dashboard_access" <?php if( $block_dashboard_access): ?>checked="checked"<?php endif; ?>>
-            <span class="memberful-label__text--multiline">Block Wordpress dashboard access from members.</span>
+            <span class="memberful-label__text--multiline">Block WordPress dashboard access from members.</span>
           </label>
         </p>
         <p>
