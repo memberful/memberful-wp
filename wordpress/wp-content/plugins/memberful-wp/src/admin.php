@@ -448,7 +448,9 @@ function memberful_wp_bulk_protect() {
       'products' => memberful_wp_metabox_acl_format( array(), 'product' ),
       'subscriptions' => memberful_wp_metabox_acl_format( array(), 'subscription' ),
       'marketing_content' => '',
-      'form_target'       => memberful_wp_plugin_bulk_protect_url(TRUE),
+      'form_target' => memberful_wp_plugin_bulk_protect_url(TRUE),
+      'viewable_by_any_registered_users' => false,
+      'viewable_by_anybody_subscribed_to_a_plan' => false
     )
   );
 }
