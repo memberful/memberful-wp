@@ -273,7 +273,7 @@
 
       menu.push({text: 'Free sign up link', onclick: function() { insertRegistrationShortcode(editor); }});
 
-      menu.push({text: 'Private Wordpress RSS Feed link', onclick: function() { insertPrivateRSSFeedShortcode(editor); }});
+      menu.push({text: 'Private WordPress RSS Feed link', onclick: function() { insertPrivateRSSFeedShortcode(editor); }});
 
       if (window.MemberfulData.feeds.length > 0) {
         menu.push({text: 'Link to Podcasts', onclick: function() { insertPodcastsShortcode(editor); }});
