@@ -58,4 +58,35 @@ jQuery(document).ready(function($){
   $(document).on('pjax:complete', function() {
     $('[data-depends-on]').each(setupDependents);
   });
+
+  if(typeof tinyMCE !== 'undefined' && tinyMCE.editors.length){
+    
+    let editor = tinyMCE.editors[0];
+    let globalContent=$('#use_global_marketing_checkbox');
+    let snippetContent=$('#use_global_snippets_checkbox');
+    
+    function checkGlobalValidity(e){
+      let isGlobal=globalContent.is(':checked');
+      let isSnippets=snippetContent.is(':checked');
+      let submit=$('button[type="submit"]');
+      let isContentEmpty=!editor.getContent().trim();
+
+      let warning=$('#global_content_required');
+
+      if( isGlobal && isContentEmpty ){
+       submit.prop('disabled', true);
+       warning.show();
+
+      } else {
+        submit.prop('disabled', false);
+        warning.hide();
+
+      }
+    }
+
+    globalContent.change(checkGlobalValidity)
+    snippetContent.change(checkGlobalValidity)
+    editor.on('change', checkGlobalValidity);
+  }
+
 })

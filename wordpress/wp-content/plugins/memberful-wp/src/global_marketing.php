@@ -4,7 +4,37 @@ if ( ! defined( 'MEMBERFUL_PARAGRAPH_COUNT' ) ) {
   define( 'MEMBERFUL_PARAGRAPH_COUNT', 2 );
 }
 
-add_filter( 'memberful_wp_protect_content', 'memberful_apply_global_marketing_content_filter', 1, 1 );
+if(get_option('memberful_use_global_snippets')){
+  add_filter( 'memberful_wp_protect_content', 'memberful_apply_global_snippets_content_filter', 1, 1 );
+} else {
+  add_filter( 'memberful_wp_protect_content', 'memberful_get_global_replacement', 1, 1 );
+}
+
+
+/**
+ * Identify Post specific or global marketting content
+ *
+ * @param string $marketting_content
+ * @return string
+ */
+function memberful_get_global_replacement($marketting_content){
+  $override                         = get_option( 'memberful_global_marketing_override' );
+  $global_marketing_content         = get_option( 'memberful_global_marketing_content' );
+
+  //always send global is override
+  if($override) {
+    return $global_marketing_content;
+  }
+
+  //Send global if post marketting is empty
+  if(empty(trim($marketting_content))){
+    return $global_marketing_content;
+  }
+
+  //Send post marketting if neither of the above
+  return $marketting_content;
+
+}
 
 /**
  * Filter the paywall to return a "teaser".
@@ -13,16 +43,11 @@ add_filter( 'memberful_wp_protect_content', 'memberful_apply_global_marketing_co
  *
  * @return string concat of teaser and memberful marketing content
  */
-function memberful_apply_global_marketing_content_filter( $memberful_marketing_content ) {
+function memberful_apply_global_snippets_content_filter( $memberful_marketing_content ) {
   global $post;
-  $override = get_option( 'memberful_global_marketing_override' );
+  $replacement=memberful_get_global_replacement($memberful_marketing_content);
 
-  if ( ! $override && ! empty( $memberful_marketing_content ) ) {
-    return $memberful_marketing_content;
-  }
-
-  $global_marketing_content         = get_option( 'memberful_global_marketing_content' );
-  $wrapped_global_marketing_content = "<div class='memberful-global-marketting-content'>$global_marketing_content</div>";
+  $wrapped_global_marketing_content = "<div class='memberful-global-marketting-content'>$replacement</div>";
 
   // Prevent endless loop trap
   remove_action( 'the_content', 'memberful_wp_protect_content', -10 );

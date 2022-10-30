@@ -48,7 +48,6 @@ function memberful_wp_metabox( $post ) {
 
   $marketing_content = array_filter(array(
     memberful_post_marketing_content( $post->ID ),
-    memberful_wp_default_marketing_content(),
     memberful_wp_marketing_content_explanation()
   ));
 
@@ -126,9 +125,6 @@ function memberful_wp_save_postdata( $post_id ) {
 
   memberful_wp_update_post_marketing_content( $post_id, $marketing_content );
 
-  if ( ! empty( $_POST['memberful_make_default_marketing_content'] ) ) {
-    memberful_wp_update_default_marketing_content( $marketing_content );
-  }
 }
 
 function memberful_wp_add_term_metabox( $term ) {
@@ -148,7 +144,6 @@ function memberful_wp_add_term_metabox( $term ) {
 
     $marketing_content = array_filter(array(
       memberful_term_marketing_content( $term->term_id ),
-      memberful_wp_default_marketing_content(),
       memberful_wp_marketing_content_explanation()
     ));
 
@@ -188,9 +183,6 @@ function memberful_wp_save_term_metadata( $term_id ) {
 
   memberful_wp_update_term_marketing_content( $term_id, $marketing_content );
 
-  if ( ! empty( $_POST['memberful_make_default_marketing_content'] ) ) {
-    memberful_wp_update_default_marketing_content( $marketing_content );
-  }
 }
 
 /**

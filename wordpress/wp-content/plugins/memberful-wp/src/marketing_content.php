@@ -1,7 +1,23 @@
 <?php
 
 define( 'MEMBERFUL_MARKETING_META_KEY', 'memberful_marketing_content' );
-define( 'MEMBERFUL_OPTION_DEFAULT_MARKETING_CONTENT', 'memberful_default_marketing_content' );
+define( 'MEMBERFUL_LEGACY_DEFAULT_MARKETING_CONTENT', 'memberful_default_marketing_content' );
+
+
+
+function memberful_migrate_from_legacy_default(){
+  $legacy=get_option(MEMBERFUL_LEGACY_DEFAULT_MARKETING_CONTENT);
+  
+  if( $legacy ){
+    return;
+  }
+  //migrate to new settings
+  update_option('memberful_global_marketing_content', $legacy);
+  update_option('memberful_use_global_marketing', TRUE);
+
+  //delete legacy option
+  delete_option(MEMBERFUL_LEGACY_DEFAULT_MARKETING_CONTENT);
+}
 
 // Get marketing content for the frontend
 function memberful_marketing_content( $post_id ) {
@@ -34,14 +50,6 @@ function memberful_wp_update_term_marketing_content( $term_id, $content ) {
   update_term_meta( $term_id, MEMBERFUL_MARKETING_META_KEY, $content );
 }
 
-function memberful_wp_update_default_marketing_content( $content ) {
-  update_option( MEMBERFUL_OPTION_DEFAULT_MARKETING_CONTENT, $content );
-}
-
-function memberful_wp_default_marketing_content() {
-  return stripslashes( get_option( MEMBERFUL_OPTION_DEFAULT_MARKETING_CONTENT, '' ) );
-}
-
 function memberful_wp_marketing_content_explanation() {
-  return __( "This marketing content will be shown in place of your protected content to anyone who is not allowed to read the post..." );
+  return apply_filters('memberful_marketing_content_explanation', '');
 }

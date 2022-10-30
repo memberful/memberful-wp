@@ -13,10 +13,10 @@
 
       ?>
       <div class="memberful-marketing-content-description">
-        <label>
-          <input type="checkbox" name="memberful_make_default_marketing_content" value="1">
-          Make this the default marketing content for new posts, pages, tags and categories.
-        </label>
+        <a href="<?php echo admin_url('/options-general.php?page=memberful_options&subpage=global_marketing');?>">
+          Click Here
+        </a>
+         to manage global marketing content.
       </div>
     </div>
   </div>
