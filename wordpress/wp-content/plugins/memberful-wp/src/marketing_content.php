@@ -8,7 +8,7 @@ define( 'MEMBERFUL_LEGACY_DEFAULT_MARKETING_CONTENT', 'memberful_default_marketi
 function memberful_migrate_from_legacy_default(){
   $legacy=get_option(MEMBERFUL_LEGACY_DEFAULT_MARKETING_CONTENT);
   
-  if( $legacy ){
+  if( empty($legacy) ){
     return;
   }
   //migrate to new settings
