@@ -19,6 +19,8 @@ function memberful_migrate_from_legacy_default(){
   delete_option(MEMBERFUL_LEGACY_DEFAULT_MARKETING_CONTENT);
 }
 
+add_action('admin_init', 'memberful_migrate_from_legacy_default');
+
 // Get marketing content for the frontend
 function memberful_marketing_content( $post_id ) {
   $user_id = is_user_logged_in() ? get_current_user_id() : 0;
