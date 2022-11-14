@@ -3,11 +3,9 @@
 define( 'MEMBERFUL_MARKETING_META_KEY', 'memberful_marketing_content' );
 define( 'MEMBERFUL_LEGACY_DEFAULT_MARKETING_CONTENT', 'memberful_default_marketing_content' );
 
-
-
 function memberful_migrate_from_legacy_default(){
   $legacy=get_option(MEMBERFUL_LEGACY_DEFAULT_MARKETING_CONTENT);
-  
+
   if( empty($legacy) ){
     return;
   }

@@ -11,9 +11,9 @@ jQuery(document).ready(function($){
 
     var target     = $('input[name="'+depends_on+'"]');
 
-	if ( ! target.length ) {
-	  target = $('select[name="'+depends_on+'"]');
-	}
+    if ( ! target.length ) {
+      target = $('select[name="'+depends_on+'"]');
+    }
 
     if ( ! target.length ) {
       target = $('#'+depends_on);
@@ -60,11 +60,11 @@ jQuery(document).ready(function($){
   });
 
   if(typeof tinyMCE !== 'undefined' && tinyMCE.editors.length){
-    
+
     let editor = tinyMCE.editors[0];
     let globalContent=$('#use_global_marketing_checkbox');
     let snippetContent=$('#use_global_snippets_checkbox');
-    
+
     function checkGlobalValidity(e){
       let isGlobal=globalContent.is(':checked');
       let isSnippets=snippetContent.is(':checked');
@@ -74,8 +74,8 @@ jQuery(document).ready(function($){
       let warning=$('#global_content_required');
 
       if( isGlobal && isContentEmpty ){
-       submit.prop('disabled', true);
-       warning.show();
+        submit.prop('disabled', true);
+        warning.show();
 
       } else {
         submit.prop('disabled', false);

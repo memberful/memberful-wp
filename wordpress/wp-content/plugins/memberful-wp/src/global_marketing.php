@@ -10,7 +10,6 @@ if(get_option('memberful_use_global_snippets')){
   add_filter( 'memberful_wp_protect_content', 'memberful_get_global_replacement', 1, 1 );
 }
 
-
 /**
  * Identify Post specific or global marketting content
  *
