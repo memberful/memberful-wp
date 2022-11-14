@@ -149,6 +149,7 @@ ul.memberful-global-restrict-access-required-list {
 }
 #global_content_required{
   display: none;
+  margin-bottom: 1em;
 }
 
 /*---------------------------------------------------------
