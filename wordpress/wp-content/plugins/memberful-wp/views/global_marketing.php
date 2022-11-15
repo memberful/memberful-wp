@@ -61,8 +61,8 @@
     </div>
   </div>
   <div id="global_content_required">
-    <?php _e('When using global marketting content, the marketing content box cannot be empty.', 'memberful'); ?>
+    <?php _e('When using global marketing content, the marketing content box cannot be empty.', 'memberful'); ?>
   </div>
-  <button type="submit" name="save_global_marketting" class="button button-primary">Save Changes</button>
+  <button type="submit" name="save_global_marketing" class="button button-primary">Save Changes</button>
   </form>
 </div>

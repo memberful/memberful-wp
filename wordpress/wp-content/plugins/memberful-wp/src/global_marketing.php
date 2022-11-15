@@ -11,12 +11,12 @@ if(get_option('memberful_use_global_snippets')){
 }
 
 /**
- * Identify Post specific or global marketting content
+ * Identify Post specific or global marketing content
  *
- * @param string $marketting_content
+ * @param string $marketing_content
  * @return string
  */
-function memberful_get_global_replacement($marketting_content){
+function memberful_get_global_replacement($marketing_content){
   $override = get_option( 'memberful_global_marketing_override' );
   $global_marketing_content = get_option( 'memberful_global_marketing_content' );
 
@@ -24,11 +24,11 @@ function memberful_get_global_replacement($marketting_content){
     return $global_marketing_content;
   }
 
-  if(empty(trim($marketting_content))){
+  if(empty(trim($marketing_content))){
     return $global_marketing_content;
   }
 
-  return $marketting_content;
+  return $marketing_content;
 }
 
 /**
@@ -42,7 +42,7 @@ function memberful_apply_global_snippets_content_filter( $memberful_marketing_co
   global $post;
   $replacement = memberful_get_global_replacement($memberful_marketing_content);
 
-  $wrapped_global_marketing_content = "<div class='memberful-global-marketting-content'>$replacement</div>";
+  $wrapped_global_marketing_content = "<div class='memberful-global-marketing-content'>$replacement</div>";
 
   // Prevent endless loop trap
   remove_action( 'the_content', 'memberful_wp_protect_content', -10 );

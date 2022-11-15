@@ -555,7 +555,7 @@ function memberful_wp_add_protected_state_to_post_list($states, $post) {
 }
 
 function memberful_wp_global_marketing() {
-  if ( isset( $_POST['save_global_marketting'] ) && memberful_wp_valid_nonce( 'memberful_options' ) ) {
+  if ( isset( $_POST['save_global_marketing'] ) && memberful_wp_valid_nonce( 'memberful_options' ) ) {
     if ( isset( $_POST['memberful_use_global_marketing'] ) ) {
       update_option( 'memberful_use_global_marketing', true );
       update_option( 'memberful_global_marketing_override', filter_input( INPUT_POST, 'memberful_global_marketing_override', FILTER_SANITIZE_NUMBER_INT ) );
