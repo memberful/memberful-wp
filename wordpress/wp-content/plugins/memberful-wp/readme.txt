@@ -49,6 +49,10 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 == Changelog ==
 
+= unreleased =
+
+* The “Default marketing content” setting has been moved to Settings → Memberful → Global marketing content. Previously, it was located underneath each of our marketing content boxes on posts, pages, tags, and categories.
+
 = 1.69.1 =
 
 * Fix PHP warnings
