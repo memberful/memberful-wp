@@ -14,9 +14,8 @@
       if ( $use_global_marketing ) :
         ?>
         checked="checked"<?php endif; ?>>
-        <span class="memberful-label__text--multiline"><strong>Automatically pull an excerpt from each post.</strong>
-          <?php echo esc_html(' Memberful will pull the first two paragraphs from each protected post to use as marketing content for logged out visitors.'
-          .' This feature requires <p> tags in your posts to detect which content to use.');?>
+        <span class="memberful-label__text--multiline"><strong><?php _e('Turn on global marketing content', 'memberful') ?></strong>
+          <?php _e(' This setting allows you to create default marketing content to be displayed for all locked posts, pages, categories and tags.', 'memberful');?>
         </span>
       </label>
     </p>
@@ -39,12 +38,30 @@
       >
       Only use the global marketing content when other content doesn't exist.
       </label>
+      <hr>
+  
+      <div id="global_marketing_snippet_options">
+
+      <input id="use_global_snippets_checkbox" class="memberful-label__checkbox--multiline" type="checkbox" name="memberful_use_global_snippets" 
+      <?php
+      if ( $use_global_snippets ) :
+        ?>
+        checked="checked"<?php endif; ?>>
+        <span class="memberful-label__text--multiline"><strong>Automatically pull an excerpt from each post.</strong>
+          <?php echo esc_html(' Memberful will pull the first two paragraphs from each protected post to use as marketing content for logged out visitors.'
+          .' This feature requires <p> tags in your posts to detect which content to use.');?>
+      </div>
+
     </div>
+
 
     <div class='global-marketing-content' data-depends-on="use_global_marketing_checkbox" data-depends-value="1">
       <?php wp_editor( $global_marketing_content, $editor_id = 'memberful_global_marketing_content', $settings = array() ); ?>
 
     </div>
+  </div>
+  <div id="global_content_required">
+    <?php _e('When using global marketting content, the marketing content box cannot be empty.', 'memberful'); ?>
   </div>
   <button type="submit" name="save_global_marketting" class="button button-primary">Save Changes</button>
   </form>

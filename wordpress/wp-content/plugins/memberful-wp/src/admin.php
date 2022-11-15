@@ -436,9 +436,6 @@ function memberful_wp_bulk_protect() {
       memberful_wp_set_post_available_to_anybody_subscribed_to_a_plan($id, $viewable_by_anybody_subscribed_to_a_plan);
     }
 
-    if( isset($_POST['memberful_make_default_marketing_content']) && $_POST['memberful_make_default_marketing_content'] )
-      memberful_wp_update_default_marketing_content( $marketing_content );
-
     wp_redirect( memberful_wp_plugin_bulk_protect_url() . '&success=bulk' );
   }
 
@@ -563,12 +560,14 @@ function memberful_wp_global_marketing() {
       update_option( 'memberful_use_global_marketing', true );
       update_option( 'memberful_global_marketing_override', filter_input( INPUT_POST, 'memberful_global_marketing_override', FILTER_SANITIZE_NUMBER_INT ) );
       update_option( 'memberful_global_marketing_content', filter_input( INPUT_POST, 'memberful_global_marketing_content' ) );
+      update_option ( 'memberful_use_global_snippets', isset($_POST['memberful_use_global_snippets']));
     } else {
       update_option( 'memberful_use_global_marketing', false );
     }
   }
 
   $use_global_marketing = get_option( 'memberful_use_global_marketing' );
+  $use_global_snippets = get_option( 'memberful_use_global_snippets');
   $global_marketing_content = get_option( 'memberful_global_marketing_content' );
   $global_marketing_override = get_option( 'memberful_global_marketing_override', true );
 
@@ -576,6 +575,7 @@ function memberful_wp_global_marketing() {
     'global_marketing',
     array(
       'use_global_marketing' => $use_global_marketing,
+      'use_global_snippets'  => $use_global_snippets,
       'global_marketing_content' => $global_marketing_content,
       'global_marketing_override' => $global_marketing_override,
       'form_target' => memberful_wp_plugin_global_marketing_url()

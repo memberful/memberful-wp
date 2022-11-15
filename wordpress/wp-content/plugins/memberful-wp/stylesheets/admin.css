@@ -144,6 +144,13 @@ ul.memberful-global-restrict-access-required-list {
 .memberful-bulk-apply-box label {
   margin-right: 5px;
 }
+#global_marketing_options hr{
+  margin: 2em 0;
+}
+#global_content_required{
+  display: none;
+  margin-bottom: 1em;
+}
 
 /*---------------------------------------------------------
 Global Marketing Tools
