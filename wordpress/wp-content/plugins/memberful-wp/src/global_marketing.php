@@ -17,22 +17,18 @@ if(get_option('memberful_use_global_snippets')){
  * @return string
  */
 function memberful_get_global_replacement($marketting_content){
-  $override                         = get_option( 'memberful_global_marketing_override' );
-  $global_marketing_content         = get_option( 'memberful_global_marketing_content' );
+  $override = get_option( 'memberful_global_marketing_override' );
+  $global_marketing_content = get_option( 'memberful_global_marketing_content' );
 
-  //always send global is override
   if($override) {
     return $global_marketing_content;
   }
 
-  //Send global if post marketting is empty
   if(empty(trim($marketting_content))){
     return $global_marketing_content;
   }
 
-  //Send post marketting if neither of the above
   return $marketting_content;
-
 }
 
 /**
@@ -44,7 +40,7 @@ function memberful_get_global_replacement($marketting_content){
  */
 function memberful_apply_global_snippets_content_filter( $memberful_marketing_content ) {
   global $post;
-  $replacement=memberful_get_global_replacement($memberful_marketing_content);
+  $replacement = memberful_get_global_replacement($memberful_marketing_content);
 
   $wrapped_global_marketing_content = "<div class='memberful-global-marketting-content'>$replacement</div>";
 
