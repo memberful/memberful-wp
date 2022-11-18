@@ -4,7 +4,7 @@ Tags: memberful, member, membership, memberships, recurring payments, recurring 
 Requires at least: 3.6
 Tested up to: 6.1
 Requires PHP: 7.0
-Stable tag: 1.70.0
+Stable tag: 1.70.1
 License: GPLv2 or later
 
 Sell memberships and restrict access to content with WordPress and Memberful.
@@ -49,7 +49,7 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 == Changelog ==
 
-= unreleased =
+= 1.70.1 =
 
 * Fix migration of default marketing content to global marketing content. If you updated to version 1.70.0 before, please check your "Automatically pull an excerpt from each post" setting in Settings → Memberful → Global marketing content.
 
