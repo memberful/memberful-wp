@@ -1,23 +1,6 @@
 <?php
 
 define( 'MEMBERFUL_MARKETING_META_KEY', 'memberful_marketing_content' );
-define( 'MEMBERFUL_LEGACY_DEFAULT_MARKETING_CONTENT', 'memberful_default_marketing_content' );
-
-function memberful_migrate_from_legacy_default(){
-  $legacy = get_option(MEMBERFUL_LEGACY_DEFAULT_MARKETING_CONTENT);
-
-  if( empty($legacy) ){
-    return;
-  }
-
-  //migrate to new settings
-  update_option( 'memberful_global_marketing_content', $legacy );
-  update_option( 'memberful_use_global_marketing', TRUE );
-
-  //delete legacy option
-  delete_option(MEMBERFUL_LEGACY_DEFAULT_MARKETING_CONTENT);
-}
-add_action( 'admin_init', 'memberful_migrate_from_legacy_default' );
 
 // Get marketing content for the frontend
 function memberful_marketing_content( $post_id ) {

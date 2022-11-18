@@ -49,6 +49,10 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 == Changelog ==
 
+= unreleased =
+
+* Fix migration of default marketing content to global marketing content. If you updated to version 1.70.0 before, please check your "Automatically pull an excerpt from each post" setting in Settings → Memberful → Global marketing content.
+
 = 1.70.0 =
 
 * The “Default marketing content” setting has been moved to Settings → Memberful → Global marketing content. Previously, it was located underneath each of our marketing content boxes on posts, pages, tags, and categories.
