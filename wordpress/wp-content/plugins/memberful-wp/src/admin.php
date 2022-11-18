@@ -67,6 +67,25 @@ function memberful_wp_plugin_migrate_db() {
     $db_version = 2;
   }
 
+  if ( $db_version < 3 ) {
+    if ( get_option( 'memberful_use_global_marketing' ) ) {
+      add_option( 'memberful_use_global_snippets', TRUE );
+    } else {
+      $legacy_default_marketing_content = get_option( 'memberful_default_marketing_content', NULL );
+
+      if ( !empty( $legacy_default_marketing_content ) ) {
+        update_option( 'memberful_global_marketing_content', $legacy_default_marketing_content );
+        update_option( 'memberful_global_marketing_override', FALSE );
+        update_option( 'memberful_use_global_marketing', TRUE );
+        update_option( 'memberful_use_global_snippets', FALSE );
+
+        delete_option( 'memberful_default_marketing_content' );
+      }
+    }
+
+    $db_version = 3;
+  }
+
   update_option( 'memberful_db_version', $db_version );
 }
 
