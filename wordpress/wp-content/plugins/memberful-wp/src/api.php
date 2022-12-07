@@ -21,6 +21,7 @@ function memberful_api_member( $member_id ) {
 /* Disconnect the WP integration in Memberful */
 function memberful_api_disconnect() {
   $url = memberful_wp_wrap_api_token(memberful_disconnect_url());
+  $url = add_query_arg("home_url", home_url(), $url);
 
   $request = array(
     "method"    => "DELETE",
