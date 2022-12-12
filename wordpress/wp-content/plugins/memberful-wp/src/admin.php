@@ -497,13 +497,21 @@ function memberful_wp_bulk_protect() {
 
 function memberful_wp_protect_bbpress() {
   if ( ! empty( $_POST ) ) {
-    $protection_enabled = empty( $_POST['memberful_protect_bbpress'] ) ? FALSE : ( $_POST['memberful_protect_bbpress'] == '1');
+    $protection_enabled = isset( $_POST['memberful_protect_bbpress'] );
+
     $required_downloads = empty( $_POST['memberful_product_acl'] ) ? array() : (array) $_POST['memberful_product_acl'];
+    $required_downloads = array_map( 'intval', $required_downloads );
+    $required_downloads = array_intersect( $required_downloads, array_keys( memberful_downloads() ) );
+
     $required_subscription_plans = empty( $_POST['memberful_subscription_acl'] ) ? array() : (array) $_POST['memberful_subscription_acl'];
-    $viewable_by_any_registered_user = empty( $_POST['memberful_viewable_by_any_registered_users'] ) ? FALSE : ($_POST['memberful_viewable_by_any_registered_users'] == '1');
-    $viewable_by_anybody_subscribed_to_a_plan = empty( $_POST['memberful_viewable_by_anybody_subscribed_to_a_plan'] ) ? FALSE : ($_POST['memberful_viewable_by_anybody_subscribed_to_a_plan'] == '1');
-    $redirect_to_homepage = empty( $_POST['memberful_send_unauthorized_users'] ) ? TRUE : ($_POST['memberful_send_unauthorized_users'] == 'homepage');
-    $redirect_to_url = empty( $_POST['memberful_send_unauthorized_users_to_url'] ) ? '' : $_POST['memberful_send_unauthorized_users_to_url'];
+    $required_subscription_plans = array_map( 'intval', $required_subscription_plans );
+    $required_subscription_plans = array_intersect( $required_subscription_plans, array_keys( memberful_subscription_plans() ) );
+
+    $viewable_by_any_registered_user = isset( $_POST['memberful_viewable_by_any_registered_users'] );
+    $viewable_by_anybody_subscribed_to_a_plan = isset( $_POST['memberful_viewable_by_anybody_subscribed_to_a_plan'] );
+
+    $redirect_to_homepage = empty( $_POST['memberful_send_unauthorized_users'] ) ? true : ($_POST['memberful_send_unauthorized_users'] == 'homepage');
+    $redirect_to_url = empty( $_POST['memberful_send_unauthorized_users_to_url'] ) ? '' : sanitize_url( $_POST['memberful_send_unauthorized_users_to_url'] );
 
     if ( ! empty( $required_subscription_plans ) )
       $required_subscription_plans = array_combine( $required_subscription_plans, $required_subscription_plans );
