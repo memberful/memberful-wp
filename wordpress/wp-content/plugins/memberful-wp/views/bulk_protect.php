@@ -2,15 +2,19 @@
   <?php memberful_wp_render('option_tabs', array('active' => 'bulk_protect')); ?>
   <?php memberful_wp_render('flash'); ?>
 
-  <?php if( isset( $_GET['success'] ) && $_GET['success'] == 'bulk' ) :  ?>
+  <?php if( isset( $_GET['success'] ) && $_GET['success'] == 'bulk' ) { ?>
     <div class="updated notice">
       <p><?php _e( "Bulk restrictions have been applied successfully.", 'memberful' ); ?></p>
     </div>
-  <?php else : ?>
+  <?php } elseif( isset( $_GET['error'] ) ) { ?>
+    <div class="error notice">
+      <p><?php echo esc_html( $_GET['error'] ); ?></p>
+    </div>
+  <?php } else { ?>
     <div class="update-nag">
       <?php _e( "<strong>Be careful:</strong> When you bulk apply these restrict access settings we will <strong>overwrite and replace</strong> any specified individual Post or Page restrict access settings.", 'memberful' ); ?>
     </div>
-  <?php endif; ?>
+  <?php } ?>
 
   <form method="POST" action="<?php echo $form_target ?>">
     <div class="memberful-bulk-apply-box">
