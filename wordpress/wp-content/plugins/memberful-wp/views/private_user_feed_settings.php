@@ -2,7 +2,7 @@
   <?php memberful_wp_render('option_tabs', array('active' => 'private_user_feed_settings')); ?>
   <?php memberful_wp_render('flash'); ?>
   <div id="memberful-wrap">
-    <form method="POST" action="<?php echo $form_target ?>">
+    <form method="POST" action="<?php echo esc_url($form_target); ?>">
       <div class="memberful-private-rss-feed-settings-box">
         <div class="postbox memberful-postbox">
           <fieldset>
@@ -16,7 +16,7 @@
                       <label>
                         <input type="checkbox"
                                name="memberful_private_feed_subscriptions[]"
-                               value="<?php echo $id; ?>"
+                               value="<?php echo esc_attr($id); ?>"
                               <?php checked(in_array($id, $current_feed_subscriptions));?>
                             >
                         <?php echo esc_html( $subscription['name'] ); ?>

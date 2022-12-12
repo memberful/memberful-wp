@@ -29,7 +29,7 @@ function memberful_nav_menu_items_meta_box() {
 function memberful_nav_menu_link_item($url, $label) { ?>
   <li>
     <label class="menu-item-title">
-      <input type="checkbox" name="memberful_link" class="menu-item-checkbox" data-url="<?php echo esc_attr($url); ?>" data-label="<?php echo esc_attr($label); ?>"> <?php echo($label); ?>
+      <input type="checkbox" name="memberful_link" class="menu-item-checkbox" data-url="<?php echo esc_attr($url); ?>" data-label="<?php echo esc_attr($label); ?>"> <?php echo esc_html($label); ?>
     </label>
   </li>
   <?php

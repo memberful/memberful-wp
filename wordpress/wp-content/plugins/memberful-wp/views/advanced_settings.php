@@ -2,7 +2,7 @@
   <?php memberful_wp_render('option_tabs', array('active' => 'advanced_settings')); ?>
   <?php memberful_wp_render('flash'); ?>
   <p><?php _e( "Assign roles to active (paying) and inactive (not paying) members. Memberful will automatically keep the role mappings in sync. Works best with custom roles created by other plugins.", 'memberful' ); ?></p>
-  <form method="post" action="<?php echo memberful_wp_plugin_advanced_settings_url( TRUE ); ?>">
+  <form method="post" action="<?php echo esc_url(memberful_wp_plugin_advanced_settings_url( TRUE )); ?>">
       <table class="widefat fixed" id="memberful-role-mapping-table">
         <thead>
         <tr>
@@ -13,11 +13,11 @@
         <tbody class="role-mapping">
           <?php foreach( $available_state_mappings as $state_id => $state): ?>
           <tr>
-            <td class="customer-state"><strong><?php echo $state['name']; ?></strong></td>
+            <td class="customer-state"><strong><?php echo esc_html($state['name']); ?></strong></td>
             <td class="mapped-role">
-              <select name="role_mappings[<?php echo $state_id; ?>]">
+              <select name="role_mappings[<?php echo esc_attr($state_id); ?>]">
                 <?php foreach( $available_roles as $role => $role_name ): ?>
-                <option value="<?php echo $role; ?>" <?php echo ($state['current_role'] === $role) ? 'selected="selected"' : '' ?>><?php echo $role_name; ?></option>
+                <option value="<?php echo esc_attr($role); ?>" <?php echo ($state['current_role'] === $role) ? 'selected="selected"' : '' ?>><?php echo esc_html($role_name); ?></option>
                 <?php endforeach; ?>
               </select>
             </td>
