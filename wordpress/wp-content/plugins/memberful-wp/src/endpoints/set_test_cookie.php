@@ -1,11 +1,11 @@
 <?php
 
 class Memberful_Wp_Endpoint_Set_Test_Cookie implements Memberful_Wp_Endpoint {
-  public function verify_request( $request_method ) {
-    return $request_method === 'GET';
+  public function verify_request() {
+    return $_SERVER['REQUEST_METHOD'] === 'GET';
   }
 
-  public function process( array $request_params, array $server_params ) {
+  public function process() {
     setcookie(
       'memberful_cookie_test',
       'passed',

@@ -1,11 +1,11 @@
 <?php
 
 class Memberful_Wp_Endpoint_Debug implements Memberful_Wp_Endpoint {
-  public function verify_request( $request_method ) {
+  public function verify_request() {
     if(!is_ssl())
       return false;
 
-    if($request_method !== "GET")
+    if($_SERVER['REQUEST_METHOD'] !== "GET")
       return false;
 
     $memberful_api_key = get_option( "memberful_api_key" );
@@ -24,7 +24,7 @@ class Memberful_Wp_Endpoint_Debug implements Memberful_Wp_Endpoint {
     return true;
   }
 
-  public function process( array $request_params, array $server_params ) {
+  public function process() {
     ob_start();
     memberful_wp_debug();
     print html_entity_decode( strip_tags( ob_get_clean() ), ENT_QUOTES );

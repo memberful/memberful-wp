@@ -5,11 +5,11 @@
  */
 class Memberful_Wp_Endpoint_Webhook implements Memberful_Wp_Endpoint {
 
-  public function verify_request( $request_method ) {
-    return $request_method === 'POST';
+  public function verify_request() {
+    return $_SERVER['REQUEST_METHOD'] === 'POST';
   }
 
-  public function process( array $request_params, array $server_params ) {
+  public function process() {
     $member_id  = NULL;
     $payload = json_decode($this->raw_request_body());
 

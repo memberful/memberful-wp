@@ -20,11 +20,11 @@ add_action( 'wp_loaded', 'memberful_wp_endpoint_filter' );
  */
 function memberful_wp_endpoint_filter() {
   if ( $endpoint = memberful_wp_endpoint_for_request() ) {
-    if ( ! $endpoint->verify_request( $_SERVER['REQUEST_METHOD'] ) )
+    if ( ! $endpoint->verify_request() )
       die( 'Invalid request' );
 
     header('Cache-Control: private');
-    $endpoint->process( $_REQUEST, $_SERVER );
+    $endpoint->process();
     exit();
   }
 }
@@ -64,7 +64,7 @@ interface Memberful_Wp_Endpoint {
   /**
    * Allow the endpoint to process the request
    */
-  public function process( array $request_params, array $server_params );
+  public function process();
 
   /**
    * Checks if the request method is acceptable for this endpoint
@@ -73,5 +73,5 @@ interface Memberful_Wp_Endpoint {
    *
    * @return boolean True if request method is acceptable, else false
    */
-  public function verify_request( $request_method );
+  public function verify_request();
 }
