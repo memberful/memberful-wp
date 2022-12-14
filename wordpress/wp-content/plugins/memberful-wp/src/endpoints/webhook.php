@@ -20,15 +20,15 @@ class Memberful_Wp_Endpoint_Webhook implements Memberful_Wp_Endpoint {
         $member_id = (int) $payload->order->member->id;
       }
 
-      echo 'Processing order webhook for member '.intval($member_id);
+      echo 'Processing order webhook for member '.$member_id;
     } elseif ( strpos( $payload->event, 'member' ) !== FALSE ) {
       $member_id = (int) $payload->member->id;
 
-      echo 'Processing member webhook for member '.intval($member_id);
+      echo 'Processing member webhook for member '.$member_id;
     } elseif ( strpos( $payload->event, 'subscription.' ) !== FALSE ) {
       $member_id = (int) $payload->subscription->member->id;
 
-      echo 'Processing subscription webhook for member '.intval($member_id);
+      echo 'Processing subscription webhook for member '.$member_id;
     } elseif ( strpos( $payload->event, 'subscription_plan' ) !== FALSE ) {
       memberful_wp_sync_subscription_plans();
 
