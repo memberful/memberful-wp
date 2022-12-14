@@ -35,14 +35,14 @@ class Memberful_Wp_Endpoint_Auth implements Memberful_Wp_Endpoint {
   }
 
   private function after_logout_redirect_url() {
-    $url = !empty( $_REQUEST['redirect_to'] ) ? $_REQUEST['redirect_to'] : home_url();
+    $url = !empty( $_REQUEST['redirect_to'] ) ? wp_sanitize_redirect( $_REQUEST['redirect_to'] ) : home_url();
 
     return apply_filters( 'memberful_wp_after_sign_out_url', $url );
   }
 
   private function after_login_redirect_url() {
     if ( isset( $_REQUEST['redirect_to'] ) ) {
-      $url = $_REQUEST['redirect_to'];
+      $url = wp_sanitize_redirect ( $_REQUEST['redirect_to'] );
       $url = preg_match('/^https?%/', $url) ? urldecode($url) : $url;
     } else {
       $url = home_url();

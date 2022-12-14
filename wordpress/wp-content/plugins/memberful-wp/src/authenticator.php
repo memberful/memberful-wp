@@ -110,12 +110,12 @@ class Memberful_Authenticator {
     $redirect_to = get_home_url();
 
     if ( isset( $_SERVER['HTTP_REFERER'] ) ) {
-      $redirect_to = $_SERVER['HTTP_REFERER'];
+      $redirect_to = wp_sanitize_redirect( $_SERVER['HTTP_REFERER'] );
     }
 
     // Allow overriding of redirect location
     if ( isset( $_REQUEST['redirect_to'] ) ) {
-      $redirect_to = $_REQUEST['redirect_to'];
+      $redirect_to = wp_sanitize_redirect( $_REQUEST['redirect_to'] );
     }
 
     // Send the user to Memberful
