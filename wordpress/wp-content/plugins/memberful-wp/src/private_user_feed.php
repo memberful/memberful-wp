@@ -21,7 +21,7 @@ function memberful_private_user_feed_init() {
     return;
 
   // Extract the token from the URL
-  $feedUserToken = $_GET['member-feed'];
+  $feedUserToken = sanitize_text_field( $_GET['member-feed'] );
 
   $requiredPlan = memberful_private_user_feed_settings_get_required_plan();
 
@@ -34,8 +34,8 @@ function memberful_private_user_feed_init() {
   // We'll take "all" users with the token match.
   $user_query = new WP_User_Query(
     array(
-      'meta_key'	  =>	'memberful_private_user_feed_token',
-      'meta_value'	=>	$feedUserToken
+      'meta_key' => 'memberful_private_user_feed_token',
+      'meta_value' => $feedUserToken
     )
   );
 
