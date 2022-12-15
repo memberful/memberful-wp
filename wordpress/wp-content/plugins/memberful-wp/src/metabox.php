@@ -100,17 +100,15 @@ function memberful_wp_save_postdata( $post_id ) {
     $post_id = $parent_id;
   }
 
-  $entities = array( Memberful_ACL::DOWNLOAD, Memberful_ACL::SUBSCRIPTION );
+  $download_ids = array_map( 'intval', (array) $_POST['memberful_product_acl'] );
+  $download_ids = array_intersect( $download_ids, array_keys(memberful_downloads()) );
+  $acl_manager = new Memberful_Post_ACL( 'product' );
+  $acl_manager->set_acl( $post_id, $download_ids );
 
-  foreach ( $entities as $entity ) {
-    $field = 'memberful_'.$entity.'_acl';
-
-    $acl_list = empty($_POST[$field]) ? array() : (array) $_POST[$field];
-
-    $acl_manager = new Memberful_Post_ACL( $entity );
-
-    $acl_manager->set_acl( $post_id, $acl_list );
-  }
+  $subscription_plan_ids = array_map( 'intval', (array) $_POST['memberful_subscription_acl'] );
+  $subscription_plan_ids = array_intersect( $subscription_plan_ids, array_keys(memberful_subscription_plans()) );
+  $acl_manager = new Memberful_Post_ACL( 'subscription' );
+  $acl_manager->set_acl( $post_id, $subscription_plan_ids );
 
   $viewable_by_any_registered_users = isset($_POST['memberful_viewable_by_any_registered_users']) && $_POST['memberful_viewable_by_any_registered_users'] === '1';
   memberful_wp_set_post_available_to_any_registered_users( $post_id, $viewable_by_any_registered_users );
@@ -121,7 +119,7 @@ function memberful_wp_save_postdata( $post_id ) {
   if(!isset($_POST['memberful_marketing_content']))
     return;
 
-  $marketing_content = trim( $_POST['memberful_marketing_content'] );
+  $marketing_content = trim( wp_kses_post( $_POST['memberful_marketing_content'] ) );
 
   memberful_wp_update_post_marketing_content( $post_id, $marketing_content );
 
@@ -158,17 +156,15 @@ function memberful_wp_save_term_metadata( $term_id ) {
   if ( ! memberful_wp_valid_nonce( plugin_basename( __FILE__ ) ) )
     return;
 
-  $entities = array( Memberful_ACL::DOWNLOAD, Memberful_ACL::SUBSCRIPTION );
+  $download_ids = array_map( 'intval', (array) $_POST['memberful_product_acl'] );
+  $download_ids = array_intersect( $download_ids, array_keys( memberful_downloads() ) );
+  $acl_manager = new Memberful_Term_ACL( 'product' );
+  $acl_manager->set_acl( $term_id, $download_ids );
 
-  foreach ( $entities as $entity ) {
-    $field = 'memberful_'.$entity.'_acl';
-
-    $acl_list = empty($_POST[$field]) ? array() : (array) $_POST[$field];
-
-    $acl_manager = new Memberful_Term_ACL( $entity );
-
-    $acl_manager->set_acl( $term_id, $acl_list );
-  }
+  $subscription_plan_ids = array_map( 'intval', (array) $_POST['memberful_subscription_acl'] );
+  $subscription_plan_ids = array_intersect( $subscription_plan_ids, array_keys( memberful_subscription_plans() ) );
+  $acl_manager = new Memberful_Term_ACL( 'subscription' );
+  $acl_manager->set_acl( $term_id, $subscription_plan_ids );
 
   $viewable_by_any_registered_users = isset($_POST['memberful_viewable_by_any_registered_users']) && $_POST['memberful_viewable_by_any_registered_users'] === '1';
   memberful_wp_set_term_available_to_any_registered_users( $term_id, $viewable_by_any_registered_users );
@@ -179,10 +175,9 @@ function memberful_wp_save_term_metadata( $term_id ) {
   if(!isset($_POST['memberful_marketing_content']))
     return;
 
-  $marketing_content = trim( $_POST['memberful_marketing_content'] );
+  $marketing_content = trim( wp_kses_post( $_POST['memberful_marketing_content'] ) );
 
   memberful_wp_update_term_marketing_content( $term_id, $marketing_content );
-
 }
 
 /**
