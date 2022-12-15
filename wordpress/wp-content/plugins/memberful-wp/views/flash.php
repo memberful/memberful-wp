@@ -1,7 +1,7 @@
 <?php if ( $message = Memberful_Wp_Reporting::pop() ): ?>
-<div class="notice is-dismissible <?php echo $message['type'] ?>">
+<div class="notice is-dismissible <?php echo esc_attr($message['type']); ?>">
   <p>
-    <?php echo $message['message'] ?>
+    <?php echo esc_html($message['message']); ?>
   </p>
 </div>
 <?php endif; ?>

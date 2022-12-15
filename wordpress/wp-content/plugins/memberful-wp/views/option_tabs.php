@@ -41,6 +41,6 @@ if ( is_plugin_active( 'bbpress/bbpress.php' ) ) {
 ?>
 <h2 class="nav-tab-wrapper">
 <?php foreach($links as $link): ?>
-  <a href="<?php echo $link['url']; ?>" id="nav_tab_<?php echo $link['id']; ?>" class="nav-tab <?php echo $link['id'] === $active ? 'nav-tab-active' : '' ?>"><?php echo $link['title']; ?></a>
+  <a href="<?php echo esc_url($link['url']); ?>" id="nav_tab_<?php echo esc_attr($link['id']); ?>" class="nav-tab <?php echo $link['id'] === $active ? esc_attr('nav-tab-active') : '' ?>"><?php echo esc_html($link['title']); ?></a>
 <?php endforeach; ?>
 </h2>

@@ -77,8 +77,8 @@ if ( ! class_exists( 'Memberful_WP_Profile_Widget' ) ) :
       $title = ( isset( $instance[ 'title' ] ) ) ? $instance[ 'title' ] : 'Your account';
 ?>
     <p>
-      <label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:' ); ?></label>
-      <input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
+      <label for="<?php echo esc_attr($this->get_field_id( 'title' )); ?>"><?php _e( 'Title:' ); ?></label>
+      <input class="widefat" id="<?php echo esc_attr($this->get_field_id( 'title' )); ?>" name="<?php echo esc_attr($this->get_field_name( 'title' )); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
     </p>
 <?php
     }
@@ -121,7 +121,7 @@ function memberful_wp_add_stylesheet_if_action() {
 
 function memberful_wp_format_widget_links( $links ) {
   foreach ( $links as $key => $link ) {
-    $links[$key] = '<a href="'.$link['href'].'" class="'.$link['class'].'">'.$link['text'].'</a>';
+    $links[$key] = '<a href="'.esc_url($link['href']).'" class="'.esc_attr($link['class']).'">'.esc_html($link['text']).'</a>';
   }
 
   return implode( ' <span class="memberful-links-separator">|</span> ', $links );

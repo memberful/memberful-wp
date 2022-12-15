@@ -20,7 +20,7 @@ query_posts(array(
   'posts_per_page'  => get_option( 'posts_per_rss', 10 )
 ));
 
-echo '<?xml version="1.0" encoding="'.get_option('blog_charset').'"?'.'>';
+echo '<?xml version="1.0" encoding="'.esc_attr(get_option('blog_charset')).'"?'.'>';
 
 do_action( 'rss_tag_pre', 'rss2' );
 ?>
@@ -37,10 +37,10 @@ do_action( 'rss_tag_pre', 'rss2' );
     <?php endif; ?>
     <?php do_action('rss2_ns'); ?>>
   <channel>
-    <title><?php echo memberful_private_user_feed_title(); ?></title>
+    <title><?php echo esc_html(memberful_private_user_feed_title()); ?></title>
     <atom:link href="<?php self_link(); ?>" rel="self" type="application/rss+xml" />
     <link><?php bloginfo_rss('url') ?></link>
-    <description><?php echo memberful_private_user_feed_description(); ?></description>
+    <description><?php echo esc_html(memberful_private_user_feed_description()); ?></description>
     <lastBuildDate><?php echo mysql2date('D, d M Y H:i:s +0000', get_lastpostmodified('GMT'), false); ?></lastBuildDate>
     <language><?php bloginfo_rss( 'language' ); ?></language>
     <?php if (get_option('memberful_add_block_tags_to_rss_feed')): ?>
@@ -58,7 +58,7 @@ $duration = 'hourly';
  * @param string $duration The update period. Accepts 'hourly', 'daily', 'weekly', 'monthly',
  *                         'yearly'. Default 'hourly'.
  */
-echo apply_filters( 'rss_update_period', $duration );
+echo esc_html(apply_filters( 'rss_update_period', $duration ));
 ?></sy:updatePeriod>
   <sy:updateFrequency><?php
 $frequency = '1';
@@ -71,7 +71,7 @@ $frequency = '1';
  * @param string $frequency An integer passed as a string representing the frequency
  *                          of RSS updates within the update period. Default '1'.
  */
-echo apply_filters( 'rss_update_frequency', $frequency );
+echo esc_html(apply_filters( 'rss_update_frequency', $frequency ));
 ?></sy:updateFrequency>
 <?php
 /**

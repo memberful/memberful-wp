@@ -10,6 +10,8 @@ class Memberful_Wp_Endpoint_Webhook implements Memberful_Wp_Endpoint {
   }
 
   public function process() {
+    header("Content-Type: text/plain");
+
     $member_id  = NULL;
     $payload = json_decode($this->raw_request_body());
 

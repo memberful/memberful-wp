@@ -105,7 +105,7 @@ function memberful_private_rss_feed_link($success_message = '', $error_message =
     $link = add_query_arg('category', $category, $link);
 
   if($success_message != '')
-    $link = '<a href="' . $link . '">' . do_shortcode($success_message) . '</a>';
+    $link = '<a href="' . esc_url($link) . '">' . do_shortcode($success_message) . '</a>';
 
   return memberful_private_rss_feed_link_response_helper($link, $return);
 }
@@ -114,7 +114,7 @@ function memberful_private_rss_feed_link_response_helper($response, $return = fa
   if($return)
     return $response;
 
-  echo $response;
+  echo wp_kses_post($response);
 
   return '';
 }

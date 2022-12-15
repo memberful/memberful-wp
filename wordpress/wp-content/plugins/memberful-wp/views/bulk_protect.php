@@ -16,7 +16,7 @@
     </div>
   <?php } ?>
 
-  <form method="POST" action="<?php echo $form_target ?>">
+  <form method="POST" action="<?php echo esc_url($form_target); ?>">
     <div class="memberful-bulk-apply-box">
       <h3><?php _e( "Bulk apply restrict access settings", 'memberful' ); ?></h3>
       <p>
@@ -32,12 +32,12 @@
           <option value="all_posts"><?php _e( "All Posts", 'memberful' ); ?></option>
           <option value="all_posts_from_category"><?php _e( "All Posts from a category or categories", 'memberful' ); ?></option>
           <?php foreach(memberful_additional_post_types_to_protect() as $post_type): ?>
-            <option value="<?php echo $post_type->name ?>"><?php echo $post_type->labels->all_items ?></option>
+            <option value="<?php echo esc_attr($post_type->name); ?>"><?php echo esc_html($post_type->labels->all_items); ?></option>
           <?php endforeach; ?>
         </select>
         <ul data-depends-on="global-restrict-target" data-depends-value="all_posts_from_category" class="memberful-global-restrict-access-category-list">
           <?php foreach(get_categories() as $category): ?>
-            <li><label><input type="checkbox"  name="memberful_protect_categories[]" value="<?php echo $category->cat_ID ?>"><?php echo $category->cat_name; ?></option></label></li>
+            <li><label><input type="checkbox"  name="memberful_protect_categories[]" value="<?php echo esc_attr($category->cat_ID); ?>"><?php echo esc_html($category->cat_name); ?></label></li>
       <?php endforeach; ?>
         </ul>
           <p>

@@ -1,7 +1,7 @@
 <div class="wrap">
   <?php memberful_wp_render('option_tabs', array('active' => 'protect_bbpress')); ?>
   <?php memberful_wp_render('flash'); ?>
-  <form method="POST" action="<?php echo $form_target ?>">
+  <form method="POST" action="<?php echo esc_url($form_target); ?>">
     <?php memberful_wp_nonce_field( 'memberful_options' ); ?>
     <div class="memberful-bbpress-enable">
       <label>
