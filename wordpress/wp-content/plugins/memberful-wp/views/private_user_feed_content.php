@@ -10,8 +10,7 @@ remove_all_filters('the_excerpt_rss');
 remove_filter('the_content', 'memberful_wp_protect_content', 100);
 
 $post_types = array("post");
-$category = $_GET['category'] ?? '';
-$category = sanitize_term_field( 'slug', $category, 0, 'category', 'db' );
+$category = ( isset( $_GET['category'] ) ) ? sanitize_term_field( 'slug', $_GET['category'], 0, 'category', 'db' ) : '';
 
 query_posts(array(
   'category__in'    => apply_filters( 'memberful_private_rss_category_ids', array() ),
