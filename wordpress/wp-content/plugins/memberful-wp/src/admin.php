@@ -378,10 +378,15 @@ function memberful_wp_advanced_settings() {
   $current_inactive_role = memberful_wp_role_for_inactive_customer();
 
   if ( ! empty( $_POST ) ) {
-    $new_active_role   = isset( $_POST['role_mappings']['active_customer'] ) ? $_POST['role_mappings']['active_customer'] : '';
-    $new_inactive_role = isset( $_POST['role_mappings']['inactive_customer'] ) ? $_POST['role_mappings']['inactive_customer'] : '';
+    if ( isset( $_POST['role_mappings']['active_customer'] ) && array_key_exists( $_POST['role_mappings']['active_customer'], $allowed_roles ) ) {
+      $new_active_role = $_POST['role_mappings']['active_customer'];
+    }
 
-    if ( array_key_exists( $new_active_role, $allowed_roles ) && array_key_exists( $new_inactive_role, $allowed_roles ) ) {
+    if ( isset( $_POST['role_mappings']['inactive_customer'] ) && array_key_exists( $_POST['role_mappings']['inactive_customer'], $allowed_roles ) ) {
+      $new_inactive_role = $_POST['role_mappings']['inactive_customer'];
+    }
+
+    if ( isset($new_active_role) && isset($new_inactive_role) ) {
       update_option( 'memberful_role_active_customer', $new_active_role );
       update_option( 'memberful_role_inactive_customer', $new_inactive_role );
 
@@ -454,7 +459,7 @@ function memberful_wp_bulk_protect() {
         break;
       default:
         if ( in_array( $_POST['target_for_restriction'], array_keys( memberful_additional_post_types_to_protect() ) ) ) {
-          $query_params['post_type'] = $_POST['target_for_restriction'];
+          $query_params['post_type'] = sanitize_text_field($_POST['target_for_restriction']);
         } else {
           wp_die("Invalid request");
         }
@@ -499,13 +504,23 @@ function memberful_wp_protect_bbpress() {
   if ( ! empty( $_POST ) ) {
     $protection_enabled = isset( $_POST['memberful_protect_bbpress'] );
 
-    $required_downloads = empty( $_POST['memberful_product_acl'] ) ? array() : (array) $_POST['memberful_product_acl'];
-    $required_downloads = array_map( 'intval', $required_downloads );
-    $required_downloads = array_intersect( $required_downloads, array_keys( memberful_downloads() ) );
+    if ( empty( $_POST['memberful_product_acl'] ) ) {
+      $required_downloads = array();
+    } else {
+      $required_downloads = array_intersect(
+        array_map('intval', (array) $_POST['memberful_product_acl']),
+        array_keys( memberful_downloads() )
+      );
+    }
 
-    $required_subscription_plans = empty( $_POST['memberful_subscription_acl'] ) ? array() : (array) $_POST['memberful_subscription_acl'];
-    $required_subscription_plans = array_map( 'intval', $required_subscription_plans );
-    $required_subscription_plans = array_intersect( $required_subscription_plans, array_keys( memberful_subscription_plans() ) );
+    if ( empty( $_POST['memberful_subscription_acl'] ) ) {
+      $required_subscription_plans = array();
+    } else {
+      $required_subscription_plans = array_intersect(
+        array_map('intval', (array) $_POST['memberful_subscription_acl']),
+        array_keys( memberful_subscription_plans() )
+      );
+    }
 
     $viewable_by_any_registered_user = isset( $_POST['memberful_viewable_by_any_registered_users'] );
     $viewable_by_anybody_subscribed_to_a_plan = isset( $_POST['memberful_viewable_by_anybody_subscribed_to_a_plan'] );
