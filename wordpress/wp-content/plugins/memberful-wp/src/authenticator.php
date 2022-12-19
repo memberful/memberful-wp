@@ -100,11 +100,7 @@ class Memberful_Authenticator {
 
       return $user;
     } elseif ( isset( $_GET['error'] ) ) {
-      // For some reason we got an error code.
-      return $this->_error(
-        'memberful_oauth_error',
-        ( isset( $_GET['error'] ) ? $_GET['error'] : __( "Unknown error.", "memberful") )
-      );
+      return $this->_error('memberful_oauth_error', wp_kses_post($_GET['error']));
     }
 
     $redirect_to = get_home_url();
