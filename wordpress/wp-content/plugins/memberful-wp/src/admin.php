@@ -379,11 +379,11 @@ function memberful_wp_advanced_settings() {
 
   if ( ! empty( $_POST ) ) {
     if ( isset( $_POST['role_mappings']['active_customer'] ) && array_key_exists( $_POST['role_mappings']['active_customer'], $allowed_roles ) ) {
-      $new_active_role = $_POST['role_mappings']['active_customer'];
+      $new_active_role = sanitize_text_field($_POST['role_mappings']['active_customer']);
     }
 
     if ( isset( $_POST['role_mappings']['inactive_customer'] ) && array_key_exists( $_POST['role_mappings']['inactive_customer'], $allowed_roles ) ) {
-      $new_inactive_role = $_POST['role_mappings']['inactive_customer'];
+      $new_inactive_role = sanitize_text_field($_POST['role_mappings']['inactive_customer']);
     }
 
     if ( isset($new_active_role) && isset($new_inactive_role) ) {

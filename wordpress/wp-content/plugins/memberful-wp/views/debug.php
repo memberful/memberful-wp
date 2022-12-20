@@ -5,13 +5,13 @@ Generated on: <?php echo date("Y-m-d H:i:s O"); ?>
 
 
 # Meta:
-WordPress: <?php echo $wp_version ?>
+WordPress: <?php echo esc_html($wp_version); ?>
 
-Site URL: <?php echo site_url(); ?>
+Site URL: <?php echo esc_url(site_url()); ?>
 
-Home URL: <?php echo home_url(); ?>
+Home URL: <?php echo esc_url(home_url()); ?>
 
-PHP version: <?php echo phpversion(); ?>
+PHP version: <?php echo esc_html(phpversion()); ?>
 
 
 # Plugins
