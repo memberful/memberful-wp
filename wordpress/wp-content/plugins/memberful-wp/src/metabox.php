@@ -100,12 +100,14 @@ function memberful_wp_save_postdata( $post_id ) {
     $post_id = $parent_id;
   }
 
-  $download_ids = array_map( 'intval', (array) $_POST['memberful_product_acl'] );
+  $download_ids = empty($_POST['memberful_product_acl']) ? array() : (array) $_POST['memberful_product_acl'];
+  $download_ids = array_map( 'intval', $download_ids );
   $download_ids = array_intersect( $download_ids, array_keys(memberful_downloads()) );
   $acl_manager = new Memberful_Post_ACL( 'product' );
   $acl_manager->set_acl( $post_id, $download_ids );
 
-  $subscription_plan_ids = array_map( 'intval', (array) $_POST['memberful_subscription_acl'] );
+  $subscription_plan_ids = empty($_POST['memberful_subscription_acl']) ? array() : (array) $_POST['memberful_subscription_acl'];
+  $subscription_plan_ids = array_map( 'intval', $subscription_plan_ids );
   $subscription_plan_ids = array_intersect( $subscription_plan_ids, array_keys(memberful_subscription_plans()) );
   $acl_manager = new Memberful_Post_ACL( 'subscription' );
   $acl_manager->set_acl( $post_id, $subscription_plan_ids );
@@ -156,12 +158,14 @@ function memberful_wp_save_term_metadata( $term_id ) {
   if ( ! memberful_wp_valid_nonce( plugin_basename( __FILE__ ) ) )
     return;
 
-  $download_ids = array_map( 'intval', (array) $_POST['memberful_product_acl'] );
+  $download_ids = empty($_POST['memberful_product_acl']) ? array() : (array) $_POST['memberful_product_acl'];
+  $download_ids = array_map( 'intval', $download_ids );
   $download_ids = array_intersect( $download_ids, array_keys( memberful_downloads() ) );
   $acl_manager = new Memberful_Term_ACL( 'product' );
   $acl_manager->set_acl( $term_id, $download_ids );
 
-  $subscription_plan_ids = array_map( 'intval', (array) $_POST['memberful_subscription_acl'] );
+  $subscription_plan_ids = empty($_POST['memberful_subscription_acl']) ? array() : (array) $_POST['memberful_subscription_acl'];
+  $subscription_plan_ids = array_map( 'intval', $subscription_plan_ids );
   $subscription_plan_ids = array_intersect( $subscription_plan_ids, array_keys( memberful_subscription_plans() ) );
   $acl_manager = new Memberful_Term_ACL( 'subscription' );
   $acl_manager->set_acl( $term_id, $subscription_plan_ids );
