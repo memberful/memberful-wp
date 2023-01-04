@@ -3,8 +3,6 @@
 add_action( 'the_content', 'memberful_wp_protect_content', 100 );
 
 function memberful_wp_protect_content( $content ) {
-  global $post;
-
   if(doing_filter('memberful_wp_protect_content')){
     return $content;
   }
@@ -13,19 +11,25 @@ function memberful_wp_protect_content( $content ) {
     return $content;
   }
 
-  if ( ! memberful_can_user_access_post( wp_get_current_user()->ID, $post->ID ) ) {
+  $post_id = get_the_ID();
+
+  if (!$post_id) {
+    // TODO
+  }
+
+  if ( ! memberful_can_user_access_post( wp_get_current_user()->ID, $post_id ) ) {
     // Disable Beaver Builder
     remove_action( "the_content", "FLBuilder::render_content" );
 
     // Remove Elementor action hook
-    if (get_queried_object_id() === $post->ID) {
+    if (get_queried_object_id() === $post_id) {
       remove_action("elementor/frontend/the_content", "memberful_wp_protect_content");
     }
 
     // Remove media enclosures from the RSS feed
     add_filter("rss_enclosure", "__return_empty_string");
 
-    $memberful_marketing_content = memberful_marketing_content( $post->ID );
+    $memberful_marketing_content = memberful_marketing_content( $post_id );
     return apply_filters( 'memberful_wp_protect_content', $memberful_marketing_content );
   }
 
