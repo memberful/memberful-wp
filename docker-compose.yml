@@ -1,6 +1,26 @@
 version: "3.3"
 
 services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.1.0
+    container_name: elasticsearch
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    ports: 
+      - 9200:9200
+    environment:
+      - xpack.security.enabled=false
+      - xpack.security.http.ssl.enabled=false
+      - discovery.type=single-node
+      - bootstrap.system_call_filter=false
+    mem_limit: 4294967296
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    cap_add:
+      - IPC_LOCK
+
   db:
     image: mariadb:latest
     ports:
@@ -33,3 +53,5 @@ services:
 
 volumes:
   db_data: {}
+  elasticsearch_data:
+    driver: local
