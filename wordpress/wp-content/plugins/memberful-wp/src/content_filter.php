@@ -5,6 +5,12 @@ add_action( 'the_content', 'memberful_wp_protect_content', 100 );
 function memberful_wp_protect_content( $content ) {
   global $post;
 
+  if ( !isset( $post ) ) {
+    # Return the content since we're not in the loop if `$post` is `NULL`
+    # Temporary fix for Elasticpress' syncing issue
+    return $content;
+  }
+
   if(doing_filter('memberful_wp_protect_content')){
     return $content;
   }
