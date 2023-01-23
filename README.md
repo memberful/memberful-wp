@@ -74,8 +74,23 @@ segment is a separate number. i.e. `1.12.0` > `1.11.0`.
 
 ### Prerequisites
 
-* Make sure you're added as a committer in Wordpress.
-* Add `export $MEMBERFUL_SVN_USERNAME=<YOUR_SVN_USERNAME>` to your `~/.zshrc` / `~/.bashrc`. The deploy script uses the `$MEMBERFUL_SVN_USERNAME` variable as the username when pushing to SVN. You'll be prompted to enter your password if you haven't authenticated your SVN user to the Wordpress server.
+Make sure you're added as a committer in Wordpress.
+
+The release script retrieves the Wordpress committer username from the `svn` server config file. 
+
+To setup, enter `~/.subversion/servers` and add a group with a URL match for WP's server URL, as well as your WP username, like so:
+
+```
+[groups]
+
+memberful-wp = plugins.svn.wordpress.org
+
+[memberful-wp]
+
+username = YOUR_WP_COMMITTER_USERNAME
+```
+
+Any `svn` actions to `plugins.svn.wordpress.org` that require authentication will then use the username from the config file.
 
 ### Release steps
 
