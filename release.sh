@@ -20,7 +20,6 @@ SVN_COMMIT_MESSAGE="Tagging version $VERSION"
 SVN_LOCAL_PATH="/tmp/$PLUGIN_SLUG"
 SVN_TRUNK_PATH="$SVN_LOCAL_PATH/trunk"
 SVN_URL="https://plugins.svn.wordpress.org/$PLUGIN_SLUG/"
-SVN_USER=memberful
 
 check_current_branch() {
   if [ "$CURRENT_BRANCH" != "$MAIN_BRANCH" ]; then
@@ -76,7 +75,7 @@ push_to_wordpress_svn() {
   done
 
   echo "Commiting to trunk"
-  svn commit --username "$SVN_USER" -m "$SVN_COMMIT_MESSAGE"
+  svn commit -m "$SVN_COMMIT_MESSAGE"
 
   echo "Tagging version $VERSION"
   cd $SVN_LOCAL_PATH
@@ -85,7 +84,7 @@ push_to_wordpress_svn() {
   fi
   svn copy trunk tags/$VERSION
   cd tags/$VERSION
-  svn commit --username "$SVN_USER" -m "$SVN_COMMIT_MESSAGE"
+  svn commit -m "$SVN_COMMIT_MESSAGE"
 
   echo "Removing temporary directory $SVN_LOCAL_PATH"
   rm -fr $SVN_LOCAL_PATH

@@ -72,6 +72,28 @@ segment is a separate number. i.e. `1.12.0` > `1.11.0`.
 
 ## Releasing a new version of the plugin
 
+### Prerequisites
+
+Make sure you're added as a committer in Wordpress.
+
+The release script retrieves the Wordpress committer username from the `svn` server config file. 
+
+To setup, enter `~/.subversion/servers` and add a group with a URL match for WP's server URL, as well as your WP username, like so:
+
+```
+[groups]
+
+memberful-wp = plugins.svn.wordpress.org
+
+[memberful-wp]
+
+username = YOUR_WP_COMMITTER_USERNAME
+```
+
+Any `svn` actions to `plugins.svn.wordpress.org` that require authentication will then use the username from the config file.
+
+### Release steps
+
 * Make sure that every change has an appropriate changelog entry in `readme.txt`.
 * Set correct version number in `readme.txt` and `memberful-wp.php`.
 * Ensure that all changes are ready in the `main` branch.
@@ -80,7 +102,7 @@ segment is a separate number. i.e. `1.12.0` > `1.11.0`.
   version you tagged will be copied across to the `tags` and `trunk`
   directories, (sans development files) and then committed to the svn repo,
   causing wordpress.org to release a new version.
-* The script will remove the svn directory.
+* The script will remove the `svn` directory.
 
 ### Updating WordPress SVN without a new plugin version
 
