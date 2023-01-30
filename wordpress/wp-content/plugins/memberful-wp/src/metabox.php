@@ -34,6 +34,10 @@ function memberful_wp_add_metabox() {
 }
 
 function memberful_wp_metabox( $post ) {
+  error_log( 'inside metabox' );
+  error_log( 'metabox post type' );
+  error_log( gettype( $post ) );
+
   wp_nonce_field( plugin_basename( __FILE__ ), 'memberful_nonce' );
 
   $view_vars = array();
@@ -123,6 +127,9 @@ function memberful_wp_save_postdata( $post_id ) {
 
   $marketing_content = trim( wp_kses_post( $_POST['memberful_marketing_content'] ) );
 
+  error_log( 'memberful marketing content' );
+  error_log( $_POST['memberful_marketing_content'] );
+
   memberful_wp_update_post_marketing_content( $post_id, $marketing_content );
 
 }
@@ -180,6 +187,9 @@ function memberful_wp_save_term_metadata( $term_id ) {
     return;
 
   $marketing_content = trim( wp_kses_post( $_POST['memberful_marketing_content'] ) );
+
+  error_log( 'memberful marketing content' );
+  error_log( $_POST['memberful_marketing_content'] );
 
   memberful_wp_update_term_marketing_content( $term_id, $marketing_content );
 }
