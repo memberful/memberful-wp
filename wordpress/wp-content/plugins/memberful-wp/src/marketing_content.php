@@ -14,6 +14,9 @@ function memberful_marketing_content( $post_id ) {
     $marketing_content = memberful_term_marketing_content( $term );
   }
 
+  $embed = new WP_Embed();
+  $marketing_content = $embed->autoembed( $marketing_content );
+
   return apply_filters( 'memberful_marketing_content', $marketing_content );
 }
 
