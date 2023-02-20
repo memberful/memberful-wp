@@ -30,8 +30,8 @@ An easy way to work with the CLI from outside the container is to take the `wp()
 ```bash
 wp() {
   docker run -it --rm \
-    --volumes-from memberful-wp_wordpress_1 \
-    --network container:memberful-wp_wordpress_1 \
+    --volumes-from memberful-wp-wordpress-1 \
+    --network container:memberful-wp-wordpress-1 \
     --env-file envfile \
     --user 33:33 \
     wordpress:cli wp $@
