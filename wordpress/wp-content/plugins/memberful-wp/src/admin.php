@@ -629,6 +629,11 @@ function memberful_wp_global_marketing() {
       update_option( 'memberful_use_global_marketing', true );
       update_option( 'memberful_global_marketing_override', filter_input( INPUT_POST, 'memberful_global_marketing_override', FILTER_SANITIZE_NUMBER_INT ) );
       update_option( 'memberful_global_marketing_content', filter_input( INPUT_POST, 'memberful_global_marketing_content' ) );
+
+      // error_log('Updating memberful_use_global_snippets without typecasted value');
+      // update_option ( 'memberful_use_global_snippets', isset($_POST['memberful_use_global_snippets']));
+
+      error_log('Updating memberful_use_global_snippets with typecasted value');
       update_option ( 'memberful_use_global_snippets', (int) isset($_POST['memberful_use_global_snippets']));
     } else {
       update_option( 'memberful_use_global_marketing', false );
@@ -637,6 +642,7 @@ function memberful_wp_global_marketing() {
 
   $use_global_marketing = get_option( 'memberful_use_global_marketing' );
   $use_global_snippets = get_option( 'memberful_use_global_snippets');
+  error_log('Value of memberful_use_global_snippets after update: ' . $use_global_snippets);
   $global_marketing_content = get_option( 'memberful_global_marketing_content' );
   $global_marketing_override = get_option( 'memberful_global_marketing_override', true );
 
