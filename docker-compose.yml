@@ -13,6 +13,8 @@ services:
       MARIADB_DATABASE: wordpress
       MARIADB_USER: wordpress
       MARIADB_PASSWORD: wordpress
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   wordpress:
     depends_on:
@@ -30,6 +32,17 @@ services:
     extra_hosts:
       - "apps.memberful.localhost:host-gateway"
       - "ttf.memberful.localhost:host-gateway"
+      - "host.docker.internal:host-gateway"
+
+  redis:
+    image: redis:latest
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    volumes:
+      - cache:/data
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
 volumes:
+  cache: {}
   db_data: {}
