@@ -47,9 +47,6 @@ function memberful_wp_is_connected_to_site() {
 
 function memberful_wp_register_options() {
   foreach ( memberful_wp_all_options() as $option => $default ) {
-    if ($option === 'memberful_use_global_snippets') {
-      error_log('Setting memberful_use_global_snippets to ' . $default . ' via memberful_wp_register_options()');
-    }
     add_option( $option, $default );
   }
 }
