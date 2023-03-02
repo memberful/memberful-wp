@@ -96,7 +96,7 @@ class Memberful_Wp_Integration_Sfwd_Learndash {
    * @return string
    */
   function memberful_wp_protect_learndash_content( $content, $post_id ) {
-    $memberful_marketing_content = wp_kses_post( memberful_marketing_content( $post_id ) );
+    $memberful_marketing_content = memberful_wp_kses_post( memberful_marketing_content( $post_id ) );
     return apply_filters( 'memberful_wp_protect_content', $memberful_marketing_content );
   }
 

@@ -121,7 +121,7 @@ function memberful_wp_save_postdata( $post_id ) {
   if(!isset($_POST['memberful_marketing_content']))
     return;
 
-  $marketing_content = trim( wp_kses_post( $_POST['memberful_marketing_content'] ) );
+  $marketing_content = trim( memberful_wp_kses_post( $_POST['memberful_marketing_content'] ) );
 
   memberful_wp_update_post_marketing_content( $post_id, $marketing_content );
 
@@ -179,7 +179,7 @@ function memberful_wp_save_term_metadata( $term_id ) {
   if(!isset($_POST['memberful_marketing_content']))
     return;
 
-  $marketing_content = trim( wp_kses_post( $_POST['memberful_marketing_content'] ) );
+  $marketing_content = trim( memberful_wp_kses_post( $_POST['memberful_marketing_content'] ) );
 
   memberful_wp_update_term_marketing_content( $term_id, $marketing_content );
 }
