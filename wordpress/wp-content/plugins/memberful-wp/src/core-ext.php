@@ -40,6 +40,25 @@ function memberful_wp_allowed_hosts( $hosts ) {
   return $hosts;
 }
 
+function memberful_wp_kses_post( $string ) {
+  $allowed_html = array_merge(
+    wp_kses_allowed_html( 'post' ),
+    array(
+      'iframe' => array(
+        'allow' => true,
+        'allowfullscreen' => true,
+        'frameborder' => true,
+        'height' => true,
+        'loading' => true,
+        'src' => true,
+        'width' => true
+      )
+    )
+  );
+
+  return wp_kses( $string, $allowed_html );
+}
+
 function memberful_wp_render( $template, array $vars = array() ) {
   extract( $vars );
 

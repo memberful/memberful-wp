@@ -430,7 +430,7 @@ function memberful_wp_bulk_protect() {
     $acl_for_subscriptions = array_map( 'intval', $acl_for_subscriptions );
     $acl_for_subscriptions = array_intersect( $acl_for_subscriptions, array_keys( memberful_subscription_plans() ) );
 
-    $marketing_content = trim( wp_kses_post( $_POST['memberful_marketing_content'] ) );
+    $marketing_content = trim( memberful_wp_kses_post( $_POST['memberful_marketing_content'] ) );
     $viewable_by_any_registered_user = isset( $_POST['memberful_viewable_by_any_registered_users'] );
     $viewable_by_anybody_subscribed_to_a_plan = isset( $_POST['memberful_viewable_by_anybody_subscribed_to_a_plan'] );
 
@@ -628,7 +628,7 @@ function memberful_wp_global_marketing() {
     if ( isset( $_POST['memberful_use_global_marketing'] ) ) {
       update_option( 'memberful_use_global_marketing', true );
       update_option( 'memberful_global_marketing_override', filter_input( INPUT_POST, 'memberful_global_marketing_override', FILTER_SANITIZE_NUMBER_INT ) );
-      update_option( 'memberful_global_marketing_content', filter_input( INPUT_POST, 'memberful_global_marketing_content' ) );
+      update_option( 'memberful_global_marketing_content', memberful_wp_kses_post( $_POST['memberful_global_marketing_content'] ) );
       update_option( 'memberful_use_global_snippets', (int) isset($_POST['memberful_use_global_snippets']));
     } else {
       update_option( 'memberful_use_global_marketing', false );

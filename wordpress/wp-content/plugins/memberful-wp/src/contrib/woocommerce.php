@@ -70,7 +70,7 @@ class Memberful_Wp_Integration_WooCommerce {
   }
 
   function memberful_wp_protect_woo_content( $post_id ) {
-    $memberful_marketing_content = wp_kses_post( memberful_marketing_content( $post_id ) );
+    $memberful_marketing_content = memberful_wp_kses_post( memberful_marketing_content( $post_id ) );
     return apply_filters( 'memberful_wp_protect_content', $memberful_marketing_content );
   }
 
