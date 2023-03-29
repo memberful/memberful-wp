@@ -1,6 +1,6 @@
 <?php
 
-add_action('wp_head', 'memberful_wp_render_embed' );
+add_action( 'wp_head', 'memberful_wp_render_embed' );
 
 function memberful_wp_render_embed() {
   if ( ! get_option( 'memberful_embed_enabled', FALSE ) || ! memberful_wp_is_connected_to_site() )
@@ -11,7 +11,7 @@ function memberful_wp_render_embed() {
   if ( $custom_domain ) {
     $site_option = array( 'https://'.$custom_domain , get_option( 'memberful_site' ) );
   } else {
-    $site_option = get_option( 'memberful_site' );
+    $site_option = array( get_option( 'memberful_site' ) );
   }
 
   memberful_wp_render(
@@ -24,5 +24,5 @@ function memberful_wp_render_embed() {
 }
 
 function memberful_wp_embed_script_src() {
-  return MEMBERFUL_EMBED_HOST.'/assets/embedded.js';
+  return MEMBERFUL_EMBED_HOST.'/embed.js';
 }

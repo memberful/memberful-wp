@@ -25,7 +25,7 @@ if ( ! defined( 'MEMBERFUL_APPS_HOST' ) )
   define( 'MEMBERFUL_APPS_HOST', 'https://apps.memberful.com' );
 
 if ( ! defined( 'MEMBERFUL_EMBED_HOST' ) )
-  define( 'MEMBERFUL_EMBED_HOST', 'https://d35xxde4fgg0cx.cloudfront.net');
+  define( 'MEMBERFUL_EMBED_HOST', 'https://js.memberful.com');
 
 // Should requests to memberful check the SSL certificate?
 if ( ! defined( 'MEMBERFUL_SSL_VERIFY' ) )
