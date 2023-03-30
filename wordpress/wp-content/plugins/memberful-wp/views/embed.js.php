@@ -1,19 +1,10 @@
 <script type="text/javascript">
-  window.MemberfulOptions = {
-    site: <?php echo json_encode($site_option); ?>,
-    memberSignedIn: <?php echo is_user_logged_in() ? 'true' : 'false'; ?>
-  };
-
-  (function() {
-    var s = document.createElement('script');
-    s.type = 'text/javascript';
-    s.async = true;
-    s.src = '<?php echo esc_url($script_src); ?>';
-
-    setup = function() { window.MemberfulEmbedded.setup(); };
-
-    s.addEventListener("load", setup, false);
-
-    ( document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0] ).appendChild( s );
-  })();
+  (function(c) {
+    var script = document.createElement("script");
+    script.src = "<?php echo esc_url($script_src); ?>";
+    script.onload = function() { Memberful.setup(c) };
+    document.head.appendChild(script);
+  })({
+    site: <?php echo json_encode($site_option); ?>
+  });
 </script>

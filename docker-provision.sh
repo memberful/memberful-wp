@@ -24,7 +24,7 @@ echo "Activating Memberful WP plugin"
 wp plugin activate memberful-wp
 wp widget add memberful_wp_profile_widget sidebar-1 1
 wp config set MEMBERFUL_APPS_HOST "http://apps.memberful.localhost"
-wp config set MEMBERFUL_EMBED_HOST "http://apps.memberful.localhost"
+wp config set MEMBERFUL_EMBED_HOST "http://js.memberful.localhost"
 wp config set MEMBERFUL_SSL_VERIFY false --raw
 
 if [ -x "$(command -v puma-dev)" ]; then 
