@@ -628,7 +628,7 @@ function memberful_wp_global_marketing() {
     if ( isset( $_POST['memberful_use_global_marketing'] ) ) {
       update_option( 'memberful_use_global_marketing', true );
       update_option( 'memberful_global_marketing_override', filter_input( INPUT_POST, 'memberful_global_marketing_override', FILTER_SANITIZE_NUMBER_INT ) );
-      update_option( 'memberful_global_marketing_content', memberful_wp_kses_post( $_POST['memberful_global_marketing_content'] ) );
+      update_option( 'memberful_global_marketing_content', memberful_wp_kses_post( filter_input( INPUT_POST, 'memberful_global_marketing_content' ) ) );
       update_option( 'memberful_use_global_snippets', (int) isset($_POST['memberful_use_global_snippets']));
     } else {
       update_option( 'memberful_use_global_marketing', false );
