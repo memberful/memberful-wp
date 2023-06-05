@@ -9,7 +9,7 @@
             <?php if ( ! empty( $subscription_plans ) ) : ?>
               <div id="memberful-private-user-feed-subscription-list">
                 <h3><?php _e( 'Enable private user RSS feeds', 'memberful' ); ?></h3>
-                <p><?php _e( "Provide a private RSS feed of <strong>ALL POSTS</strong> for active subscribers to these Subscription Plans:", 'memberful' ); ?></p>
+                <p><?php _e( "Provide a private RSS feed for active subscribers to the following Plans. Members will get access to <strong>ALL POSTS</strong> on the site, regardless of which plan they are subscribed to.", 'memberful' ); ?></p>
                 <ul>
                   <?php foreach($subscription_plans as $id => $subscription): ?>
                     <li>
