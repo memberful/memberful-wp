@@ -19,6 +19,23 @@ class Memberful_User_Map {
    * @return WP_User
    */
   public function map( $member, array $context = array() ) {
+    if (isset($member->deleted)) {
+      $mapping_from_member = $this->repository()->find_user_member_is_mapped_to($member);
+
+      if ($mapping_from_member['mapping_exists']) {
+        return $mapping_from_member['user'];
+      } else {
+        return $this->add_data_to_wp_error(
+          new WP_Error(
+            'user_does_not_exist',
+            'The Wordpress user with the given member_id does not exist',
+            array('member_id' => $member->id)
+          ),
+          compact('member')
+        );
+      }
+    }
+
     $existing_user_with_members_email = get_user_by( 'email', $member->email );
 
     $mapping_from_member = $this->repository()->find_user_member_is_mapped_to( $member );
