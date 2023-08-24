@@ -3,14 +3,14 @@
 Plugin Name: Memberful WP
 Plugin URI: http://github.com/memberful/memberful-wp
 Description: Sell memberships and restrict access to content with WordPress and Memberful.
-Version: 1.73.2
+Version: 1.73.3
 Author: Memberful
 Author URI: http://memberful.com
 License: GPLv2 or later
  */
 
 if ( ! defined( 'MEMBERFUL_VERSION' ) )
-  define( 'MEMBERFUL_VERSION', '1.73.2' );
+  define( 'MEMBERFUL_VERSION', '1.73.3' );
 
 if ( ! defined( 'MEMBERFUL_PLUGIN_FILE' ) )
   define( 'MEMBERFUL_PLUGIN_FILE', __FILE__ );
