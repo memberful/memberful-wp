@@ -43,9 +43,25 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 == Screenshots ==
 
-1. Sync your members and their membership information.
-2. Restrict access to posts or pages.
-3. Simple sign in and account management widget.
+1. View your user dashboard
+2. Install the Memberful Wordpress plugin
+3. Customize your page branding
+4. Bulk restrict access to content
+5. Name and price your plan
+6. Add Default Marketing Content
+7. Create dynamic posts
+8. Create a subscription landing page
+9. Choose billing frequency and subscription length
+10. Enable the private RSS feed
+11. Enable fade-out teaser text
+12. Restrict content by category or tag
+13. Copy plan purchase links
+14. Access shortcodes via the Memberful editor button
+15. Restrict access with shortcodes
+16. Customize your checkout process
+17. Enable free or paid trials
+18. View metrics and revenue reports
+19. View membership information
 
 == Changelog ==
 
