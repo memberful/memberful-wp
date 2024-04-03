@@ -22,9 +22,13 @@ WordPress should be connected to your local vm, ready for development!
 
 Run `docker compose down` to remove the Docker containers and follow the previous section to start them again.
 
+### Updating Docker images
+
+If you need to update the Docker images, you can run `docker compose pull` to pull the latest images. Then you can run `docker compose up` to start the updated containers.
+
 ### Using the WP-CLI
 
-The command-line interface from Wordpress can be useful in debugging plugin issues and reading/editing the database.
+The command-line interface from WordPress can be useful in debugging plugin issues and reading/editing the database.
 
 An easy way to work with the CLI from outside the container is to take the `wp()` bash function from the provision script:
 ```bash
@@ -38,7 +42,7 @@ wp() {
 }
 ```
 
-If your volume and container names match you can take the above function, copy/paste it into your command prompt, and then run `wp` commands as if Wordpress was installed directly (outside a container).
+If your volume and container names match you can take the above function, copy/paste it into your command prompt, and then run `wp` commands as if WordPress was installed directly (outside a container).
 
 For example, to see all the metadata for user 2 directly from the db:
 `wp user meta list 2`
@@ -74,9 +78,9 @@ segment is a separate number. i.e. `1.12.0` > `1.11.0`.
 
 ### Prerequisites
 
-Make sure you're added as a committer in Wordpress.
+Make sure you're added as a committer in WordPress.
 
-The release script retrieves the Wordpress committer username from the `svn` server config file. 
+The release script retrieves the WordPress committer username from the `svn` server config file. 
 
 To setup, enter `~/.subversion/servers` and add a group with a URL match for WP's server URL, as well as your WP username, like so:
 
