@@ -5,8 +5,8 @@ add_action( 'save_post', 'memberful_wp_save_postdata' );
 
 function memberful_setup_taxonomy_hooks( $taxonomy, $object_type, $arguments ) {
   if ( $arguments['public'] && $arguments['show_in_menu'] ) {
-    add_action( "${taxonomy}_edit_form", 'memberful_wp_add_term_metabox' );
-    add_action( "edited_${taxonomy}", 'memberful_wp_save_term_metadata' );
+    add_action( "{$taxonomy}_edit_form", 'memberful_wp_add_term_metabox' );
+    add_action( "edited_{$taxonomy}", 'memberful_wp_save_term_metadata' );
   }
 }
 add_action( 'registered_taxonomy', 'memberful_setup_taxonomy_hooks', 10, 3 );

@@ -49,6 +49,10 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 == Changelog ==
 
+= unreleased =
+
+* Fix PHP deprecation warnings.
+
 = 1.73.5 =
 
 * Restored previously reverted fix for PHP warnings when mapping deleted members in Memberful_User_Map#map
