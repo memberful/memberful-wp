@@ -52,9 +52,8 @@ Install Memberful on a self-hosted WordPress site or a site hosted with WordPres
 1. From your Memberful dashboard navigate to Website → Settings and click the link to activate the WordPress service.
 2. Activate the WordPress service
 3. Copy the WordPress registration key (ctrl/cmd + c).
-4. Copy registration key
-5. Install and activate the plugin on your WordPress site. Paste your registration key (ctrl/cmd + v) into the field and click Connect to Memberful.
-6. Once connected, your members will be signed into WordPress when they sign into Memberful. Their plans are also automatically synced, which makes it easy to protect WordPress content.
+4. Install and activate the plugin on your WordPress site. Paste your registration key (ctrl/cmd + v) into the field and click Connect to Memberful.
+5. Once connected, your members will be signed into WordPress when they sign into Memberful. Their plans are also automatically synced, which makes it easy to protect WordPress content.
 
 ## Review the plugin settings
 
