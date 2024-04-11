@@ -45,7 +45,7 @@ Generate reliable, recurring revenue by selling subscription plans while protect
 
 The Memberful WordPress plugin makes it easy to integrate Memberful with your WordPress website and protect content—serverside—for members only.
 
-Install Memberful on a self-hosted WordPress site or a site hosted with WordPress.com— Creator plan or higher. If you are on their Creator plan (or higher), and don’t want to upgrade, you can use the WordPress.com guided transfer service to move your content over to a self-hosted WordPress website.
+Install Memberful on a self-hosted WordPress site or a site hosted with WordPress.com— Creator plan or higher. If you are not on their Creator plan (or higher), and don’t want to upgrade, you can use the WordPress.com guided transfer service to move your content over to a self-hosted WordPress website.
 
 ## Install the Memberful WordPress plugin
 
