@@ -1,6 +1,6 @@
 === Memberful WP ===
-Contributors: matt-button, drewstrojny, dwestendorf, rusuandreirobert, sumobi, Webby Scots
-Tags: memberful, member, membership, memberships, recurring payments, recurring billing, paywall, subscriptions, stripe, oauth, oauth2
+Contributors: drewstrojny, jakememberful, julianmemberful, lucasmemberful, patrikmemberful
+Tags: membership, subscriptions, paywall, stripe, recurring payments, memberful, oauth, oauth 2.0, members, recurring billing
 Requires at least: 3.6
 Tested up to: 6.5
 Requires PHP: 7.0
@@ -11,21 +11,67 @@ Sell memberships and restrict access to content with WordPress and Memberful.
 
 == Description ==
 
-A reliable WordPress membership plugin that integrates your site with [Memberful](https://memberful.com). Memberful is a service for selling subscriptions to your website with [Stripe](https://stripe.com).
+[Memberful](https://memberful.com/) is a best-in-class membership software and WordPress plugin used by some of the web's biggest creators, publishers, and independent media companies.
 
-Features include:
+Generate reliable, recurring revenue by selling subscription plans while protecting access to your content. Memberful allows you to maintain full control and ownership of your audience, your brand, and your business.
 
-* Automatic syncing of your Memberful membership data to WordPress.
-* Single sign on: Members are automatically signed into WordPress when they sign in to Memberful.
-* Create a paywall and restrict access to content based on membership level. Protect any posts or pages right from your WordPress edit screen.
-* A widget with links for members to sign in and manage their account (update credit card, cancel subscription, etc.).
-* Option to create Private RSS feeds and protect bbPress forums.
+## Protect Content
+
+- Protect members-only content and select which subscribers get access to gated areas of your website using server-side content protection.
+- Restrict access to content based on membership level and protect specific posts or pages right from your WordPress edit screen.
+- Manage access to media including blog articles, in-house newsletters, private podcasts, protected downloads, and more.
+
+## Integrations
+
+- Built-in integrations with popular third-party services including Mailchimp, Discord, ConvertKit, Klaviyo, and Google Analytics.
+- Add new custom applications or develop your own using the Memberful API.
+- Utilize webhooks to trigger when important events happen on your site, such as when a member changes their payment/tax details.
+
+## Membership Management
+
+- Automatically sync your Memberful membership data to WordPress or import a list of your existing members.
+- Add multiple staff users and manage their account permissions.
+- Utilize built-in analytics dashboards to monitor and grow your business.
+
+## Payment and Plans
+
+- Easily accept payments through your Stripe account.
+- Streamlined member checkout process with Single-Sign-On (SSO) and Apple & Google Pay integration.
+- Create multiple membership plans and upgrades to allow tiered access to different areas of your website.
+- Discounts, Referrals, and Retention bonuses to incentivize sign-ups and membership upgrades.
+- Enable automatic tax calculations based on where you and your members are located.
 
 == Installation ==
 
-1. Install Memberful WP via the WordPress.org plugin directory, or download the file and visit Plugins => Add New => Upload from your WordPress dashboard.
-2. Activate the WordPress service from your Memberful account.
-3. From the plugin screen in your WordPress dashboard paste in your registration key and click the "Connect to Memberful" button.
+The Memberful WordPress plugin makes it easy to integrate Memberful with your WordPress website and protect content—serverside—for members only.
+
+Install Memberful on a self-hosted WordPress site or a site hosted with WordPress.com— Creator plan or higher. If you are not on their Creator plan (or higher), and don’t want to upgrade, you can use the WordPress.com guided transfer service to move your content over to a self-hosted WordPress website.
+
+## Install the Memberful WordPress plugin
+
+1. From your Memberful dashboard navigate to Website → Settings and click the link to activate the WordPress service.
+2. Activate the WordPress service
+3. Copy the WordPress registration key (ctrl/cmd + c).
+4. Install and activate the plugin on your WordPress site. Paste your registration key (ctrl/cmd + v) into the field and click Connect to Memberful.
+5. Once connected, your members will be signed into WordPress when they sign into Memberful. Their plans are also automatically synced, which makes it easy to protect WordPress content.
+
+## Review the plugin settings
+
+Navigate to Settings → Memberful in your WordPress dashboard to customize the appearance and behavior of the Memberful plugin.
+
+- Keep all WordPress users logged in for 1 year.
+- Hide the WordPress admin toolbar from members.
+- Block WordPress dashboard access from members.
+- Conditionally show Sign in, Sign out, and Account menu items based on members' signed-in status.
+- Update display names in WordPress when members change their full name in Memberful.
+
+## Configure role mapping
+
+The Memberful WordPress plugin can assign different roles to active (paying) members versus inactive (non-paying) members. Memberful will automatically keep the role mappings in sync.
+
+Navigate to Settings → Memberful → Advanced Role Mapping in your WordPress dashboard to map member roles.
+
+For a detailed walkthrough, visit https://memberful.com/help/wordpress-plugin/setup/install-the-memberful-plugin/
 
 == Frequently Asked Questions ==
 
@@ -43,9 +89,25 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 == Screenshots ==
 
-1. Sync your members and their membership information.
-2. Restrict access to posts or pages.
-3. Simple sign in and account management widget.
+1. View your user dashboard
+2. Install the Memberful WordPress plugin
+3. Customize your page branding
+4. Bulk restrict access to content
+5. Name and price your plan
+6. Add Default Marketing Content
+7. Create dynamic posts
+8. Create a subscription landing page
+9. Choose billing frequency and subscription length
+10. Enable the private RSS feed
+11. Enable fade-out teaser text
+12. Restrict content by category or tag
+13. Copy plan purchase links
+14. Access shortcodes via the Memberful editor button
+15. Restrict access with shortcodes
+16. Customize your checkout process
+17. Enable free or paid trials
+18. View metrics and revenue reports
+19. View membership information
 
 == Changelog ==
 
@@ -91,7 +153,7 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 = 1.71.4 =
 
-* Fixed non-object access error when `memberful_wp_protect_content` runs outside of the Wordpress Loop.
+* Fixed non-object access error when `memberful_wp_protect_content` runs outside of the WordPress Loop.
 
 = 1.71.3 =
 
