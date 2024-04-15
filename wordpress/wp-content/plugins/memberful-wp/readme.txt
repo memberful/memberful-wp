@@ -47,7 +47,7 @@ The Memberful WordPress plugin makes it easy to integrate Memberful with your Wo
 
 Install Memberful on a self-hosted WordPress site or a site hosted with WordPress.com— Creator plan or higher. If you are not on their Creator plan (or higher), and don’t want to upgrade, you can use the WordPress.com guided transfer service to move your content over to a self-hosted WordPress website.
 
-## Install the Memberful WordPress plugin
+Install the Memberful WordPress plugin:
 
 1. From your Memberful dashboard navigate to Website → Settings and click the link to activate the WordPress service.
 2. Activate the WordPress service
