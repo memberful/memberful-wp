@@ -115,6 +115,14 @@ version. For example we need to do this after updating "Tested up to" in
 `readme.txt`. To do this simply follow the release instructions above without
 updating the plugin version.
 
+### Updating assets for the WordPress plugin page
+
+Very occasionally we may need to update the assets for the WordPress plugin. This
+includes the banner image, the icon, and the screenshots. To do this:
+
+* Update the assets in the `assets` directory.
+* Run `./release.sh --assets`.
+
 ## Rolling back
 
 * Revert your changes.

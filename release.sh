@@ -74,7 +74,7 @@ push_to_wordpress_svn() {
     fi
   done
 
-  echo "Commiting to trunk"
+  echo "Committing to trunk"
   svn commit -m "$SVN_COMMIT_MESSAGE"
 
   echo "Tagging version $VERSION"
@@ -85,7 +85,26 @@ push_to_wordpress_svn() {
   svn copy trunk tags/$VERSION
   cd tags/$VERSION
   svn commit -m "$SVN_COMMIT_MESSAGE"
+}
 
+push_assets_to_wordpress_svn() {
+  echo "Creating local copy of SVN repo in $SVN_LOCAL_PATH"
+  svn co "$SVN_URL/assets" $SVN_LOCAL_PATH/assets
+
+  rsync -a --delete --exclude ".svn" "$PWD/assets/" "$SVN_LOCAL_PATH/assets"
+
+  cd $SVN_LOCAL_PATH/assets
+
+  echo "Adding new files to assets"
+  svn status | grep "^?" | awk '{print $2}' | xargs -r svn add
+  echo "Removing old files from assets"
+  svn status | grep "^\!" | awk '{print $2}' | xargs -r svn remove
+
+  echo "Committing to assets"
+  svn commit -m "Updated assets"
+}
+
+cleanup() {
   echo "Removing temporary directory $SVN_LOCAL_PATH"
   rm -fr $SVN_LOCAL_PATH
 }
@@ -94,6 +113,13 @@ check_current_branch
 check_for_uncommitted_changes
 check_version_definitions
 ask_for_release_confirmation
-push_to_wordpress_svn
+
+if [ "$1" == "--assets" ]; then
+  push_assets_to_wordpress_svn
+else
+  push_to_wordpress_svn
+fi
+
+cleanup
 
 echo "Done!"
