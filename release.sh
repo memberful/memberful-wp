@@ -60,19 +60,15 @@ push_to_wordpress_svn() {
   echo "Creating local copy of SVN repo in $SVN_LOCAL_PATH"
   svn co $SVN_URL $SVN_LOCAL_PATH
 
+  rsync -a --delete --exclude ".svn" "$PLUGIN_DIR/" "$SVN_TRUNK_PATH"
+
+  cd $SVN_LOCAL_PATH
+
   echo "Adding new files to trunk"
-  cp -r $PLUGIN_DIR/* $SVN_TRUNK_PATH
-  cd $SVN_TRUNK_PATH
-  svn status | grep "^?" | awk '{print $2}' | xargs svn add
+  svn status | grep "^?" | awk '{print $2}' | xargs -r svn add
 
   echo "Removing old files from trunk"
-  cd $SVN_TRUNK_PATH
-
-  find . -type f | while read FILE; do
-    if [ ! -e $PLUGIN_DIR/$FILE ]; then
-      svn remove "$FILE"
-    fi
-  done
+  svn status | grep "^\!" | awk '{print $2}' | xargs -r svn remove
 
   echo "Committing to trunk"
   svn commit -m "$SVN_COMMIT_MESSAGE"
