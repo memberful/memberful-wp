@@ -83,6 +83,18 @@ push_to_wordpress_svn() {
   svn commit -m "$SVN_COMMIT_MESSAGE"
 }
 
+  # Keep only the latest 20 tags
+  echo "Checking and removing old tags if necessary"
+  cd $SVN_LOCAL_PATH/tags
+  TAGS_TO_DELETE=$(svn ls | sort -t. -k1,1nr -k2,2nr -k3,3nr | tail -n +21)
+
+  if [ ! -z "$TAGS_TO_DELETE" ]; then
+    echo "Removing old tags..."
+    echo "$TAGS_TO_DELETE" | xargs -I {} svn remove {}
+    svn commit -m "Remove old tags"
+  fi
+}
+
 push_assets_to_wordpress_svn() {
   echo "Creating local copy of SVN repo in $SVN_LOCAL_PATH"
   svn co "$SVN_URL/assets" $SVN_LOCAL_PATH/assets
