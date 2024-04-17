@@ -47,17 +47,17 @@ The Memberful WordPress plugin makes it easy to integrate Memberful with your Wo
 
 Install Memberful on a self-hosted WordPress site or a site hosted with WordPress.com— Creator plan or higher. If you are not on their Creator plan (or higher), and don’t want to upgrade, you can use the WordPress.com guided transfer service to move your content over to a self-hosted WordPress website.
 
-Install the Memberful WordPress plugin:
+**Install the Memberful WordPress plugin**
 
-1. From your Memberful dashboard navigate to Website → Settings and click the link to activate the WordPress service.
+1. From your Memberful dashboard navigate to *Website → Settings* and click the link to activate the WordPress service.
 2. Activate the WordPress service
 3. Copy the WordPress registration key (ctrl/cmd + c).
 4. Install and activate the plugin on your WordPress site. Paste your registration key (ctrl/cmd + v) into the field and click Connect to Memberful.
 5. Once connected, your members will be signed into WordPress when they sign into Memberful. Their plans are also automatically synced, which makes it easy to protect WordPress content.
 
-## Review the plugin settings
+**Review the plugin settings**
 
-Navigate to Settings → Memberful in your WordPress dashboard to customize the appearance and behavior of the Memberful plugin.
+Navigate to *Settings → Memberful* in your WordPress dashboard to customize the appearance and behavior of the Memberful plugin.
 
 - Keep all WordPress users logged in for 1 year.
 - Hide the WordPress admin toolbar from members.
@@ -65,13 +65,13 @@ Navigate to Settings → Memberful in your WordPress dashboard to customize the 
 - Conditionally show Sign in, Sign out, and Account menu items based on members' signed-in status.
 - Update display names in WordPress when members change their full name in Memberful.
 
-## Configure role mapping
+**Configure role mapping**
 
 The Memberful WordPress plugin can assign different roles to active (paying) members versus inactive (non-paying) members. Memberful will automatically keep the role mappings in sync.
 
-Navigate to Settings → Memberful → Advanced Role Mapping in your WordPress dashboard to map member roles.
+Navigate to *Settings → Memberful → Advanced Role Mapping* in your WordPress dashboard to map member roles.
 
-For a detailed walkthrough, visit https://memberful.com/help/wordpress-plugin/setup/install-the-memberful-plugin/
+For a detailed walkthrough, visit [https://memberful.com/help/wordpress-plugin/setup/install-the-memberful-plugin/](https://memberful.com/help/wordpress-plugin/setup/install-the-memberful-plugin/)
 
 == Frequently Asked Questions ==
 
