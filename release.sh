@@ -81,6 +81,17 @@ push_to_wordpress_svn() {
   svn copy trunk tags/$VERSION
   cd tags/$VERSION
   svn commit -m "$SVN_COMMIT_MESSAGE"
+
+  # Keep only the latest 10 tags
+  echo "Checking and removing old tags if necessary"
+  cd $SVN_LOCAL_PATH/tags
+  TAGS_TO_DELETE=$(svn ls | sort -t. -k1,1nr -k2,2nr -k3,3nr | tail -n +11)
+
+  if [ ! -z "$TAGS_TO_DELETE" ]; then
+    echo "Removing old tags..."
+    echo "$TAGS_TO_DELETE" | xargs -I {} svn remove {}
+    svn commit -m "Remove old tags"
+  fi
 }
 
 push_assets_to_wordpress_svn() {
