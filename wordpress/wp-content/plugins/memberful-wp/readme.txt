@@ -1,4 +1,4 @@
-=== Memberful WP ===
+=== Memberful - Membership Plugin ===
 Contributors: drewstrojny, jakememberful, julianmemberful, lucasmemberful, patrikmemberful
 Tags: membership, subscriptions, paywall, stripe, recurring payments, memberful, oauth, oauth 2.0, members, recurring billing
 Requires at least: 3.6
