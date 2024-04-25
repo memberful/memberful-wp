@@ -20,7 +20,7 @@ wp core install \
 echo "Installing twentytwentyone theme"
 wp theme install twentytwentyone --activate
 
-echo "Activating Memberful WP plugin"
+echo "Activating the Memberful plugin"
 wp plugin activate memberful-wp
 wp widget add memberful_wp_profile_widget sidebar-1 1
 wp config set MEMBERFUL_APPS_HOST "http://apps.memberful.localhost"
