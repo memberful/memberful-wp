@@ -83,7 +83,7 @@ Yes. [Memberful](https://memberful.com) is a hosted membership service, and the 
 
 Yes, you can [protect WordPress content](https://memberful.com/help/integrate/services/wordpress/protect-wordpress-content/) with Memberful. Every page and post features a restrict access meta box where you can set specific permissions. We also include [several helpful functions](https://memberful.com/help/integrate/services/wordpress/wordpress-functions/) for use in WordPress themes or plugins.
 
-= How do I contribute to Memberful WP or report bugs? =
+= How do I contribute to the plugin or report bugs? =
 
 Glad you asked! We manage development of the plugin over at the [Memberful WP Github repository](https://github.com/memberful/memberful-wp). Please report any bugs there. If you want to help fix something or contribute a feature, submit a [pull request](https://help.github.com/articles/using-pull-requests).
 
