@@ -14,7 +14,7 @@ You should be able to access the WP admin panel now: http://wordpress.localhost/
 The default username/password is admin/admin.
 
 Once signed in you'll need to go to your local Memberful site, and setup a WordPress integration
-(`Memberful Admin -> Settings -> Integrate -> I'm using WordPress`), then copy and paste the activation
+(`Memberful Admin -> Website -> External Website -> Connect my WordPress site`), then copy and paste the activation
 code into the WordPress admin panel (WP admin -> Settings -> Memberful). Submit the form and then
 WordPress should be connected to your local vm, ready for development!
 
@@ -80,7 +80,7 @@ segment is a separate number. i.e. `1.12.0` > `1.11.0`.
 
 Make sure you're added as a committer in WordPress.
 
-The release script retrieves the WordPress committer username from the `svn` server config file. 
+The release script retrieves the WordPress committer username from the `svn` server config file.
 
 To setup, enter `~/.subversion/servers` and add a group with a URL match for WP's server URL, as well as your WP username, like so:
 
