@@ -143,7 +143,8 @@ function memberful_wp_extract_api_error_log_from_response( $response ) {
 }
 
 function memberful_wp_error_log() {
-  return get_option( 'memberful_error_log', array() );
+  $error_log = get_option('memberful_error_log', array());
+  return is_array($error_log) ? $error_log : array($error_log);
 }
 
 function memberful_wp_record_wp_error( $wp_error ) {
