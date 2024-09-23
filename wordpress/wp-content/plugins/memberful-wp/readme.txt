@@ -115,6 +115,7 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 * Ensure `memberful_error_log` option is always an array (#363)
 * Pin WP Docker image version to 6.4.0 (#364)
+* Update README with new Memberful app UI paths
 
 = 1.73.6 =
 
