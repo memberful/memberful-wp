@@ -27,7 +27,7 @@ wp config set MEMBERFUL_APPS_HOST "http://apps.memberful.localhost"
 wp config set MEMBERFUL_EMBED_HOST "http://js.memberful.localhost"
 wp config set MEMBERFUL_SSL_VERIFY false --raw
 
-if [ -x "$(command -v puma-dev)" ]; then 
-  echo "Adding puma-dev entry for wordpress.locahost"
+if [ -x "$(command -v puma-dev)" ]; then
+  echo "Adding puma-dev entry for wordpress.localhost"
   echo 8181 > ~/.puma-dev/wordpress
 fi
