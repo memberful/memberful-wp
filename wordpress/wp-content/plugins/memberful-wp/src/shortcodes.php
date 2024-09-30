@@ -27,10 +27,14 @@ function memberful_wp_shortcode_buy_subscription_link( $atts, $content ) {
   $url = add_query_arg( 'plan', $plan_id, memberful_url( 'checkout' ) );
 
   if( isset( $atts['price'] ) ) {
-    $url = add_query_arg( 'price', $atts['price'], $url );
+    $price = filter_var($atts['price'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+
+    if( $price !== false && $price > 0 ) {
+      $url = add_query_arg( 'price', $price, $url );
+    }
   }
 
-  return '<a href="'.$url.'">'.do_shortcode($content).'</a>';
+  return '<a href="' . esc_url($url) . '">' . do_shortcode($content) . '</a>';
 }
 
 function memberful_wp_shortcode_buy_gift_link( $atts, $content ) {
@@ -60,10 +64,14 @@ function memberful_wp_shortcode_feeds_link( $atts, $content ) {
   $url = memberful_feeds_url();
 
   if (!empty($atts['podcast'])) {
-    $url = add_query_arg('id', $atts['podcast'], $url);
+    $podcast_id = filter_var($atts['podcast'], FILTER_VALIDATE_INT);
+
+    if ($podcast_id !== false && $podcast_id > 0) {
+      $url = add_query_arg('id', $podcast_id, $url);
+    }
   }
 
-  return '<a href="'.$url.'">'.do_shortcode($content).'</a>';
+  return '<a href="' . esc_url($url) . '">' . do_shortcode($content) . '</a>';
 }
 
 function memberful_wp_shortcode_download_link( $atts, $content) {
