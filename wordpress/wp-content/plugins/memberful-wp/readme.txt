@@ -111,6 +111,10 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 == Changelog ==
 
+= unreleased =
+
+* Sanitize and escape shortcode output (#365)
+
 = 1.73.7 =
 
 * Ensure `memberful_error_log` option is always an array (#363)
