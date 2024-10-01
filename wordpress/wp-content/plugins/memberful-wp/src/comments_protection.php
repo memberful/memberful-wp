@@ -51,7 +51,7 @@ add_action( 'do_feed_atom', 'memberful_single_feed_comments_protection', 9, 1 );
 function memberful_single_feed_comments_protection($for_comments){
     if(!$for_comments)
       return;
-      
+
     if(!is_singular())
       return;
 
@@ -115,8 +115,13 @@ function memberful_comment_feed_cwhere_filter($cwhere, $query){
     return $cwhere;
 
   global $wpdb;
-  $restricted=implode(',', memberful_get_protected_post_IDS());
-  $cwhere.= "AND {$wpdb->posts}.ID NOT IN ($restricted)";
+  $protected_post_ids = memberful_get_protected_post_IDS();
+  if ( empty( $protected_post_ids ) ) {
+    return $cwhere;
+  }
+
+  $restricted=implode(',', $protected_post_ids);
+  $cwhere.= " AND {$wpdb->posts}.ID NOT IN ($restricted)";
   return $cwhere;
 }
 ?>
