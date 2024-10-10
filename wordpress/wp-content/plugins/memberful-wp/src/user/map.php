@@ -120,7 +120,7 @@ class Memberful_User_Map {
   private function map_deleted_member($member) {
     $mapping_from_member = $this->repository()->find_user_member_is_mapped_to($member);
 
-    if ($mapping_from_member['mapping_exists']) {
+    if ($mapping_from_member['mapping_exists'] && $mapping_from_member['user'] !== FALSE) {
       return $mapping_from_member['user'];
     } else {
       return $this->add_data_to_wp_error(
