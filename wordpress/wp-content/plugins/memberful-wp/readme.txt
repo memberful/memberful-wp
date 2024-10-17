@@ -111,6 +111,10 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 == Changelog ==
 
+= unreleased =
+
+* Check if WP User exists when mapping deleted Memberful members (#366)
+
 = 1.73.8 =
 
 * Sanitize and escape shortcode output (#365)
