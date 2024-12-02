@@ -14,65 +14,68 @@ require_once MEMBERFUL_DIR . '/src/acl/term_options.php';
  * @return array Map of post ID => post ID
  */
 function memberful_wp_user_disallowed_post_ids( $user_id ) {
-  if ( isset( $disallowed_post_ids )) {
-    return $disallowed_post_ids;
-  } else {
-    static $disallowed_post_ids = array();
-    $acl = get_option( 'memberful_acl', array() );
-    $disallowed_post_ids = memberful_wp_user_disallowed_ids_from_acl( $user_id, $acl);
-
-    return $disallowed_post_ids;
-  }
-}
-
-function memberful_wp_user_disallowed_term_ids( $user_id ) {
-  if ( isset( $disallowed_term_ids )) {
-    return $disallowed_term_ids;
-  } else {
-    static $disallowed_term_ids = array();
-    $acl = get_option( 'memberful_term_acl', array() );
-    $disallowed_term_ids = memberful_wp_user_disallowed_ids_from_acl( $user_id, $acl);
-
-    return $disallowed_term_ids;
-  }
-}
-
-function memberful_wp_user_disallowed_ids_from_acl( $user_id, $acl ) {
-  $user_id        = (int) $user_id;
+  $acl = get_option( 'memberful_acl', array() );
   $user_signed_in = $user_id !== 0;
+  $user_subs = memberful_wp_user_plans_subscribed_to( $user_id );
 
-  $global_product_acl = isset( $acl['product'] ) ? $acl['product'] : array();
-  $global_subscription_acl = isset( $acl['subscription'] ) ? $acl['subscription'] : array();
-  $posts_for_any_registered_users = memberful_wp_get_all_posts_available_to_any_registered_user();
-  $posts_for_anybody_subscribed_to_a_plan = memberful_wp_get_all_posts_available_to_anybody_subscribed_to_a_plan();
+  $posts_user_is_not_allowed_to_access = _memberful_wp_get_protected_ids_from_acl( $acl, $user_id );
 
-  // Items the user has access to
-  $user_products = memberful_wp_user_downloads( $user_id );
-  $user_subs     = memberful_wp_user_plans_subscribed_to( $user_id );
+  if ( empty( $user_subs ) ) {
+    $posts_user_is_not_allowed_to_access = array_merge(
+      $posts_user_is_not_allowed_to_access,
+      memberful_wp_get_all_posts_available_to_anybody_subscribed_to_a_plan()
+    );
+  }
 
-  // Work out the set of posts the user is and isn't allowed to access
-  $user_product_acl      = memberful_wp_generate_user_specific_acl_from_global_acl( $user_products, $global_product_acl );
-  $user_subscription_acl = memberful_wp_generate_user_specific_acl_from_global_acl( $user_subs, $global_subscription_acl );
-
-  $user_allowed_posts    = array_merge( $user_product_acl['allowed'],    $user_subscription_acl['allowed'] );
-  // At this point we dont know if the user is signed in, so assume they're not & that they can't access
-  // "registered users only" posts
-  $user_restricted_posts = array_merge( $user_product_acl['restricted'], $user_subscription_acl['restricted'], $posts_for_any_registered_users, $posts_for_anybody_subscribed_to_a_plan );
-
-  // Remove the set of posts a user can access from the set they can't.
-  // If a post requires 1 of 2 subscriptions, and a member only has 1 of them
-  // then the post will be in the restricted set and the allowed set
-  $posts_user_is_not_allowed_to_access = array_diff( $user_restricted_posts, $user_allowed_posts );
-
-  if ( $user_signed_in ) {
-    $posts_user_is_not_allowed_to_access = array_diff( $posts_user_is_not_allowed_to_access, $posts_for_any_registered_users);
-
-    if ( !empty($user_subs) ) {
-      $posts_user_is_not_allowed_to_access = array_diff( $posts_user_is_not_allowed_to_access, $posts_for_anybody_subscribed_to_a_plan );
-    }
+  if ( !$user_signed_in ) {
+    $posts_user_is_not_allowed_to_access = array_merge(
+      $posts_user_is_not_allowed_to_access,
+      memberful_wp_get_all_posts_available_to_any_registered_user()
+    );
   }
 
   return ( empty( $posts_user_is_not_allowed_to_access ) ) ? array() : array_combine( $posts_user_is_not_allowed_to_access, $posts_user_is_not_allowed_to_access );
+}
+
+function memberful_wp_user_disallowed_term_ids( $user_id ) {
+  $acl = get_option( 'memberful_term_acl', array() );
+  $user_signed_in = $user_id !== 0;
+  $user_subs = memberful_wp_user_plans_subscribed_to( $user_id );
+
+  $terms_user_is_not_allowed_to_access = _memberful_wp_get_protected_ids_from_acl( $acl, $user_id );
+
+  if ( empty( $user_subs ) ) {
+    $terms_user_is_not_allowed_to_access = array_merge(
+      $terms_user_is_not_allowed_to_access,
+      memberful_wp_get_all_terms_available_to_anybody_subscribed_to_a_plan()
+    );
+  }
+
+  if ( !$user_signed_in ) {
+    $terms_user_is_not_allowed_to_access = array_merge(
+      $terms_user_is_not_allowed_to_access,
+      memberful_wp_get_all_terms_available_to_any_registered_user()
+    );
+  }
+
+  return ( empty( $terms_user_is_not_allowed_to_access ) ) ? array() : array_combine( $terms_user_is_not_allowed_to_access, $terms_user_is_not_allowed_to_access );
+}
+
+function _memberful_wp_get_protected_ids_from_acl( $acl, $user_id ) {
+  $user_products = memberful_wp_user_downloads( $user_id );
+  $user_subs     = memberful_wp_user_plans_subscribed_to( $user_id );
+
+  $product_acl = isset( $acl['product'] ) ? $acl['product'] : array();
+  $subscription_acl = isset( $acl['subscription'] ) ? $acl['subscription'] : array();
+
+  // Work out the set of items the user is and isn't allowed to access
+  $user_product_acl      = memberful_wp_generate_user_specific_acl_from_global_acl( $user_products, $product_acl );
+  $user_subscription_acl = memberful_wp_generate_user_specific_acl_from_global_acl( $user_subs, $subscription_acl );
+
+  $user_allowed_items    = array_merge( $user_product_acl['allowed'],    $user_subscription_acl['allowed'] );
+  $user_restricted_items = array_merge( $user_product_acl['restricted'], $user_subscription_acl['restricted'] );
+
+  return array_diff( $user_restricted_items, $user_allowed_items );
 }
 
 /**
@@ -301,22 +304,6 @@ function memberful_wp_post_viewable_by_any_subscriber( $post, $terms_for_post ) 
 function memberful_first_term_restricting_post( $user, $post ) {
   $restricted_terms = array_values( memberful_wp_user_disallowed_term_ids( $user ));
   $post_terms = memberful_wp_get_term_ids_for_post( $post );
-
-  if ( !$user ) {
-    $terms_requiring_any_user = array_intersect( $post_terms, memberful_wp_get_all_terms_available_to_any_registered_user() );
-
-    if ( !empty( $terms_requiring_any_user )) {
-      return reset ( $terms_requiring_any_user );
-    }
-  }
-
-  if ( !$user || empty( memberful_wp_user_plans_subscribed_to( $user ))) {
-    $terms_requiring_any_active_plan = array_intersect( $post_terms, memberful_wp_get_all_terms_available_to_anybody_subscribed_to_a_plan() );
-
-    if ( !empty( $terms_requiring_any_active_plan )) {
-      return reset ( $terms_requiring_any_active_plan );
-    }
-  }
 
   if ( !empty( $restricted_terms ) && !empty( $post_terms )) {
     $terms_restricted_to_specific_plans = array_intersect( $restricted_terms, $post_terms );
