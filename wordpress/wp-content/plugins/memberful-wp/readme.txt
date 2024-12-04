@@ -111,6 +111,10 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 == Changelog ==
 
+= unreleased =
+
+* Exclude protected posts from search results
+
 = 1.73.9 =
 
 * Check if WP User exists when mapping deleted Memberful members (#366)
