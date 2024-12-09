@@ -52,25 +52,37 @@ function memberful_apply_global_snippets_content_filter( $memberful_marketing_co
   // re-add the action for follow-on call
   add_action( 'the_content', 'memberful_wp_protect_content', -10 );
 
-  $offset = 0;
-  for ( $i = 0; $i < MEMBERFUL_PARAGRAPH_COUNT; $i++ ) {
-    $offset = strpos( $original_content, '</p>', $offset ) + 5;
-    if( $offset === strlen($original_content) ){
-      continue;
-    }
-  }
-  $has_teaser= $offset < strlen($original_content);
+  $has_teaser = false;
+  $teaser = '';
 
-  if($has_teaser){
-    $teaser = force_balance_tags(substr( $original_content, 0, $offset ));
-  } else {
-    $teaser = '';
+  if ( !empty( $original_content ) ) {
+    $teaser_offset = 0;
+
+    for ( $i = 0; $i < MEMBERFUL_PARAGRAPH_COUNT; $i++ ) {
+      $paragraph_offset = strpos( $original_content, '</p>', $teaser_offset );
+
+      if ( $paragraph_offset === false ) {
+        break;
+      } else {
+        $teaser_offset = $paragraph_offset + 4; // Move past the </p> tag
+      }
+
+      if ( $teaser_offset === strlen( $original_content ) ) {
+        break;
+      }
+    }
+
+    $has_teaser = $teaser_offset <= strlen($original_content);
+
+    if ( $has_teaser ) {
+      $teaser = force_balance_tags(substr( $original_content, 0, $teaser_offset ));
+    }
   }
 
   $wrapped_teaser = "<div class='memberful-global-teaser-content'>$teaser</div>";
 
   if ( $has_teaser && ! did_action( 'memberful_teaser_css' ) ) {
-    $wrapped_teaser.= apply_filters( 'memberful_teaser_css', memberful_get_teaser_css() );
+    $wrapped_teaser .= apply_filters( 'memberful_teaser_css', memberful_get_teaser_css() );
   }
 
   return $wrapped_teaser . $wrapped_global_marketing_content;
