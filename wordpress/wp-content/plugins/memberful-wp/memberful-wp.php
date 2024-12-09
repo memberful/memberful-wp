@@ -46,6 +46,7 @@ require_once MEMBERFUL_DIR . '/src/widgets.php';
 require_once MEMBERFUL_DIR . '/src/endpoints.php';
 require_once MEMBERFUL_DIR . '/src/marketing_content.php';
 require_once MEMBERFUL_DIR . '/src/content_filter.php';
+require_once MEMBERFUL_DIR . '/src/search_filter.php';
 require_once MEMBERFUL_DIR . '/src/entities.php';
 require_once MEMBERFUL_DIR . '/src/embed.php';
 require_once MEMBERFUL_DIR . '/src/api.php';

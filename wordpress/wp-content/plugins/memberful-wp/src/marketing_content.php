@@ -4,8 +4,8 @@ define( 'MEMBERFUL_MARKETING_META_KEY', 'memberful_marketing_content' );
 
 // Get marketing content for the frontend
 function memberful_marketing_content( $post_id ) {
-  $user_id = is_user_logged_in() ? get_current_user_id() : 0;
-  $restricted_posts = memberful_wp_user_disallowed_post_ids( $user_id );
+  $user_id = get_current_user_id();
+  $restricted_posts = memberful_wp_post_ids_disallowed_by_post_acl( $user_id );
 
   if ( isset( $restricted_posts[$post_id] )) {
     $marketing_content = memberful_post_marketing_content( $post_id );
