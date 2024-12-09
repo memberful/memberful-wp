@@ -5,11 +5,45 @@ require_once MEMBERFUL_DIR . '/src/acl/term_options.php';
 
 /**
  * Returns an array of post IDs that the user is not allowed to access.
+ * Includes posts disallowed by both Post ACL and Term ACL.
+ *
+ * @return array An array of post IDs that the user is not allowed to access.
+ */
+function memberful_wp_user_disallowed_post_ids( $user_id ) {
+  $user_posts = _memberful_wp_items_from_acl(
+    get_option( 'memberful_acl', array() ),
+    $user_id,
+    memberful_wp_posts_for_subscribers(),
+    memberful_wp_posts_for_registered_users()
+  );
+
+  $user_terms = _memberful_wp_items_from_acl(
+    get_option( 'memberful_term_acl', array() ),
+    $user_id,
+    memberful_wp_terms_for_subscribers(),
+    memberful_wp_terms_for_registered_users()
+  );
+
+  $posts_allowed_by_terms = _memberful_wp_posts_with_terms( $user_terms['allowed'] );
+  $posts_restricted_by_terms = _memberful_wp_posts_with_terms( $user_terms['restricted'] );
+
+  // Merge posts disallowed by Post ACL and Term ACL
+  $disallowed_posts = array_unique( array_merge( $user_posts['restricted'], $posts_restricted_by_terms ) );
+
+  // Remove posts allowed by Post ACL or Term ACL
+  $disallowed_posts = array_diff( $disallowed_posts, $user_posts['allowed'], $posts_allowed_by_terms );
+
+  return $disallowed_posts;
+}
+
+/**
+ * Returns an array of post IDs that the user is not allowed to access.
+ * Includes only posts disallowed by Post ACL, not Term ACL.
  *
  * @return array An associative array where the keys and values are post IDs
  *               that the user is not allowed to access.
  */
-function memberful_wp_user_disallowed_post_ids( $user_id ) {
+function memberful_wp_post_ids_disallowed_by_post_acl( $user_id ) {
   static $cache = array();
 
   if ( isset( $cache[$user_id] ) ) {
@@ -357,4 +391,41 @@ function memberful_supported_taxonomies() {
   $taxonomies = get_taxonomies( array( "public" => true, "show_in_menu" => true ) );
 
   return $taxonomies;
+}
+
+function _memberful_wp_posts_with_terms( $terms ) {
+  if ( empty( $terms )) {
+    return array();
+  }
+
+  $tax_query = array();
+
+  $grouped_terms = _memberful_wp_group_terms_by_taxonomy( $terms );
+
+  foreach ( $grouped_terms as $taxonomy => $term_ids ) {
+    $tax_query[] = array(
+      'taxonomy' => $taxonomy,
+      'field'    => 'term_id',
+      'terms'    => $term_ids,
+      'operator' => 'IN',
+    );
+  }
+
+  if ( count( $tax_query ) > 1 ) {
+    $tax_query = array_merge( array( 'relation' => 'OR' ), $tax_query );
+  }
+
+  return get_posts( array( 'tax_query' => $tax_query, 'fields' => 'ids', 'numberposts' => -1 ) );
+}
+
+function _memberful_wp_group_terms_by_taxonomy( $term_ids ) {
+  $terms = get_terms( array( 'include' => $term_ids, 'hide_empty' => false) );
+
+  $grouped_terms = array();
+
+  foreach ( $terms as $term ) {
+    $grouped_terms[$term->taxonomy][] = $term->term_id;
+  }
+
+  return $grouped_terms;
 }
