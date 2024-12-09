@@ -118,15 +118,15 @@ function _memberful_wp_items_from_acl( $acl, $user_id, $items_for_subscribers, $
   $restricted_items = array_merge( $user_product_acl['restricted'], $user_subscription_acl['restricted'] );
 
   if ( $user_signed_in ) {
-    $allowed_items = array_merge($allowed_items, $items_for_registered_users);
+    $allowed_items = array_merge( $allowed_items, $items_for_registered_users );
   } else {
-    $restricted_items = array_merge($restricted_items, $items_for_registered_users);
+    $restricted_items = array_merge( $restricted_items, $items_for_registered_users );
   }
 
   if ( empty( $user_subs ) ) {
-    $restricted_items = array_merge($restricted_items, $items_for_subscribers);
+    $restricted_items = array_merge( $restricted_items, $items_for_subscribers );
   } else {
-    $allowed_items = array_merge($allowed_items, $items_for_subscribers);
+    $allowed_items = array_merge( $allowed_items, $items_for_subscribers );
   }
 
   $restricted_items = array_diff( $restricted_items, $allowed_items );
