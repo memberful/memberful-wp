@@ -113,7 +113,7 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 = 1.74.0 =
 
-* Exclude protected posts from search results
+* Exclude protected posts from search results if the user doesn't have access to those posts
 * Improve teaser generation for global marketing content
 
 = 1.73.9 =
