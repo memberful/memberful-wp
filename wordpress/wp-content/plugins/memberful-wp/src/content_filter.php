@@ -15,6 +15,7 @@ function memberful_wp_protect_content( $content ) {
     return $content;
   }
 
+  // Do not filter content for admins
   if ( current_user_can( 'publish_posts' ) ) {
     return $content;
   }

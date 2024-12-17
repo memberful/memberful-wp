@@ -111,6 +111,10 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 == Changelog ==
 
+= unreleased =
+
+* Allow admins to see protected posts in search results
+
 = 1.74.0 =
 
 * Exclude protected posts from search results if the user doesn't have access to those posts
