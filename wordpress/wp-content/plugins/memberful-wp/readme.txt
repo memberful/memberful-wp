@@ -111,6 +111,10 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 == Changelog ==
 
+= unreleased =
+
+* Improve member synchronization on sites hosted on WordPress.com
+
 = 1.74.1 =
 
 * Allow admins to see protected posts in search results
