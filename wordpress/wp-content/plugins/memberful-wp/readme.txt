@@ -113,7 +113,9 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 = unreleased =
 
+* Improve member synchronization on sites hosted on WordPress.com
 * Improve compatibility with Oxygen Builder
+
 
 = 1.74.1 =
 

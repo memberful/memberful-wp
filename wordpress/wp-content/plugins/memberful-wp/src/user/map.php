@@ -193,6 +193,8 @@ class Memberful_User_Mapping_Ensure_User {
   }
 
   private function create_user() {
+    global $wp_filter;
+
     $user_data = $this->fields_that_always_sync_from_memberful();
 
     $user_data['user_pass']               = wp_generate_password();
@@ -201,6 +203,22 @@ class Memberful_User_Mapping_Ensure_User {
     $user_data['user_nicename']           = $this->member->username;
     $user_data['nickname']                = $this->member->full_name;
     $user_data['display_name']            = $this->member->full_name;
+
+    // Disable the `bkismet_check_signup` filter added by a platform plugin on
+    // wordpress.com.
+    if ( isset( $wp_filter['wp_pre_insert_user_data'] ) ) {
+      foreach ( $wp_filter['wp_pre_insert_user_data']->callbacks as $priority => $callbacks ) {
+        foreach ($callbacks as $callback_key => $callback) {
+          if ( is_array( $callback['function']) && is_object($callback['function'][0] ) ) {
+            $object = $callback['function'][0];
+
+            if ( method_exists( $object, 'bkismet_check_signup' ) ) {
+              remove_filter( 'wp_pre_insert_user_data', [$object, 'bkismet_check_signup'], $priority );
+            }
+          }
+        }
+      }
+    }
 
     return wp_insert_user( apply_filters( 'memberful.map_user.create', $user_data, $this->member ) );
   }
