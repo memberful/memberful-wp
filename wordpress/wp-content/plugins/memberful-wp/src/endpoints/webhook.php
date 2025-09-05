@@ -6,11 +6,34 @@
 class Memberful_Wp_Endpoint_Webhook implements Memberful_Wp_Endpoint {
 
   public function verify_request() {
-    return $_SERVER['REQUEST_METHOD'] === 'POST';
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+      return false;
+    }
+    
+    $webhook_secret = get_option('memberful_webhook_secret');
+    if (empty($webhook_secret)) {
+      return false;
+    }
+    
+    $signature = $_SERVER['HTTP_X_MEMBERFUL_WEBHOOK_DIGEST'] ?? '';
+    if (empty($signature)) {
+      return false;
+    }
+    
+    $payload = file_get_contents('php://input');
+    $expected_signature = hash('sha256', $payload . $webhook_secret);
+    
+    return hash_equals($expected_signature, $signature);
   }
 
   public function process() {
     header("Content-Type: text/plain");
+
+    // Verify the request is authenticated
+    if (!$this->verify_request()) {
+      http_response_code(401);
+      die('Unauthorized');
+    }
 
     $member_id  = NULL;
     $payload = json_decode($this->raw_request_body());
