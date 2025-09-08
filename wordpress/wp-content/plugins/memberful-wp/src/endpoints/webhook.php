@@ -10,7 +10,7 @@ class Memberful_Wp_Endpoint_Webhook implements Memberful_Wp_Endpoint {
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
       return array(
         'code' => 405,
-        'message' => 'Method Not Allowed. Webhook endpoint only accepts POST requests.'
+        'message' => 'Method Not Allowed'
       );
     }
     
@@ -19,7 +19,7 @@ class Memberful_Wp_Endpoint_Webhook implements Memberful_Wp_Endpoint {
     if (empty($webhook_secret)) {
       return array(
         'code' => 501,
-        'message' => 'Webhook secret not configured. Please configure the webhook secret in Memberful settings.'
+        'message' => 'Not Implemented'
       );
     }
     
@@ -28,7 +28,7 @@ class Memberful_Wp_Endpoint_Webhook implements Memberful_Wp_Endpoint {
     if (empty($signature)) {
       return array(
         'code' => 401,
-        'message' => 'Unauthorized. Missing X-Memberful-Webhook-Digest header.'
+        'message' => 'Unauthorized'
       );
     }
     
@@ -39,7 +39,7 @@ class Memberful_Wp_Endpoint_Webhook implements Memberful_Wp_Endpoint {
     if (!hash_equals($expected_signature, $signature)) {
       return array(
         'code' => 401,
-        'message' => 'Unauthorized. Invalid webhook signature.'
+        'message' => 'Unauthorized'
       );
     }
     
