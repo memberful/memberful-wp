@@ -6,34 +6,48 @@
 class Memberful_Wp_Endpoint_Webhook implements Memberful_Wp_Endpoint {
 
   public function verify_request() {
+    // Check HTTP method first
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-      return false;
+      return array(
+        'code' => 405,
+        'message' => 'Method Not Allowed. Webhook endpoint only accepts POST requests.'
+      );
     }
     
+    // Check if webhook secret is configured
     $webhook_secret = get_option('memberful_webhook_secret');
     if (empty($webhook_secret)) {
-      return false;
+      return array(
+        'code' => 501,
+        'message' => 'Webhook secret not configured. Please configure the webhook secret in Memberful settings.'
+      );
     }
     
+    // Check if signature header is present
     $signature = $_SERVER['HTTP_X_MEMBERFUL_WEBHOOK_DIGEST'] ?? '';
     if (empty($signature)) {
-      return false;
+      return array(
+        'code' => 401,
+        'message' => 'Unauthorized. Missing X-Memberful-Webhook-Digest header.'
+      );
     }
     
+    // Verify signature
     $payload = file_get_contents('php://input');
     $expected_signature = hash('sha256', $payload . $webhook_secret);
     
-    return hash_equals($expected_signature, $signature);
+    if (!hash_equals($expected_signature, $signature)) {
+      return array(
+        'code' => 401,
+        'message' => 'Unauthorized. Invalid webhook signature.'
+      );
+    }
+    
+    return true;
   }
 
   public function process() {
     header("Content-Type: text/plain");
-
-    // Verify the request is authenticated
-    if (!$this->verify_request()) {
-      http_response_code(401);
-      die('Unauthorized');
-    }
 
     $member_id  = NULL;
     $payload = json_decode($this->raw_request_body());

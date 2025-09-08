@@ -20,8 +20,19 @@ add_action( 'wp_loaded', 'memberful_wp_endpoint_filter' );
  */
 function memberful_wp_endpoint_filter() {
   if ( $endpoint = memberful_wp_endpoint_for_request() ) {
-    if ( ! $endpoint->verify_request() )
-      die( 'Invalid request' );
+    $verification_result = $endpoint->verify_request();
+    
+    if ( $verification_result !== true ) {
+      // Handle different types of verification failures
+      if ( is_array( $verification_result ) && isset( $verification_result['code'] ) ) {
+        http_response_code( $verification_result['code'] );
+        die( $verification_result['message'] ?? 'Invalid request' );
+      } else {
+        // Default to 400 Bad Request for generic failures
+        http_response_code( 400 );
+        die( 'Invalid request' );
+      }
+    }
 
     header('Cache-Control: private');
     $endpoint->process();
@@ -67,11 +78,9 @@ interface Memberful_Wp_Endpoint {
   public function process();
 
   /**
-   * Checks if the request method is acceptable for this endpoint
+   * Checks if the request is acceptable for this endpoint
    *
-   * If false is returned the request should be cancelled
-   *
-   * @return boolean True if request method is acceptable, else false
+   * @return boolean|array True if request is acceptable, or array with 'code' and 'message' for specific errors
    */
   public function verify_request();
 }
