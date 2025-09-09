@@ -24,7 +24,7 @@ class Memberful_Wp_Endpoint_Webhook implements Memberful_Wp_Endpoint {
     }
     
     // Check if signature header is present
-    $signature = $_SERVER['HTTP_X_MEMBERFUL_WEBHOOK_DIGEST'] ?? '';
+    $signature = $_SERVER['HTTP_X_MEMBERFUL_WEBHOOK_SIGNATURE'] ?? '';
     if (empty($signature)) {
       return array(
         'code' => 401,
@@ -32,9 +32,9 @@ class Memberful_Wp_Endpoint_Webhook implements Memberful_Wp_Endpoint {
       );
     }
     
-    // Verify signature
+    // Verify signature using HMAC-SHA256 (as per Memberful documentation)
     $payload = file_get_contents('php://input');
-    $expected_signature = hash('sha256', $payload . $webhook_secret);
+    $expected_signature = hash_hmac('sha256', $payload, $webhook_secret);
     
     if (!hash_equals($expected_signature, $signature)) {
       return array(
