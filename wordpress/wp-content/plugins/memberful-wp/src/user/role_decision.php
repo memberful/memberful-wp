@@ -16,6 +16,10 @@ class Memberful_Wp_User_Role_Decision {
     );
   }
 
+  private $active_role;
+  private $inactive_role;
+  private $roles_memberful_is_allowed_to_change_from;
+
   public function __construct( $active_role, $inactive_role, $default_role, array $extra_roles_memberful_is_allowed_to_change_from = array() ) {
     $this->active_role   = $active_role;
     $this->inactive_role = $inactive_role;
@@ -42,6 +46,40 @@ class Memberful_Wp_User_Role_Decision {
       return $current_role;
     }
 
+    // Check if per-plan roles are enabled
+    if ( memberful_wp_use_per_plan_roles() && $is_active ) {
+      return $this->role_for_user_with_plan_mappings( $current_subscriptions );
+    }
+
     return $is_active ? $this->active_role : $this->inactive_role;
+  }
+
+  /**
+   * Determine the role for a user based on their plan subscriptions
+   * @param array $current_subscriptions User's current subscription plans
+   * @return string The role to assign
+   */
+  private function role_for_user_with_plan_mappings( $current_subscriptions ) {
+    $plan_mappings = memberful_wp_get_all_plan_role_mappings();
+    
+    // Find the highest priority role based on user's subscriptions
+    $assigned_roles = array();
+    
+    foreach ( $current_subscriptions as $plan_id => $subscription_data ) {
+      if ( isset( $plan_mappings[ $plan_id ] ) ) {
+        $assigned_roles[] = $plan_mappings[ $plan_id ];
+      }
+    }
+    
+    // If user has multiple plans with different roles, we need to determine priority
+    if ( ! empty( $assigned_roles ) ) {
+      // For now, we'll use the first role found
+      // In the future, this could be enhanced with role priority logic
+      return $assigned_roles[0];
+    }
+    
+    // Fallback when per-plan roles are enabled but no mapping found
+    // Use the inactive role to avoid granting broad access unintentionally
+    return $this->inactive_role;
   }
 }
