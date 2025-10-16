@@ -113,7 +113,7 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 = 1.76.0 =
 
-* Fix webhook signature verification security vulnerability
+* Fix webhook signature verification security vulnerability (CVE-2025-58000)
 
 = 1.75.0 =
 
