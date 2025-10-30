@@ -28,6 +28,7 @@
 
       <h2 style="margin-top:20px;">Per-Plan Roles</h2>
       <p><?php _e( 'Assign specific WordPress roles to specific subscription plans. Enable this to override the simple active/inactive role mapping.', 'memberful' ); ?></p>
+      <p><?php _e( 'Learn more about roles <a href="https://memberful.com/docs/" target="_blank">here</a>.', 'memberful' ); ?></p>
 
       <table class="form-table">
         <tr>
@@ -73,6 +74,21 @@
                 </td>
               </tr>
               <?php endforeach; ?>
+              <tr>
+                <td class="plan-name">
+                  <strong><?php _e( 'No active subscription plan', 'memberful' ); ?></strong>
+                </td>
+                <td class="mapped-role">
+                  <select name="plan_role_mappings[inactive]">
+                    <option value=""><?php _e( 'No specific role (use default)', 'memberful' ); ?></option>
+                    <?php foreach( $available_roles as $role => $role_name ): ?>
+                    <option value="<?php echo esc_attr( $role ); ?>" <?php echo ( isset($current_mappings['inactive']) && $current_mappings['inactive'] === $role ) ? 'selected="selected"' : '' ?>>
+                      <?php echo esc_html( $role_name ); ?>
+                    </option>
+                    <?php endforeach; ?>
+                  </select>
+                </td>
+              </tr>
             </tbody>
           </table>
         <?php endif; ?>
