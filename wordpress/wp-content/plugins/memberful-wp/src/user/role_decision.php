@@ -4,7 +4,9 @@ class Memberful_Wp_User_Role_Decision {
   public static function ensure_user_role_is_correct( WP_User $user ) {
     $decision = self::build();
 
-    return $decision->update_user_role( $user );
+    $decision->update_user_role( $user );
+
+    clean_user_cache( $user->ID );
   }
 
   public static function build(array $extra_roles_memberful_is_allowed_to_change_from = array()) {
@@ -97,9 +99,9 @@ class Memberful_Wp_User_Role_Decision {
 
     // If user has multiple plans with different roles, we need to determine priority
     if ( ! empty( $assigned_roles ) ) {
-      // For now, we'll use the first role found
+      // For now, we'll use the role with the highest level of capabilities.
       // In the future, this could be enhanced with support for multiple roles per plan.
-      $role = $assigned_roles[0];
+      $role = $this->get_user_role_with_highest_capabilities( $assigned_roles );
 
       /**
        * Filter to determine the role for a user with plan mappings.
@@ -143,5 +145,49 @@ class Memberful_Wp_User_Role_Decision {
     }
 
     return $default_inactive_role;
+  }
+
+  /**
+   * Get the user role with the highest level of capabilities from a list of roles.
+   *
+   * This is a temporary solution to determine which of multiple roles
+   * should be assigned to a user with multiple roles.
+   *
+   * @param array $roles The roles to check.
+   * @return string The role with the highest level of capabilities.
+   */
+  public function get_user_role_with_highest_capabilities( $roles ) {
+    global $wp_roles;
+
+    if (!isset($wp_roles)) {
+        $wp_roles = new WP_Roles();
+    }
+
+    $highest_count = 0;
+    $highest_role = '';
+
+    foreach ($roles as $role_name) {
+        $role = $wp_roles->get_role($role_name);
+        if ($role && $role->capabilities) {
+          // Get the level_* capabilities and find the highest one that is set to true.
+          $level_capabilities = array_filter($role->capabilities, function($value, $key) {
+            return str_starts_with($key, 'level_') && $value === true;
+          }, ARRAY_FILTER_USE_BOTH);
+
+          if (empty($level_capabilities)) {
+            continue;
+          }
+
+          $highest_level = max(array_keys($level_capabilities));
+          $highest_level = absint(str_replace('level_', '', $highest_level));
+
+          if ($highest_level > $highest_count) {
+            $highest_count = $highest_level;
+            $highest_role = $role_name;
+          }
+        }
+    }
+
+    return $highest_role;
   }
 }
