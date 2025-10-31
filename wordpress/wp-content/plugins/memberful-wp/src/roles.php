@@ -142,12 +142,13 @@ function memberful_wp_update_all_user_roles_with_plan_mappings() {
  */
 function memberful_wp_user_role_for_user( WP_User $user ) {
   if ( ! $user instanceof WP_User ) {
-    return '';
+    return get_option( 'default_role', 'subscriber' );
   }
 
   $role_decision = Memberful_Wp_User_Role_Decision::build();
 
-  $user_role = $role_decision->role_for_user( reset( $user->roles ), memberful_wp_user_plans_subscribed_to( $user->ID ) );
+  $current_role = ! empty( $user->roles ) ? reset( $user->roles ) : get_option( 'default_role', 'subscriber' );
+  $user_role = $role_decision->role_for_user( $current_role, memberful_wp_user_plans_subscribed_to( $user->ID ) );
 
   /**
    * Filter to determine the user role for a user.
