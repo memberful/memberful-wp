@@ -21,11 +21,21 @@ function memberful_wp_roles_that_can_be_mapped_to() {
 }
 
 function memberful_wp_role_for_active_customer( $default_role = 'subscriber' ) {
-  return get_option( 'memberful_role_active_customer', $default_role );
+  $configured_role = get_option( 'memberful_role_active_customer', $default_role );
+
+  if ( array_key_exists( $configured_role, memberful_wp_roles_that_can_be_mapped_to() ) )
+    return $configured_role;
+
+  return $default_role;
 }
 
 function memberful_wp_role_for_inactive_customer( $default_role = 'subscriber' ) {
-  return get_option( 'memberful_role_inactive_customer', $default_role );
+  $configured_role = get_option( 'memberful_role_inactive_customer', $default_role );
+
+  if ( array_key_exists( $configured_role, memberful_wp_roles_that_can_be_mapped_to() ) )
+    return $configured_role;
+
+  return $default_role;
 }
 
 
