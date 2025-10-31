@@ -188,6 +188,13 @@ class Memberful_Wp_User_Role_Decision {
         }
     }
 
+    if ( empty( $highest_role ) && ! empty( $roles ) ) {
+      // Fallback to the first role in the list if no highest role is found.
+      // This can happen if the user has no roles with level_* capabilities,
+      // or with custom roles that don't have level_* capabilities.
+      $highest_role = reset( $roles );
+    }
+
     return $highest_role;
   }
 }
