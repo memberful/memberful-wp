@@ -7,7 +7,15 @@ function memberful_wp_roles_that_can_be_mapped_to() {
 
   unset($allowed_roles['administrator']);
 
-  $allowed_roles = apply_filters( 'memberful_roles_for_mapping', $allowed_roles );
+  /**
+   * Filter to determine the allowed roles that can be mapped to.
+   *
+   * @since 1.77.0
+   *
+   * @param array $allowed_roles The allowed roles that can be mapped to.
+   * @return array The allowed roles that can be mapped to.
+   */
+  $allowed_roles = apply_filters( 'memberful_allowed_roles_for_mapping', $allowed_roles );
 
   return $allowed_roles;
 }
@@ -69,6 +77,15 @@ function memberful_wp_remove_plan_role_mapping( $plan_id ) {
  */
 function memberful_wp_get_all_plan_role_mappings() {
   $mappings = get_option( 'memberful_plan_role_mappings', array() );
+
+  /**
+   * Filter to get all the saved per-plan role mappings.
+   *
+   * @since 1.77.0
+   *
+   * @param array $mappings The saved per-plan role mappings.
+   * @return array The role mappings.
+   */
   return apply_filters( 'memberful_all_plan_role_mappings', $mappings );
 }
 
@@ -78,6 +95,15 @@ function memberful_wp_get_all_plan_role_mappings() {
  */
 function memberful_wp_use_per_plan_roles() {
   $use_per_plan_roles = get_option( 'memberful_use_per_plan_roles', FALSE );
+
+  /**
+   * Filter to determine if per-plan roles are enabled.
+   *
+   * @since 1.77.0
+   *
+   * @param bool $use_per_plan_roles Whether per-plan roles are enabled.
+   * @return bool Whether per-plan roles are enabled. (Default: false)
+   */
   return apply_filters( 'memberful_use_per_plan_roles', $use_per_plan_roles );
 }
 
@@ -120,5 +146,17 @@ function memberful_wp_user_role_for_user( WP_User $user ) {
   }
 
   $role_decision = Memberful_Wp_User_Role_Decision::build();
-  return $role_decision->role_for_user( reset( $user->roles ), memberful_wp_user_plans_subscribed_to( $user->ID ) );
+
+  $user_role = $role_decision->role_for_user( reset( $user->roles ), memberful_wp_user_plans_subscribed_to( $user->ID ) );
+
+  /**
+   * Filter to determine the user role for a user.
+   *
+   * @since 1.77.0
+   *
+   * @param string $user_role The user role for the user.
+   * @param WP_User $user The user.
+   * @return string The user role for the user.
+   */
+  return apply_filters( 'memberful_wp_user_role_for_user', $user_role, $user );
 }

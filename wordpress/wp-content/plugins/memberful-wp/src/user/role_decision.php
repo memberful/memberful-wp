@@ -21,8 +21,25 @@ class Memberful_Wp_User_Role_Decision {
   private $roles_memberful_is_allowed_to_change_from;
 
   public function __construct( $active_role, $inactive_role, $default_role, array $extra_roles_memberful_is_allowed_to_change_from = array() ) {
-    $this->active_role   = $active_role;
-    $this->inactive_role = $this->get_fallback_role_for_inactive_user( $inactive_role );
+    /**
+     * Filter to determine the active customer role.
+     *
+     * @since 1.77.0
+     *
+     * @param string $active_role The active customer role.
+     * @return string The active customer role.
+     */
+    $this->active_role = apply_filters( 'memberful_user_role_for_active_customer', $active_role );
+
+    /**
+     * Filter to determine the inactive customer role.
+     *
+     * @since 1.77.0
+     *
+     * @param string $inactive_role The inactive customer role.
+     * @return string The inactive customer role.
+     */
+    $this->inactive_role = apply_filters( 'memberful_user_role_for_inactive_customer', $this->get_fallback_role_for_inactive_user( $inactive_role ) );
 
     $this->roles_memberful_is_allowed_to_change_from = array_merge(
       array( $this->active_role, $this->inactive_role, $default_role ),
@@ -34,13 +51,23 @@ class Memberful_Wp_User_Role_Decision {
     $current_subscriptions = memberful_wp_user_plans_subscribed_to( $user->ID );
     $new_role = $this->role_for_user( reset( $user->roles ), $current_subscriptions );
 
-    $new_role = apply_filters( 'memberful_wp_user_role_for_update_user_role', $new_role, $user, $current_subscriptions );
+    $new_role = apply_filters( 'memberful_user_role_for_update_user_role', $new_role, $user, $current_subscriptions );
 
     $user->set_role( $new_role );
   }
 
   public function role_for_user($current_role, $current_subscriptions) {
-    $is_active = ! empty( $current_subscriptions );
+
+    /**
+     * Filter to determine the current subscriptions for a user.
+     *
+     * @since 1.77.0
+     *
+     * @param array $current_subscriptions The current subscriptions for the user.
+     * @return array The current subscriptions for the user.
+     */
+    $current_subscriptions = apply_filters( 'memberful_role_decision_user_current_subscriptions', $current_subscriptions );
+    $is_active             = ! empty( $current_subscriptions );
 
     // If per-plan roles are enabled and the user has an active subscription,
     // use the role mapping for the user's subscriptions.
@@ -72,7 +99,18 @@ class Memberful_Wp_User_Role_Decision {
     if ( ! empty( $assigned_roles ) ) {
       // For now, we'll use the first role found
       // In the future, this could be enhanced with support for multiple roles per plan.
-      return $assigned_roles[0];
+      $role = $assigned_roles[0];
+
+      /**
+       * Filter to determine the role for a user with plan mappings.
+       *
+       * @since 1.77.0
+       *
+       * @param string $role The role for the user.
+       * @param array $current_subscriptions Current subscriptions for the user.
+       * @return string The role for the user.
+       */
+      return apply_filters( 'memberful_user_role_for_user_with_plan_mappings', $role, $current_subscriptions );
     }
 
     // If no mapping is found, use the inactive role as the fallback.
