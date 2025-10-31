@@ -78,6 +78,18 @@ function memberful_wp_remove_plan_role_mapping( $plan_id ) {
 function memberful_wp_get_all_plan_role_mappings() {
   $mappings = get_option( 'memberful_plan_role_mappings', array() );
 
+  if ( ! is_array( $mappings ) ) {
+    $mappings = array();
+  }
+
+  $allowed_roles = memberful_wp_roles_that_can_be_mapped_to();
+
+  foreach ( $mappings as $plan_id => $role ) {
+    if ( empty( $role ) || ! array_key_exists( $role, $allowed_roles ) ) {
+      $mappings[ $plan_id ] = get_option( 'default_role', 'subscriber' );
+    }
+  }
+
   /**
    * Filter to get all the saved per-plan role mappings.
    *
