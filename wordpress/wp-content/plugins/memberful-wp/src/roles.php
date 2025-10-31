@@ -13,15 +13,11 @@ function memberful_wp_roles_that_can_be_mapped_to() {
 }
 
 function memberful_wp_role_for_active_customer( $default_role = 'subscriber' ) {
-  $role_decision = Memberful_Wp_User_Role_Decision::build(array($default_role));
-
-  return $role_decision->role_for_user( $default_role, array() );
+  return get_option( 'memberful_role_active_customer', $default_role );
 }
 
 function memberful_wp_role_for_inactive_customer( $default_role = 'subscriber' ) {
-  $role_decision = Memberful_Wp_User_Role_Decision::build(array($default_role));
-
-  return $role_decision->get_inactive_role();
+  return get_option( 'memberful_role_inactive_customer', $default_role );
 }
 
 
