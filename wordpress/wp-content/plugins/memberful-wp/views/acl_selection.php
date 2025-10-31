@@ -23,7 +23,7 @@
             <?php foreach($subscriptions as $id => $subscription): ?>
               <li>
                 <label>
-                  <input type="checkbox" name="memberful_subscription_acl[]" value="<?php echo esc_attr($id); ?>" <?php checked( $subscription['checked'] ); ?>>
+                  <input type="checkbox" class="memberful-subscription-plan" name="memberful_subscription_acl[]" value="<?php echo esc_attr($id); ?>" <?php checked( $subscription['checked'] ); ?>>
                   <?php echo esc_html( $subscription['name'] ); ?>
                 </label>
               </li>
@@ -48,3 +48,40 @@
         <?php endif; ?>
       </div>
     </div>
+    <script type="text/javascript">
+    jQuery(function($){
+      var anyActive = $('input[name="memberful_viewable_by_anybody_subscribed_to_a_plan"]');
+      var specific  = $('input.memberful-subscription-plan');
+
+      function syncFromAnyActive(){
+        var isOn = anyActive.is(':checked');
+        if (isOn) {
+          if (specific.filter(':checked').length) {
+            specific.filter(':checked').prop('checked', false).trigger('change');
+          }
+          specific.prop('disabled', true);
+        } else {
+          specific.prop('disabled', false);
+        }
+      }
+
+      function syncFromSpecific(){
+        if (specific.filter(':checked').length > 0) {
+          if (anyActive.is(':checked')) {
+            anyActive.prop('checked', false).trigger('change');
+          }
+        }
+      }
+
+      anyActive.on('change', function(){
+        syncFromAnyActive();
+      });
+
+      specific.on('change', function(){
+        syncFromSpecific();
+      });
+
+      // Initial state
+      syncFromAnyActive();
+    });
+    </script>

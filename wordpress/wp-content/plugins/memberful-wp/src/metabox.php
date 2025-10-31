@@ -116,6 +116,10 @@ function memberful_wp_save_postdata( $post_id ) {
   memberful_wp_set_post_available_to_any_registered_users( $post_id, $viewable_by_any_registered_users );
 
   $viewable_by_anybody_subscribed_to_a_plan = isset($_POST['memberful_viewable_by_anybody_subscribed_to_a_plan']) && $_POST['memberful_viewable_by_anybody_subscribed_to_a_plan'] === '1';
+  // Enforce mutual exclusivity at save time: if specific plans are chosen, do not allow broad access
+  if ( !empty($subscription_plan_ids) ) {
+    $viewable_by_anybody_subscribed_to_a_plan = false;
+  }
   memberful_wp_set_post_available_to_anybody_subscribed_to_a_plan( $post_id, $viewable_by_anybody_subscribed_to_a_plan );
 
   if(!isset($_POST['memberful_marketing_content']))
