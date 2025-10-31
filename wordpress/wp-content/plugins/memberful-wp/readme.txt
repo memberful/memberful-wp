@@ -2,9 +2,9 @@
 Contributors: drewstrojny, jakememberful, julianmemberful, lucasmemberful, patrikmemberful
 Tags: membership, subscriptions, paywall, stripe, recurring payments, memberful, oauth, oauth 2.0, members, recurring billing
 Requires at least: 3.6
-Tested up to: 6.7
-Requires PHP: 7.0
-Stable tag: 1.75.0
+Tested up to: 6.8.3
+Requires PHP: 7.4
+Stable tag: 1.76.1
 License: GPLv2 or later
 
 Sell memberships and restrict access to content with WordPress and Memberful.
@@ -110,6 +110,15 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 19. View membership information
 
 == Changelog ==
+
+= 1.76.1 =
+
+* Update WordPress compatibility to 6.8.3
+* Update minimum PHP requirement to 7.4
+
+= 1.76.0 =
+
+* Fix webhook signature verification security vulnerability (CVE-2025-58000)
 
 = 1.75.0 =
 
@@ -763,5 +772,3 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 * Added more shortcodes: account, sign in, sign out.
 * Improved error messages.
 * Ensure proper re-directs on sign out.
-
-
