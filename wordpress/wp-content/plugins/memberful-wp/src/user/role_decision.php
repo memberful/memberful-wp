@@ -42,10 +42,6 @@ class Memberful_Wp_User_Role_Decision {
   public function role_for_user($current_role, $current_subscriptions) {
     $is_active = ! empty( $current_subscriptions );
 
-    if ( ! in_array( $current_role, $this->roles_memberful_is_allowed_to_change_from ) ) {
-      return $current_role;
-    }
-
     // If per-plan roles are enabled and the user has an active subscription,
     // use the role mapping for the user's subscriptions.
     if ( memberful_wp_use_per_plan_roles() && $is_active ) {
@@ -104,6 +100,8 @@ class Memberful_Wp_User_Role_Decision {
       if ( isset( $plan_mappings['inactive'] ) && ! empty( $plan_mappings['inactive'] ) ) {
         return $plan_mappings['inactive'];
       }
+
+      return get_option( 'default_role', 'subscriber' );
     }
 
     return $default_inactive_role;
