@@ -51,14 +51,14 @@ class Memberful_Wp_User_Role_Decision {
 
   public function update_user_role( WP_User $user ) {
     $current_subscriptions = memberful_wp_user_plans_subscribed_to( $user->ID );
-    $new_role = $this->role_for_user( reset( $user->roles ), $current_subscriptions );
+    $new_role = $this->role_for_user( $current_subscriptions );
 
     $new_role = apply_filters( 'memberful_user_role_for_update_user_role', $new_role, $user, $current_subscriptions );
 
     $user->set_role( $new_role );
   }
 
-  public function role_for_user($current_role, $current_subscriptions) {
+  public function role_for_user($current_subscriptions) {
 
     /**
      * Filter to determine the current subscriptions for a user.
@@ -171,7 +171,7 @@ class Memberful_Wp_User_Role_Decision {
         if ($role && $role->capabilities) {
           // Get the level_* capabilities and find the highest one that is set to true.
           $level_capabilities = array_filter($role->capabilities, function($value, $key) {
-            return str_starts_with($key, 'level_') && $value === true;
+            return strpos($key, 'level_') === 0 && $value === true;
           }, ARRAY_FILTER_USE_BOTH);
 
           if (empty($level_capabilities)) {
