@@ -116,7 +116,7 @@ function memberful_wp_update_all_user_roles_with_plan_mappings() {
  */
 function memberful_wp_user_role_for_user( WP_User $user ) {
   if ( ! $user instanceof WP_User ) {
-    return new WP_Error( 'invalid_user', __( 'Invalid user', 'memberful' ) );
+    return '';
   }
 
   $role_decision = Memberful_Wp_User_Role_Decision::build();
