@@ -380,6 +380,15 @@ function memberful_wp_advanced_settings() {
   $current_mappings      = memberful_wp_get_all_plan_role_mappings();
   $use_per_plan_roles    = memberful_wp_use_per_plan_roles();
 
+  /**
+   * Filter to determine if user roles should be automatically updated/synced to existing users on save.
+   *
+   * @since 1.77.0
+   *
+   * @param bool $should_update_user_roles Whether to update user roles. (Default: true)
+   */
+  $should_update_user_roles = apply_filters( 'memberful_should_bulk_update_user_roles_on_save', true );
+
   if ( ! empty( $_POST ) ) {
     if ( isset( $_POST['role_mappings']['active_customer'] ) && array_key_exists( $_POST['role_mappings']['active_customer'], $allowed_roles ) ) {
       $new_active_role = sanitize_text_field($_POST['role_mappings']['active_customer']);
@@ -394,8 +403,9 @@ function memberful_wp_advanced_settings() {
       update_option( 'memberful_role_active_customer', $new_active_role );
       update_option( 'memberful_role_inactive_customer', $new_inactive_role );
 
-      // TODO: Update all users with the new active/inactive role mappings.
-      // memberful_wp_update_customer_roles( $current_active_role, $new_active_role, $current_inactive_role, $new_inactive_role );
+      if ( $should_update_user_roles ) {
+        memberful_wp_update_customer_roles( $current_active_role, $new_active_role, $current_inactive_role, $new_inactive_role );
+      }
 
       Memberful_Wp_Reporting::report( __('Active/Inactive role settings updated') );
     } else {
@@ -431,8 +441,9 @@ function memberful_wp_advanced_settings() {
 
       update_option( 'memberful_plan_role_mappings', $new_plan_mappings );
 
-      // TODO: Update all users with the new plan role mappings.
-      // memberful_wp_update_all_user_roles_with_plan_mappings();
+      if ( $should_update_user_roles ) {
+        memberful_wp_update_all_user_roles_with_plan_mappings();
+      }
 
       Memberful_Wp_Reporting::report( __('Per-plan role mappings updated') );
     } else {
