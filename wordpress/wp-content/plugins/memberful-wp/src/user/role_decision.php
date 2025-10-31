@@ -101,8 +101,8 @@ class Memberful_Wp_User_Role_Decision {
     if ( memberful_wp_use_per_plan_roles() ) {
       $plan_mappings = memberful_wp_get_all_plan_role_mappings();
 
-      if ( isset( $plan_mappings['inactive'] ) ) {
-        return $plan_mappings['inactive'] ?? $default_inactive_role;
+      if ( isset( $plan_mappings['inactive'] ) && ! empty( $plan_mappings['inactive'] ) ) {
+        return $plan_mappings['inactive'];
       }
     }
 
