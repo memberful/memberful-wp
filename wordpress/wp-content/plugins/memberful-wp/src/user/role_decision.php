@@ -31,10 +31,10 @@ class Memberful_Wp_User_Role_Decision {
   }
 
   public function update_user_role( WP_User $user ) {
-    $new_role = $this->role_for_user(
-      reset( $user->roles ),
-      memberful_wp_user_plans_subscribed_to( $user->ID )
-    );
+    $current_subscriptions = memberful_wp_user_plans_subscribed_to( $user->ID );
+    $new_role = $this->role_for_user( reset( $user->roles ), $current_subscriptions );
+
+    $new_role = apply_filters( 'memberful_wp_user_role_for_update_user_role', $new_role, $user, $current_subscriptions );
 
     $user->set_role( $new_role );
   }
