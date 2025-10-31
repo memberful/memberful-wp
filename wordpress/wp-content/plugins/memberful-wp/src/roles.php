@@ -7,25 +7,21 @@ function memberful_wp_roles_that_can_be_mapped_to() {
 
   unset($allowed_roles['administrator']);
 
+  $allowed_roles = apply_filters( 'memberful_roles_for_mapping', $allowed_roles );
+
   return $allowed_roles;
 }
 
 function memberful_wp_role_for_active_customer( $default_role = 'subscriber' ) {
-  $configured_role = get_option( 'memberful_role_active_customer', $default_role );
+  $role_decision = Memberful_Wp_User_Role_Decision::build(array($default_role));
 
-  if ( array_key_exists( $configured_role, memberful_wp_roles_that_can_be_mapped_to() ) )
-    return $configured_role;
-
-  return $default_role;
+  return $role_decision->role_for_user( $default_role, array() );
 }
 
 function memberful_wp_role_for_inactive_customer( $default_role = 'subscriber' ) {
-  $configured_role = get_option( 'memberful_role_inactive_customer', $default_role );
+  $role_decision = Memberful_Wp_User_Role_Decision::build(array($default_role));
 
-  if ( array_key_exists( $configured_role, memberful_wp_roles_that_can_be_mapped_to() ) )
-    return $configured_role;
-
-  return $default_role;
+  return $role_decision->get_inactive_role();
 }
 
 
@@ -46,7 +42,7 @@ function memberful_wp_update_customer_roles( $old_active_role, $new_active_role,
  * @return string The WordPress role for this plan, or null if not mapped
  */
 function memberful_wp_get_plan_role_mapping( $plan_id ) {
-  $mappings = get_option( 'memberful_plan_role_mappings', array() );
+  $mappings = memberful_wp_get_all_plan_role_mappings();
   return isset( $mappings[ $plan_id ] ) ? $mappings[ $plan_id ] : null;
 }
 
@@ -56,7 +52,7 @@ function memberful_wp_get_plan_role_mapping( $plan_id ) {
  * @param string $role The WordPress role to assign
  */
 function memberful_wp_set_plan_role_mapping( $plan_id, $role ) {
-  $mappings = get_option( 'memberful_plan_role_mappings', array() );
+  $mappings = memberful_wp_get_all_plan_role_mappings();
   $mappings[ $plan_id ] = $role;
   update_option( 'memberful_plan_role_mappings', $mappings );
 }
@@ -66,7 +62,7 @@ function memberful_wp_set_plan_role_mapping( $plan_id, $role ) {
  * @param int $plan_id The plan ID
  */
 function memberful_wp_remove_plan_role_mapping( $plan_id ) {
-  $mappings = get_option( 'memberful_plan_role_mappings', array() );
+  $mappings = memberful_wp_get_all_plan_role_mappings();
   unset( $mappings[ $plan_id ] );
   update_option( 'memberful_plan_role_mappings', $mappings );
 }
@@ -76,7 +72,8 @@ function memberful_wp_remove_plan_role_mapping( $plan_id ) {
  * @return array Array of plan_id => role mappings
  */
 function memberful_wp_get_all_plan_role_mappings() {
-  return get_option( 'memberful_plan_role_mappings', array() );
+  $mappings = get_option( 'memberful_plan_role_mappings', array() );
+  return apply_filters( 'memberful_all_plan_role_mappings', $mappings );
 }
 
 /**
@@ -84,7 +81,8 @@ function memberful_wp_get_all_plan_role_mappings() {
  * @return bool
  */
 function memberful_wp_use_per_plan_roles() {
-  return get_option( 'memberful_use_per_plan_roles', FALSE );
+  $use_per_plan_roles = get_option( 'memberful_use_per_plan_roles', FALSE );
+  return apply_filters( 'memberful_use_per_plan_roles', $use_per_plan_roles );
 }
 
 /**
@@ -100,7 +98,7 @@ function memberful_wp_set_use_per_plan_roles( $enabled ) {
  */
 function memberful_wp_update_all_user_roles_with_plan_mappings() {
   $mapped_users = Memberful_User_Mapping_Repository::fetch_user_ids_of_all_mapped_members();
-  
+
   if ( empty( $mapped_users ) ) {
     return;
   }
@@ -110,4 +108,21 @@ function memberful_wp_update_all_user_roles_with_plan_mappings() {
   foreach ( $users as $user ) {
     Memberful_Wp_User_Role_Decision::ensure_user_role_is_correct( $user );
   }
+}
+
+/**
+ * Get the assigned role for a user.
+ *
+ * TODO: Support for multiple roles.
+ *
+ * @param WP_User $user The user to get the role for.
+ * @return string|WP_Error The assigned role for the user, or a WP_Error if the user is invalid.
+ */
+function memberful_wp_user_role_for_user( WP_User $user ) {
+  if ( ! $user instanceof WP_User ) {
+    return new WP_Error( 'invalid_user', __( 'Invalid user', 'memberful' ) );
+  }
+
+  $role_decision = Memberful_Wp_User_Role_Decision::build();
+  return $role_decision->role_for_user( reset( $user->roles ), memberful_wp_user_plans_subscribed_to( $user->ID ) );
 }

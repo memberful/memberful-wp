@@ -22,10 +22,10 @@ class Memberful_Wp_User_Role_Decision {
 
   public function __construct( $active_role, $inactive_role, $default_role, array $extra_roles_memberful_is_allowed_to_change_from = array() ) {
     $this->active_role   = $active_role;
-    $this->inactive_role = $inactive_role;
+    $this->inactive_role = $this->get_fallback_role_for_inactive_user( $inactive_role );
 
     $this->roles_memberful_is_allowed_to_change_from = array_merge(
-      array( $active_role, $inactive_role, $default_role ),
+      array( $this->active_role, $this->inactive_role, $default_role ),
       $extra_roles_memberful_is_allowed_to_change_from
     );
   }
@@ -46,7 +46,8 @@ class Memberful_Wp_User_Role_Decision {
       return $current_role;
     }
 
-    // Check if per-plan roles are enabled
+    // If per-plan roles are enabled and the user has an active subscription,
+    // use the role mapping for the user's subscriptions.
     if ( memberful_wp_use_per_plan_roles() && $is_active ) {
       return $this->role_for_user_with_plan_mappings( $current_subscriptions );
     }
@@ -61,25 +62,50 @@ class Memberful_Wp_User_Role_Decision {
    */
   private function role_for_user_with_plan_mappings( $current_subscriptions ) {
     $plan_mappings = memberful_wp_get_all_plan_role_mappings();
-    
+
     // Find the highest priority role based on user's subscriptions
     $assigned_roles = array();
-    
+
     foreach ( $current_subscriptions as $plan_id => $subscription_data ) {
       if ( isset( $plan_mappings[ $plan_id ] ) ) {
         $assigned_roles[] = $plan_mappings[ $plan_id ];
       }
     }
-    
+
     // If user has multiple plans with different roles, we need to determine priority
     if ( ! empty( $assigned_roles ) ) {
       // For now, we'll use the first role found
-      // In the future, this could be enhanced with role priority logic
+      // In the future, this could be enhanced with support for multiple roles per plan.
       return $assigned_roles[0];
     }
-    
-    // Fallback when per-plan roles are enabled but no mapping found
-    // Use the inactive role to avoid granting broad access unintentionally
+
+    // If no mapping is found, use the inactive role as the fallback.
     return $this->inactive_role;
+  }
+
+  /**
+   * Get the inactive role for the user.
+   *
+   * @return string The inactive role for the user.
+   */
+  public function get_inactive_role() {
+    return $this->inactive_role;
+  }
+
+  /**
+   * Get the fallback role for the inactive user
+   * @param string $default_inactive_role The default inactive role to use if no fallback is found
+   * @return string The fallback role for the inactive user
+   */
+  private function get_fallback_role_for_inactive_user( $default_inactive_role = 'subscriber' ) {
+    if ( memberful_wp_use_per_plan_roles() ) {
+      $plan_mappings = memberful_wp_get_all_plan_role_mappings();
+
+      if ( isset( $plan_mappings['inactive'] ) ) {
+        return $plan_mappings['inactive'] ?? $default_inactive_role;
+      }
+    }
+
+    return $default_inactive_role;
   }
 }

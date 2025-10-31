@@ -431,6 +431,10 @@ function memberful_wp_advanced_settings() {
 
       update_option( 'memberful_plan_role_mappings', $new_plan_mappings );
 
+      // Reset the previously saved active/inactive role mappings.
+      update_option( 'memberful_role_active_customer', '' );
+      update_option( 'memberful_role_inactive_customer', '' );
+
       // TODO: Update all users with the new plan role mappings.
       // memberful_wp_update_all_user_roles_with_plan_mappings();
 

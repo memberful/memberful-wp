@@ -28,7 +28,7 @@
 
       <h2 style="margin-top:20px;">Per-Plan Roles</h2>
       <p><?php _e( 'Assign specific WordPress roles to specific subscription plans. Enable this to override the simple active/inactive role mapping.', 'memberful' ); ?></p>
-      <p><?php _e( 'Learn more about roles <a href="https://memberful.com/docs/" target="_blank">here</a>.', 'memberful' ); ?></p>
+      <p><?php _e( 'Learn more about per-plan roles <a href="https://memberful.com/docs/" target="_blank">here</a>.', 'memberful' ); ?></p>
 
       <table class="form-table">
         <tr>
