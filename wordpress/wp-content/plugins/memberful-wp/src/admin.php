@@ -431,10 +431,6 @@ function memberful_wp_advanced_settings() {
 
       update_option( 'memberful_plan_role_mappings', $new_plan_mappings );
 
-      // Reset the previously saved active/inactive role mappings.
-      update_option( 'memberful_role_active_customer', '' );
-      update_option( 'memberful_role_inactive_customer', '' );
-
       // TODO: Update all users with the new plan role mappings.
       // memberful_wp_update_all_user_roles_with_plan_mappings();
 
@@ -700,58 +696,4 @@ function memberful_wp_global_marketing() {
       'form_target' => memberful_wp_plugin_global_marketing_url()
     )
   );
-}
-
-function memberful_wp_plan_role_mappings() {
-  $allowed_roles = memberful_wp_roles_that_can_be_mapped_to();
-  $subscription_plans = memberful_subscription_plans();
-  $current_mappings = memberful_wp_get_all_plan_role_mappings();
-  $use_per_plan_roles = memberful_wp_use_per_plan_roles();
-
-  if ( ! empty( $_POST ) && isset( $_POST['save_plan_role_mappings'] ) ) {
-    if ( ! memberful_wp_valid_nonce( 'memberful_options' ) ) {
-      return;
-    }
-
-    // Update the per-plan roles setting
-    $use_per_plan_roles = isset( $_POST['use_per_plan_roles'] );
-    memberful_wp_set_use_per_plan_roles( $use_per_plan_roles );
-
-    if ( $use_per_plan_roles && isset( $_POST['plan_role_mappings'] ) ) {
-      $new_mappings = array();
-
-      foreach ( $_POST['plan_role_mappings'] as $plan_id => $role ) {
-        $plan_id = intval( $plan_id );
-        $role = sanitize_text_field( $role );
-
-        // Only save if the role is valid and the plan exists
-        if ( ! empty( $role ) && array_key_exists( $role, $allowed_roles ) && isset( $subscription_plans[ $plan_id ] ) ) {
-          $new_mappings[ $plan_id ] = $role;
-        }
-      }
-
-      update_option( 'memberful_plan_role_mappings', $new_mappings );
-
-      // Update all existing users with the new role mappings
-      memberful_wp_update_all_user_roles_with_plan_mappings();
-
-      Memberful_Wp_Reporting::report( __( 'Plan role mappings updated successfully', 'memberful' ) );
-    } else {
-      // Clear all mappings if per-plan roles are disabled
-      update_option( 'memberful_plan_role_mappings', array() );
-      Memberful_Wp_Reporting::report( __( 'Per-plan roles disabled', 'memberful' ) );
-    }
-
-    wp_redirect( memberful_wp_plugin_plan_role_mappings_url() );
-    return;
-  }
-
-  $vars = array(
-    'subscription_plans' => $subscription_plans,
-    'available_roles' => $allowed_roles,
-    'current_mappings' => $current_mappings,
-    'use_per_plan_roles' => $use_per_plan_roles,
-  );
-
-  memberful_wp_render( 'plan_role_mappings', $vars );
 }
