@@ -1,9 +1,9 @@
 <div class="wrap">
   <?php memberful_wp_render('option_tabs', array('active' => 'advanced_settings')); ?>
   <?php memberful_wp_render('flash'); ?>
-  <p class="memberful-role-mapping-table-description"><?php _e( "Assign roles to active (paying) and inactive (not paying) members. Memberful will automatically keep the role mappings in sync. Works best with custom roles created by other plugins.", 'memberful' ); ?></p>
+  <p class="memberful-role-mapping-table-description" style="<?php echo $use_per_plan_roles ? 'display: none;' : ''; ?>"><?php _e( "Assign roles to active (paying) and inactive (not paying) members. Memberful will automatically keep the role mappings in sync. Works best with custom roles created by other plugins.", 'memberful' ); ?></p>
   <form method="post" action="<?php echo esc_url(memberful_wp_plugin_advanced_settings_url( TRUE )); ?>">
-      <table class="widefat fixed" id="memberful-role-mapping-table">
+      <table class="widefat fixed" id="memberful-role-mapping-table" style="<?php echo $use_per_plan_roles ? 'display: none;' : ''; ?>">
         <thead>
         <tr>
           <th scope="col" class="manage-column"><?php _e( "Map members with", 'memberful' ); ?></th>
@@ -28,7 +28,6 @@
 
       <h2 style="margin-top:20px;">Per-Plan Roles</h2>
       <p><?php _e( 'Assign specific WordPress roles to specific subscription plans. Enable this to override the simple active/inactive role mapping.', 'memberful' ); ?></p>
-      <p><?php _e( 'Learn more about per-plan roles <a href="https://memberful.com/docs/" target="_blank">here</a>.', 'memberful' ); ?></p>
 
       <table class="form-table">
         <tr>
