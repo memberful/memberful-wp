@@ -295,6 +295,11 @@ function memberful_can_user_access_post( $user, $post ) {
     return $user ? true : false;
   }
 
+  // Grant access if user has a subscription and post or one of its terms allows access with any subscription
+  if ( memberful_wp_post_viewable_by_any_subscriber( $post, $terms_for_post )) {
+    return !empty( $user_subs );
+  }
+
   // Get the set of restrictions for this post
   $post_acl = get_post_meta( $post, 'memberful_acl', TRUE );
   $plans_for_post = isset( $post_acl['subscription'] ) ? $post_acl['subscription'] : array();
@@ -326,12 +331,7 @@ function memberful_can_user_access_post( $user, $post ) {
   $user_products = $user ? array_keys( memberful_wp_user_products( $user )) : array();
   $product_intersect = array_intersect( $products_for_post, $user_products );
 
-  // If there are no specific plan/product restrictions, fall back to the broad rules
   if (( empty( $plans_for_post ) ) && ( empty( $products_for_post ))) {
-    // Grant access if user has a subscription and post or one of its terms allows access with any subscription
-    if ( memberful_wp_post_viewable_by_any_subscriber( $post, $terms_for_post )) {
-      return !empty( $user_subs );
-    }
     // Grant access if no restrictions
     return true;
   } elseif ( ! empty( $plan_intersect ) || ! empty( $product_intersect )) {
