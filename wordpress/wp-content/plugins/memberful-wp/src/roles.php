@@ -157,8 +157,6 @@ function memberful_wp_update_all_user_roles_with_plan_mappings() {
 /**
  * Get the assigned role for a user.
  *
- * TODO: Support for multiple roles.
- *
  * @param WP_User $user The user to get the role for.
  * @return string|WP_Error The assigned role for the user, or a WP_Error if the user is invalid.
  */
