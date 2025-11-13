@@ -51,14 +51,25 @@ class Memberful_Wp_User_Role_Decision {
 
   public function update_user_role( WP_User $user ) {
     $current_subscriptions = memberful_wp_user_plans_subscribed_to( $user->ID );
-    $new_role = $this->role_for_user( $current_subscriptions );
+    $new_role = $this->role_for_user( reset( $user->roles ), $current_subscriptions );
 
+    /**
+     * Filter to determine the new role for a user.
+     *
+     * @since 1.77.0
+     *
+     * @param string $new_role The new role for the user.
+     * @param WP_User $user The user.
+     * @param array $current_subscriptions The current subscriptions for the user.
+     *
+     * @return string The new role for the user.
+     */
     $new_role = apply_filters( 'memberful_user_role_for_update_user_role', $new_role, $user, $current_subscriptions );
 
     $user->set_role( $new_role );
   }
 
-  public function role_for_user($current_subscriptions) {
+  public function role_for_user($current_role, $current_subscriptions) {
 
     /**
      * Filter to determine the current subscriptions for a user.
@@ -75,6 +86,10 @@ class Memberful_Wp_User_Role_Decision {
     // use the role mapping for the user's subscriptions.
     if ( memberful_wp_use_per_plan_roles() && $is_active ) {
       return $this->role_for_user_with_plan_mappings( $current_subscriptions );
+    }
+
+    if ( ! in_array( $current_role, $this->roles_memberful_is_allowed_to_change_from ) ) {
+      return $current_role;
     }
 
     return $is_active ? $this->active_role : $this->inactive_role;

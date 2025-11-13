@@ -167,7 +167,7 @@ function memberful_wp_user_role_for_user( WP_User $user ) {
 
   $role_decision = Memberful_Wp_User_Role_Decision::build();
 
-  $user_role = $role_decision->role_for_user( memberful_wp_user_plans_subscribed_to( $user->ID ) );
+  $user_role = $role_decision->role_for_user( reset( $user->roles ), memberful_wp_user_plans_subscribed_to( $user->ID ) );
 
   /**
    * Filter to determine the user role for a user.
