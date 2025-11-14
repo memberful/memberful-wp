@@ -22,7 +22,7 @@ function memberful_wp_protect_search( $query ) {
   }
 
   // Check if protected content should be included in search
-  $show_protected_content_in_search = get_option( 'memberful_show_protected_content_in_search', false );
+  $show_protected_content_in_search = (bool) get_option( 'memberful_show_protected_content_in_search', false );
 
   /**
    * Filter to determine if protected content should be included in search.
@@ -33,7 +33,7 @@ function memberful_wp_protect_search( $query ) {
    * @param WP_Query $query The query object.
    * @return bool Whether to show protected content in search.
    */
-  $show_protected_content_in_search = apply_filters( 'memberful_show_protected_content_in_search', $show_protected_content_in_search, $query );
+  $show_protected_content_in_search = (bool) apply_filters( 'memberful_show_protected_content_in_search', $show_protected_content_in_search, $query );
 
   if ( $show_protected_content_in_search ) {
     return;
