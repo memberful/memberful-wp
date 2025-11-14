@@ -120,7 +120,7 @@ function memberful_wp_admin_enqueue_scripts() {
     );
     wp_enqueue_script(
       'memberful-admin',
-      plugins_url( 'js/admin.js', dirname( __FILE__ ) ),
+      plugins_url( 'js/src/admin.js', dirname( __FILE__ ) ),
       array('jquery'),
       MEMBERFUL_VERSION
     );
@@ -128,7 +128,7 @@ function memberful_wp_admin_enqueue_scripts() {
 
   wp_enqueue_script(
     'memberful-menu',
-    plugins_url( 'js/menu.js', dirname( __FILE__ ) ),
+    plugins_url( 'js/src/menu.js', dirname( __FILE__ ) ),
     array('jquery'),
     MEMBERFUL_VERSION
   );
