@@ -162,6 +162,10 @@ class Memberful_WP_Block_Editor {
 			return '';
 		}
 
+		if ( ! is_user_logged_in() ) {
+			return '';
+		}
+
 		return $block_content;
 	}
 
