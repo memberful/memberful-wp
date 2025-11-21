@@ -53,6 +53,26 @@ class Memberful_WP_Block_Editor {
 	 */
 	public static function get_block_visibility_excluded_blocks() {
 
+		$excluded_blocks = array(
+			'core/button',
+			'core/buttons',
+			'core/separator',
+			'core/spacer',
+			'core/more',
+			'core/nextpage',
+			'core/block',
+			'core/legacy-widget',
+			'core/widget-group',
+			'core/navigation',
+			'core/navigation-link',
+			'core/navigation-submenu',
+			'core/site-logo',
+			'core/site-title',
+			'core/site-tagline',
+			'core/loginout',
+			'core/home-link',
+		);
+
 		/**
 		 * Filters the blocks that are excluded from the block visibility controls.
 		 *
@@ -61,7 +81,7 @@ class Memberful_WP_Block_Editor {
 		 * @param array $block_visibility_excluded_blocks The blocks that are excluded from the block visibility controls.
 		 * @return array The blocks that are excluded from the block visibility controls.
 		*/
-		return apply_filters( 'memberful_wp_block_visibility_excluded_blocks', array() );
+		return apply_filters( 'memberful_wp_block_visibility_excluded_blocks', $excluded_blocks );
 	}
 
 	/**
@@ -110,8 +130,8 @@ class Memberful_WP_Block_Editor {
 		$original_block_content = $block_content;
 
 		// Handle the block visibility conditions.
-		if ( ! empty( $block['attrs']['memberfulVisibility'] ) ) {
-			switch ( $block['attrs']['memberfulVisibility'] ) {
+		if ( ! empty( $block['attrs']['memberful_visibility'] ) ) {
+			switch ( $block['attrs']['memberful_visibility'] ) {
 				case 'all':
 					$block_content = $this->all_members_visibility( $block['attrs'], $block_content );
 					break;
@@ -158,7 +178,7 @@ class Memberful_WP_Block_Editor {
 	 * @return mixed Returns the new block content.
 	 */
 	public function all_members_visibility( $block_attributes, $block_content ) {
-		if ( ! empty( $block_attributes['memberfulVisibilityHide'] ) && is_user_logged_in() ) {
+		if ( ! empty( $block_attributes['memberful_visibility_hide'] ) && is_user_logged_in() ) {
 			return '';
 		}
 
@@ -212,7 +232,7 @@ class Memberful_WP_Block_Editor {
 			return '';
 		}
 
-		$plans = $block_attributes['memberfulVisibilitySpecificPlans'] ?? array();
+		$plans = $block_attributes['memberful_visibility_plans'] ?? array();
 
 		// Hide the block if the user has any of the specific plans.
 		if ( $this->should_reverse_visibility_conditions( $block_attributes ) ) {
@@ -232,7 +252,7 @@ class Memberful_WP_Block_Editor {
 	 * @return boolean Returns true if the visibility conditions should be reversed.
 	 */
 	public function should_reverse_visibility_conditions( $block_attributes ) {
-		return ! empty( $block_attributes['memberfulVisibilityHide'] );
+		return ! empty( $block_attributes['memberful_visibility_hide'] );
 	}
 }
 

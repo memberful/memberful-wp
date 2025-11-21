@@ -1,8 +1,7 @@
 import { ToggleControl, SelectControl, CheckboxControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { createHigherOrderComponent } from '@wordpress/compose';
-import { addFilter, applyFilters } from '@wordpress/hooks';
-import { useEffect } from '@wordpress/element';
+import { addFilter } from '@wordpress/hooks';
 import { InspectorControls } from '@wordpress/block-editor';
 import { PanelBody } from '@wordpress/components';
 
@@ -16,14 +15,14 @@ const MemberfulBlockVisibilityAttributes = (settings, name) => {
     }
     if (settings.attributes) {
         settings.attributes = Object.assign(settings.attributes, {
-            memberfulVisibility: {
+            memberful_visibility: {
                 enum: ['none', 'all', 'active', 'specific'],
             },
-            memberfulVisibilityHide: {
+            memberful_visibility_hide: {
                 type: 'boolean',
                 default: false,
             },
-            memberfulVisibilitySpecificPlans: {
+            memberful_visibility_plans: {
                 type: 'array',
                 default: [],
             },
@@ -37,23 +36,23 @@ addFilter('blocks.registerBlockType', 'memberful/block-visibility-attributes', M
 // Add the visibility controls to the allowed blocks.
 const MemberfulVisibilityControlsOptions = (props) => {
     const { attributes, setAttributes } = props;
-    const { memberfulVisibility, memberfulVisibilityHide, memberfulVisibilitySpecificPlans } = attributes;
+    const { memberful_visibility, memberful_visibility_hide, memberful_visibility_plans } = attributes;
 
     const handleVisibilityChange = (value) => {
         // Reset the specific plans if any are selected.
         if (value !== 'specific') {
-            setAttributes({ memberfulVisibilitySpecificPlans: [] });
+            setAttributes({ memberful_visibility_plans: [] });
         }
-        setAttributes({ memberfulVisibility: value });
+        setAttributes({ memberful_visibility: value });
     };
 
-    const toggleVisibilityHide = () => setAttributes({ memberfulVisibilityHide: !memberfulVisibilityHide });
+    const toggleVisibilityHide = () => setAttributes({ memberful_visibility_hide: !memberful_visibility_hide });
 
     const handleSpecificPlansChange = (id, value) => {
         if (value) {
-            setAttributes({ memberfulVisibilitySpecificPlans: [...memberfulVisibilitySpecificPlans, id] });
+            setAttributes({ memberful_visibility_plans: [...memberful_visibility_plans, id] });
         } else {
-            setAttributes({ memberfulVisibilitySpecificPlans: memberfulVisibilitySpecificPlans.filter((planId) => planId !== id) });
+            setAttributes({ memberful_visibility_plans: memberful_visibility_plans.filter((planId) => planId !== id) });
         }
     };
 
@@ -61,7 +60,7 @@ const MemberfulVisibilityControlsOptions = (props) => {
         <>
             <SelectControl
                 label={__('Visibility Condition', 'memberful')}
-                value={memberfulVisibility}
+                value={memberful_visibility}
                 onChange={handleVisibilityChange}
                 options={[
                     { value: 'none', label: __('None (All users)', 'memberful') },
@@ -70,7 +69,7 @@ const MemberfulVisibilityControlsOptions = (props) => {
                     { value: 'specific', label: __('Members with a specific plan', 'memberful') },
                 ]}
             />
-            {memberfulVisibility === 'specific' && (
+            {memberful_visibility === 'specific' && (
                 <>
                     <p className="components-base-control__help" style={{ color: 'rgb(117, 117, 117)', fontSize: '12px' }}>
                         {__('Show the block to members with at least one of the following plans:', 'memberful')}
@@ -79,16 +78,16 @@ const MemberfulVisibilityControlsOptions = (props) => {
                         <CheckboxControl
                             key={id}
                             label={plan.name}
-                            checked={memberfulVisibilitySpecificPlans.includes(id)}
+                            checked={memberful_visibility_plans.includes(id)}
                             onChange={(value) => handleSpecificPlansChange(id, value)}
                         />
                     ))}
                 </>
             )}
-            {memberfulVisibility !== 'none' && (
+            {memberful_visibility !== 'none' && (
                 <ToggleControl
                     label={__('Hide when the above conditions are met', 'memberful')}
-                    checked={memberfulVisibilityHide}
+                    checked={memberful_visibility_hide}
                     onChange={toggleVisibilityHide}
                 />
             )}
@@ -103,7 +102,7 @@ const MemberfulVisibilityControls = createHigherOrderComponent((BlockEdit) => {
                 <BlockEdit key="edit" {...props} />
                 {props.isSelected && !excludedBlocks.includes(props.name) && (
                     <InspectorControls>
-                        <PanelBody title={__('Memberful Visibility', 'memberful')}>
+                        <PanelBody title={__('Memberful Visibility', 'memberful')} initialOpen={false}>
                             {MemberfulVisibilityControlsOptions(props)}
                         </PanelBody>
                     </InspectorControls>
