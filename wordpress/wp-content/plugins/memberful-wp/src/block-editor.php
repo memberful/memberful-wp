@@ -56,25 +56,7 @@ class Memberful_WP_Block_Editor {
 	 */
 	public static function get_block_visibility_excluded_blocks() {
 
-		$excluded_blocks = array(
-			'core/button',
-			'core/buttons',
-			'core/separator',
-			'core/spacer',
-			'core/more',
-			'core/nextpage',
-			'core/block',
-			'core/legacy-widget',
-			'core/widget-group',
-			'core/navigation',
-			'core/navigation-link',
-			'core/navigation-submenu',
-			'core/site-logo',
-			'core/site-title',
-			'core/site-tagline',
-			'core/loginout',
-			'core/home-link',
-		);
+		$excluded_blocks = array();
 
 		/**
 		 * Filters the blocks that are excluded from the block visibility controls.
