@@ -48,6 +48,17 @@ For example, to see all the metadata for user 2 directly from the db:
 `wp user meta list 2`
 
 
+## Building plugin assets
+
+The plugin's JavaScript files are compiled with WP Scripts and Webpack.
+
+Run `npm install` from the plugin root folder to install the necessary dependencies.
+
+When in local development mode, run `npm run start` to start WP Scripts in "watch" mode. This will automatically re-build assets when changes are made.
+
+When preparing for plugin release, run `npm run build` to build the final versions of the assets for release. The built files will be excluded from git.
+
+
 ## Versioning
 
 The plugin is versioned using [Semantic Versioning](http://semver.org).
@@ -101,6 +112,8 @@ Any `svn` actions to `plugins.svn.wordpress.org` that require authentication wil
 * Make sure that every change has an appropriate changelog entry in `readme.txt`.
 * Set correct version number in `readme.txt` and `memberful-wp.php`.
 * Ensure that all changes are ready in the `main` branch.
+* Run `npm install && npm run build` from the plugin root to build plugin assets.
+* Remove the `node_modules` directory after building assets.
 * Run `./release.sh`.
 * A copy of the wordpress.org svn repo will be downloaded into `/tmp`, the
   version you tagged will be copied across to the `tags` and `trunk`
