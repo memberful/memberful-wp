@@ -8,31 +8,6 @@ import { PanelBody } from '@wordpress/components';
 const subscriptionPlans = window?.memberful_wp_block_editor?.options?.memberful_subscriptions || [];
 const excludedBlocks = window?.memberful_wp_block_editor?.block_visibility_excluded_blocks || [];
 
-// Add custom attributes to allowed blocks for visibility controls.
-const MemberfulBlockVisibilityAttributes = (settings, name) => {
-    if (excludedBlocks.includes(name)) {
-        return settings;
-    }
-    if (settings.attributes) {
-        settings.attributes = Object.assign(settings.attributes, {
-            memberful_visibility: {
-                enum: ['none', 'all', 'active', 'specific'],
-            },
-            memberful_visibility_hide: {
-                type: 'boolean',
-                default: false,
-            },
-            memberful_visibility_plans: {
-                type: 'array',
-                default: [],
-            },
-        });
-    }
-    return settings;
-};
-
-addFilter('blocks.registerBlockType', 'memberful/block-visibility-attributes', MemberfulBlockVisibilityAttributes);
-
 // Add the visibility controls to the allowed blocks.
 const MemberfulVisibilityControlsOptions = (props) => {
     const { attributes, setAttributes } = props;

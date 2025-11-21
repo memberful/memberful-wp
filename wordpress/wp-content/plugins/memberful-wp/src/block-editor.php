@@ -37,10 +37,13 @@ class Memberful_WP_Block_Editor {
 	 * Constructor.
 	 */
 	public function __construct() {
-		add_action( 'enqueue_block_editor_assets', array( $this, 'enqueue_assets' ) );
+		if ( function_exists( 'register_block_type' ) ) {
+			add_action( 'enqueue_block_editor_assets', array( $this, 'enqueue_assets' ) );
+			add_filter( 'register_block_type_args', array( $this, 'add_block_visibility_attributes' ), 10, 2 );
 
-		if ( ! is_admin() ) {
-			add_action( 'render_block', array( $this, 'render_block' ), 5, 2 );
+			if ( ! is_admin() ) {
+				add_action( 'render_block', array( $this, 'render_block' ), 10, 2 );
+			}
 		}
 	}
 
@@ -117,6 +120,39 @@ class Memberful_WP_Block_Editor {
 	}
 
 	/**
+	 * Add the block visibility attributes to registered blocks.
+	 *
+	 * @since 1.77.0
+	 *
+	 * @param array  $args The block arguments.
+	 * @param string $name The block name.
+	 * @return array The block arguments.
+	 */
+	public function add_block_visibility_attributes( $args, $name ) {
+		// Skip for excluded blocks.
+		if ( in_array( $name, self::get_block_visibility_excluded_blocks(), true ) ) {
+			return $args;
+		}
+
+		$args['attributes']['memberful_visibility'] = array(
+			'type' => 'string',
+			'enum' => array( 'none', 'all', 'active', 'specific' ),
+		);
+
+		$args['attributes']['memberful_visibility_hide'] = array(
+			'type'    => 'boolean',
+			'default' => false,
+		);
+
+		$args['attributes']['memberful_visibility_plans'] = array(
+			'type'    => 'array',
+			'default' => array(),
+		);
+
+		return $args;
+	}
+
+	/**
 	 * Conditionally render the block based on the block visibility conditions.
 	 *
 	 * @since 1.77.0
@@ -129,24 +165,27 @@ class Memberful_WP_Block_Editor {
 
 		$original_block_content = $block_content;
 
+		// Skip if no visibility rule is set.
+		if ( empty( $block['attrs']['memberful_visibility'] ) ) {
+			return $block_content;
+		}
+
 		// Handle the block visibility conditions.
-		if ( ! empty( $block['attrs']['memberful_visibility'] ) ) {
-			switch ( $block['attrs']['memberful_visibility'] ) {
-				case 'all':
-					$block_content = $this->all_members_visibility( $block['attrs'], $block_content );
-					break;
+		switch ( $block['attrs']['memberful_visibility'] ) {
+			case 'all':
+				$block_content = $this->all_members_visibility( $block['attrs'], $block_content );
+				break;
 
-				case 'active':
-					$block_content = $this->active_members_visibility( $block['attrs'], $block_content );
-					break;
+			case 'active':
+				$block_content = $this->active_members_visibility( $block['attrs'], $block_content );
+				break;
 
-				case 'specific':
-					$block_content = $this->specific_members_visibility( $block['attrs'], $block_content );
-					break;
+			case 'specific':
+				$block_content = $this->specific_members_visibility( $block['attrs'], $block_content );
+				break;
 
-				default:
-					break;
-			}
+			default:
+				break;
 		}
 
 		/**
