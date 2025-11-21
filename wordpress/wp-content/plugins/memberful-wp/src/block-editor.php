@@ -41,9 +41,7 @@ class Memberful_WP_Block_Editor {
 			add_action( 'enqueue_block_editor_assets', array( $this, 'enqueue_assets' ) );
 			add_filter( 'register_block_type_args', array( $this, 'add_block_visibility_attributes' ), 10, 2 );
 
-			if ( ! is_admin() ) {
-				add_action( 'render_block', array( $this, 'render_block' ), 10, 2 );
-			}
+			add_action( 'render_block', array( $this, 'render_block' ), 10, 2 );
 		}
 	}
 
