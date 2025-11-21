@@ -102,7 +102,7 @@ class Memberful_WP_Block_Editor {
 	}
 
 	/**
-	 * Add the block visibility attributes to registered blocks.
+	 * Add the block visibility attributes to registered blocks server-side.
 	 *
 	 * @since 1.77.0
 	 *
@@ -117,8 +117,9 @@ class Memberful_WP_Block_Editor {
 		}
 
 		$args['attributes']['memberful_visibility'] = array(
-			'type' => 'string',
-			'enum' => array( 'none', 'all', 'active', 'specific' ),
+			'type'    => 'string',
+			'enum'    => array( 'none', 'logged_in', 'specific' ),
+			'default' => 'none',
 		);
 
 		$args['attributes']['memberful_visibility_hide'] = array(
@@ -148,22 +149,18 @@ class Memberful_WP_Block_Editor {
 		$original_block_content = $block_content;
 
 		// Skip if no visibility rule is set.
-		if ( empty( $block['attrs']['memberful_visibility'] ) ) {
+		if ( empty( $block['attrs'] ) || empty( $block['attrs']['memberful_visibility'] ) ) {
 			return $block_content;
 		}
 
 		// Handle the block visibility conditions.
 		switch ( $block['attrs']['memberful_visibility'] ) {
-			case 'all':
+			case 'logged_in':
 				$block_content = $this->all_members_visibility( $block['attrs'], $block_content );
 				break;
 
-			case 'active':
-				$block_content = $this->active_members_visibility( $block['attrs'], $block_content );
-				break;
-
 			case 'specific':
-				$block_content = $this->specific_members_visibility( $block['attrs'], $block_content );
+				$block_content = $this->specific_plans_visibility( $block['attrs'], $block_content );
 				break;
 
 			default:
@@ -199,44 +196,19 @@ class Memberful_WP_Block_Editor {
 	 * @return mixed Returns the new block content.
 	 */
 	public function all_members_visibility( $block_attributes, $block_content ) {
-		if ( ! empty( $block_attributes['memberful_visibility_hide'] ) && is_user_logged_in() ) {
-			return '';
-		}
-
-		if ( ! is_user_logged_in() ) {
-			return '';
-		}
-
-		return $block_content;
-	}
-
-	/**
-	 * Active Members Visibility.
-	 *
-	 * Members with any active plan will see the block,
-	 * unless the visibility conditions are reversed.
-	 *
-	 * @since 1.77.0
-	 *
-	 * @param array $block_attributes The block data.
-	 * @param mixed $block_content The block content.
-	 * @return mixed Returns the new block content.
-	 */
-	public function active_members_visibility( $block_attributes, $block_content ) {
-		// Logged out users will not see the block at all.
-		if ( ! is_user_logged_in() ) {
-			return '';
-		}
+		$is_logged_in = is_user_logged_in();
 
 		if ( $this->should_reverse_visibility_conditions( $block_attributes ) ) {
-			return is_subscribed_to_any_memberful_plan( wp_get_current_user()->ID ) ? '' : $block_content;
+			// Show to logged out users only.
+			return $is_logged_in ? '' : $block_content;
 		}
 
-		return is_subscribed_to_any_memberful_plan( wp_get_current_user()->ID ) ? $block_content : '';
+		// Default: show to any logged‑in user only.
+		return $is_logged_in ? $block_content : '';
 	}
 
 	/**
-	 * Specific Members Visibility.
+	 * Specific Plans Visibility.
 	 *
 	 * Members with the specific plans will see the block,
 	 * unless the visibility conditions are reversed or the user does not have any of the specific plans.
@@ -247,13 +219,18 @@ class Memberful_WP_Block_Editor {
 	 * @param mixed $block_content The block content.
 	 * @return mixed Returns the new block content.
 	 */
-	public function specific_members_visibility( $block_attributes, $block_content ) {
+	public function specific_plans_visibility( $block_attributes, $block_content ) {
 		// Logged out users will not see the block at all.
 		if ( ! is_user_logged_in() ) {
 			return '';
 		}
 
 		$plans = $block_attributes['memberful_visibility_plans'] ?? array();
+
+		// No plans configured - fall back to rendering the block unmodified.
+		if ( empty( $plans ) ) {
+			return $block_content;
+		}
 
 		// Hide the block if the user has any of the specific plans.
 		if ( $this->should_reverse_visibility_conditions( $block_attributes ) ) {
