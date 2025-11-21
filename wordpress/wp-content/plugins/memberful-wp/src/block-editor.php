@@ -97,7 +97,7 @@ class Memberful_WP_Block_Editor {
 	}
 
 	/**
-	 * Render the block.
+	 * Conditionally render the block based on the block visibility conditions.
 	 *
 	 * @since 1.77.0
 	 *
