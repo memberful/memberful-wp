@@ -9,12 +9,12 @@ set -e
 
 PLUGIN_SLUG=memberful-wp
 
-CURRENT_BRANCH=`git branch | grep \* | cut -f 2 -d ' '`
+CURRENT_BRANCH=$(git branch | grep \* | cut -f 2 -d ' ')
 MAIN_BRANCH=main
 PLUGIN_DIR="$PWD/wordpress/wp-content/plugins/memberful-wp"
 MAIN_PLUGIN_FILE="$PLUGIN_DIR/memberful-wp.php"
 README_FILE="$PLUGIN_DIR/readme.txt"
-VERSION=`grep "^Stable tag" "$README_FILE" | awk '{ print $3 }'`
+VERSION=$(grep "^Stable tag" "$README_FILE" | awk '{ print $3 }')
 
 SVN_COMMIT_MESSAGE="Tagging version $VERSION"
 SVN_LOCAL_PATH="/tmp/$PLUGIN_SLUG"
@@ -35,8 +35,8 @@ check_for_uncommitted_changes() {
 }
 
 check_version_definitions() {
-  MAIN_PLUGIN_FILE_VERSION=`grep "^Version" $MAIN_PLUGIN_FILE | awk '{ print $2 }'`
-  MEMBERFUL_VERSION=`grep MEMBERFUL_VERSION $MAIN_PLUGIN_FILE | grep -v defined | cut -f 4 -d "'"`
+  MAIN_PLUGIN_FILE_VERSION=$(grep "^Version" $MAIN_PLUGIN_FILE | awk '{ print $2 }')
+  MEMBERFUL_VERSION=$(grep MEMBERFUL_VERSION $MAIN_PLUGIN_FILE | grep -v defined | cut -f 4 -d "'")
 
   if [ "$VERSION" != "$MAIN_PLUGIN_FILE_VERSION" -o "$MAIN_PLUGIN_FILE_VERSION" != "$MEMBERFUL_VERSION" ]; then
     echo "Plugin version definitions in $README_FILE and $MAIN_PLUGIN_FILE must match! Please fix them."
@@ -50,7 +50,7 @@ ask_for_release_confirmation() {
 
   read ANSWER
 
-  if ! echo $ANSWER | grep -E "^[yY][eE][sS]$|^[yY]$" > /dev/null; then
+  if ! echo $ANSWER | grep -E "^[yY][eE][sS]$|^[yY]$" >/dev/null; then
     echo "Exiting..."
     exit
   fi
@@ -60,7 +60,7 @@ push_to_wordpress_svn() {
   echo "Creating local copy of SVN repo in $SVN_LOCAL_PATH"
   svn co $SVN_URL $SVN_LOCAL_PATH
 
-  rsync -a --delete --exclude ".svn" "$PLUGIN_DIR/" "$SVN_TRUNK_PATH"
+  rsync -a --delete --exclude ".svn" "node_modules" "$PLUGIN_DIR/" "$SVN_TRUNK_PATH"
 
   cd $SVN_LOCAL_PATH
 
