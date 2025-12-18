@@ -5,4 +5,4 @@
  */
 
 // Block imports.
-import './blocks/extensions';
+import "./blocks/extensions";
