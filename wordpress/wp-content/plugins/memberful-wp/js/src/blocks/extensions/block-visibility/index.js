@@ -2,6 +2,7 @@ import {
   ToggleControl,
   SelectControl,
   CheckboxControl,
+  Notice,
 } from "@wordpress/components";
 import { __ } from "@wordpress/i18n";
 import { createHigherOrderComponent } from "@wordpress/compose";
@@ -121,6 +122,11 @@ const MemberfulVisibilityControlsOptions = (props) => {
               onChange={(value) => handleSpecificPlansChange(id, value)}
             />
           ))}
+          {memberful_visibility_plans.length === 0 && (
+            <Notice status="error" isDismissible={false}>
+              {__("Please select at least one plan.", "memberful")}
+            </Notice>
+          )}
         </>
       )}
       {memberful_visibility !== "none" && (
