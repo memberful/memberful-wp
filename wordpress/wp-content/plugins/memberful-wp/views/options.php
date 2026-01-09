@@ -52,6 +52,12 @@
             <span class="memberful-label__text--multiline">Update display names in WordPress when members change their full name in Memberful.</span>
           </label>
         </p>
+        <p>
+          <label for="show_protected_content_in_search_checkbox">
+            <input id="show_protected_content_in_search_checkbox" class="memberful-label__checkbox--multiline" type="checkbox" name="memberful_show_protected_content_in_search" <?php if( $show_protected_content_in_search): ?>checked="checked"<?php endif; ?>>
+            <span class="memberful-label__text--multiline">Show protected content in site search. <small>⚠️ Enabling this option will allow non-members to see protected content in WordPress search results.</small></span>
+          </label>
+        </p>
         <button type="submit" name="save_changes" class="button button-primary">Save Changes</button>
       </form>
     </div>

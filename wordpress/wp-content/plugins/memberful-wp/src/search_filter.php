@@ -21,6 +21,24 @@ function memberful_wp_protect_search( $query ) {
     return;
   }
 
+  // Check if protected content should be included in search
+  $show_protected_content_in_search = (bool) get_option( 'memberful_show_protected_content_in_search', false );
+
+  /**
+   * Filter to determine if protected content should be included in search.
+   *
+   * @since 1.77.0
+   *
+   * @param bool $show_protected_content_in_search Whether to show protected content in search.
+   * @param WP_Query $query The query object.
+   * @return bool Whether to show protected content in search.
+   */
+  $show_protected_content_in_search = (bool) apply_filters( 'memberful_show_protected_content_in_search', $show_protected_content_in_search, $query );
+
+  if ( $show_protected_content_in_search ) {
+    return;
+  }
+
   $disallowed_post_ids = memberful_wp_user_disallowed_post_ids( get_current_user_id() );
 
   // Exclude posts the user is not allowed to see.

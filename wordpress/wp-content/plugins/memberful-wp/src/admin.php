@@ -272,6 +272,7 @@ function memberful_wp_options() {
       update_option( 'memberful_block_dashboard_access', isset( $_POST['memberful_block_dashboard_access'] ));
       update_option( 'memberful_filter_account_menu_items', isset( $_POST['memberful_filter_account_menu_items'] ));
       update_option( 'memberful_auto_sync_display_names', isset( $_POST['memberful_auto_sync_display_names'] ) );
+      update_option( 'memberful_show_protected_content_in_search', isset( $_POST['memberful_show_protected_content_in_search'] ) );
 
       return wp_redirect( admin_url( 'options-general.php?page=memberful_options' ) );
     }
@@ -308,6 +309,7 @@ function memberful_wp_options() {
   $block_dashboard_access = get_option( 'memberful_block_dashboard_access' );
   $filter_account_menu_items = get_option( 'memberful_filter_account_menu_items' );
   $auto_sync_display_names = get_option( 'memberful_auto_sync_display_names' );
+  $show_protected_content_in_search = get_option( 'memberful_show_protected_content_in_search' );
 
   memberful_wp_render (
     'options',
@@ -319,7 +321,8 @@ function memberful_wp_options() {
       'hide_admin_toolbar' => $hide_admin_toolbar,
       'block_dashboard_access' => $block_dashboard_access,
       'filter_account_menu_items' => $filter_account_menu_items,
-      'auto_sync_display_names' => $auto_sync_display_names
+      'auto_sync_display_names' => $auto_sync_display_names,
+      'show_protected_content_in_search' => $show_protected_content_in_search
     )
   );
 }
