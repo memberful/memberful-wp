@@ -60,7 +60,7 @@ push_to_wordpress_svn() {
   echo "Creating local copy of SVN repo in $SVN_LOCAL_PATH"
   svn co $SVN_URL $SVN_LOCAL_PATH
 
-  rsync -a --delete --exclude ".svn" "node_modules" "$PLUGIN_DIR/" "$SVN_TRUNK_PATH"
+  rsync -a --delete --exclude ".svn" --exclude "node_modules" "$PLUGIN_DIR/" "$SVN_TRUNK_PATH"
 
   cd $SVN_LOCAL_PATH
 
