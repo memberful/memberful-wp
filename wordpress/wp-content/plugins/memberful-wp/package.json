@@ -1,0 +1,29 @@
+{
+  "name": "memberful-wp",
+  "version": "1.78.0",
+  "description": "Better membership software for WordPress.",
+  "main": "js/index.js",
+  "scripts": {
+    "start": "wp-scripts start --source-path=js/src --output-path=js/build",
+    "build": "wp-scripts build --source-path=js/src --output-path=js/build",
+    "check-engines": "wp-scripts check-engines"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+git@github.com:memberful/memberful-wp.git"
+  },
+  "author": "Memberful",
+  "license": "ISC",
+  "keywords": [
+    "wordpress",
+    "membership",
+    "plugin"
+  ],
+  "bugs": {
+    "url": "https://github.com/memberful/memberful-wp/issues"
+  },
+  "homepage": "https://github.com/memberful/memberful-wp#readme",
+  "devDependencies": {
+    "@wordpress/scripts": "^31.0.0"
+  }
+}
