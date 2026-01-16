@@ -12,6 +12,8 @@ class Memberful_Wp_Integration_Ad_Provider_Raptive extends Memberful_Wp_Integrat
 
   public function __construct() {
     parent::__construct();
+    $this->name = 'Raptive Ads';
+    $this->identifier = 'raptive-ads';
   }
 
   public function is_installed() {
@@ -19,33 +21,15 @@ class Memberful_Wp_Integration_Ad_Provider_Raptive extends Memberful_Wp_Integrat
   }
 
   public function get_name() {
-    return 'Raptive Ads';
+    return $this->name;
   }
 
   public function get_identifier() {
-    return 'raptive-ads';
+    return $this->identifier;
   }
 
   public function disable_ads_for_user($user_id) {
     add_filter( 'body_class', array( $this, 'disable_ads_body_class' ) );
-  }
-
-  public function apply_ad_controls_for_user($user_id) {
-    if( $this->should_disable_ads_for_user( $user_id ) ) {
-      $this->disable_ads_for_user( $user_id );
-    }
-  }
-
-  public function should_disable_ads_for_user($user_id) {
-    // consider the user's plans and the ad provider's settings to determine if ads should be disabled.
-    return false;
-  }
-
-  public function get_ad_provider_settings() {
-    return array(
-      'disabled_plans' => array(),
-      'disable_for_all_subscribers' => false,
-    );
   }
 
   /**

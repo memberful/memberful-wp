@@ -1,0 +1,104 @@
+<?php
+/**
+ * Ad provider settings view.
+ *
+ * @package memberful-wp
+ */
+
+?>
+<div class="wrap">
+  <?php memberful_wp_render( 'option_tabs', array( 'active' => 'ad_provider_settings' ) ); ?>
+  <?php memberful_wp_render( 'flash' ); ?>
+
+  <form method="POST" action="<?php echo esc_url( $form_target ); ?>">
+    <?php memberful_wp_nonce_field( 'memberful_options' ); ?>
+
+    <div class="memberful-bulk-apply-box">
+      <h3><?php esc_html_e( 'Ad provider settings', 'memberful' ); ?></h3>
+      <p><?php esc_html_e( 'Disable ads based on the member\'s subscription status and plans, for each supported ad provider.', 'memberful' ); ?></p>
+
+      <?php if ( empty( $providers ) ) : ?>
+        <p><?php esc_html_e( 'No ad providers are registered.', 'memberful' ); ?></p>
+      <?php else : ?>
+        <?php foreach ( $providers as $provider_id => $provider ) : ?>
+          <?php
+            $settings       = isset( $provider_settings[ $provider_id ] ) ? $provider_settings[ $provider_id ] : array();
+            $settings       = wp_parse_args( $settings, memberful_wp_ad_provider_settings_defaults() );
+            $disabled_plans = isset( $settings['disabled_plans'] ) && is_array( $settings['disabled_plans'] )
+              ? $settings['disabled_plans']
+              : array();
+          ?>
+          <div class="memberful-ad-provider-settings">
+            <p>
+              <label for="memberful_ad_provider_<?php echo esc_attr( $provider_id ); ?>_enabled">
+                <input
+                  id="memberful_ad_provider_<?php echo esc_attr( $provider_id ); ?>_enabled"
+                  type="checkbox"
+                  name="memberful_ad_provider[<?php echo esc_attr( $provider_id ); ?>][enabled]"
+                  <?php checked( ! empty( $settings['enabled'] ) ); ?>
+                >
+                <strong><?php echo esc_html( $provider->get_name() ); ?></strong>
+                <?php if ( ! $provider->is_installed() ) : ?>
+                  <span><?php esc_html_e( '(not installed)', 'memberful' ); ?></span>
+                <?php endif; ?>
+              </label>
+            </p>
+
+            <div
+              data-depends-on="memberful_ad_provider_<?php echo esc_attr( $provider_id ); ?>_enabled"
+              data-depends-value="1"
+              style="display: none;"
+            >
+              <p><?php esc_html_e( 'Disable ads for members with an active subscription to a specific plan:', 'memberful' ); ?></p>
+
+              <?php if ( empty( $subscription_plans ) ) : ?>
+                <p><?php esc_html_e( 'No subscription plans are available.', 'memberful' ); ?></p>
+              <?php else : ?>
+                <ul>
+                  <?php foreach ( $subscription_plans as $plan_id => $plan ) : ?>
+                    <li>
+                      <label>
+                        <input
+                          type="checkbox"
+                          name="memberful_ad_provider[<?php echo esc_attr( $provider_id ); ?>][disabled_plans][]"
+                          value="<?php echo esc_attr( $plan_id ); ?>"
+                          <?php checked( in_array( (int) $plan_id, $disabled_plans, true ) ); ?>
+                        >
+                        <?php echo esc_html( $plan['name'] ); ?>
+                      </label>
+                    </li>
+                  <?php endforeach; ?>
+                </ul>
+              <?php endif; ?>
+
+              <p>
+                <label>
+                  <input
+                    type="checkbox"
+                    name="memberful_ad_provider[<?php echo esc_attr( $provider_id ); ?>][disable_for_all_subscribers]"
+                    <?php checked( ! empty( $settings['disable_for_all_subscribers'] ) ); ?>
+                  >
+                  <em><?php esc_html_e( 'Disable ads for any member with an active subscription.', 'memberful' ); ?></em>
+                </label>
+              </p>
+              <p>
+                <label>
+                  <input
+                    type="checkbox"
+                    name="memberful_ad_provider[<?php echo esc_attr( $provider_id ); ?>][disable_for_logged_in]"
+                    <?php checked( ! empty( $settings['disable_for_logged_in'] ) ); ?>
+                  >
+                  <em><?php esc_html_e( 'Disable ads for all logged in users.', 'memberful' ); ?></em>
+                </label>
+              </p>
+            </div>
+          </div>
+          <hr>
+        <?php endforeach; ?>
+      <?php endif; ?>
+    </div>
+    <button type="submit" name="save_ad_provider_settings" class="button button-primary">
+      <?php esc_html_e( 'Save Changes', 'memberful' ); ?>
+    </button>
+  </form>
+</div>

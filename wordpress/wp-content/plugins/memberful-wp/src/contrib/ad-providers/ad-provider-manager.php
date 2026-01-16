@@ -5,6 +5,9 @@
  * @package memberful-wp
  */
 
+ require_once MEMBERFUL_DIR . '/src/contrib/ad-providers/base-ad-provider.php';
+ require_once MEMBERFUL_DIR . '/src/contrib/ad-providers/raptive-ads.php';
+
 /**
  * Central registry and coordinator for all ad providers.
  */
@@ -49,7 +52,11 @@ class Memberful_Wp_Integration_Ad_Provider_Manager {
    */
   public function auto_register_providers() {
     // Manually register providers here for auto registration.
+    // TODO: allow filtering of providers to register, also allow filtering of other provider-specific methods.
     $this->register_provider( new Memberful_Wp_Integration_Ad_Provider_Raptive() );
+
+    // Apply ad controls for users.
+    $this->apply_ad_controls_for_user();
   }
 
   /**
@@ -77,11 +84,11 @@ class Memberful_Wp_Integration_Ad_Provider_Manager {
    * @return Memberful_Wp_Integration_Ad_Provider_Base|null The ad provider, or null if not found.
    */
   public function get_provider( $identifier ) {
-    if( ! isset( $this->providers[$identifier] ) ) {
+    if ( ! isset( $this->providers[ $identifier ] ) ) {
       return null;
     }
 
-    return $this->providers[$identifier] ?? null;
+    return $this->providers[ $identifier ] ?? null;
   }
 
   /**
@@ -104,7 +111,7 @@ class Memberful_Wp_Integration_Ad_Provider_Manager {
    */
   public function should_disable_ads_for_user( $user_id, $provider_id ) {
     $provider = $this->get_provider( $provider_id );
-    if( ! $provider ) {
+    if ( ! $provider ) {
       return false;
     }
 
@@ -116,12 +123,16 @@ class Memberful_Wp_Integration_Ad_Provider_Manager {
    *
    * @param int $user_id The ID of the user to apply ad controls for.
    */
-  public function apply_ad_controls_for_user( $user_id ) {
+  public function apply_ad_controls_for_user() {
+    $user_id = get_current_user_id();
+
+    if ( ! $user_id ) {
+      return;
+    }
+
     /** @var Memberful_Wp_Integration_Ad_Provider_Base $provider */
-    foreach( $this->get_detected_providers() as $provider ) {
+    foreach ( $this->get_detected_providers() as $provider ) {
       $provider->apply_ad_controls_for_user( $user_id );
     }
   }
 }
-
-Memberful_Wp_Integration_Ad_Provider_Manager::instance();
