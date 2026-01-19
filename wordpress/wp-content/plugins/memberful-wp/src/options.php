@@ -23,6 +23,7 @@ function memberful_wp_all_options() {
     'memberful_block_dashboard_access' => TRUE,
     'memberful_filter_account_menu_items' => TRUE,
     'memberful_auto_sync_display_names' => FALSE,
+    'memberful_show_protected_content_in_search' => FALSE,
     'memberful_use_global_marketing' => FALSE,
     'memberful_use_global_snippets' => TRUE,
     'memberful_global_marketing_override' => TRUE,
