@@ -23,7 +23,7 @@
             <?php foreach($subscriptions as $id => $subscription): ?>
               <li>
                 <label>
-                  <input type="checkbox" name="memberful_subscription_acl[]" value="<?php echo esc_attr($id); ?>" <?php checked( $subscription['checked'] ); ?>>
+                  <input type="checkbox" class="memberful-subscription-plan" name="memberful_subscription_acl[]" value="<?php echo esc_attr($id); ?>" <?php checked( $subscription['checked'] ); ?>>
                   <?php echo esc_html( $subscription['name'] ); ?>
                 </label>
               </li>

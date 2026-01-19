@@ -19,7 +19,7 @@ class Memberful_Authenticator {
    */
   static public function audit_password_reset( $allowed, $user_id ) {
     $user = new WP_User( $user_id );
-    $member_role = memberful_wp_role_for_active_customer();
+    $member_role = memberful_wp_user_role_for_user( $user );
 
     return $user->has_cap( $member_role ) ? FALSE : $allowed;
   }
