@@ -121,7 +121,7 @@ function memberful_wp_admin_enqueue_scripts() {
     );
     wp_enqueue_script(
       'memberful-admin',
-      plugins_url( 'js/admin.js', dirname( __FILE__ ) ),
+      plugins_url( 'js/src/admin.js', dirname( __FILE__ ) ),
       array('jquery'),
       MEMBERFUL_VERSION
     );
@@ -129,7 +129,7 @@ function memberful_wp_admin_enqueue_scripts() {
 
   wp_enqueue_script(
     'memberful-menu',
-    plugins_url( 'js/menu.js', dirname( __FILE__ ) ),
+    plugins_url( 'js/src/menu.js', dirname( __FILE__ ) ),
     array('jquery'),
     MEMBERFUL_VERSION
   );
@@ -273,6 +273,7 @@ function memberful_wp_options() {
       update_option( 'memberful_block_dashboard_access', isset( $_POST['memberful_block_dashboard_access'] ));
       update_option( 'memberful_filter_account_menu_items', isset( $_POST['memberful_filter_account_menu_items'] ));
       update_option( 'memberful_auto_sync_display_names', isset( $_POST['memberful_auto_sync_display_names'] ) );
+      update_option( 'memberful_show_protected_content_in_search', isset( $_POST['memberful_show_protected_content_in_search'] ) );
 
       return wp_redirect( admin_url( 'options-general.php?page=memberful_options' ) );
     }
@@ -311,6 +312,7 @@ function memberful_wp_options() {
   $block_dashboard_access = get_option( 'memberful_block_dashboard_access' );
   $filter_account_menu_items = get_option( 'memberful_filter_account_menu_items' );
   $auto_sync_display_names = get_option( 'memberful_auto_sync_display_names' );
+  $show_protected_content_in_search = get_option( 'memberful_show_protected_content_in_search' );
 
   memberful_wp_render (
     'options',
@@ -322,7 +324,8 @@ function memberful_wp_options() {
       'hide_admin_toolbar' => $hide_admin_toolbar,
       'block_dashboard_access' => $block_dashboard_access,
       'filter_account_menu_items' => $filter_account_menu_items,
-      'auto_sync_display_names' => $auto_sync_display_names
+      'auto_sync_display_names' => $auto_sync_display_names,
+      'show_protected_content_in_search' => $show_protected_content_in_search
     )
   );
 }
@@ -379,6 +382,18 @@ function memberful_wp_advanced_settings() {
   $allowed_roles         = memberful_wp_roles_that_can_be_mapped_to();
   $current_active_role   = memberful_wp_role_for_active_customer();
   $current_inactive_role = memberful_wp_role_for_inactive_customer();
+  $subscription_plans    = memberful_subscription_plans();
+  $current_mappings      = memberful_wp_get_all_plan_role_mappings();
+  $use_per_plan_roles    = memberful_wp_use_per_plan_roles();
+
+  /**
+   * Filter to determine if user roles should be automatically updated/synced to existing users on save.
+   *
+   * @since 1.77.0
+   *
+   * @param bool $should_update_user_roles Whether to update user roles. (Default: true)
+   */
+  $should_update_user_roles = apply_filters( 'memberful_should_bulk_update_user_roles_on_save', true );
 
   if ( ! empty( $_POST ) ) {
     if ( isset( $_POST['role_mappings']['active_customer'] ) && array_key_exists( $_POST['role_mappings']['active_customer'], $allowed_roles ) ) {
@@ -389,15 +404,57 @@ function memberful_wp_advanced_settings() {
       $new_inactive_role = sanitize_text_field($_POST['role_mappings']['inactive_customer']);
     }
 
+    // Save active/inactive role mappings
     if ( isset($new_active_role) && isset($new_inactive_role) ) {
       update_option( 'memberful_role_active_customer', $new_active_role );
       update_option( 'memberful_role_inactive_customer', $new_inactive_role );
 
-      memberful_wp_update_customer_roles( $current_active_role, $new_active_role, $current_inactive_role, $new_inactive_role );
+      if ( $should_update_user_roles ) {
+        memberful_wp_update_customer_roles( $current_active_role, $new_active_role, $current_inactive_role, $new_inactive_role );
+      }
 
-      Memberful_Wp_Reporting::report( __('Settings updated') );
+      Memberful_Wp_Reporting::report( __('Active/Inactive role settings updated') );
     } else {
       Memberful_Wp_Reporting::report( __('The roles you chose aren\'t in the list of allowed roles'), 'error' );
+    }
+
+    // Save per-plan role mappings
+    $new_use_per_plan_roles = isset( $_POST['use_per_plan_roles'] );
+    memberful_wp_set_use_per_plan_roles( $new_use_per_plan_roles );
+
+    if ( $new_use_per_plan_roles ) {
+      $new_plan_mappings = array();
+
+      if ( isset( $_POST['plan_role_mappings'] ) && is_array( $_POST['plan_role_mappings'] ) ) {
+        foreach ( $_POST['plan_role_mappings'] as $plan_id => $role ) {
+          if ( empty( $plan_id ) ) {
+            continue;
+          }
+
+          $plan_id = is_numeric( $plan_id ) ? intval( $plan_id ) : sanitize_text_field( $plan_id );
+          $role    = sanitize_text_field( $role );
+
+          if ( 'inactive' === $plan_id ) {
+            $new_plan_mappings['inactive'] = $role;
+            continue;
+          }
+
+          if ( ! empty( $role ) && array_key_exists( $role, $allowed_roles ) && isset( $subscription_plans[ $plan_id ] ) ) {
+            $new_plan_mappings[ $plan_id ] = $role;
+          }
+        }
+      }
+
+      update_option( 'memberful_plan_role_mappings', $new_plan_mappings );
+
+      if ( $should_update_user_roles ) {
+        memberful_wp_update_all_user_roles_with_plan_mappings();
+      }
+
+      Memberful_Wp_Reporting::report( __('Per-plan role mappings updated') );
+    } else {
+      // If disabling, clear mappings
+      update_option( 'memberful_plan_role_mappings', array() );
     }
 
     wp_redirect( memberful_wp_plugin_advanced_settings_url() );
@@ -415,6 +472,9 @@ function memberful_wp_advanced_settings() {
       ),
     ),
     'available_roles' => $allowed_roles,
+    'subscription_plans' => $subscription_plans,
+    'current_mappings' => $current_mappings,
+    'use_per_plan_roles' => $use_per_plan_roles,
   );
   memberful_wp_render( 'advanced_settings', $vars );
 }

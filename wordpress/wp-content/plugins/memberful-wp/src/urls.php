@@ -104,6 +104,10 @@ function memberful_wp_plugin_protect_bbpress_url($no_header = FALSE) {
   return memberful_wp_plugin_settings_url($no_header, 'protect_bbpress');
 }
 
+function memberful_wp_plugin_plan_role_mappings_url($no_header = FALSE) {
+  return memberful_wp_plugin_settings_url($no_header, 'plan_role_mappings');
+}
+
 /**
  * Generate a URL to the Memberful site
  *
