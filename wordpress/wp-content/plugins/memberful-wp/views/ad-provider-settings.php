@@ -55,7 +55,7 @@
               data-depends-value="1"
               style="display: none;"
             >
-              <p><?php esc_html_e( 'Disable ads for members with an active subscription to a specific plan:', 'memberful' ); ?></p>
+              <p><?php esc_html_e( 'Hide ads for members with an active subscription to a specific plan:', 'memberful' ); ?></p>
 
               <?php if ( empty( $subscription_plans ) ) : ?>
                 <p><?php esc_html_e( 'No subscription plans are available.', 'memberful' ); ?></p>

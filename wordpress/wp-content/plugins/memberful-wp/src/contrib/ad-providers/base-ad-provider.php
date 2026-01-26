@@ -93,6 +93,20 @@ abstract class Memberful_Wp_Integration_Ad_Provider_Base {
    * @return bool True if ads should be disabled, false otherwise.
    */
   public function should_disable_ads_for_user($user_id) {
+    /**
+     * Filter if ads should be disabled for a user.
+     *
+     * @param bool|null $should_disable Whether to disable ads for the user, or null to use default logic.
+     * @param int $user_id The ID of the user to check.
+     * @param string $provider_id The identifier of the ad provider.
+     * @return bool|null True if ads should be disabled, false otherwise, or null to use default logic.
+     */
+    $should_disable = apply_filters( 'memberful_ad_provider_should_disable_ads_for_user', null, $user_id, $this->get_identifier() );
+
+    if ( $should_disable !== null ) {
+      return (bool) $should_disable;
+    }
+
     $settings = $this->get_ad_provider_settings();
 
     // Provider is not enabled.

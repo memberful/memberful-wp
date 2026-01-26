@@ -6,7 +6,6 @@
  */
 
  require_once MEMBERFUL_DIR . '/src/contrib/ad-providers/base-ad-provider.php';
- require_once MEMBERFUL_DIR . '/src/contrib/ad-providers/raptive-ads.php';
 
 /**
  * Central registry and coordinator for all ad providers.
@@ -42,20 +41,24 @@ class Memberful_Wp_Integration_Ad_Provider_Manager {
   /**
    * Constructor.
    */
-  public function __construct() {
-    // Auto-register providers on plugins_loaded hook.
-    add_action( 'plugins_loaded', array( $this, 'auto_register_providers' ) );
+  private function __construct() {
   }
 
   /**
-   * Auto-register providers on plugins_loaded hook.
+   * Initialize the ad provider manager.
    */
-  public function auto_register_providers() {
-    // Manually register providers here for auto registration.
-    // TODO: allow filtering of providers to register, also allow filtering of other provider-specific methods.
-    $this->register_provider( new Memberful_Wp_Integration_Ad_Provider_Raptive() );
+  public function init() {
+    /**
+     * Action to register ad providers.
+     *
+     * All ad providers should be registered using this action.
+     *
+     * @param Memberful_Wp_Integration_Ad_Provider_Manager $this The ad provider manager instance.
+     * @return void
+     */
+    do_action( 'memberful_ad_provider_register_providers', $this );
 
-    // Apply ad controls for users.
+    // Once all providers are registered, apply ad controls for users.
     $this->apply_ad_controls_for_user();
   }
 
@@ -74,7 +77,15 @@ class Memberful_Wp_Integration_Ad_Provider_Manager {
    * @return array An array of all registered ad providers.
    */
   public function get_all_providers() {
-    return $this->providers;
+    /**
+     * Filter all providers (active and inactive).
+     *
+     * @param array $providers The registered ad providers.
+     * @return array The filtered registered ad providers.
+     */
+    $providers = apply_filters( 'memberful_ad_provider_all_providers', $this->providers );
+
+    return $providers;
   }
 
   /**
@@ -97,9 +108,19 @@ class Memberful_Wp_Integration_Ad_Provider_Manager {
    * @return array An array of detected ad providers.
    */
   public function get_detected_providers() {
-    return array_filter( $this->providers, function( $provider ) {
+    $detected_providers = array_filter( $this->providers, function( $provider ) {
       return $provider->is_installed();
     } );
+
+    /**
+     * Filter the detected providers.
+     *
+     * @param array $detected_providers The detected providers.
+     * @return array The filtered detected providers.
+     */
+    $detected_providers = apply_filters( 'memberful_ad_provider_detected_providers', $detected_providers );
+
+    return $detected_providers;
   }
 
   /**
@@ -132,6 +153,19 @@ class Memberful_Wp_Integration_Ad_Provider_Manager {
 
     /** @var Memberful_Wp_Integration_Ad_Provider_Base $provider */
     foreach ( $this->get_detected_providers() as $provider ) {
+
+      /**
+       * Filter if ad controls should be applied for a provider.
+       *
+       * @param bool $should_apply Whether to apply ad controls for the provider, or null to use default logic.
+       * @param Memberful_Wp_Integration_Ad_Provider_Base $provider The ad provider.
+       * @param int $user_id The ID of the user to apply ad controls for.
+       * @return bool Whether to apply ad controls for the provider.
+       */
+      if ( ! apply_filters( 'memberful_ad_provider_should_apply_controls_for_provider', true, $provider, $user_id ) ) {
+        continue;
+      }
+
       $provider->apply_ad_controls_for_user( $user_id );
     }
   }
