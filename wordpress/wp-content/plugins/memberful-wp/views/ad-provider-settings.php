@@ -14,8 +14,14 @@
     <?php memberful_wp_nonce_field( 'memberful_options' ); ?>
 
     <div class="memberful-bulk-apply-box">
-      <h3><?php esc_html_e( 'Ad provider settings', 'memberful' ); ?></h3>
-      <p><?php esc_html_e( 'Disable ads based on the member\'s subscription status and plans, for each supported ad provider.', 'memberful' ); ?></p>
+      <h3><?php esc_html_e( 'Hide ads for signed in members', 'memberful' ); ?></h3>
+      <p><?php
+        printf(
+          /* translators: %s: mailto link to info@memberful.com */
+          esc_html__( 'To hide ads for members, select your ad provider and set the visibility by subscription plan. If you don\'t see your ad provider listed, please email us at %s.', 'memberful' ),
+          '<a href="mailto:' . esc_attr( 'info@memberful.com' ) . '">' . esc_html( 'info@memberful.com' ) . '</a>'
+        );
+      ?></p>
 
       <?php if ( empty( $providers ) ) : ?>
         <p><?php esc_html_e( 'No ad providers are registered.', 'memberful' ); ?></p>
@@ -78,7 +84,7 @@
                     name="memberful_ad_provider[<?php echo esc_attr( $provider_id ); ?>][disable_for_all_subscribers]"
                     <?php checked( ! empty( $settings['disable_for_all_subscribers'] ) ); ?>
                   >
-                  <em><?php esc_html_e( 'Disable ads for any member with an active subscription.', 'memberful' ); ?></em>
+                  <em><?php esc_html_e( 'Hide ads for any member with an active subscription.', 'memberful' ); ?></em>
                 </label>
               </p>
               <p>
@@ -88,7 +94,7 @@
                     name="memberful_ad_provider[<?php echo esc_attr( $provider_id ); ?>][disable_for_logged_in]"
                     <?php checked( ! empty( $settings['disable_for_logged_in'] ) ); ?>
                   >
-                  <em><?php esc_html_e( 'Disable ads for all logged in users.', 'memberful' ); ?></em>
+                  <em><?php esc_html_e( 'Hide ads for all members (active, inactive, or free).', 'memberful' ); ?></em>
                 </label>
               </p>
             </div>
