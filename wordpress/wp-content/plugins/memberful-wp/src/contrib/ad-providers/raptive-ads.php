@@ -17,6 +17,10 @@ class Memberful_Wp_Integration_Ad_Provider_Raptive extends Memberful_Wp_Integrat
   }
 
   public function is_installed() {
+    if ( ! function_exists( 'is_plugin_active' ) ) {
+      require_once ABSPATH . 'wp-admin/includes/plugin.php';
+    }
+
     return is_plugin_active( 'adthrive-ads/adthrive-ads.php' );
   }
 
