@@ -2,11 +2,15 @@
 /**
  * Base class for ad provider integrations to extend from.
  *
+ * @since 1.78.0
  * @package memberful-wp
  */
 
 /**
  * Abstract base class defining the interface for all ad providers.
+ *
+ * @package memberful-wp
+ * @since 1.78.0
  */
 abstract class Memberful_Wp_Integration_Ad_Provider_Base {
 

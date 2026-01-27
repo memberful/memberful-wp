@@ -2,6 +2,7 @@
 /**
  * Manager class for all ad providers.
  *
+ * @since 1.78.0
  * @package memberful-wp
  */
 
@@ -9,6 +10,9 @@
 
 /**
  * Central registry and coordinator for all ad providers.
+ *
+ * @package memberful-wp
+ * @since 1.78.0
  */
 class Memberful_Wp_Integration_Ad_Provider_Manager {
 

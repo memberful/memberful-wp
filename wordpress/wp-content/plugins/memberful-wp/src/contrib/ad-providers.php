@@ -2,6 +2,7 @@
 /**
  * Ad providers integration.
  *
+ * @since 1.78.0
  * @package memberful-wp
  */
 

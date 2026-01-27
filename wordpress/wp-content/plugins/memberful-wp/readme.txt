@@ -4,7 +4,7 @@ Tags: membership, subscriptions, paywall, stripe, recurring payments, memberful,
 Requires at least: 3.6
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 1.76.1
+Stable tag: 1.78.0
 License: GPLv2 or later
 
 Sell memberships and restrict access to content with WordPress and Memberful.
@@ -26,6 +26,7 @@ Generate reliable, recurring revenue by selling subscription plans while protect
 - Built-in integrations with popular third-party services including Mailchimp, Discord, ConvertKit, Klaviyo, and Google Analytics.
 - Add new custom applications or develop your own using the Memberful API.
 - Utilize webhooks to trigger when important events happen on your site, such as when a member changes their payment/tax details.
+- Integrate with popular ad providers to disable ads based on user subscription plans and user status.
 
 ## Membership Management
 
@@ -110,6 +111,16 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 19. View membership information
 
 == Changelog ==
+
+= 1.78.0 =
+
+* Add ad suppression settings to allow users to disable Raptive Ads for users
+
+= 1.77.0 =
+
+* Add per-plan role mappings
+* Add block editor visibility controls
+* Add an option to include protected content in search
 
 = 1.76.1 =
 
