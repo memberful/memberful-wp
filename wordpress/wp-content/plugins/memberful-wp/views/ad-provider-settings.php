@@ -55,41 +55,10 @@
               data-depends-value="1"
               style="display: none;"
             >
-              <p><?php esc_html_e( 'Hide ads for members with an active subscription to a specific plan:', 'memberful' ); ?></p>
-
-              <?php if ( empty( $subscription_plans ) ) : ?>
-                <p><?php esc_html_e( 'No subscription plans are available.', 'memberful' ); ?></p>
-              <?php else : ?>
-                <ul>
-                  <?php foreach ( $subscription_plans as $plan_id => $plan ) : ?>
-                    <li>
-                      <label>
-                        <input
-                          type="checkbox"
-                          name="memberful_ad_provider[<?php echo esc_attr( $provider_id ); ?>][disabled_plans][]"
-                          value="<?php echo esc_attr( $plan_id ); ?>"
-                          <?php checked( in_array( (int) $plan_id, $disabled_plans, true ) ); ?>
-                        >
-                        <?php echo esc_html( $plan['name'] ); ?>
-                      </label>
-                    </li>
-                  <?php endforeach; ?>
-                </ul>
-              <?php endif; ?>
-
               <p>
-                <label>
+                <label for="memberful_ad_provider_<?php echo esc_attr( $provider_id ); ?>_disable_for_logged_in">
                   <input
-                    type="checkbox"
-                    name="memberful_ad_provider[<?php echo esc_attr( $provider_id ); ?>][disable_for_all_subscribers]"
-                    <?php checked( ! empty( $settings['disable_for_all_subscribers'] ) ); ?>
-                  >
-                  <em><?php esc_html_e( 'Hide ads for any member with an active subscription.', 'memberful' ); ?></em>
-                </label>
-              </p>
-              <p>
-                <label>
-                  <input
+                    id="memberful_ad_provider_<?php echo esc_attr( $provider_id ); ?>_disable_for_logged_in"
                     type="checkbox"
                     name="memberful_ad_provider[<?php echo esc_attr( $provider_id ); ?>][disable_for_logged_in]"
                     <?php checked( ! empty( $settings['disable_for_logged_in'] ) ); ?>
@@ -97,6 +66,51 @@
                   <em><?php esc_html_e( 'Hide ads for all members (active, inactive, or free).', 'memberful' ); ?></em>
                 </label>
               </p>
+              <p
+                data-depends-on="memberful_ad_provider_<?php echo esc_attr( $provider_id ); ?>_disable_for_logged_in"
+                data-depends-value-not="1"
+              >
+                <label for="memberful_ad_provider_<?php echo esc_attr( $provider_id ); ?>_disable_for_all_subscribers">
+                  <input
+                    id="memberful_ad_provider_<?php echo esc_attr( $provider_id ); ?>_disable_for_all_subscribers"
+                    type="checkbox"
+                    name="memberful_ad_provider[<?php echo esc_attr( $provider_id ); ?>][disable_for_all_subscribers]"
+                    <?php checked( ! empty( $settings['disable_for_all_subscribers'] ) ); ?>
+                  >
+                  <em><?php esc_html_e( 'Hide ads for any member with an active subscription.', 'memberful' ); ?></em>
+                </label>
+              </p>
+              <div
+                data-depends-on="memberful_ad_provider_<?php echo esc_attr( $provider_id ); ?>_disable_for_logged_in"
+                data-depends-value-not="1"
+              >
+                <div
+                  data-depends-on="memberful_ad_provider_<?php echo esc_attr( $provider_id ); ?>_disable_for_all_subscribers"
+                  data-depends-value-not="1"
+                >
+                  <p><?php esc_html_e( 'Hide ads for members with an active subscription to a specific plan:', 'memberful' ); ?></p>
+
+                  <?php if ( empty( $subscription_plans ) ) : ?>
+                    <p><?php esc_html_e( 'No subscription plans are available.', 'memberful' ); ?></p>
+                  <?php else : ?>
+                    <ul>
+                      <?php foreach ( $subscription_plans as $plan_id => $plan ) : ?>
+                        <li>
+                          <label>
+                            <input
+                              type="checkbox"
+                              name="memberful_ad_provider[<?php echo esc_attr( $provider_id ); ?>][disabled_plans][]"
+                              value="<?php echo esc_attr( $plan_id ); ?>"
+                              <?php checked( in_array( (int) $plan_id, $disabled_plans, true ) ); ?>
+                            >
+                            <?php echo esc_html( $plan['name'] ); ?>
+                          </label>
+                        </li>
+                      <?php endforeach; ?>
+                    </ul>
+                  <?php endif; ?>
+                </div>
+              </div>
             </div>
           </div>
           <hr>

@@ -118,13 +118,13 @@ abstract class Memberful_Wp_Integration_Ad_Provider_Base {
       return false;
     }
 
-    // Disable for all subscribers.
-    if ( isset( $settings['disable_for_all_subscribers'] ) && $settings['disable_for_all_subscribers'] === true && is_subscribed_to_any_memberful_plan( $user_id ) ) {
+    // Disable for logged in users.
+    if ( isset( $settings['disable_for_logged_in'] ) && $settings['disable_for_logged_in'] === true && is_user_logged_in() ) {
       return true;
     }
 
-    // Disable for logged in users.
-    if ( isset( $settings['disable_for_logged_in'] ) && $settings['disable_for_logged_in'] === true && is_user_logged_in() ) {
+    // Disable for all subscribers.
+    if ( isset( $settings['disable_for_all_subscribers'] ) && $settings['disable_for_all_subscribers'] === true && is_subscribed_to_any_memberful_plan( $user_id ) ) {
       return true;
     }
 

@@ -267,6 +267,6 @@ Ad Provider Settings
 .memberful-ad-provider-settings {
   margin-bottom: 1rem;
 }
-.memberful-ad-provider-settings div {
+.memberful-ad-provider-settings > div {
   margin-left: 1rem;
 }
