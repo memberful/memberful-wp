@@ -2,6 +2,7 @@
 
 require_once MEMBERFUL_DIR . '/src/options.php';
 require_once MEMBERFUL_DIR . '/src/metabox.php';
+require_once MEMBERFUL_DIR . '/src/ad-control.php';
 
 add_action( 'admin_head',            'memberful_wp_announce_plans_and_download_in_head' );
 add_action( 'admin_menu',            'memberful_wp_menu' );
@@ -298,6 +299,8 @@ function memberful_wp_options() {
       return memberful_wp_render('cookies_test');
     case 'global_marketing':
       return memberful_wp_global_marketing();
+    case 'ad_provider_settings':
+      return memberful_wp_ad_provider_settings();
     }
   }
 
@@ -708,6 +711,40 @@ function memberful_wp_global_marketing() {
       'global_marketing_content' => $global_marketing_content,
       'global_marketing_override' => $global_marketing_override,
       'form_target' => memberful_wp_plugin_global_marketing_url()
+    )
+  );
+}
+
+/**
+ * Render and save the ad provider settings.
+ */
+function memberful_wp_ad_provider_settings() {
+  $providers = Memberful_Wp_Integration_Ad_Provider_Manager::instance()->get_all_providers();
+  $subscription_plans = memberful_subscription_plans();
+  $provider_settings = memberful_wp_ad_provider_get_settings();
+
+  if ( isset( $_POST['save_ad_provider_settings'] ) && memberful_wp_valid_nonce( 'memberful_options' ) ) {
+    $raw_settings = empty( $_POST['memberful_ad_provider'] ) ? array() : (array) $_POST['memberful_ad_provider'];
+    $provider_ids = array_keys( $providers );
+    $plan_ids = array_keys( $subscription_plans );
+
+    update_option(
+      'memberful_ad_provider_settings',
+      memberful_wp_ad_provider_sanitise_settings( $raw_settings, $provider_ids, $plan_ids )
+    );
+
+    Memberful_Wp_Reporting::report( __( 'Settings updated', 'memberful' ) );
+
+    return wp_redirect( memberful_wp_plugin_ad_provider_settings_url() );
+  }
+
+  memberful_wp_render(
+    'ad-provider-settings',
+    array(
+      'providers' => $providers,
+      'subscription_plans' => $subscription_plans,
+      'provider_settings' => $provider_settings,
+      'form_target' => memberful_wp_plugin_ad_provider_settings_url( true )
     )
   );
 }

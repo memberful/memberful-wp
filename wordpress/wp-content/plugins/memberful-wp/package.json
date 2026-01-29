@@ -24,6 +24,6 @@
   },
   "homepage": "https://github.com/memberful/memberful-wp#readme",
   "devDependencies": {
-    "@wordpress/scripts": "^31.0.0"
+    "@wordpress/scripts": "^31.3.0"
   }
 }
