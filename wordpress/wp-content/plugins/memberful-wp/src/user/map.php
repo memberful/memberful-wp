@@ -155,6 +155,7 @@ class Memberful_User_Mapping_Ensure_User {
 
   private $wp_user;
   private $member;
+  private $user_exists;
 
   public function __construct( $wp_user, $member ) {
     $this->wp_user     = $wp_user;
