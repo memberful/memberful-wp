@@ -58,6 +58,18 @@
             <span class="memberful-label__text--multiline">Show protected content in site search. <small>⚠️ Enabling this option will allow non-members to see protected content in WordPress search results.</small></span>
           </label>
         </p>
+        <p>
+          <label for="expiry_banner_enabled_checkbox">
+            <input id="expiry_banner_enabled_checkbox" class="memberful-label__checkbox--multiline" type="checkbox" name="memberful_expiry_banner_enabled" <?php if( $expiry_banner_enabled ): ?>checked="checked"<?php endif; ?>>
+            <span class="memberful-label__text--multiline">Show a banner to members whose membership is expiring soon or has expired.</span>
+          </label>
+        </p>
+        <p>
+          <label for="memberful_expiry_banner_days">
+            Show the expiry banner this many days before membership expiration.
+          </label><br>
+          <input id="memberful_expiry_banner_days" type="number" min="1" max="90" name="memberful_expiry_banner_days" value="<?php echo esc_attr( max( 1, (int) $expiry_banner_days ) ); ?>">
+        </p>
         <button type="submit" name="save_changes" class="button button-primary">Save Changes</button>
       </form>
     </div>
