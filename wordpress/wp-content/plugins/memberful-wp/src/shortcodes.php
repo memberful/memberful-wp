@@ -45,19 +45,19 @@ function memberful_wp_shortcode_buy_gift_link( $atts, $content ) {
 
 
 function memberful_wp_shortcode_register_link( $atts, $content ) {
-  return '<a href="'.memberful_registration_page_url().'" role="register">'.do_shortcode($content).'</a>';
+  return '<a href="'.memberful_registration_page_url().'" data-memberful-link-type="register">'.do_shortcode($content).'</a>';
 }
 
 function memberful_wp_shortcode_sign_out_link( $atts, $content ) {
-  return '<a href="'.memberful_sign_out_url().'" role="sign_out">'.do_shortcode($content).'</a>';
+  return '<a href="'.memberful_sign_out_url().'" data-memberful-link-type="sign_out">'.do_shortcode($content).'</a>';
 }
 
 function memberful_wp_shortcode_sign_in_link( $atts, $content ) {
-  return '<a href="'.memberful_sign_in_url().'" role="sign_in">'.do_shortcode($content).'</a>';
+  return '<a href="'.memberful_sign_in_url().'" data-memberful-link-type="sign_in">'.do_shortcode($content).'</a>';
 }
 
 function memberful_wp_shortcode_account_link( $atts, $content ) {
-  return '<a href="'.memberful_account_url().'" role="account">'.do_shortcode($content).'</a>';
+  return '<a href="'.memberful_account_url().'" data-memberful-link-type="account">'.do_shortcode($content).'</a>';
 }
 
 function memberful_wp_shortcode_feeds_link( $atts, $content ) {
