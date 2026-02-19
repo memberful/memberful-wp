@@ -50,11 +50,37 @@ function memberful_wp_render_expiry_banner() {
    */
   $message = apply_filters( 'memberful_expiry_banner_message', $message, $expiry_data );
 
+  $is_expired = ! empty( $expiry_data['is_expired'] );
+  $aria_role = $is_expired ? 'alert' : 'status';
+  $aria_live = $is_expired ? 'assertive' : 'polite';
+
+  /**
+   * Filters the ARIA role used for the expiry banner live region.
+   *
+   * @param string $aria_role   The computed ARIA role.
+   * @param array  $expiry_data The computed expiry data for the current user.
+   *
+   * @return string The ARIA role for the banner.
+   */
+  $aria_role = (string) apply_filters( 'memberful_expiry_banner_aria_role', $aria_role, $expiry_data );
+
+  /**
+   * Filters the ARIA live mode used for the expiry banner.
+   *
+   * @param string $aria_live   The computed ARIA live value.
+   * @param array  $expiry_data The computed expiry data for the current user.
+   *
+   * @return string The ARIA live value for the banner.
+   */
+  $aria_live = (string) apply_filters( 'memberful_expiry_banner_aria_live', $aria_live, $expiry_data );
+
   ob_start();
   memberful_wp_render(
     'expiry-banner',
     array(
-      'message' => $message
+      'message' => $message,
+      'aria_role' => $aria_role,
+      'aria_live' => $aria_live,
     )
   );
   $html = ob_get_clean();
