@@ -49,6 +49,9 @@
                 <?php endif; ?>
               </label>
             </p>
+            <?php if ( 'advanced-ads' === $provider_id ) : ?>
+              <p><em><?php esc_html_e( 'Tip: Advanced Ads also has it\'s own role-based "Disable Ads" feature.', 'memberful' ); ?></em></p>
+            <?php endif; ?>
 
             <div
               data-depends-on="memberful_ad_provider_<?php echo esc_attr( $provider_id ); ?>_enabled"
