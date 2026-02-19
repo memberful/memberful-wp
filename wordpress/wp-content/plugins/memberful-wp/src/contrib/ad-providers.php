@@ -8,6 +8,7 @@
 
 require_once MEMBERFUL_DIR . '/src/contrib/ad-providers/ad-provider-manager.php';
 require_once MEMBERFUL_DIR . '/src/contrib/ad-providers/raptive-ads.php';
+require_once MEMBERFUL_DIR . '/src/contrib/ad-providers/mediavine-ads.php';
 
 /**
  * Ad providers integration.
@@ -27,5 +28,8 @@ function memberful_wp_ad_providers_register_providers() {
 
   // Raptive Ads (AdThrive Ads).
   $ad_provider_manager->register_provider( new Memberful_Wp_Integration_Ad_Provider_Raptive() );
+
+  // MediaVine Ads.
+  $ad_provider_manager->register_provider( new Memberful_Wp_Integration_Ad_Provider_Mediavine() );
 }
 add_action( 'memberful_ad_provider_register_providers', 'memberful_wp_ad_providers_register_providers' );
