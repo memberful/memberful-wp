@@ -59,9 +59,6 @@ class Memberful_Wp_Integration_Ad_Provider_Advanced_Ads extends Memberful_Wp_Int
   public function disable_ads_for_user( $user_id ) {
     // Preferred filter from Advanced Ads 2.0.0+.
     add_filter( 'advanced-ads-can-display-ad', array( $this, 'disable_advanced_ads' ), 10, 3 );
-
-    // Backwards compatibility with older Advanced Ads versions.
-    add_filter( 'advanced-ads-can-display', array( $this, 'disable_advanced_ads' ), 10, 3 );
   }
 
   /**
