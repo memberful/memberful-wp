@@ -18,29 +18,6 @@
     style="background:transparent;border:0;color:inherit;cursor:pointer;font:inherit;font-size:1rem;line-height:1;padding:0;"
   >x</button>
 </div>
-<script>
-  (function() {
-    var key = 'memberful_expiry_banner_dismissed';
-    var banner = document.getElementById('memberful-expiry-banner');
-    if (!banner) {
-      return;
-    }
-
-    if (window.sessionStorage && window.sessionStorage.getItem(key) === '1') {
-      banner.style.display = 'none';
-      return;
-    }
-
-    var dismissButton = banner.querySelector('button');
-    if (!dismissButton) {
-      return;
-    }
-
-    dismissButton.addEventListener('click', function() {
-      if (window.sessionStorage) {
-        window.sessionStorage.setItem(key, '1');
-      }
-      banner.style.display = 'none';
-    });
-  })();
+<script async defer>
+  !function(){var e="memberful_expiry_banner_dismissed",n=document.getElementById("memberful-expiry-banner");if(n)if(window.sessionStorage&&"1"===window.sessionStorage.getItem(e))n.style.display="none";else{var s=n.querySelector("button");s&&s.addEventListener("click",(function(){window.sessionStorage&&window.sessionStorage.setItem(e,"1"),n.style.display="none"}))}}();
 </script>
