@@ -50,7 +50,7 @@
               </label>
             </p>
             <?php if ( 'advanced-ads' === $provider_id ) : ?>
-              <p><em><?php esc_html_e( 'Tip: Advanced Ads also has it\'s own role-based "Disable Ads" feature.', 'memberful' ); ?></em></p>
+              <p><em><?php esc_html_e( 'Tip: Advanced Ads also has its own role-based "Disable Ads" feature.', 'memberful' ); ?></em></p>
             <?php endif; ?>
 
             <div
