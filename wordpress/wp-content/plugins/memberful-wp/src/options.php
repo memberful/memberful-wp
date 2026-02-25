@@ -27,7 +27,8 @@ function memberful_wp_all_options() {
     'memberful_use_global_marketing' => FALSE,
     'memberful_use_global_snippets' => TRUE,
     'memberful_global_marketing_override' => TRUE,
-    'memberful_global_marketing_content' => ''
+    'memberful_global_marketing_content' => '',
+    'memberful_ad_provider_settings' => array()
   );
 }
 

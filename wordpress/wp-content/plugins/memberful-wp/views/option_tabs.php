@@ -16,6 +16,11 @@ $links = array(
     'url'   => memberful_wp_plugin_global_marketing_url()
   ),
   array(
+    'id'    => 'ad_provider_settings',
+    'title' => __('Hide ads'),
+    'url'   => memberful_wp_plugin_ad_provider_settings_url()
+  ),
+  array(
     'id'    => 'advanced_settings',
     'title' => __('Advanced Role Mapping'),
     'url'   => memberful_wp_plugin_advanced_settings_url()

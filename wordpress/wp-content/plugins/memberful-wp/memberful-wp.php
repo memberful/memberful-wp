@@ -3,14 +3,14 @@
 Plugin Name: Memberful - Membership Plugin
 Plugin URI: http://github.com/memberful/memberful-wp
 Description: Sell memberships and restrict access to content with WordPress and Memberful.
-Version: 1.77.1
+Version: 1.78.0
 Author: Memberful
 Author URI: http://memberful.com
 License: GPLv2 or later
  */
 
 if ( ! defined( 'MEMBERFUL_VERSION' ) )
-  define( 'MEMBERFUL_VERSION', '1.77.1' );
+  define( 'MEMBERFUL_VERSION', '1.78.0' );
 
 if ( ! defined( 'MEMBERFUL_PLUGIN_FILE' ) )
   define( 'MEMBERFUL_PLUGIN_FILE', __FILE__ );
@@ -63,6 +63,7 @@ require_once MEMBERFUL_DIR . '/src/bulk_protect.php';
 require_once MEMBERFUL_DIR . '/src/hide_admin_toolbar.php';
 require_once MEMBERFUL_DIR . '/src/block_dashboard_access.php';
 require_once MEMBERFUL_DIR . '/src/filter_account_menu_items.php';
+require_once MEMBERFUL_DIR . '/src/contrib/ad-providers.php';
 
 if ( in_array( 'sensei/woothemes-sensei.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
   require_once MEMBERFUL_DIR . '/src/contrib/woothemes-sensei.php';
