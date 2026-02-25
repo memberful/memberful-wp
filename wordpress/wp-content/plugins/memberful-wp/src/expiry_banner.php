@@ -32,10 +32,6 @@ function memberful_wp_render_expiry_banner() {
     return;
   }
 
-  if ( current_user_can( 'manage_options' ) ) {
-    return;
-  }
-
   $enabled = (bool) get_option( 'memberful_expiry_banner_enabled', false );
 
   /**
