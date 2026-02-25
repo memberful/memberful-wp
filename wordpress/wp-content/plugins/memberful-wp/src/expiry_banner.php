@@ -1,6 +1,20 @@
 <?php
 
-add_action( 'wp_footer', 'memberful_wp_render_expiry_banner' );
+add_action( 'wp_body_open', 'memberful_wp_render_expiry_banner' );
+add_action( 'wp_footer', 'memberful_wp_render_expiry_banner_fallback' );
+
+/**
+ * Renders the expiry banner in footer for themes without wp_body_open support.
+ *
+ * @return void
+ */
+function memberful_wp_render_expiry_banner_fallback() {
+  if ( did_action( 'wp_body_open' ) ) {
+    return;
+  }
+
+  memberful_wp_render_expiry_banner();
+}
 
 /**
  * Renders the expiry banner on front end pages for eligible users.
@@ -8,6 +22,12 @@ add_action( 'wp_footer', 'memberful_wp_render_expiry_banner' );
  * @return void
  */
 function memberful_wp_render_expiry_banner() {
+  static $has_rendered = false;
+
+  if ( $has_rendered ) {
+    return;
+  }
+
   if ( is_admin() || ! memberful_wp_is_connected_to_site() || ! is_user_logged_in() ) {
     return;
   }
@@ -73,6 +93,8 @@ function memberful_wp_render_expiry_banner() {
    * @return string The ARIA live value for the banner.
    */
   $aria_live = (string) apply_filters( 'memberful_expiry_banner_aria_live', $aria_live, $expiry_data );
+
+  $has_rendered = true;
 
   ob_start();
   memberful_wp_render(
