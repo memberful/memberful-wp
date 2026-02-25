@@ -31,9 +31,7 @@ abstract class Memberful_Wp_Integration_Ad_Provider_Base {
   /**
    * Constructor.
    */
-  public function __construct() {
-    $this->init_hooks();
-  }
+  public function __construct() {}
 
   /**
    * Initialize the hooks for the ad provider (if any).
@@ -47,35 +45,37 @@ abstract class Memberful_Wp_Integration_Ad_Provider_Base {
    *
    * @return bool True if the ad provider is installed, false otherwise.
    */
-  public function is_installed() {}
+  abstract public function is_installed();
 
   /**
    * Get the human-readable name of the ad provider.
    *
    * @return string The human-readable name of the ad provider.
    */
-  public function get_name() {}
+  abstract public function get_name();
 
   /**
    * Get the identifier of the ad provider.
    *
    * @return string The identifier of the ad provider.
    */
-  public function get_identifier() {}
+  abstract public function get_identifier();
 
   /**
    * Disable ads for a user.
    *
    * @param int $user_id The ID of the user to disable ads for.
    */
-  public function disable_ads_for_user($user_id) {}
+  abstract public function disable_ads_for_user( $user_id );
 
   /**
    * Get the detection methods for the ad provider.
    *
    * @return array An array of detection methods.
    */
-  public function get_detection_methods() {}
+  public function get_detection_methods() {
+    return array();
+  }
 
   /**
    * Apply ad controls for a user.
@@ -130,7 +130,11 @@ abstract class Memberful_Wp_Integration_Ad_Provider_Base {
 
     // Disable for specific plans.
     if ( isset( $settings['disabled_plans'] ) && ! empty( $settings['disabled_plans'] ) ) {
-      $user_plans = memberful_wp_user_plans_subscribed_to( $user_id );
+      static $user_plans_by_user = array();
+      if ( ! isset( $user_plans_by_user[ $user_id ] ) ) {
+        $user_plans_by_user[ $user_id ] = memberful_wp_user_plans_subscribed_to( $user_id );
+      }
+      $user_plans = $user_plans_by_user[ $user_id ];
       return count( array_intersect( $user_plans, $settings['disabled_plans'] ) ) > 0;
     }
 

@@ -21,9 +21,9 @@ class Memberful_Wp_Integration_Ad_Provider_Advanced_Ads extends Memberful_Wp_Int
    * Constructor.
    */
   public function __construct() {
-    parent::__construct();
     $this->name       = 'Advanced Ads';
     $this->identifier = 'advanced-ads';
+    $this->init_hooks();
   }
 
   /**

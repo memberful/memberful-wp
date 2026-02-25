@@ -16,9 +16,9 @@
 class Memberful_Wp_Integration_Ad_Provider_Raptive extends Memberful_Wp_Integration_Ad_Provider_Base {
 
   public function __construct() {
-    parent::__construct();
     $this->name = 'Raptive Ads';
     $this->identifier = 'raptive-ads';
+    $this->init_hooks();
   }
 
   public function is_installed() {
@@ -37,7 +37,7 @@ class Memberful_Wp_Integration_Ad_Provider_Raptive extends Memberful_Wp_Integrat
     return $this->identifier;
   }
 
-  public function disable_ads_for_user($user_id) {
+  public function disable_ads_for_user( $user_id ) {
     add_filter( 'body_class', array( $this, 'disable_ads_body_class' ) );
   }
 
@@ -51,7 +51,7 @@ class Memberful_Wp_Integration_Ad_Provider_Raptive extends Memberful_Wp_Integrat
    * @param array $classes The body classes.
    * @return array The body classes.
    */
-  public function disable_ads_body_class($classes) {
+  public function disable_ads_body_class( $classes ) {
     $classes[] = 'adthrive-disable-all';
     return $classes;
   }

@@ -84,6 +84,17 @@ function memberful_wp_ad_provider_sanitise_settings( $raw_settings, $provider_id
       'disable_for_all_subscribers' => isset( $provider_settings['disable_for_all_subscribers'] ),
       'disable_for_logged_in' => isset( $provider_settings['disable_for_logged_in'] ),
     );
+
+    $filtered_settings = apply_filters(
+      'memberful_ad_provider_sanitised_settings',
+      $sanitised[ $provider_id ],
+      $provider_id,
+      $provider_settings,
+      $allowed_plan_ids
+    );
+    if ( is_array( $filtered_settings ) ) {
+      $sanitised[ $provider_id ] = $filtered_settings;
+    }
   }
 
   return $sanitised;

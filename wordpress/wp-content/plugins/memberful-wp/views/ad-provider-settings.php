@@ -16,10 +16,18 @@
     <div class="memberful-bulk-apply-box">
       <h3><?php esc_html_e( 'Hide ads for signed in members', 'memberful' ); ?></h3>
       <p><?php
+        $memberful_email_link = '<a href="mailto:' . esc_attr( 'info@memberful.com' ) . '">' . esc_html( 'info@memberful.com' ) . '</a>';
         printf(
           /* translators: %s: mailto link to info@memberful.com */
-          esc_html__( 'To hide ads for members, select your ad provider and set the visibility by subscription plan. If you don\'t see your ad provider listed, please email us at %s.', 'memberful' ),
-          '<a href="mailto:' . esc_attr( 'info@memberful.com' ) . '">' . esc_html( 'info@memberful.com' ) . '</a>'
+          wp_kses(
+            __( 'To hide ads for members, select your ad provider and set the visibility by subscription plan. If you don\'t see your ad provider listed, please email us at %s.', 'memberful' ),
+            array(
+              'a' => array(
+                'href' => array(),
+              ),
+            )
+          ),
+          $memberful_email_link
         );
       ?></p>
 

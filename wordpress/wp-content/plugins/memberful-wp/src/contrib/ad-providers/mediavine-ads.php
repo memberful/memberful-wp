@@ -22,9 +22,9 @@ class Memberful_Wp_Integration_Ad_Provider_Mediavine extends Memberful_Wp_Integr
    * Constructor.
    */
   public function __construct() {
-    parent::__construct();
     $this->name       = 'MediaVine Ads';
     $this->identifier = 'mediavine-ads';
+    $this->init_hooks();
   }
 
   /**
