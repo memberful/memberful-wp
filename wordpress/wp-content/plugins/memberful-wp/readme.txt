@@ -2,7 +2,7 @@
 Contributors: drewstrojny, jakememberful, julianmemberful, lucasmemberful, patrikmemberful
 Tags: membership, subscriptions, paywall, stripe, recurring payments, memberful, oauth, oauth 2.0, members, recurring billing
 Requires at least: 3.6
-Tested up to: 6.9
+Tested up to: 6.9.1
 Requires PHP: 7.4
 Stable tag: 1.78.0
 License: GPLv2 or later
@@ -114,7 +114,11 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 = 1.78.0 =
 
-* Add ad suppression settings to allow users to disable Raptive Ads for users
+* Add ad suppression settings to allow users to disable Raptive Ads, Advanced Ads, and MediaVine for members
+
+= 1.77.1 =
+
+* Fix PHP 8.3 deprecation notice
 
 = 1.77.0 =
 
