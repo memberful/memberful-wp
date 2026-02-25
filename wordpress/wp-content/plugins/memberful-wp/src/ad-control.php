@@ -85,6 +85,15 @@ function memberful_wp_ad_provider_sanitise_settings( $raw_settings, $provider_id
       'disable_for_logged_in' => isset( $provider_settings['disable_for_logged_in'] ),
     );
 
+    /**
+     * Filter the sanitised ad provider settings.
+     *
+     * @param array $sanitised The sanitised ad provider settings.
+     * @param string $provider_id The identifier of the ad provider.
+     * @param array $provider_settings The raw provider settings.
+     * @param array $allowed_plan_ids The allowed plan IDs.
+     * @return array The filtered sanitised ad provider settings.
+     */
     $filtered_settings = apply_filters(
       'memberful_ad_provider_sanitised_settings',
       $sanitised[ $provider_id ],
