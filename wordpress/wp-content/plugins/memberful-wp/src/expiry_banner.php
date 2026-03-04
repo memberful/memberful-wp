@@ -143,21 +143,28 @@ function memberful_wp_get_soonest_expiring_subscription( $user_id ) {
   $now = time();
   $threshold_timestamp = $now + ( $days_threshold * DAY_IN_SECONDS );
   $soonest = null;
+  $expiring_subscriptions_count = 0;
+  $active_subscriptions_count = 0;
 
   foreach ( $subscriptions as $subscription ) {
     if ( empty( $subscription['expires_at'] ) ) {
+      ++$active_subscriptions_count;
       continue;
     }
 
     $expires_at = memberful_wp_parse_expiry_timestamp( $subscription['expires_at'] );
 
     if ( empty( $expires_at ) ) {
+      ++$active_subscriptions_count;
       continue;
     }
 
     if ( $expires_at > $threshold_timestamp ) {
+      ++$active_subscriptions_count;
       continue;
     }
+
+    ++$expiring_subscriptions_count;
 
     if ( null === $soonest || $expires_at < $soonest['expires_at'] ) {
       $seconds_remaining = $expires_at - $now;
@@ -171,6 +178,13 @@ function memberful_wp_get_soonest_expiring_subscription( $user_id ) {
       );
     }
   }
+
+  if ( null === $soonest ) {
+    return null;
+  }
+
+  $soonest['expiring_subscriptions_count'] = $expiring_subscriptions_count;
+  $soonest['active_subscriptions_count'] = $active_subscriptions_count;
 
   return $soonest;
 }
@@ -189,8 +203,28 @@ function memberful_wp_expiry_banner_message( array $expiry_data, $account_url ) 
     esc_url( $account_url ),
     esc_html__( 'Update your membership', 'memberful' )
   );
+  $expiring_subscriptions_count = max( 1, (int) ( $expiry_data['expiring_subscriptions_count'] ?? 1 ) );
+  $active_subscriptions_count = max( 0, (int) ( $expiry_data['active_subscriptions_count'] ?? 0 ) );
+  $is_mixed_subscriptions = $active_subscriptions_count > 0;
+  $has_multiple_expiring_subscriptions = $expiring_subscriptions_count > 1;
 
   if ( ! empty( $expiry_data['is_expired'] ) ) {
+    if ( $is_mixed_subscriptions && $has_multiple_expiring_subscriptions ) {
+      return wp_sprintf(
+        /* translators: %s is the update membership link. */
+        __( 'You have multiple subscriptions that have expired. %s.', 'memberful' ),
+        $link
+      );
+    }
+
+    if ( $is_mixed_subscriptions ) {
+      return wp_sprintf(
+        /* translators: %s is the update membership link. */
+        __( 'You have a subscription that has expired. %s.', 'memberful' ),
+        $link
+      );
+    }
+
     return wp_sprintf(
       /* translators: %s is the update membership link. */
       __( 'Your membership has expired. %s.', 'memberful' ),
@@ -199,9 +233,53 @@ function memberful_wp_expiry_banner_message( array $expiry_data, $account_url ) 
   }
 
   if ( (int) $expiry_data['days_remaining'] <= 0 ) {
+    if ( $is_mixed_subscriptions && $has_multiple_expiring_subscriptions ) {
+      return wp_sprintf(
+        /* translators: %s is the update membership link. */
+        __( 'You have multiple subscriptions expiring today. %s.', 'memberful' ),
+        $link
+      );
+    }
+
+    if ( $is_mixed_subscriptions ) {
+      return wp_sprintf(
+        /* translators: %s is the update membership link. */
+        __( 'You have a subscription expiring today. %s.', 'memberful' ),
+        $link
+      );
+    }
+
     return wp_sprintf(
       /* translators: %s is the update membership link. */
       __( 'Your membership expires today. %s.', 'memberful' ),
+      $link
+    );
+  }
+
+  if ( $is_mixed_subscriptions && $has_multiple_expiring_subscriptions ) {
+    return wp_sprintf(
+      /* translators: 1: Number of days remaining. 2: Update membership link. */
+      _n(
+        'You have multiple subscriptions expiring in %1$d day. %2$s.',
+        'You have multiple subscriptions expiring in %1$d days. %2$s.',
+        (int) $expiry_data['days_remaining'],
+        'memberful'
+      ),
+      (int) $expiry_data['days_remaining'],
+      $link
+    );
+  }
+
+  if ( $is_mixed_subscriptions ) {
+    return wp_sprintf(
+      /* translators: 1: Number of days remaining. 2: Update membership link. */
+      _n(
+        'You have a subscription expiring in %1$d day. %2$s.',
+        'You have a subscription expiring in %1$d days. %2$s.',
+        (int) $expiry_data['days_remaining'],
+        'memberful'
+      ),
+      (int) $expiry_data['days_remaining'],
       $link
     );
   }
