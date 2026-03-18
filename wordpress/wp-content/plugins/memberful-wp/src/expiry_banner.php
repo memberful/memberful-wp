@@ -201,7 +201,7 @@ function memberful_wp_expiry_banner_message( array $expiry_data, $account_url ) 
   $link = wp_sprintf(
     '<a href="%s">%s</a>',
     esc_url( $account_url ),
-    esc_html__( 'Update your membership', 'memberful' )
+    esc_html__( 'Renew now', 'memberful' )
   );
   $expiring_subscriptions_count = max( 1, (int) ( $expiry_data['expiring_subscriptions_count'] ?? 1 ) );
   $active_subscriptions_count = max( 0, (int) ( $expiry_data['active_subscriptions_count'] ?? 0 ) );
@@ -211,23 +211,23 @@ function memberful_wp_expiry_banner_message( array $expiry_data, $account_url ) 
   if ( ! empty( $expiry_data['is_expired'] ) ) {
     if ( $is_mixed_subscriptions && $has_multiple_expiring_subscriptions ) {
       return wp_sprintf(
-        /* translators: %s is the update membership link. */
-        __( 'You have multiple subscriptions that have expired. %s.', 'memberful' ),
+        /* translators: %s is the renewal link. */
+        __( 'Some of your subscriptions have expired. %s.', 'memberful' ),
         $link
       );
     }
 
     if ( $is_mixed_subscriptions ) {
       return wp_sprintf(
-        /* translators: %s is the update membership link. */
-        __( 'You have a subscription that has expired. %s.', 'memberful' ),
+        /* translators: %s is the renewal link. */
+        __( 'One of your subscriptions has expired. %s.', 'memberful' ),
         $link
       );
     }
 
     return wp_sprintf(
-      /* translators: %s is the update membership link. */
-      __( 'Your membership has expired. %s.', 'memberful' ),
+      /* translators: %s is the renewal link. */
+      __( 'Your subscription has expired. %s.', 'memberful' ),
       $link
     );
   }
@@ -235,33 +235,33 @@ function memberful_wp_expiry_banner_message( array $expiry_data, $account_url ) 
   if ( (int) $expiry_data['days_remaining'] <= 0 ) {
     if ( $is_mixed_subscriptions && $has_multiple_expiring_subscriptions ) {
       return wp_sprintf(
-        /* translators: %s is the update membership link. */
-        __( 'You have multiple subscriptions expiring today. %s.', 'memberful' ),
+        /* translators: %s is the renewal link. */
+        __( 'Some of your subscriptions expire today. %s.', 'memberful' ),
         $link
       );
     }
 
     if ( $is_mixed_subscriptions ) {
       return wp_sprintf(
-        /* translators: %s is the update membership link. */
-        __( 'You have a subscription expiring today. %s.', 'memberful' ),
+        /* translators: %s is the renewal link. */
+        __( 'One of your subscriptions expires today. %s.', 'memberful' ),
         $link
       );
     }
 
     return wp_sprintf(
-      /* translators: %s is the update membership link. */
-      __( 'Your membership expires today. %s.', 'memberful' ),
+      /* translators: %s is the renewal link. */
+      __( 'Your subscription expires today. %s.', 'memberful' ),
       $link
     );
   }
 
   if ( $is_mixed_subscriptions && $has_multiple_expiring_subscriptions ) {
     return wp_sprintf(
-      /* translators: 1: Number of days remaining. 2: Update membership link. */
+      /* translators: 1: Number of days remaining. 2: Renewal link. */
       _n(
-        'You have multiple subscriptions expiring in %1$d day. %2$s.',
-        'You have multiple subscriptions expiring in %1$d days. %2$s.',
+        'Some of your subscriptions expire in %1$d day. %2$s.',
+        'Some of your subscriptions expire in %1$d days. %2$s.',
         (int) $expiry_data['days_remaining'],
         'memberful'
       ),
@@ -272,10 +272,10 @@ function memberful_wp_expiry_banner_message( array $expiry_data, $account_url ) 
 
   if ( $is_mixed_subscriptions ) {
     return wp_sprintf(
-      /* translators: 1: Number of days remaining. 2: Update membership link. */
+      /* translators: 1: Number of days remaining. 2: Renewal link. */
       _n(
-        'You have a subscription expiring in %1$d day. %2$s.',
-        'You have a subscription expiring in %1$d days. %2$s.',
+        'One of your subscriptions expires in %1$d day. %2$s.',
+        'One of your subscriptions expires in %1$d days. %2$s.',
         (int) $expiry_data['days_remaining'],
         'memberful'
       ),
@@ -285,10 +285,10 @@ function memberful_wp_expiry_banner_message( array $expiry_data, $account_url ) 
   }
 
   return wp_sprintf(
-    /* translators: 1: Number of days remaining. 2: Update membership link. */
+    /* translators: 1: Number of days remaining. 2: Renewal link. */
     _n(
-      'Your membership expires in %1$d day. %2$s.',
-      'Your membership expires in %1$d days. %2$s.',
+      'Your subscription expires in %1$d day. %2$s.',
+      'Your subscription expires in %1$d days. %2$s.',
       (int) $expiry_data['days_remaining'],
       'memberful'
     ),
