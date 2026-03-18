@@ -38,6 +38,8 @@ class Memberful_WP_Block_Editor {
 	 */
 	public function __construct() {
 		if ( function_exists( 'register_block_type' ) ) {
+			add_action( 'init', array( $this, 'register_blocks' ) );
+			add_filter( 'block_categories_all', array( $this, 'register_block_categories' ), 10, 2 );
 			add_action( 'enqueue_block_editor_assets', array( $this, 'enqueue_assets' ) );
 			add_filter( 'register_block_type_args', array( $this, 'add_block_visibility_attributes' ), 10, 2 );
 
@@ -54,7 +56,9 @@ class Memberful_WP_Block_Editor {
 	 */
 	public static function get_block_visibility_excluded_blocks() {
 
-		$excluded_blocks = array();
+		$excluded_blocks = array(
+			'memberful/paywall-divider',
+		);
 
 		/**
 		 * Filters the blocks that are excluded from the block visibility controls.
@@ -65,6 +69,60 @@ class Memberful_WP_Block_Editor {
 		 * @return array The blocks that are excluded from the block visibility controls.
 		*/
 		return apply_filters( 'memberful_wp_block_visibility_excluded_blocks', $excluded_blocks );
+	}
+
+	/**
+	 * Register Memberful block types.
+	 *
+	 * @since 1.78.1
+	 *
+	 * @return void
+	 */
+	public function register_blocks(): void {
+		$block_directory = MEMBERFUL_DIR . '/js/build/blocks/paywall-divider';
+
+		if ( ! file_exists( $block_directory . '/block.json' ) ) {
+			$block_directory = MEMBERFUL_DIR . '/js/src/blocks/paywall-divider';
+		}
+
+		register_block_type(
+			$block_directory,
+			array(
+				'render_callback' => '__return_empty_string',
+        'autoRegister' => true,
+			)
+		);
+	}
+
+	/**
+	 * Register custom block categories for the block inserter.
+	 *
+	 * @since 1.78.1
+	 *
+	 * @param array $categories Existing block categories.
+	 * @return array Updated block categories.
+	 */
+	public function register_block_categories( $categories ) {
+		$memberful_category_exists = false;
+
+		foreach ( $categories as $category ) {
+			if ( isset( $category['slug'] ) && 'memberful' === $category['slug'] ) {
+				$memberful_category_exists = true;
+				break;
+			}
+		}
+
+		if ( $memberful_category_exists ) {
+			return $categories;
+		}
+
+		$categories[] = array(
+			'slug'  => 'memberful',
+			'title' => __( 'Memberful', 'memberful' ),
+			'icon'  => null,
+		);
+
+		return $categories;
 	}
 
 	/**
