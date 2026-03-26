@@ -4,7 +4,7 @@
   "name": "memberful/paywall-divider",
   "title": "Memberful Paywall Divider",
   "version": "1.0.0",
-  "description": "Marks where protected content starts for unauthorised visitors.",
+  "description": "Marks where protected content starts for unauthorized visitors.",
   "category": "memberful",
   "icon": "minus",
   "keywords": [

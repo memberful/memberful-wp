@@ -9,7 +9,7 @@
     <h3><?php _e( 'Global marketing content', 'memberful' ); ?></h3>
     <p>
       <label for="use_global_marketing_checkbox">
-      <input id="use_global_marketing_checkbox" class="memberful-label__checkbox--multiline" type="checkbox" name="memberful_use_global_marketing" 
+      <input id="use_global_marketing_checkbox" class="memberful-label__checkbox--multiline" type="checkbox" name="memberful_use_global_marketing"
       <?php
       if ( $use_global_marketing ) :
         ?>
@@ -21,7 +21,7 @@
     </p>
     <div id="global_marketing_options" data-depends-on="use_global_marketing_checkbox" data-depends-value="1">
       <label for="global_marketing_override_radio_true">
-      <input id="global_marketing_override_radio_true" type="radio" name="memberful_global_marketing_override" value="1" 
+      <input id="global_marketing_override_radio_true" type="radio" name="memberful_global_marketing_override" value="1"
       <?php
       if ( $global_marketing_override ) {
         echo 'checked="checked"';}
@@ -39,17 +39,18 @@
       Only use the global marketing content when other content doesn't exist.
       </label>
       <hr>
-  
+
       <div id="global_marketing_snippet_options">
 
-      <input id="use_global_snippets_checkbox" class="memberful-label__checkbox--multiline" type="checkbox" name="memberful_use_global_snippets" 
+      <input id="use_global_snippets_checkbox" class="memberful-label__checkbox--multiline" type="checkbox" name="memberful_use_global_snippets"
       <?php
       if ( $use_global_snippets ) :
         ?>
         checked="checked"<?php endif; ?>>
         <span class="memberful-label__text--multiline"><strong>Automatically pull an excerpt from each post.</strong>
-          <?php echo esc_html(' Memberful will pull the first two paragraphs from each protected post to use as marketing content for logged out visitors.'
-          .' This feature requires <p> tags in your posts to detect which content to use.');?>
+          <?php echo esc_html( ' Memberful will pull the first two paragraphs from each protected post to use as marketing content for logged out visitors.'
+          . ' This feature requires <p> tags in your posts to detect which content to use.'
+          . ' If a post contains a Memberful Paywall Divider block, all content above the divider will be shown instead of the excerpt.' ); ?>
       </div>
 
     </div>
