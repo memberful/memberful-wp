@@ -1,6 +1,6 @@
 {
   "$schema": "https://schemas.wp.org/trunk/block.json",
-	"apiVersion": 3,
+  "apiVersion": 3,
   "name": "memberful/paywall-divider",
   "title": "Memberful Paywall Divider",
   "version": "1.0.0",
