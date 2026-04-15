@@ -164,11 +164,17 @@ function memberful_wp_get_soonest_expiring_subscription( $user_id ) {
       continue;
     }
 
+    $seconds_remaining = $expires_at - $now;
+    $is_expired = $seconds_remaining < 0;
+
+    if ( ! $is_expired && memberful_wp_subscription_has_autorenew_enabled( $subscription ) ) {
+      ++$active_subscriptions_count;
+      continue;
+    }
+
     ++$expiring_subscriptions_count;
 
     if ( null === $soonest || $expires_at < $soonest['expires_at'] ) {
-      $seconds_remaining = $expires_at - $now;
-      $is_expired = $seconds_remaining < 0;
       $days_remaining = $is_expired ? 0 : (int) ceil( $seconds_remaining / DAY_IN_SECONDS );
 
       $soonest = array(
@@ -316,4 +322,19 @@ function memberful_wp_parse_expiry_timestamp( $expires_at ) {
   }
 
   return (int) $parsed_time;
+}
+
+/**
+ * Checks whether subscription auto-renew is enabled.
+ *
+ * @param array $subscription Subscription data from user meta.
+ *
+ * @return bool
+ */
+function memberful_wp_subscription_has_autorenew_enabled( array $subscription ) {
+  if ( ! array_key_exists( 'autorenew', $subscription ) ) {
+    return false;
+  }
+
+  return wp_validate_boolean( $subscription['autorenew'] );
 }
