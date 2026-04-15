@@ -1,7 +1,7 @@
 === Memberful - Membership Plugin ===
 Contributors: drewstrojny, jakememberful, julianmemberful, lucasmemberful, patrikmemberful
 Tags: membership, subscriptions, paywall, stripe, recurring payments, memberful, oauth, oauth 2.0, members, recurring billing
-Requires at least: 3.6
+Requires at least: 6.3
 Tested up to: 6.9.1
 Requires PHP: 7.4
 Stable tag: 1.78.0
