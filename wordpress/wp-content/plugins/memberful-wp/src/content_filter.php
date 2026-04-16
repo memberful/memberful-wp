@@ -76,7 +76,7 @@ function memberful_wp_format_divider_teaser_content( $content ) {
 
   $wrapped_content = "<div class='memberful-global-teaser-content'>$content</div>";
 
-  if ( function_exists( 'memberful_get_teaser_css' ) && ! did_action( 'memberful_teaser_css' ) ) {
+  if ( function_exists( 'memberful_get_teaser_css' ) && ! did_filter( 'memberful_teaser_css' ) ) {
     $wrapped_content .= apply_filters( 'memberful_teaser_css', memberful_get_teaser_css() );
   }
 
