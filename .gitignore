@@ -8,3 +8,8 @@
 !/wordpress/wp-content/plugins
 /wordpress/wp-content/plugins/*
 !/wordpress/wp-content/plugins/memberful-wp
+
+# Claude Code - https://code.claude.com/docs/en/settings
+.claude/settings.local.json
+.claude/worktrees
+CLAUDE.local.md
