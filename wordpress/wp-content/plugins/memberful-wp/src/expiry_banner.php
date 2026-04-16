@@ -174,7 +174,21 @@ function memberful_wp_get_soonest_expiring_subscription( $user_id ) {
 
     ++$expiring_subscriptions_count;
 
-    if ( null === $soonest || $expires_at < $soonest['expires_at'] ) {
+    $should_replace_soonest = false;
+
+    if ( null === $soonest ) {
+      $should_replace_soonest = true;
+    } else {
+      $soonest_is_expired = ! empty( $soonest['is_expired'] );
+
+      if ( $soonest_is_expired && ! $is_expired ) {
+        $should_replace_soonest = true;
+      } elseif ( $soonest_is_expired === $is_expired && $expires_at < $soonest['expires_at'] ) {
+        $should_replace_soonest = true;
+      }
+    }
+
+    if ( $should_replace_soonest ) {
       $days_remaining = $is_expired ? 0 : (int) ceil( $seconds_remaining / DAY_IN_SECONDS );
 
       $soonest = array(
@@ -215,10 +229,18 @@ function memberful_wp_expiry_banner_message( array $expiry_data, $account_url ) 
   $has_multiple_expiring_subscriptions = $expiring_subscriptions_count > 1;
 
   if ( ! empty( $expiry_data['is_expired'] ) ) {
-    if ( $is_mixed_subscriptions && $has_multiple_expiring_subscriptions ) {
+    if ( $has_multiple_expiring_subscriptions ) {
+      if ( $is_mixed_subscriptions ) {
+        return wp_sprintf(
+          /* translators: %s is the renewal link. */
+          __( 'Some of your subscriptions have expired. %s.', 'memberful' ),
+          $link
+        );
+      }
+
       return wp_sprintf(
         /* translators: %s is the renewal link. */
-        __( 'Some of your subscriptions have expired. %s.', 'memberful' ),
+        __( 'Your subscriptions have expired. %s.', 'memberful' ),
         $link
       );
     }
@@ -239,10 +261,18 @@ function memberful_wp_expiry_banner_message( array $expiry_data, $account_url ) 
   }
 
   if ( (int) $expiry_data['days_remaining'] <= 0 ) {
-    if ( $is_mixed_subscriptions && $has_multiple_expiring_subscriptions ) {
+    if ( $has_multiple_expiring_subscriptions ) {
+      if ( $is_mixed_subscriptions ) {
+        return wp_sprintf(
+          /* translators: %s is the renewal link. */
+          __( 'Some of your subscriptions expire today. %s.', 'memberful' ),
+          $link
+        );
+      }
+
       return wp_sprintf(
         /* translators: %s is the renewal link. */
-        __( 'Some of your subscriptions expire today. %s.', 'memberful' ),
+        __( 'Your subscriptions expire today. %s.', 'memberful' ),
         $link
       );
     }
@@ -262,12 +292,26 @@ function memberful_wp_expiry_banner_message( array $expiry_data, $account_url ) 
     );
   }
 
-  if ( $is_mixed_subscriptions && $has_multiple_expiring_subscriptions ) {
+  if ( $has_multiple_expiring_subscriptions ) {
+    if ( $is_mixed_subscriptions ) {
+      return wp_sprintf(
+        /* translators: 1: Number of days remaining. 2: Renewal link. */
+        _n(
+          'Some of your subscriptions expire in %1$d day. %2$s.',
+          'Some of your subscriptions expire in %1$d days. %2$s.',
+          (int) $expiry_data['days_remaining'],
+          'memberful'
+        ),
+        (int) $expiry_data['days_remaining'],
+        $link
+      );
+    }
+
     return wp_sprintf(
       /* translators: 1: Number of days remaining. 2: Renewal link. */
       _n(
-        'Some of your subscriptions expire in %1$d day. %2$s.',
-        'Some of your subscriptions expire in %1$d days. %2$s.',
+        'Your subscriptions expire in %1$d day. %2$s.',
+        'Your subscriptions expire in %1$d days. %2$s.',
         (int) $expiry_data['days_remaining'],
         'memberful'
       ),
