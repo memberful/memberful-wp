@@ -36,3 +36,7 @@ Do not run `./release.sh` as part of normal contributor or agent work unless a m
 ## Versioning
 
 The plugin version must match in three places: the `Stable tag` field in `readme.txt`, the `Version` header in `memberful-wp.php`, and the `MEMBERFUL_VERSION` constant in the same file. `release.sh` validates this before publishing. During feature development, use `= unreleased =` as the changelog heading in `readme.txt`. When a release is cut, that heading is replaced with the actual version number and all three locations are updated together. Do not bump the version unless explicitly asked.
+
+### Changelog updates before a version bump
+
+Before bumping the version, review all changes since the last version bump (use `git log` against the commit that last changed the version) and ensure each significant change has a changelog entry under the `= unreleased =` heading in `readme.txt`. A significant change is a new feature, bug fix, security patch, or notable behavioral change. Each entry should be a single bullet (`* …`) with a concise one-line description matching the style of existing entries (e.g. `* Add per-plan role mappings`, `* Fix PHP 8.3 deprecation notice`). For minor changes such as small refactors, internal cleanup, or documentation-only edits, ask the user whether to include them.
