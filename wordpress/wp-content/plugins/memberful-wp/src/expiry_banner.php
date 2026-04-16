@@ -189,7 +189,7 @@ function memberful_wp_get_soonest_expiring_subscription( $user_id ) {
     }
 
     if ( $should_replace_soonest ) {
-      $days_remaining = $is_expired ? 0 : (int) ceil( $seconds_remaining / DAY_IN_SECONDS );
+      $days_remaining = memberful_wp_get_subscription_days_remaining( $expires_at, $now );
 
       $soonest = array(
         'expires_at' => $expires_at,
@@ -366,6 +366,39 @@ function memberful_wp_parse_expiry_timestamp( $expires_at ) {
   }
 
   return (int) $parsed_time;
+}
+
+/**
+ * Calculates remaining subscription days in the site timezone.
+ *
+ * @param int $expires_at Subscription expiry timestamp.
+ * @param int $now        Current timestamp.
+ *
+ * @return int
+ */
+function memberful_wp_get_subscription_days_remaining( $expires_at, $now ) {
+  if ( $expires_at <= $now ) {
+    return 0;
+  }
+
+  $timezone = wp_timezone();
+  $current_date = wp_date( 'Y-m-d', $now, $timezone );
+  $expiry_date = wp_date( 'Y-m-d', $expires_at, $timezone );
+
+  if ( $current_date === $expiry_date ) {
+    return 0;
+  }
+
+  $current_date_object = date_create_immutable_from_format( '!Y-m-d', $current_date, $timezone );
+  $expiry_date_object = date_create_immutable_from_format( '!Y-m-d', $expiry_date, $timezone );
+
+  if ( false === $current_date_object || false === $expiry_date_object ) {
+    return (int) ceil( ( $expires_at - $now ) / DAY_IN_SECONDS );
+  }
+
+  $days_remaining = (int) $current_date_object->diff( $expiry_date_object )->format( '%a' );
+
+  return max( 1, $days_remaining );
 }
 
 /**
