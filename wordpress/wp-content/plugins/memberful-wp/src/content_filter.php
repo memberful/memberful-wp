@@ -3,9 +3,28 @@
 add_action( 'the_content', 'memberful_wp_protect_content', 100 );
 
 /**
- * Split post content at the first paywall divider block.
+ * Get the marker inserted by the paywall divider block.
  *
- * @param string $content Raw post content.
+ * @return string
+ */
+function memberful_wp_get_paywall_divider_marker() {
+  return '<!-- memberful-paywall-divider -->';
+}
+
+/**
+ * Remove the paywall divider marker from rendered content.
+ *
+ * @param string $content Rendered post content.
+ * @return string
+ */
+function memberful_wp_strip_paywall_divider_marker( $content ) {
+  return str_replace( memberful_wp_get_paywall_divider_marker(), '', (string) $content );
+}
+
+/**
+ * Split rendered post content at the first paywall divider marker.
+ *
+ * @param string $content Rendered post content.
  * @return array{
  *   has_divider: bool,
  *   content_above_divider: string,
@@ -23,8 +42,7 @@ function memberful_wp_split_post_content_at_paywall_divider( $content ) {
     );
   }
 
-  $divider_pattern = '/<!--\s+wp:memberful\/paywall-divider(?:\s+[^>]*)?\s*\/-->|<!--\s+wp:memberful\/paywall-divider(?:\s+[^>]*)?\s*-->\s*<!--\s+\/wp:memberful\/paywall-divider\s*-->/';
-  $content_parts   = preg_split( $divider_pattern, $content, 2 );
+  $content_parts = explode( memberful_wp_get_paywall_divider_marker(), $content, 2 );
 
   if ( ! is_array( $content_parts ) || 2 !== count( $content_parts ) ) {
     return array(
@@ -39,24 +57,6 @@ function memberful_wp_split_post_content_at_paywall_divider( $content ) {
     'content_above_divider'  => $content_parts[0],
     'content_below_divider'  => $content_parts[1],
   );
-}
-
-/**
- * Render content using the standard `the_content` pipeline without recursion.
- *
- * @param string $content Content to render.
- * @return string Rendered content.
- */
-function memberful_wp_render_content_without_protection( $content ) {
-  if ( '' === trim( (string) $content ) ) {
-    return $content;
-  }
-
-  remove_action( 'the_content', 'memberful_wp_protect_content', 100 );
-  $rendered_content = apply_filters( 'the_content', $content );
-  add_action( 'the_content', 'memberful_wp_protect_content', 100 );
-
-  return $rendered_content;
 }
 
 /**
@@ -86,19 +86,21 @@ function memberful_wp_format_divider_teaser_content( $content ) {
 function memberful_wp_protect_content( $content ) {
   global $post;
 
+  $content_split = memberful_wp_split_post_content_at_paywall_divider( $content );
+
   if ( !isset( $post ) ) {
     # Return the content since we're not in the loop if `$post` is `NULL`
     # Temporary fix for Elasticpress' syncing issue
-    return $content;
+    return memberful_wp_strip_paywall_divider_marker( $content );
   }
 
   if(doing_filter('memberful_wp_protect_content')){
-    return $content;
+    return memberful_wp_strip_paywall_divider_marker( $content );
   }
 
   // Do not filter content for admins
   if ( current_user_can( 'publish_posts' ) ) {
-    return $content;
+    return memberful_wp_strip_paywall_divider_marker( $content );
   }
 
   if ( ! memberful_can_user_access_post( wp_get_current_user()->ID, $post->ID ) ) {
@@ -115,25 +117,25 @@ function memberful_wp_protect_content( $content ) {
 
     $memberful_marketing_content = memberful_marketing_content( $post->ID );
 
-    // Split the content at the paywall divider (if present).
-    $content_split = memberful_wp_split_post_content_at_paywall_divider( $post->post_content );
-
     if ( $content_split['has_divider'] ) {
-      $rendered_content_above_divider = memberful_wp_render_content_without_protection( $content_split['content_above_divider'] );
-      $rendered_content_above_divider = memberful_wp_format_divider_teaser_content( $rendered_content_above_divider );
+      $content_above_divider = memberful_wp_format_divider_teaser_content( $content_split['content_above_divider'] );
       $rendered_marketing_content = apply_filters( 'memberful_wp_protect_content', $memberful_marketing_content );
 
       if ( '' !== trim( (string) $rendered_marketing_content ) ) {
-        return $rendered_content_above_divider . $rendered_marketing_content;
+        return $content_above_divider . $rendered_marketing_content;
       }
 
-      return $rendered_content_above_divider;
+      return $content_above_divider;
     }
 
     return apply_filters( 'memberful_wp_protect_content', $memberful_marketing_content );
   }
 
-  return $content;
+  if ( $content_split['has_divider'] ) {
+    return $content_split['content_above_divider'] . $content_split['content_below_divider'];
+  }
+
+  return memberful_wp_strip_paywall_divider_marker( $content );
 }
 
 add_filter( 'memberful_wp_protect_content','wptexturize');

@@ -88,7 +88,7 @@ class Memberful_WP_Block_Editor {
     register_block_type(
       $block_directory,
       array(
-        'render_callback' => '__return_empty_string',
+        'render_callback' => 'memberful_wp_render_paywall_divider_block',
       )
     );
   }
@@ -328,4 +328,13 @@ Memberful_WP_Block_Editor::get_instance();
  */
 function memberful_wp_get_block_visibility_excluded_blocks() {
   return Memberful_WP_Block_Editor::get_block_visibility_excluded_blocks();
+}
+
+/**
+ * Render callback for the Memberful paywall divider block.
+ *
+ * @return string
+ */
+function memberful_wp_render_paywall_divider_block() {
+  return '<!-- memberful-paywall-divider -->';
 }

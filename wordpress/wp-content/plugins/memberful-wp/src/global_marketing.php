@@ -44,12 +44,8 @@ function memberful_apply_global_snippets_content_filter( $memberful_marketing_co
 
   $wrapped_global_marketing_content = "<div class='memberful-global-marketing-content'>$replacement</div>";
 
-  if ( isset( $post ) ) {
-    $content_split = memberful_wp_split_post_content_at_paywall_divider( $post->post_content );
-
-    if ( $content_split['has_divider'] ) {
-      return $wrapped_global_marketing_content;
-    }
+  if ( isset( $post ) && has_block( 'memberful/paywall-divider', $post ) ) {
+    return $wrapped_global_marketing_content;
   }
 
   // Prevent endless loop trap
@@ -89,7 +85,7 @@ function memberful_apply_global_snippets_content_filter( $memberful_marketing_co
 
   $wrapped_teaser = "<div class='memberful-global-teaser-content'>$teaser</div>";
 
-  if ( $has_teaser && ! did_action( 'memberful_teaser_css' ) ) {
+  if ( $has_teaser && ! did_filter( 'memberful_teaser_css' ) ) {
     $wrapped_teaser .= apply_filters( 'memberful_teaser_css', memberful_get_teaser_css() );
   }
 
