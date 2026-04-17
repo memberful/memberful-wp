@@ -67,28 +67,28 @@ function memberful_wp_render_expiry_banner() {
   $message = apply_filters( 'memberful_expiry_banner_message', $message, $expiry_data );
 
   $is_expired = ! empty( $expiry_data['is_expired'] );
-  $aria_role = $is_expired ? 'alert' : 'status';
-  $aria_live = $is_expired ? 'assertive' : 'polite';
+  $aria_attributes = array(
+    'role' => $is_expired ? 'alert' : 'status',
+    'live' => $is_expired ? 'assertive' : 'polite',
+  );
 
   /**
-   * Filters the ARIA role used for the expiry banner live region.
+   * Filters the ARIA attributes used for the expiry banner live region.
    *
-   * @param string $aria_role   The computed ARIA role.
-   * @param array  $expiry_data The computed expiry data for the current user.
+   * @param array $aria_attributes {
+   *   ARIA attributes for the expiry banner.
    *
-   * @return string The ARIA role for the banner.
+   *   @type string $role The ARIA role value.
+   *   @type string $live The ARIA live mode value.
+   * }
+   * @param array $expiry_data The computed expiry data for the current user.
+   *
+   * @return array The filtered ARIA attribute values.
    */
-  $aria_role = (string) apply_filters( 'memberful_expiry_banner_aria_role', $aria_role, $expiry_data );
-
-  /**
-   * Filters the ARIA live mode used for the expiry banner.
-   *
-   * @param string $aria_live   The computed ARIA live value.
-   * @param array  $expiry_data The computed expiry data for the current user.
-   *
-   * @return string The ARIA live value for the banner.
-   */
-  $aria_live = (string) apply_filters( 'memberful_expiry_banner_aria_live', $aria_live, $expiry_data );
+  $aria_attributes = apply_filters( 'memberful_expiry_banner_aria_attributes', $aria_attributes, $expiry_data );
+  $aria_attributes = is_array( $aria_attributes ) ? $aria_attributes : array();
+  $aria_role = isset( $aria_attributes['role'] ) ? (string) $aria_attributes['role'] : 'status';
+  $aria_live = isset( $aria_attributes['live'] ) ? (string) $aria_attributes['live'] : 'polite';
 
   $has_rendered = true;
   memberful_wp_enqueue_expiry_banner_script();
