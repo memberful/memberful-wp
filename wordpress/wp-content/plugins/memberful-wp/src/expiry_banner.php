@@ -91,6 +91,7 @@ function memberful_wp_render_expiry_banner() {
   $aria_live = (string) apply_filters( 'memberful_expiry_banner_aria_live', $aria_live, $expiry_data );
 
   $has_rendered = true;
+  memberful_wp_enqueue_expiry_banner_script();
 
   ob_start();
   memberful_wp_render(
@@ -112,6 +113,37 @@ function memberful_wp_render_expiry_banner() {
    * @return string The filtered banner HTML output.
    */
   echo apply_filters( 'memberful_expiry_banner_html', $html, $expiry_data );
+}
+
+/**
+ * Enqueues the expiry banner script.
+ *
+ * @return void
+ */
+function memberful_wp_enqueue_expiry_banner_script() {
+  static $is_enqueued = false;
+
+  if ( $is_enqueued ) {
+    return;
+  }
+
+  $script_asset_path = MEMBERFUL_DIR . '/js/build/expiry-banner.asset.php';
+  $script_asset_info = file_exists( $script_asset_path )
+    ? include $script_asset_path
+    : array(
+      'dependencies' => array(),
+      'version' => MEMBERFUL_VERSION,
+    );
+
+  wp_enqueue_script(
+    'memberful-expiry-banner',
+    plugins_url( 'js/build/expiry-banner.js', MEMBERFUL_PLUGIN_FILE ),
+    $script_asset_info['dependencies'],
+    $script_asset_info['version'],
+    true
+  );
+
+  $is_enqueued = true;
 }
 
 /**

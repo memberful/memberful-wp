@@ -5,5 +5,6 @@ module.exports = {
   entry: {
     ...defaultConfig.entry,
     "editor-scripts": "./js/src/editor-scripts.js",
+    "expiry-banner": "./js/src/expiry-banner.js",
   },
 };
