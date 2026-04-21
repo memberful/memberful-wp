@@ -1,4 +1,5 @@
 .DS_Store
+.idea
 
 # Manage wordpress/wp-content/plugins/memberful-wp and ignore everything else
 # from the wordpress/ folder.

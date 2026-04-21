@@ -1,0 +1,71 @@
+<?php
+/**
+ * Sanitization for the paywall builder configuration.
+ *
+ * @package memberful-wp
+ */
+class Memberful_Paywall_Sanitizer {
+	/**
+	 * Sanitize a raw paywall-config input array against a canonical defaults array.
+	 *
+	 * @param array $input    Raw input (typically $_POST payload shape).
+	 * @param array $defaults Canonical defaults from Memberful_Paywall_Config::defaults().
+	 *
+	 * @return array Sanitized config ready for update_option().
+	 */
+	public static function sanitize( array $input, array $defaults ): array {
+		$input = array_intersect_key( $input, $defaults );
+		$clean = $defaults;
+
+		$enums = array(
+			'mode'           => array( 'builder', 'custom_html' ),
+			'layout'         => array( 'simple', 'card', 'banner' ),
+			'heading_tag'    => array( 'h1', 'h2', 'h3' ),
+			'subheading_tag' => array( 'p', 'h3', 'h4' ),
+			'button_shape'   => array( 'pill', 'rounded', 'square' ),
+		);
+
+		foreach ( $enums as $key => $allowed ) {
+			if ( isset( $input[ $key ] ) && in_array( $input[ $key ], $allowed, true ) ) {
+				$clean[ $key ] = $input[ $key ];
+			}
+		}
+
+		foreach ( array( 'heading', 'subheading', 'button_label' ) as $key ) {
+			if ( isset( $input[ $key ] ) ) {
+				$clean[ $key ] = sanitize_text_field( (string) $input[ $key ] );
+			}
+		}
+
+		if ( isset( $input['features'] ) ) {
+			$features = is_array( $input['features'] )
+				? $input['features']
+				: preg_split( "/\r\n|\n|\r/", (string) $input['features'] );
+
+			$features = array_map( 'sanitize_text_field', (array) $features );
+			$features = array_map( 'trim', $features );
+			$features = array_values( array_filter( $features, 'strlen' ) );
+
+			$clean['features'] = $features;
+		}
+
+		foreach ( array( 'subscribe_url', 'sign_in_url' ) as $key ) {
+			if ( isset( $input[ $key ] ) ) {
+				$clean[ $key ] = esc_url_raw( (string) $input[ $key ] );
+			}
+		}
+
+		if ( isset( $input['brand_color'] ) ) {
+			$color = sanitize_hex_color( (string) $input['brand_color'] );
+			if ( null !== $color && '' !== $color ) {
+				$clean['brand_color'] = $color;
+			}
+		}
+
+		if ( isset( $input['custom_css'] ) ) {
+			$clean['custom_css'] = wp_strip_all_tags( (string) $input['custom_css'] );
+		}
+
+		return $clean;
+	}
+}

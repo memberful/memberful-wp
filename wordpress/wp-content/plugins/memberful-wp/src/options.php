@@ -1,35 +1,37 @@
 <?php
 require MEMBERFUL_DIR.'/src/user/map_stats.php';
 
-function memberful_wp_all_options() {
-  return array(
-    'memberful_client_id' => NULL,
-    'memberful_client_secret' => NULL,
-    'memberful_site' => NULL,
-    'memberful_custom_domain' => NULL,
-    'memberful_api_key' => NULL,
-    'memberful_webhook_secret' => NULL,
-    'memberful_products' => array(),
-    'memberful_subscriptions' => array(),
-    'memberful_acl' => array(),
-    'memberful_embed_enabled' => FALSE,
-    'memberful_error_log' => array(),
-    'memberful_role_active_customer' => 'subscriber',
-    'memberful_role_inactive_customer' => 'subscriber',
-    'memberful_plan_role_mappings' => array(),
-    'memberful_use_per_plan_roles' => FALSE,
-    'memberful_posts_available_to_any_registered_user' => array(),
-    'memberful_hide_admin_toolbar' => TRUE,
-    'memberful_block_dashboard_access' => TRUE,
-    'memberful_filter_account_menu_items' => TRUE,
-    'memberful_auto_sync_display_names' => FALSE,
-    'memberful_show_protected_content_in_search' => FALSE,
-    'memberful_use_global_marketing' => FALSE,
-    'memberful_use_global_snippets' => TRUE,
-    'memberful_global_marketing_override' => TRUE,
-    'memberful_global_marketing_content' => '',
-    'memberful_ad_provider_settings' => array()
-  );
+function memberful_wp_all_options(): array {
+	return array(
+		'memberful_client_id'                              => null,
+		'memberful_client_secret'                          => null,
+		'memberful_site'                                   => null,
+		'memberful_custom_domain'                          => null,
+		'memberful_api_key'                                => null,
+		'memberful_webhook_secret'                         => null,
+		'memberful_products'                               => array(),
+		'memberful_subscriptions'                          => array(),
+		'memberful_acl'                                    => array(),
+		'memberful_embed_enabled'                          => false,
+		'memberful_error_log'                              => array(),
+		'memberful_role_active_customer'                   => 'subscriber',
+		'memberful_role_inactive_customer'                 => 'subscriber',
+		'memberful_plan_role_mappings'                     => array(),
+		'memberful_use_per_plan_roles'                     => false,
+		'memberful_posts_available_to_any_registered_user' => array(),
+		'memberful_hide_admin_toolbar'                     => true,
+		'memberful_block_dashboard_access'                 => true,
+		'memberful_filter_account_menu_items'              => true,
+		'memberful_auto_sync_display_names'                => false,
+		'memberful_show_protected_content_in_search'       => false,
+		'memberful_use_global_marketing'                   => false,
+		'memberful_use_global_snippets'                    => true,
+		'memberful_global_marketing_override'              => true,
+		'memberful_global_marketing_content'               => '',
+		'memberful_ad_provider_settings'                   => array(),
+		Memberful_Paywall_Config::OPTION_KEY               => array(),
+		Memberful_Paywall_Config::LEGACY_FLAG_KEY          => false,
+	);
 }
 
 /**
