@@ -687,32 +687,40 @@ function memberful_wp_add_protected_state_to_post_list($states, $post) {
 }
 
 function memberful_wp_global_marketing() {
-  if ( isset( $_POST['save_global_marketing'] ) && memberful_wp_valid_nonce( 'memberful_options' ) ) {
-    if ( isset( $_POST['memberful_use_global_marketing'] ) ) {
-      update_option( 'memberful_use_global_marketing', true );
-      update_option( 'memberful_global_marketing_override', filter_input( INPUT_POST, 'memberful_global_marketing_override', FILTER_SANITIZE_NUMBER_INT ) );
-      update_option( 'memberful_global_marketing_content', memberful_wp_kses_post( filter_input( INPUT_POST, 'memberful_global_marketing_content' ) ) );
-      update_option( 'memberful_use_global_snippets', (int) isset($_POST['memberful_use_global_snippets']));
-    } else {
-      update_option( 'memberful_use_global_marketing', false );
-    }
-  }
+	if ( isset( $_POST['save_global_marketing'] ) && memberful_wp_valid_nonce( 'memberful_options' ) ) {
+		if ( isset( $_POST['memberful_use_global_marketing'] ) ) {
+			update_option( 'memberful_use_global_marketing', true );
+			update_option( 'memberful_global_marketing_override', filter_input( INPUT_POST, 'memberful_global_marketing_override', FILTER_SANITIZE_NUMBER_INT ) );
+			update_option( 'memberful_use_global_snippets', (int) isset( $_POST['memberful_use_global_snippets'] ) );
 
-  $use_global_marketing = get_option( 'memberful_use_global_marketing' );
-  $use_global_snippets = get_option( 'memberful_use_global_snippets');
-  $global_marketing_content = get_option( 'memberful_global_marketing_content' );
-  $global_marketing_override = get_option( 'memberful_global_marketing_override', true );
+			$paywall_input = filter_input( INPUT_POST, 'memberful_paywall', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
+			if ( is_array( $paywall_input ) && ! empty( $paywall_input ) ) {
+				Memberful_Paywall_Config::save( $paywall_input );
+			}
 
-  memberful_wp_render(
-    'global_marketing',
-    array(
-      'use_global_marketing' => $use_global_marketing,
-      'use_global_snippets'  => $use_global_snippets,
-      'global_marketing_content' => $global_marketing_content,
-      'global_marketing_override' => $global_marketing_override,
-      'form_target' => memberful_wp_plugin_global_marketing_url()
-    )
-  );
+			if ( 'custom_html' === Memberful_Paywall_Config::get()['mode'] ) {
+				update_option( 'memberful_global_marketing_content', memberful_wp_kses_post( filter_input( INPUT_POST, 'memberful_global_marketing_content' ) ) );
+			}
+		} else {
+			update_option( 'memberful_use_global_marketing', false );
+		}
+	}
+
+	$use_global_marketing = get_option( 'memberful_use_global_marketing' );
+	$use_global_snippets = get_option( 'memberful_use_global_snippets');
+	$global_marketing_content = get_option( 'memberful_global_marketing_content' );
+	$global_marketing_override = get_option( 'memberful_global_marketing_override', true );
+
+	memberful_wp_render(
+		'global_marketing',
+		array(
+			'use_global_marketing' => $use_global_marketing,
+			'use_global_snippets'  => $use_global_snippets,
+			'global_marketing_content' => $global_marketing_content,
+			'global_marketing_override' => $global_marketing_override,
+			'form_target' => memberful_wp_plugin_global_marketing_url()
+		)
+	);
 }
 
 /**
