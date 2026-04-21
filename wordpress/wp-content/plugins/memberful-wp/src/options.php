@@ -30,7 +30,6 @@ function memberful_wp_all_options(): array {
 		'memberful_global_marketing_content'               => '',
 		'memberful_ad_provider_settings'                   => array(),
 		Memberful_Paywall_Config::OPTION_KEY               => array(),
-		Memberful_Paywall_Config::LEGACY_FLAG_KEY          => false,
 	);
 }
 

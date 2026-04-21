@@ -13,10 +13,6 @@
  * Renders a paywall config array to HTML.
  */
 class Memberful_Paywall_Renderer {
-	const HEADING_TAGS    = array( 'h1', 'h2', 'h3' );
-	const SUBHEADING_TAGS = array( 'p', 'h3', 'h4' );
-	const LAYOUTS         = array( 'simple', 'card', 'banner' );
-
 	/**
 	 * Render a paywall config to HTML.
 	 *
@@ -27,7 +23,7 @@ class Memberful_Paywall_Renderer {
 	public static function render( array $config ): string {
 		$config = wp_parse_args( $config, Memberful_Paywall_Config::defaults() );
 
-		$layout = in_array( $config['layout'], self::LAYOUTS, true ) ? $config['layout'] : 'card';
+		$layout = in_array( $config['layout'], Memberful_Paywall_Config::LAYOUTS, true ) ? $config['layout'] : 'card';
 		$method = 'render_' . $layout;
 
 		$body = self::$method( $config );
@@ -98,7 +94,7 @@ class Memberful_Paywall_Renderer {
 	 * @return string
 	 */
 	private static function heading_block( array $config ): string {
-		$tag = in_array( $config['heading_tag'], self::HEADING_TAGS, true ) ? $config['heading_tag'] : 'h2';
+		$tag = in_array( $config['heading_tag'], Memberful_Paywall_Config::HEADING_TAGS, true ) ? $config['heading_tag'] : 'h2';
 		return sprintf(
 			'<%1$s class="memberful-paywall__heading">%2$s</%1$s>',
 			tag_escape( $tag ),
@@ -118,7 +114,7 @@ class Memberful_Paywall_Renderer {
 			return '';
 		}
 
-		$tag = in_array( $config['subheading_tag'], self::SUBHEADING_TAGS, true ) ? $config['subheading_tag'] : 'p';
+		$tag = in_array( $config['subheading_tag'], Memberful_Paywall_Config::SUBHEADING_TAGS, true ) ? $config['subheading_tag'] : 'p';
 		return sprintf(
 			'<%1$s class="memberful-paywall__subheading">%2$s</%1$s>',
 			tag_escape( $tag ),

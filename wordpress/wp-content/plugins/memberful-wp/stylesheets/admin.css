@@ -270,3 +270,38 @@ Ad Provider Settings
 .memberful-ad-provider-settings > div {
   margin-left: 1rem;
 }
+
+/*---------------------------------------------------------
+Paywall Builder
+------------------------------------------------------------ */
+.memberful-paywall-builder {
+  border-top: 1px solid #dcdcde;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+}
+.memberful-paywall-builder__mode {
+  margin-bottom: 1rem;
+}
+.memberful-paywall-builder__mode label {
+  margin-right: 1.25rem;
+}
+.memberful-paywall-builder__legend {
+  font-weight: 600;
+  margin-bottom: 0.35rem;
+}
+.memberful-paywall-builder__layout {
+  margin: 1rem 0;
+}
+.memberful-paywall-builder__layout label {
+  margin-right: 1.25rem;
+}
+.memberful-paywall-builder__fields th {
+  width: 160px;
+}
+.memberful-paywall-builder__fields .regular-text,
+.memberful-paywall-builder__fields .large-text {
+  max-width: 480px;
+}
+.memberful-paywall-builder__fields select {
+  margin-left: 0.5rem;
+}

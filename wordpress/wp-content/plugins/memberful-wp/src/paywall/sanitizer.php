@@ -18,11 +18,11 @@ class Memberful_Paywall_Sanitizer {
 		$clean = $defaults;
 
 		$enums = array(
-			'mode'           => array( 'builder', 'custom_html' ),
-			'layout'         => array( 'simple', 'card', 'banner' ),
-			'heading_tag'    => array( 'h1', 'h2', 'h3' ),
-			'subheading_tag' => array( 'p', 'h3', 'h4' ),
-			'button_shape'   => array( 'pill', 'rounded', 'square' ),
+			'mode'           => Memberful_Paywall_Config::MODES,
+			'layout'         => Memberful_Paywall_Config::LAYOUTS,
+			'heading_tag'    => Memberful_Paywall_Config::HEADING_TAGS,
+			'subheading_tag' => Memberful_Paywall_Config::SUBHEADING_TAGS,
+			'button_shape'   => Memberful_Paywall_Config::BUTTON_SHAPES,
 		);
 
 		foreach ( $enums as $key => $allowed ) {

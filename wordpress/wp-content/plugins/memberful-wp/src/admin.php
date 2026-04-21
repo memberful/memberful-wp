@@ -127,6 +127,20 @@ function memberful_wp_admin_enqueue_scripts() {
     );
   }
 
+	if (
+		'memberful_options' === filter_input( INPUT_GET, 'page' )
+		&& 'global_marketing' === filter_input( INPUT_GET, 'subpage' )
+	) {
+		wp_enqueue_style( 'wp-color-picker' );
+		wp_enqueue_script(
+			'memberful-paywall-builder',
+			MEMBERFUL_URL . '/js/build/paywall-builder.js',
+			array( 'jquery', 'wp-color-picker' ),
+			MEMBERFUL_VERSION,
+			true
+		);
+	}
+
   wp_enqueue_script(
     'memberful-menu',
     plugins_url( 'js/src/menu.js', dirname( __FILE__ ) ),
@@ -714,11 +728,12 @@ function memberful_wp_global_marketing() {
 	memberful_wp_render(
 		'global_marketing',
 		array(
-			'use_global_marketing' => $use_global_marketing,
-			'use_global_snippets'  => $use_global_snippets,
-			'global_marketing_content' => $global_marketing_content,
+			'use_global_marketing'      => $use_global_marketing,
+			'use_global_snippets'       => $use_global_snippets,
+			'global_marketing_content'  => $global_marketing_content,
 			'global_marketing_override' => $global_marketing_override,
-			'form_target' => memberful_wp_plugin_global_marketing_url()
+			'paywall_config'            => Memberful_Paywall_Config::get(),
+			'form_target'               => memberful_wp_plugin_global_marketing_url(),
 		)
 	);
 }

@@ -5,8 +5,13 @@
  * @package memberful-wp
  */
 class Memberful_Paywall_Config {
-	const OPTION_KEY      = 'memberful_paywall_config';
-	const LEGACY_FLAG_KEY = 'memberful_paywall_legacy_detected';
+	const OPTION_KEY = 'memberful_paywall_config';
+
+	const MODES           = array( 'builder', 'custom_html' );
+	const LAYOUTS         = array( 'simple', 'card', 'banner' );
+	const HEADING_TAGS    = array( 'h1', 'h2', 'h3' );
+	const SUBHEADING_TAGS = array( 'p', 'h3', 'h4' );
+	const BUTTON_SHAPES   = array( 'pill', 'rounded', 'square' );
 
 	/**
 	 * Canonical default configuration shape.
@@ -34,6 +39,10 @@ class Memberful_Paywall_Config {
 	/**
 	 * Read the stored config merged over defaults.
 	 *
+	 * On sites with legacy custom HTML in memberful_global_marketing_content and no stored builder config yet, the
+	 * default mode swaps to custom_html so the existing content keeps rendering untouched. Once the user saves any
+	 * config, the stored value wins and this check short-circuits.
+	 *
 	 * @return array
 	 */
 	public static function get(): array {
@@ -43,7 +52,21 @@ class Memberful_Paywall_Config {
 			$stored = array();
 		}
 
-		return wp_parse_args( $stored, self::defaults() );
+		$defaults = self::defaults();
+		if ( empty( $stored ) && self::has_legacy_content() ) {
+			$defaults['mode'] = 'custom_html';
+		}
+
+		return wp_parse_args( $stored, $defaults );
+	}
+
+	/**
+	 * Whether the legacy marketing content option is populated.
+	 *
+	 * @return bool
+	 */
+	private static function has_legacy_content(): bool {
+		return '' !== trim( (string) get_option( 'memberful_global_marketing_content' ) );
 	}
 
 	/**
