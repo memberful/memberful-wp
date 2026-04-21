@@ -4,6 +4,10 @@
  *
  * @package memberful-wp
  */
+
+/**
+ * Class Memberful_Paywall_Config
+ */
 class Memberful_Paywall_Config {
 	const OPTION_KEY = 'memberful_paywall_config';
 

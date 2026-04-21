@@ -1,6 +1,6 @@
 <?php
 /**
- * Paywall builder HTML renderer.
+ * Paywall builder HTML renderer
  *
  * Produces the markup that backs the global paywall content and the live
  * admin preview. Safe to call with any array shape — unknown keys fall back

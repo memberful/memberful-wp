@@ -1,8 +1,12 @@
 <?php
 /**
- * Sanitization for the paywall builder configuration.
+ * Sanitization for the paywall builder configuration
  *
  * @package memberful-wp
+ */
+
+/**
+ * Class Memberful_Paywall_Sanitizer.
  */
 class Memberful_Paywall_Sanitizer {
 	/**
