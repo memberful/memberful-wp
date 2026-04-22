@@ -14,6 +14,54 @@
  */
 class Memberful_Paywall_Renderer {
 	/**
+	 * Flag to determine if we should load paywall styles.
+	 *
+	 * @var bool
+	 */
+	private static $should_print_styles = false;
+
+	/**
+	 * Register the actions on plugin load.
+	 */
+	public static function register(): void {
+		add_filter( 'memberful_wp_protect_content', array( __CLASS__, 'protect_content' ) );
+		add_action( 'wp_footer', array( __CLASS__, 'maybe_print_styles' ) );
+	}
+
+	/**
+	 * Conditionally flag paywall loading.
+	 *
+	 * @param string $content Content.
+	 *
+	 * @return string
+	 */
+	public static function protect_content( string $content ): string {
+		$config = Memberful_Paywall_Config::get();
+
+		if ( 'builder' === $config['mode'] ) {
+			self::$should_print_styles = true;
+		}
+
+		return $content;
+	}
+
+	/**
+	 * Render paywall styles.
+	 */
+	public static function maybe_print_styles(): void {
+		if ( ! self::$should_print_styles ) {
+			return;
+		}
+
+		wp_enqueue_style(
+			'memberful-paywall',
+			MEMBERFUL_URL . '/stylesheets/paywall.css',
+			array(),
+			MEMBERFUL_VERSION
+		);
+	}
+
+	/**
 	 * Render a paywall config to HTML.
 	 *
 	 * @param array $config Config shape from Memberful_Paywall_Config::get().
@@ -26,63 +74,66 @@ class Memberful_Paywall_Renderer {
 		$layout = in_array( $config['layout'], Memberful_Paywall_Config::LAYOUTS, true ) ? $config['layout'] : 'card';
 		$method = 'render_' . $layout;
 
-		$body = self::$method( $config );
-
 		return sprintf(
-			'<div class="memberful-paywall memberful-paywall--%s" style="%s">%s</div>',
+			'<div class="memberful-paywall memberful-paywall--%1$s" style="%2$s">%3$s</div>',
 			esc_attr( $layout ),
 			esc_attr( self::wrapper_style( $config ) ),
-			$body
+			self::$method( $config )
 		);
 	}
 
 	/**
-	 * Render the "simple" layout.
+	 * Render the "simple" layout — minimal text + CTA on a transparent band.
 	 *
 	 * @param array $config Sanitized config.
 	 *
 	 * @return string
 	 */
 	private static function render_simple( array $config ): string {
-		return self::heading_block( $config )
+		return '<div class="memberful-paywall__inner">'
+			. self::heading_block( $config )
 			. self::subheading_block( $config )
 			. self::features_block( $config )
-			. '<div class="memberful-paywall__actions">' . self::primary_cta( $config ) . '</div>';
+			. '<div class="memberful-paywall__actions">' . self::primary_cta( $config ) . '</div>'
+			. self::sign_in_prompt( $config )
+			. '</div>';
 	}
 
 	/**
-	 * Render the "card" layout.
+	 * Render the "card" layout — centred white card with lock badge.
 	 *
 	 * @param array $config Sanitized config.
 	 *
 	 * @return string
 	 */
 	private static function render_card( array $config ): string {
-		return '<div class="memberful-paywall__card">'
+		return '<div class="memberful-paywall__inner">'
+			. '<div class="memberful-paywall__card">'
+			. self::lock_badge()
 			. self::heading_block( $config )
 			. self::subheading_block( $config )
 			. self::features_block( $config )
-			. '<div class="memberful-paywall__actions">'
-			. self::primary_cta( $config )
-			. self::secondary_cta( $config )
+			. '<div class="memberful-paywall__actions">' . self::primary_cta( $config ) . '</div>'
+			. self::sign_in_prompt( $config )
 			. '</div>'
 			. '</div>';
 	}
 
 	/**
-	 * Render the "banner" layout.
+	 * Render the "banner" layout — full-width dark band.
 	 *
 	 * @param array $config Sanitized config.
 	 *
 	 * @return string
 	 */
 	private static function render_banner( array $config ): string {
-		return '<div class="memberful-paywall__banner-text">'
+		return '<div class="memberful-paywall__inner">'
 			. self::heading_block( $config )
 			. self::subheading_block( $config )
 			. self::features_block( $config )
-			. '</div>'
-			. '<div class="memberful-paywall__actions">' . self::primary_cta( $config ) . '</div>';
+			. '<div class="memberful-paywall__actions">' . self::primary_cta( $config ) . '</div>'
+			. self::sign_in_prompt( $config )
+			. '</div>';
 	}
 
 	/**
@@ -155,18 +206,32 @@ class Memberful_Paywall_Renderer {
 	}
 
 	/**
-	 * Secondary sign-in CTA anchor (card layout only).
+	 * "Already a subscriber? Sign in" text prompt shown under every layout's CTA.
 	 *
 	 * @param array $config Sanitized config.
 	 *
 	 * @return string
 	 */
-	private static function secondary_cta( array $config ): string {
+	private static function sign_in_prompt( array $config ): string {
 		return sprintf(
-			'<a class="memberful-paywall__button memberful-paywall__button--secondary" href="%s">%s</a>',
+			'<p class="memberful-paywall__signin">%s <a class="memberful-paywall__signin-link" href="%s">%s</a></p>',
+			esc_html__( 'Already a subscriber?', 'memberful' ),
 			esc_url( self::sign_in_url( $config ) ),
 			esc_html__( 'Sign in', 'memberful' )
 		);
+	}
+
+	/**
+	 * Circular lock badge shown at the top of the card layout.
+	 *
+	 * @return string
+	 */
+	private static function lock_badge(): string {
+		return '<span class="memberful-paywall__lock" aria-hidden="true">'
+			. '<svg width="20" height="20" viewBox="0 0 24 24" focusable="false">'
+			. '<path fill="currentColor" d="M12 2a5 5 0 00-5 5v3H6a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2v-8a2 2 0 00-2-2h-1V7a5 5 0 00-5-5zm-3 8V7a3 3 0 016 0v3H9z"/>'
+			. '</svg>'
+			. '</span>';
 	}
 
 	/**
@@ -177,11 +242,13 @@ class Memberful_Paywall_Renderer {
 	 * @return string
 	 */
 	private static function wrapper_style( array $config ): string {
-		return sprintf(
-			'--mf-brand:%s;--mf-radius:%s;',
-			$config['brand_color'],
-			self::button_radius( $config['button_shape'] )
-		);
+		$parts = array( '--mf-radius:' . self::button_radius( $config['button_shape'] ) );
+
+		if ( ! empty( $config['brand_color'] ) ) {
+			$parts[] = '--mf-brand:' . $config['brand_color'];
+		}
+
+		return implode( ';', $parts ) . ';';
 	}
 
 	/**
@@ -236,3 +303,5 @@ class Memberful_Paywall_Renderer {
 			. '</svg>';
 	}
 }
+
+Memberful_Paywall_Renderer::register();

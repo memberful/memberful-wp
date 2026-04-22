@@ -101,7 +101,7 @@ $features_textarea = implode( "\n", (array) $paywall_config['features'] );
 
 			<p class="memberful-paywall-builder__field">
 				<label for="memberful-paywall-brand-color"><?php esc_html_e( 'Brand colour', 'memberful' ); ?></label>
-				<input id="memberful-paywall-brand-color" type="text" class="memberful-paywall-builder__color" name="memberful_paywall[brand_color]" value="<?php echo esc_attr( $paywall_config['brand_color'] ); ?>" data-default-color="<?php echo esc_attr( $paywall_config['brand_color'] ); ?>">
+				<input id="memberful-paywall-brand-color" type="text" class="memberful-paywall-builder__color" name="memberful_paywall[brand_color]" value="<?php echo esc_attr( $paywall_config['brand_color'] ); ?>">
 			</p>
 
 			<p class="memberful-paywall-builder__field">

@@ -32,8 +32,8 @@ class Memberful_Paywall_Config {
 			'button_label'  => esc_html__( 'Subscribe', 'memberful' ),
 			'subscribe_url' => '',
 			'sign_in_url'   => '',
-			'brand_color'   => '#2f80ed',
-			'button_shape'  => 'rounded',
+			'brand_color'   => '',
+			'button_shape'  => 'square',
 		);
 	}
 

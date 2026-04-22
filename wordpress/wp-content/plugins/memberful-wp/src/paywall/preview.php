@@ -55,15 +55,21 @@ class Memberful_Paywall_Preview {
 			$links .= sprintf( '<link rel="stylesheet" href="%s">', esc_url( $theme_css ) );
 		}
 
+		$teaser = '<div class="mf-preview-teaser" aria-hidden="true"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vitae urna id quam faucibus gravida ac sed ipsum. Quisque eget velit dictum leo tempor bibendum nec sed odio.</p></div>';
+
+		$styles = 'html,body{margin:0;background:#fff;color:#1b1b1b;}'
+			. '.mf-preview-teaser{font-size:16px;line-height:1.6;padding:24px 24px 0;}'
+			. '.mf-preview-teaser p{margin:0 0 1em;}';
+
 		return '<!doctype html>'
 			. '<html lang="' . esc_attr( get_bloginfo( 'language' ) ) . '">'
 			. '<head>'
 			. '<meta charset="utf-8">'
 			. '<meta name="viewport" content="width=device-width,initial-scale=1">'
 			. $links
-			. '<style>html,body{margin:0;padding:16px;background:#fff;}</style>'
+			. '<style>' . $styles . '</style>'
 			. '</head>'
-			. '<body>' . $body . '</body>'
+			. '<body>' . $teaser . $body . '</body>'
 			. '</html>';
 	}
 

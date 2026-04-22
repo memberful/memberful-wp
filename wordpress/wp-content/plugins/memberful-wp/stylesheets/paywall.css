@@ -3,8 +3,8 @@
  */
 
 .memberful-paywall {
-	--mf-brand: #2f80ed;
-	--mf-radius: 8px;
+	--mf-brand: var(--wp--preset--color--primary, var(--wp--preset--color--accent, var(--wp-admin-theme-color, #1f2933)));
+	--mf-radius: 0;
 	--mf-text: #1b1b1b;
 	--mf-muted: #555;
 	--mf-surface: #fff;
@@ -14,9 +14,10 @@
 	color: var(--mf-text);
 	font-family: inherit;
 	line-height: 1.5;
-	margin: 1.5em auto;
-	max-width: 640px;
-	padding: 2rem;
+	margin: 0;
+	padding: 0;
+	position: relative;
+	width: 100%;
 }
 
 .memberful-paywall *,
@@ -25,28 +26,55 @@
 	box-sizing: border-box;
 }
 
+/* Shared inner column that constrains content width inside full-bleed layouts. */
+.memberful-paywall__inner {
+	margin: 0 auto;
+	max-width: 600px;
+	padding: 2rem 1.5rem 2.5rem;
+	text-align: center;
+}
+
 .memberful-paywall__heading {
 	font-weight: 700;
 	line-height: 1.2;
-	margin: 0 0 0.5rem;
+	margin: 0 0 0.75rem;
+}
+
+h2.memberful-paywall__heading {
+	font-size: 2rem;
+}
+
+h2.memberful-paywall__heading {
+	font-size: 1.5rem;
+}
+
+h3.memberful-paywall__heading {
+	font-size: 1.175rem;
 }
 
 .memberful-paywall__subheading {
 	color: var(--mf-muted);
-	margin: 0 0 1.25rem;
+	font-size: 1rem;
+	margin: 0 0 1.5rem;
 }
 
 .memberful-paywall__features {
+	color: var(--mf-muted);
+	column-gap: 1.5rem;
+	display: inline-grid;
+	font-size: 1rem;
+	grid-template-columns: repeat(2, auto);
 	list-style: none;
 	margin: 0 0 1.5rem;
 	padding: 0;
+	row-gap: 0.25rem;
+	text-align: left;
 }
 
 .memberful-paywall__features li {
 	align-items: flex-start;
 	display: flex;
 	gap: 0.5rem;
-	padding: 0.25rem 0;
 }
 
 .memberful-paywall__check {
@@ -60,22 +88,26 @@
 	display: flex;
 	flex-wrap: wrap;
 	gap: 0.75rem;
+	justify-content: center;
+	margin-bottom: 1rem;
 }
 
 .memberful-paywall__button {
+	border: 1px solid transparent;
 	border-radius: var(--mf-radius);
 	display: inline-block;
+	font-size: 1rem;
 	font-weight: 600;
 	line-height: 1.2;
-	padding: 0.6rem 1.25rem;
+	padding: 0.85rem 1.75rem;
 	text-decoration: none;
-	transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease;
+	transition: background-color 150ms ease, color 150ms ease, filter 150ms ease;
 }
 
 .memberful-paywall__button--primary {
 	background: var(--mf-brand);
+	border-color: var(--mf-brand);
 	color: #fff;
-	border: 1px solid var(--mf-brand);
 }
 
 .memberful-paywall__button--primary:hover,
@@ -83,84 +115,76 @@
 	filter: brightness(0.92);
 }
 
-.memberful-paywall__button--secondary {
-	background: transparent;
-	border: 1px solid var(--mf-border);
-	color: var(--mf-brand);
+.memberful-paywall__signin {
+	color: var(--mf-muted);
+	font-size: 0.9rem;
+	margin: 0;
 }
 
-.memberful-paywall__button--secondary:hover,
-.memberful-paywall__button--secondary:focus {
-	border-color: var(--mf-brand);
+.memberful-paywall__signin-link {
+	color: inherit;
+	text-decoration: underline;
 }
 
-/* Simple layout - left aligned stack, no surface. */
+.memberful-paywall__lock {
+	align-items: center;
+	background: var(--mf-brand);
+	border-radius: 50%;
+	color: #fff;
+	display: inline-flex;
+	height: 44px;
+	justify-content: center;
+	margin: 0 auto 1rem;
+	width: 44px;
+}
+
+/* Simple — transparent band, minimal spacing. */
 .memberful-paywall--simple {
-	text-align: left;
+	background: var(--mf-surface);
 }
 
-/* Card layout - centred card with border and shadow. */
+.memberful-paywall--simple .memberful-paywall__button {
+	padding: 0.6rem 1.4rem;
+}
+
+/* Card — centred white surface floating on a muted page backdrop. */
 .memberful-paywall--card {
-	text-align: center;
+	background: #f2f4f7;
+}
+
+.memberful-paywall--card .memberful-paywall__inner {
+	padding-top: 1.5rem;
 }
 
 .memberful-paywall--card .memberful-paywall__card {
 	background: var(--mf-surface);
 	border: 1px solid var(--mf-border);
 	border-radius: calc(var(--mf-radius) + 4px);
-	box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-	padding: 2rem;
+	box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+	margin: 0 auto;
+	max-width: 420px;
+	padding: 2.25rem 2rem;
 }
 
-.memberful-paywall--card .memberful-paywall__features {
-	display: inline-block;
-	text-align: left;
+.memberful-paywall--card .memberful-paywall__button--primary {
+	display: block;
+	padding: 0.95rem 1.5rem;
+	width: 100%;
 }
 
-.memberful-paywall--card .memberful-paywall__actions {
-	justify-content: center;
-}
-
-/* Banner layout - heading/features on the left, CTA on the right. */
+/* Banner — full-bleed dark band with white copy. */
 .memberful-paywall--banner {
-	align-items: center;
-	background: var(--mf-surface);
-	border: 1px solid var(--mf-border);
-	border-radius: var(--mf-radius);
-	display: flex;
-	gap: 1.5rem;
-	max-width: none;
-	padding: 1.5rem 2rem;
+	--mf-text: #fff;
+	--mf-muted: rgba(255, 255, 255, 0.75);
+
+	background: #1f2933;
+	color: var(--mf-text);
 }
 
-.memberful-paywall--banner .memberful-paywall__banner-text {
-	flex: 1 1 auto;
-	min-width: 0;
+.memberful-paywall--banner .memberful-paywall__signin-link {
+	color: #fff;
 }
 
-.memberful-paywall--banner .memberful-paywall__heading {
-	font-size: 1.15rem;
-}
-
-.memberful-paywall--banner .memberful-paywall__subheading {
-	margin-bottom: 0;
-}
-
-.memberful-paywall--banner .memberful-paywall__actions {
-	flex: 0 0 auto;
-}
-
-@media (max-width: 768px) {
-	.memberful-paywall--banner {
-		align-items: stretch;
-		flex-direction: column;
-	}
-
-	.memberful-paywall--banner .memberful-paywall__features {
-		display: none;
-	}
-
-	.memberful-paywall--banner .memberful-paywall__actions {
-		justify-content: center;
-	}
+.memberful-paywall--banner .memberful-paywall__button--primary {
+	padding: 1rem 2rem;
 }
