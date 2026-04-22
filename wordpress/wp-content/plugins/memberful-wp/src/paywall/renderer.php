@@ -29,11 +29,10 @@ class Memberful_Paywall_Renderer {
 		$body = self::$method( $config );
 
 		return sprintf(
-			'<div class="memberful-paywall memberful-paywall--%s" style="%s">%s</div>%s',
+			'<div class="memberful-paywall memberful-paywall--%s" style="%s">%s</div>',
 			esc_attr( $layout ),
 			esc_attr( self::wrapper_style( $config ) ),
-			$body,
-			self::custom_css_block( $config )
+			$body
 		);
 	}
 
@@ -204,21 +203,6 @@ class Memberful_Paywall_Renderer {
 			default:
 				return '8px';
 		}
-	}
-
-	/**
-	 * Custom CSS <style> tag, or empty when no CSS configured.
-	 *
-	 * @param array $config Sanitized config.
-	 *
-	 * @return string
-	 */
-	private static function custom_css_block( array $config ): string {
-		$css = trim( wp_strip_all_tags( (string) $config['custom_css'] ) );
-		if ( '' === $css ) {
-			return '';
-		}
-		return '<style>' . $css . '</style>';
 	}
 
 	/**

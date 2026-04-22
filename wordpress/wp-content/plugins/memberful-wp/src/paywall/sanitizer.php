@@ -66,10 +66,6 @@ class Memberful_Paywall_Sanitizer {
 			}
 		}
 
-		if ( isset( $input['custom_css'] ) ) {
-			$clean['custom_css'] = wp_strip_all_tags( (string) $input['custom_css'] );
-		}
-
 		return $clean;
 	}
 }

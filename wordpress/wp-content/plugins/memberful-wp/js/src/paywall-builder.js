@@ -51,7 +51,6 @@ jQuery(function ($) {
       sign_in_url:    $('#memberful-paywall-signin-url').val() || '',
       brand_color:    $colorInput.val() || '',
       button_shape:   $('#memberful-paywall-button-shape').val() || 'rounded',
-      custom_css:     $('#memberful-paywall-custom-css').val() || '',
     };
   }
 

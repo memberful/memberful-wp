@@ -101,13 +101,6 @@ $features_textarea = implode( "\n", (array) $paywall_config['features'] );
 					</select>
 				</td>
 			</tr>
-			<tr>
-				<th scope="row"><label for="memberful-paywall-custom-css"><?php esc_html_e( 'Custom CSS', 'memberful' ); ?></label></th>
-				<td>
-					<textarea id="memberful-paywall-custom-css" class="large-text code" rows="6" name="memberful_paywall[custom_css]"><?php echo esc_textarea( $paywall_config['custom_css'] ); ?></textarea>
-					<p class="description"><?php esc_html_e( 'Rules are scoped under .memberful-paywall when saved.', 'memberful' ); ?></p>
-				</td>
-			</tr>
 		</tbody>
 	</table>
 

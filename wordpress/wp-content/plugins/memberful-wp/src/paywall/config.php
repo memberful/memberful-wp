@@ -36,7 +36,6 @@ class Memberful_Paywall_Config {
 			'sign_in_url'    => '',
 			'brand_color'    => '#2f80ed',
 			'button_shape'   => 'rounded',
-			'custom_css'     => '',
 		);
 	}
 
