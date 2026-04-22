@@ -127,19 +127,33 @@ function memberful_wp_admin_enqueue_scripts() {
     );
   }
 
-	if (
-		'memberful_options' === filter_input( INPUT_GET, 'page' )
-		&& 'global_marketing' === filter_input( INPUT_GET, 'subpage' )
-	) {
-		wp_enqueue_style( 'wp-color-picker' );
-		wp_enqueue_script(
-			'memberful-paywall-builder',
-			MEMBERFUL_URL . '/js/build/paywall-builder.js',
-			array( 'jquery', 'wp-color-picker' ),
-			MEMBERFUL_VERSION,
-			true
-		);
-	}
+  if (
+    'memberful_options' === filter_input( INPUT_GET, 'page' )
+    && 'global_marketing' === filter_input( INPUT_GET, 'subpage' )
+  ) {
+    wp_enqueue_style( 'wp-color-picker' );
+
+    wp_enqueue_style(
+      'memberful-paywall',
+      MEMBERFUL_URL . '/stylesheets/paywall.css',
+      array(),
+      MEMBERFUL_VERSION
+    );
+
+    wp_enqueue_script(
+      'memberful-paywall-builder',
+      MEMBERFUL_URL . '/js/build/paywall-builder.js',
+      array( 'jquery', 'wp-color-picker' ),
+      MEMBERFUL_VERSION,
+      true
+    );
+
+    wp_localize_script(
+      'memberful-paywall-builder',
+      'memberfulPaywallPreview',
+      Memberful_Paywall_Preview::script_args()
+    );
+  }
 
   wp_enqueue_script(
     'memberful-menu',

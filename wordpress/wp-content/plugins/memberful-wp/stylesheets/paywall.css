@@ -1,0 +1,166 @@
+/**
+ * Memberful paywall — frontend + admin preview styles.
+ */
+
+.memberful-paywall {
+	--mf-brand: #2f80ed;
+	--mf-radius: 8px;
+	--mf-text: #1b1b1b;
+	--mf-muted: #555;
+	--mf-surface: #fff;
+	--mf-border: rgba(0, 0, 0, 0.08);
+
+	box-sizing: border-box;
+	color: var(--mf-text);
+	font-family: inherit;
+	line-height: 1.5;
+	margin: 1.5em auto;
+	max-width: 640px;
+	padding: 2rem;
+}
+
+.memberful-paywall *,
+.memberful-paywall *::before,
+.memberful-paywall *::after {
+	box-sizing: border-box;
+}
+
+.memberful-paywall__heading {
+	font-weight: 700;
+	line-height: 1.2;
+	margin: 0 0 0.5rem;
+}
+
+.memberful-paywall__subheading {
+	color: var(--mf-muted);
+	margin: 0 0 1.25rem;
+}
+
+.memberful-paywall__features {
+	list-style: none;
+	margin: 0 0 1.5rem;
+	padding: 0;
+}
+
+.memberful-paywall__features li {
+	align-items: flex-start;
+	display: flex;
+	gap: 0.5rem;
+	padding: 0.25rem 0;
+}
+
+.memberful-paywall__check {
+	color: var(--mf-brand);
+	flex: 0 0 auto;
+	margin-top: 0.2rem;
+}
+
+.memberful-paywall__actions {
+	align-items: center;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.75rem;
+}
+
+.memberful-paywall__button {
+	border-radius: var(--mf-radius);
+	display: inline-block;
+	font-weight: 600;
+	line-height: 1.2;
+	padding: 0.6rem 1.25rem;
+	text-decoration: none;
+	transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease;
+}
+
+.memberful-paywall__button--primary {
+	background: var(--mf-brand);
+	color: #fff;
+	border: 1px solid var(--mf-brand);
+}
+
+.memberful-paywall__button--primary:hover,
+.memberful-paywall__button--primary:focus {
+	filter: brightness(0.92);
+}
+
+.memberful-paywall__button--secondary {
+	background: transparent;
+	border: 1px solid var(--mf-border);
+	color: var(--mf-brand);
+}
+
+.memberful-paywall__button--secondary:hover,
+.memberful-paywall__button--secondary:focus {
+	border-color: var(--mf-brand);
+}
+
+/* Simple layout - left aligned stack, no surface. */
+.memberful-paywall--simple {
+	text-align: left;
+}
+
+/* Card layout - centred card with border and shadow. */
+.memberful-paywall--card {
+	text-align: center;
+}
+
+.memberful-paywall--card .memberful-paywall__card {
+	background: var(--mf-surface);
+	border: 1px solid var(--mf-border);
+	border-radius: calc(var(--mf-radius) + 4px);
+	box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+	padding: 2rem;
+}
+
+.memberful-paywall--card .memberful-paywall__features {
+	display: inline-block;
+	text-align: left;
+}
+
+.memberful-paywall--card .memberful-paywall__actions {
+	justify-content: center;
+}
+
+/* Banner layout - heading/features on the left, CTA on the right. */
+.memberful-paywall--banner {
+	align-items: center;
+	background: var(--mf-surface);
+	border: 1px solid var(--mf-border);
+	border-radius: var(--mf-radius);
+	display: flex;
+	gap: 1.5rem;
+	max-width: none;
+	padding: 1.5rem 2rem;
+}
+
+.memberful-paywall--banner .memberful-paywall__banner-text {
+	flex: 1 1 auto;
+	min-width: 0;
+}
+
+.memberful-paywall--banner .memberful-paywall__heading {
+	font-size: 1.15rem;
+}
+
+.memberful-paywall--banner .memberful-paywall__subheading {
+	margin-bottom: 0;
+}
+
+.memberful-paywall--banner .memberful-paywall__actions {
+	flex: 0 0 auto;
+}
+
+@media (max-width: 768px) {
+	.memberful-paywall--banner {
+		align-items: stretch;
+		flex-direction: column;
+	}
+
+	.memberful-paywall--banner .memberful-paywall__features {
+		display: none;
+	}
+
+	.memberful-paywall--banner .memberful-paywall__actions {
+		justify-content: center;
+	}
+}
