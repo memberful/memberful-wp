@@ -176,6 +176,7 @@ function memberful_wp_get_soonest_expiring_subscription( $user_id ) {
   $threshold_timestamp = $now + ( $days_threshold * DAY_IN_SECONDS );
   $soonest = null;
   $expiring_subscriptions_count = 0;
+  $expired_subscriptions_count = 0;
   $active_subscriptions_count = 0;
 
   foreach ( $subscriptions as $subscription ) {
@@ -205,6 +206,9 @@ function memberful_wp_get_soonest_expiring_subscription( $user_id ) {
     }
 
     ++$expiring_subscriptions_count;
+    if ( $is_expired ) {
+      ++$expired_subscriptions_count;
+    }
 
     $should_replace_soonest = false;
 
@@ -236,6 +240,7 @@ function memberful_wp_get_soonest_expiring_subscription( $user_id ) {
   }
 
   $soonest['expiring_subscriptions_count'] = $expiring_subscriptions_count;
+  $soonest['expired_subscriptions_count'] = $expired_subscriptions_count;
   $soonest['active_subscriptions_count'] = $active_subscriptions_count;
 
   return $soonest;
@@ -256,9 +261,12 @@ function memberful_wp_expiry_banner_message( array $expiry_data, $account_url ) 
     esc_html__( 'Renew now', 'memberful' )
   );
   $expiring_subscriptions_count = max( 1, (int) ( $expiry_data['expiring_subscriptions_count'] ?? 1 ) );
+  $expired_subscriptions_count = max( 0, (int) ( $expiry_data['expired_subscriptions_count'] ?? 0 ) );
+  $upcoming_subscriptions_count = max( 0, $expiring_subscriptions_count - $expired_subscriptions_count );
   $active_subscriptions_count = max( 0, (int) ( $expiry_data['active_subscriptions_count'] ?? 0 ) );
   $is_mixed_subscriptions = $active_subscriptions_count > 0;
   $has_multiple_expiring_subscriptions = $expiring_subscriptions_count > 1;
+  $has_expired_subscriptions = $expired_subscriptions_count > 0;
 
   if ( ! empty( $expiry_data['is_expired'] ) ) {
     if ( $has_multiple_expiring_subscriptions ) {
@@ -293,6 +301,20 @@ function memberful_wp_expiry_banner_message( array $expiry_data, $account_url ) 
   }
 
   if ( (int) $expiry_data['days_remaining'] <= 0 ) {
+    if ( $has_expired_subscriptions ) {
+      return wp_sprintf(
+        /* translators: 1: Number of subscriptions expiring today. 2: Renewal link. */
+        _n(
+          'Some of your subscriptions have expired; another expires today. %2$s.',
+          'Some of your subscriptions have expired; %1$d others expire today. %2$s.',
+          $upcoming_subscriptions_count,
+          'memberful'
+        ),
+        $upcoming_subscriptions_count,
+        $link
+      );
+    }
+
     if ( $has_multiple_expiring_subscriptions ) {
       if ( $is_mixed_subscriptions ) {
         return wp_sprintf(
@@ -320,6 +342,43 @@ function memberful_wp_expiry_banner_message( array $expiry_data, $account_url ) 
     return wp_sprintf(
       /* translators: %s is the renewal link. */
       __( 'Your subscription expires today. %s.', 'memberful' ),
+      $link
+    );
+  }
+
+  if ( $has_expired_subscriptions ) {
+    if ( $upcoming_subscriptions_count <= 0 ) {
+      return wp_sprintf(
+        /* translators: %s is the renewal link. */
+        __( 'Some of your subscriptions have expired. %s.', 'memberful' ),
+        $link
+      );
+    }
+
+    if ( 1 === $upcoming_subscriptions_count ) {
+      return wp_sprintf(
+        /* translators: 1: Number of days remaining. 2: Renewal link. */
+        _n(
+          'Some of your subscriptions have expired; another expires in %1$d day. %2$s.',
+          'Some of your subscriptions have expired; another expires in %1$d days. %2$s.',
+          (int) $expiry_data['days_remaining'],
+          'memberful'
+        ),
+        (int) $expiry_data['days_remaining'],
+        $link
+      );
+    }
+
+    return wp_sprintf(
+      /* translators: 1: Number of subscriptions still expiring. 2: Number of days remaining. 3: Renewal link. */
+      _n(
+        'Some of your subscriptions have expired; %1$d others expire in %2$d day. %3$s.',
+        'Some of your subscriptions have expired; %1$d others expire in %2$d days. %3$s.',
+        (int) $expiry_data['days_remaining'],
+        'memberful'
+      ),
+      $upcoming_subscriptions_count,
+      (int) $expiry_data['days_remaining'],
       $link
     );
   }
