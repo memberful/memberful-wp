@@ -102,7 +102,7 @@ class Memberful_Paywall_Renderer {
 	}
 
 	/**
-	 * Subheading element with the configured tag, or empty when blank.
+	 * Subheading paragraph, or empty when blank.
 	 *
 	 * @param array $config Sanitized config.
 	 *
@@ -113,10 +113,8 @@ class Memberful_Paywall_Renderer {
 			return '';
 		}
 
-		$tag = in_array( $config['subheading_tag'], Memberful_Paywall_Config::SUBHEADING_TAGS, true ) ? $config['subheading_tag'] : 'p';
 		return sprintf(
-			'<%1$s class="memberful-paywall__subheading">%2$s</%1$s>',
-			tag_escape( $tag ),
+			'<p class="memberful-paywall__subheading">%s</p>',
 			esc_html( $config['subheading'] )
 		);
 	}

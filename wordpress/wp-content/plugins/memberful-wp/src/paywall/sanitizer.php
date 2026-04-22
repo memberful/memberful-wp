@@ -22,11 +22,10 @@ class Memberful_Paywall_Sanitizer {
 		$clean = $defaults;
 
 		$enums = array(
-			'mode'           => Memberful_Paywall_Config::MODES,
-			'layout'         => Memberful_Paywall_Config::LAYOUTS,
-			'heading_tag'    => Memberful_Paywall_Config::HEADING_TAGS,
-			'subheading_tag' => Memberful_Paywall_Config::SUBHEADING_TAGS,
-			'button_shape'   => Memberful_Paywall_Config::BUTTON_SHAPES,
+			'mode'         => Memberful_Paywall_Config::MODES,
+			'layout'       => Memberful_Paywall_Config::LAYOUTS,
+			'heading_tag'  => Memberful_Paywall_Config::HEADING_TAGS,
+			'button_shape' => Memberful_Paywall_Config::BUTTON_SHAPES,
 		);
 
 		foreach ( $enums as $key => $allowed ) {

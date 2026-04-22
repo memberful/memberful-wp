@@ -11,11 +11,10 @@
 class Memberful_Paywall_Config {
 	const OPTION_KEY = 'memberful_paywall_config';
 
-	const MODES           = array( 'builder', 'custom_html' );
-	const LAYOUTS         = array( 'simple', 'card', 'banner' );
-	const HEADING_TAGS    = array( 'h1', 'h2', 'h3' );
-	const SUBHEADING_TAGS = array( 'p', 'h3', 'h4' );
-	const BUTTON_SHAPES   = array( 'pill', 'rounded', 'square' );
+	const MODES         = array( 'builder', 'custom_html' );
+	const LAYOUTS       = array( 'simple', 'card', 'banner' );
+	const HEADING_TAGS  = array( 'h1', 'h2', 'h3' );
+	const BUTTON_SHAPES = array( 'pill', 'rounded', 'square' );
 
 	/**
 	 * Canonical default configuration shape.
@@ -24,18 +23,17 @@ class Memberful_Paywall_Config {
 	 */
 	public static function defaults(): array {
 		return array(
-			'mode'           => 'builder',
-			'layout'         => 'card',
-			'heading'        => esc_html__( 'Subscribe to keep reading', 'memberful' ),
-			'heading_tag'    => 'h2',
-			'subheading'     => esc_html__( 'This post is for paying subscribers.', 'memberful' ),
-			'subheading_tag' => 'p',
-			'features'       => array(),
-			'button_label'   => esc_html__( 'Subscribe', 'memberful' ),
-			'subscribe_url'  => '',
-			'sign_in_url'    => '',
-			'brand_color'    => '#2f80ed',
-			'button_shape'   => 'rounded',
+			'mode'          => 'builder',
+			'layout'        => 'card',
+			'heading'       => esc_html__( 'Subscribe to keep reading', 'memberful' ),
+			'heading_tag'   => 'h2',
+			'subheading'    => esc_html__( 'This post is for paying subscribers.', 'memberful' ),
+			'features'      => array(),
+			'button_label'  => esc_html__( 'Subscribe', 'memberful' ),
+			'subscribe_url' => '',
+			'sign_in_url'   => '',
+			'brand_color'   => '#2f80ed',
+			'button_shape'  => 'rounded',
 		);
 	}
 

@@ -44,7 +44,6 @@ jQuery(function ($) {
       heading:        $('#memberful-paywall-heading').val() || '',
       heading_tag:    $('#memberful-paywall-heading-tag').val() || 'h2',
       subheading:     $('#memberful-paywall-subheading').val() || '',
-      subheading_tag: $('#memberful-paywall-subheading-tag').val() || 'p',
       features:       $('#memberful-paywall-features').val() || '',
       button_label:   $('#memberful-paywall-button-label').val() || '',
       subscribe_url:  $('#memberful-paywall-subscribe-url').val() || '',

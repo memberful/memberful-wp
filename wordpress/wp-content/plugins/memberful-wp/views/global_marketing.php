@@ -20,7 +20,7 @@
 	<form method="POST" action="<?php echo esc_url( $form_target ); ?>">
 		<?php memberful_wp_nonce_field( 'memberful_options' ); ?>
 
-		<div class="memberful-bulk-apply-box">
+		<div class="memberful-bulk-apply-box memberful-bulk-apply-box--wide">
 			<h3><?php esc_html_e( 'Global marketing content', 'memberful' ); ?></h3>
 			<p>
 				<label for="use_global_marketing_checkbox">
