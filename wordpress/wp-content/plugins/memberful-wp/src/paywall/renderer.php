@@ -26,6 +26,36 @@ class Memberful_Paywall_Renderer {
 	public static function register(): void {
 		add_filter( 'memberful_wp_protect_content', array( __CLASS__, 'protect_content' ) );
 		add_action( 'wp_footer', array( __CLASS__, 'maybe_print_styles' ) );
+		add_filter( 'memberful_global_teaser_class', array( __CLASS__, 'filter_teaser_class' ) );
+		add_filter( 'memberful_teaser_css', array( __CLASS__, 'filter_teaser_css' ) );
+	}
+
+	/**
+	 * Append a layout modifier to the teaser wrapper class when the builder paywall is active.
+	 *
+	 * @param string $classes Default teaser wrapper class list.
+	 *
+	 * @return string
+	 */
+	public static function filter_teaser_class( string $classes ): string {
+		if ( ! self::is_builder_mode() ) {
+			return $classes;
+		}
+
+		$config = Memberful_Paywall_Config::get();
+
+		return $classes . ' memberful-global-teaser-content--mf-' . $config['layout'];
+	}
+
+	/**
+	 * Suppress the legacy inline teaser fade when the builder paywall owns the fade via paywall.css.
+	 *
+	 * @param string $css Legacy inline teaser CSS block.
+	 *
+	 * @return string
+	 */
+	public static function filter_teaser_css( string $css ): string {
+		return self::is_builder_mode() ? '' : $css;
 	}
 
 	/**
@@ -36,9 +66,7 @@ class Memberful_Paywall_Renderer {
 	 * @return string
 	 */
 	public static function protect_content( string $content ): string {
-		$config = Memberful_Paywall_Config::get();
-
-		if ( 'builder' === $config['mode'] ) {
+		if ( self::is_builder_mode() ) {
 			self::$should_print_styles = true;
 		}
 
@@ -227,11 +255,11 @@ class Memberful_Paywall_Renderer {
 	 * @return string
 	 */
 	private static function lock_badge(): string {
-		return '<span class="memberful-paywall__lock" aria-hidden="true">'
-			. '<svg width="20" height="20" viewBox="0 0 24 24" focusable="false">'
-			. '<path fill="currentColor" d="M12 2a5 5 0 00-5 5v3H6a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2v-8a2 2 0 00-2-2h-1V7a5 5 0 00-5-5zm-3 8V7a3 3 0 016 0v3H9z"/>'
+		return '<div class="memberful-paywall__lock" aria-hidden="true">'
+			. '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false">'
+			. '<path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>'
 			. '</svg>'
-			. '</span>';
+			. '</div>';
 	}
 
 	/**
@@ -301,6 +329,17 @@ class Memberful_Paywall_Renderer {
 		return '<svg class="memberful-paywall__check" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" focusable="false">'
 			. '<path fill="currentColor" d="M13.485 4.515a1 1 0 0 0-1.414 0L6.5 10.086 3.929 7.515a1 1 0 1 0-1.414 1.414l3.278 3.278a1 1 0 0 0 1.414 0l6.278-6.278a1 1 0 0 0 0-1.414z"/>'
 			. '</svg>';
+	}
+
+	/**
+	 * Whether the builder paywall is the active rendering mode.
+	 *
+	 * @return bool
+	 */
+	private static function is_builder_mode(): bool {
+		$config = Memberful_Paywall_Config::get();
+
+		return 'builder' === $config['mode'];
 	}
 }
 

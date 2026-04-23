@@ -98,7 +98,8 @@ function memberful_apply_global_snippets_content_filter( $memberful_marketing_co
     }
   }
 
-  $wrapped_teaser = "<div class='memberful-global-teaser-content'>$teaser</div>";
+  $teaser_class   = apply_filters( 'memberful_global_teaser_class', 'memberful-global-teaser-content' );
+  $wrapped_teaser = "<div class='" . esc_attr( $teaser_class ) . "'>$teaser</div>";
 
   if ( $has_teaser && ! did_filter( 'memberful_teaser_css' ) ) {
     $wrapped_teaser .= apply_filters( 'memberful_teaser_css', memberful_get_teaser_css() );

@@ -3,12 +3,13 @@
  */
 
 .memberful-paywall {
-	--mf-brand: var(--wp--preset--color--primary, var(--wp--preset--color--accent, var(--wp-admin-theme-color, #1f2933)));
+	--mf-border: #e5e5e5;
+	--mf-brand: var(--wp--preset--color--primary, var(--wp--preset--color--accent, var(--wp-admin-theme-color, #2271b1)));
+	--mf-muted: #666;
+	--mf-muted-soft: #999;
 	--mf-radius: 0;
-	--mf-text: #1b1b1b;
-	--mf-muted: #555;
 	--mf-surface: #fff;
-	--mf-border: rgba(0, 0, 0, 0.08);
+	--mf-text: #1a1a1a;
 
 	box-sizing: border-box;
 	color: var(--mf-text);
@@ -26,48 +27,49 @@
 	box-sizing: border-box;
 }
 
-/* Shared inner column that constrains content width inside full-bleed layouts. */
 .memberful-paywall__inner {
 	margin: 0 auto;
 	max-width: 600px;
-	padding: 2rem 1.5rem 2.5rem;
+	padding: 2rem 1.5rem 1.5rem;
 	text-align: center;
 }
 
 .memberful-paywall__heading {
-	font-weight: 700;
-	line-height: 1.2;
-	margin: 0 0 0.75rem;
+	color: var(--mf-text);
+	font-weight: 600;
+	line-height: 1.3;
+	margin: 0 0 0.5rem;
 }
 
-h2.memberful-paywall__heading {
-	font-size: 2rem;
-}
-
-h2.memberful-paywall__heading {
+h1.memberful-paywall__heading {
 	font-size: 1.5rem;
 }
 
+h2.memberful-paywall__heading {
+	font-size: 1.125rem;
+}
+
 h3.memberful-paywall__heading {
-	font-size: 1.175rem;
+	font-size: 1rem;
 }
 
 .memberful-paywall__subheading {
 	color: var(--mf-muted);
-	font-size: 1rem;
-	margin: 0 0 1.5rem;
+	font-size: 0.875rem;
+	margin: 0 auto 1.25rem;
+	max-width: 28rem;
 }
 
 .memberful-paywall__features {
 	color: var(--mf-muted);
 	column-gap: 1.5rem;
 	display: inline-grid;
-	font-size: 1rem;
+	font-size: 0.9375rem;
 	grid-template-columns: repeat(2, auto);
 	list-style: none;
-	margin: 0 0 1.5rem;
+	margin: 0 0 1.25rem;
 	padding: 0;
-	row-gap: 0.25rem;
+	row-gap: 0.375rem;
 	text-align: left;
 }
 
@@ -89,17 +91,17 @@ h3.memberful-paywall__heading {
 	flex-wrap: wrap;
 	gap: 0.75rem;
 	justify-content: center;
-	margin-bottom: 1rem;
+	margin-bottom: 0;
 }
 
 .memberful-paywall__button {
 	border: 1px solid transparent;
 	border-radius: var(--mf-radius);
 	display: inline-block;
-	font-size: 1rem;
+	font-size: 0.875rem;
 	font-weight: 600;
 	line-height: 1.2;
-	padding: 0.85rem 1.75rem;
+	padding: 0.5rem 1.5rem;
 	text-decoration: none;
 	transition: background-color 150ms ease, color 150ms ease, filter 150ms ease;
 }
@@ -116,13 +118,13 @@ h3.memberful-paywall__heading {
 }
 
 .memberful-paywall__signin {
-	color: var(--mf-muted);
-	font-size: 0.9rem;
-	margin: 0;
+	color: var(--mf-muted-soft);
+	font-size: 0.75rem;
+	margin: 1rem 0 0;
 }
 
 .memberful-paywall__signin-link {
-	color: inherit;
+	color: var(--mf-brand);
 	text-decoration: underline;
 }
 
@@ -132,59 +134,97 @@ h3.memberful-paywall__heading {
 	border-radius: 50%;
 	color: #fff;
 	display: inline-flex;
-	height: 44px;
+	height: 40px;
 	justify-content: center;
 	margin: 0 auto 1rem;
-	width: 44px;
+	width: 40px;
 }
 
-/* Simple — transparent band, minimal spacing. */
+/* Simple — top-divider band on white. */
 .memberful-paywall--simple {
 	background: var(--mf-surface);
+	border-top: 1px solid var(--mf-border);
 }
 
-.memberful-paywall--simple .memberful-paywall__button {
-	padding: 0.6rem 1.4rem;
-}
-
-/* Card — centred white surface floating on a muted page backdrop. */
+/* Card — centred white card on muted page. */
 .memberful-paywall--card {
-	background: #f2f4f7;
+	--mf-surface: #f8f8f8;
+
+	background: var(--mf-surface);
 }
 
 .memberful-paywall--card .memberful-paywall__inner {
-	padding-top: 1.5rem;
+	padding: 1.5rem;
 }
 
 .memberful-paywall--card .memberful-paywall__card {
-	background: var(--mf-surface);
-	border: 1px solid var(--mf-border);
-	border-radius: calc(var(--mf-radius) + 4px);
-	box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+	background: #fff;
+	border: 1px solid #e0e0e0;
+	border-radius: 0.5rem;
+	box-shadow: 0 10px 25px rgba(15, 23, 42, 0.1);
 	margin: 0 auto;
-	max-width: 420px;
-	padding: 2.25rem 2rem;
+	max-width: 24rem;
+	padding: 2rem;
+}
+
+.memberful-paywall--card .memberful-paywall__heading {
+	font-weight: 700;
 }
 
 .memberful-paywall--card .memberful-paywall__button--primary {
 	display: block;
-	padding: 0.95rem 1.5rem;
+	padding: 0.625rem 1.5rem;
 	width: 100%;
 }
 
-/* Banner — full-bleed dark band with white copy. */
+/* Banner — full-bleed dark band, always viewport width. */
 .memberful-paywall--banner {
+	--mf-muted: #a0a5aa;
+	--mf-muted-soft: #72777c;
+	--mf-surface: #1d2327;
 	--mf-text: #fff;
-	--mf-muted: rgba(255, 255, 255, 0.75);
 
-	background: #1f2933;
-	color: var(--mf-text);
+	background: var(--mf-surface);
+	margin-inline: calc(50% - 50vw);
+	width: 100vw;
+}
+
+.memberful-paywall--banner .memberful-paywall__inner {
+	padding: 2.5rem 2rem;
+}
+
+.memberful-paywall--banner .memberful-paywall__heading {
+	font-weight: 700;
+}
+
+.memberful-paywall--banner h2.memberful-paywall__heading {
+	font-size: 1.25rem;
+}
+
+.memberful-paywall--banner .memberful-paywall__subheading {
+	max-width: 32rem;
 }
 
 .memberful-paywall--banner .memberful-paywall__signin-link {
-	color: #fff;
+	color: #72aee6;
 }
 
 .memberful-paywall--banner .memberful-paywall__button--primary {
-	padding: 1rem 2rem;
+	padding: 0.75rem 2rem;
+}
+
+/* Teaser fade. */
+.memberful-global-teaser-content[class*="--mf-"] {
+	position: relative;
+}
+
+.memberful-global-teaser-content[class*="--mf-"]::after {
+	background: linear-gradient(transparent, #fff);
+	bottom: 0;
+	content: "";
+	height: 4rem;
+	left: 0;
+	pointer-events: none;
+	position: absolute;
+	right: 0;
 }
