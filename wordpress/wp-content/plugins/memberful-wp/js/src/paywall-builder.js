@@ -32,7 +32,10 @@ jQuery(function ($) {
     }
 
     applyMode(this.value);
-    refreshPreview();
+
+    if (this.value === 'builder') {
+      refreshPreview();
+    }
   });
 
   applyMode($modeInputs.filter(':checked').val() || 'builder');
@@ -105,5 +108,7 @@ jQuery(function ($) {
   $form.on('input', 'input[type="text"], input[type="url"], textarea', scheduleRefresh);
   $form.on('change', 'input[type="radio"], select', refreshPreview);
 
-  refreshPreview();
+  if (($modeInputs.filter(':checked').val() || 'builder') === 'builder') {
+    refreshPreview();
+  }
 });

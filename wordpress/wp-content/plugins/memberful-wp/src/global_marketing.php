@@ -17,15 +17,14 @@ if(get_option('memberful_use_global_snippets')){
  * @return string
  */
 function memberful_get_global_replacement($marketing_content){
-	$override                 = get_option( 'memberful_global_marketing_override' );
-	$global_marketing_content = memberful_wp_resolve_global_marketing_content();
+	$override = get_option( 'memberful_global_marketing_override' );
 
 	if ( $override ) {
-		return $global_marketing_content;
+		return memberful_wp_resolve_global_marketing_content();
 	}
 
 	if ( empty( trim( $marketing_content ) ) ) {
-		return $global_marketing_content;
+		return memberful_wp_resolve_global_marketing_content();
 	}
 
 	return $marketing_content;
