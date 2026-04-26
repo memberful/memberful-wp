@@ -219,7 +219,7 @@ h3.memberful-paywall__heading {
 }
 
 .memberful-global-teaser-content[class*="--mf-"]::after {
-	background: linear-gradient(transparent, #fff);
+	background: linear-gradient(transparent, var(--wp--preset--color--background, #fff));
 	bottom: 0;
 	content: "";
 	height: 4rem;

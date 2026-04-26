@@ -16,40 +16,40 @@ $features_textarea = implode( "\n", (array) $paywall_config['features'] );
       <label class="memberful-paywall-builder__template-card">
         <input type="radio" name="memberful_paywall[layout]" value="simple" <?php checked( 'simple', $paywall_config['layout'] ); ?>>
         <span class="memberful-paywall-builder__template-card-inner">
-					<span class="memberful-paywall-builder__template-thumb memberful-paywall-builder__template-thumb--simple" aria-hidden="true">
-						<span class="memberful-paywall-builder__thumb-line"></span>
-						<span class="memberful-paywall-builder__thumb-button"></span>
-					</span>
-					<span class="memberful-paywall-builder__template-meta">
-						<strong><?php esc_html_e( 'Minimal', 'memberful' ); ?></strong>
-						<small><?php esc_html_e( 'Clean divider with text and button', 'memberful' ); ?></small>
-					</span>
-				</span>
+          <span class="memberful-paywall-builder__template-thumb memberful-paywall-builder__template-thumb--simple" aria-hidden="true">
+            <span class="memberful-paywall-builder__thumb-line"></span>
+            <span class="memberful-paywall-builder__thumb-button"></span>
+          </span>
+          <span class="memberful-paywall-builder__template-meta">
+            <strong><?php esc_html_e( 'Minimal', 'memberful' ); ?></strong>
+            <small><?php esc_html_e( 'Clean divider with text and button', 'memberful' ); ?></small>
+          </span>
+        </span>
       </label>
       <label class="memberful-paywall-builder__template-card">
         <input type="radio" name="memberful_paywall[layout]" value="card" <?php checked( 'card', $paywall_config['layout'] ); ?>>
         <span class="memberful-paywall-builder__template-card-inner">
-					<span class="memberful-paywall-builder__template-thumb memberful-paywall-builder__template-thumb--card" aria-hidden="true">
-						<span class="memberful-paywall-builder__thumb-lock"></span>
-					</span>
-					<span class="memberful-paywall-builder__template-meta">
-						<strong><?php esc_html_e( 'Card', 'memberful' ); ?></strong>
-						<small><?php esc_html_e( 'Centered card with lock icon', 'memberful' ); ?></small>
-					</span>
-				</span>
+          <span class="memberful-paywall-builder__template-thumb memberful-paywall-builder__template-thumb--card" aria-hidden="true">
+            <span class="memberful-paywall-builder__thumb-lock"></span>
+          </span>
+          <span class="memberful-paywall-builder__template-meta">
+            <strong><?php esc_html_e( 'Card', 'memberful' ); ?></strong>
+            <small><?php esc_html_e( 'Centered card with lock icon', 'memberful' ); ?></small>
+          </span>
+        </span>
       </label>
       <label class="memberful-paywall-builder__template-card">
         <input type="radio" name="memberful_paywall[layout]" value="banner" <?php checked( 'banner', $paywall_config['layout'] ); ?>>
         <span class="memberful-paywall-builder__template-card-inner">
-					<span class="memberful-paywall-builder__template-thumb memberful-paywall-builder__template-thumb--banner" aria-hidden="true">
-						<span class="memberful-paywall-builder__thumb-line"></span>
-						<span class="memberful-paywall-builder__thumb-button"></span>
-					</span>
-					<span class="memberful-paywall-builder__template-meta">
-						<strong><?php esc_html_e( 'Banner', 'memberful' ); ?></strong>
-						<small><?php esc_html_e( 'Full-width dark banner', 'memberful' ); ?></small>
-					</span>
-				</span>
+          <span class="memberful-paywall-builder__template-thumb memberful-paywall-builder__template-thumb--banner" aria-hidden="true">
+            <span class="memberful-paywall-builder__thumb-line"></span>
+            <span class="memberful-paywall-builder__thumb-button"></span>
+          </span>
+          <span class="memberful-paywall-builder__template-meta">
+            <strong><?php esc_html_e( 'Banner', 'memberful' ); ?></strong>
+            <small><?php esc_html_e( 'Full-width dark banner', 'memberful' ); ?></small>
+          </span>
+        </span>
       </label>
     </div>
   </fieldset>

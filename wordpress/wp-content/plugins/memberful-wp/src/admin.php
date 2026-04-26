@@ -726,7 +726,8 @@ function memberful_wp_global_marketing() {
         Memberful_Paywall_Config::save( $paywall_input );
       }
 
-      if ( 'custom_html' === Memberful_Paywall_Config::get()['mode'] ) {
+      $config_mode = $paywall_input['mode'] ?? 'builder';
+      if ( 'custom_html' === $config_mode ) {
         update_option( 'memberful_global_marketing_content', memberful_wp_kses_post( filter_input( INPUT_POST, 'memberful_global_marketing_content' ) ) );
       }
     } else {

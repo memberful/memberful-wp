@@ -17,17 +17,17 @@ if(get_option('memberful_use_global_snippets')){
  * @return string
  */
 function memberful_get_global_replacement($marketing_content){
-	$override = get_option( 'memberful_global_marketing_override' );
+  $override = get_option( 'memberful_global_marketing_override' );
 
-	if ( $override ) {
-		return memberful_wp_resolve_global_marketing_content();
-	}
+  if ( $override ) {
+    return memberful_wp_resolve_global_marketing_content();
+  }
 
-	if ( empty( trim( $marketing_content ) ) ) {
-		return memberful_wp_resolve_global_marketing_content();
-	}
+  if ( empty( trim( $marketing_content ) ) ) {
+    return memberful_wp_resolve_global_marketing_content();
+  }
 
-	return $marketing_content;
+  return $marketing_content;
 }
 
 /**
@@ -36,13 +36,13 @@ function memberful_get_global_replacement($marketing_content){
  * @return string
  */
 function memberful_wp_resolve_global_marketing_content(): string {
-	$config = Memberful_Paywall_Config::get();
+  $config = Memberful_Paywall_Config::get();
 
-	if ( 'builder' === $config['mode'] ) {
-		return Memberful_Paywall_Renderer::render( $config );
-	}
+  if ( 'builder' === $config['mode'] ) {
+    return Memberful_Paywall_Renderer::render( $config );
+  }
 
-	return (string) get_option( 'memberful_global_marketing_content' );
+  return (string) get_option( 'memberful_global_marketing_content' );
 }
 
 /**
