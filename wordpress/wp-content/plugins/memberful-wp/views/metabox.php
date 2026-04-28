@@ -5,19 +5,34 @@
       <?php memberful_wp_render( 'acl_selection', compact( 'subscriptions', 'products', 'viewable_by_any_registered_users', 'viewable_by_anybody_subscribed_to_a_plan' ) ); ?>
     </div>
     <div class="memberful-marketing-content">
-      <?php
-
-      $editor_id = 'memberful_marketing_content';
-      $settings  = array();
-      wp_editor( $marketing_content , $editor_id, $settings );
-
-      ?>
-      <div class="memberful-marketing-content-description">
-        <a href="<?php echo admin_url('/options-general.php?page=memberful_options&subpage=global_marketing');?>">
-          Click Here
-        </a>
-         to manage global marketing content.
-      </div>
+      <?php if ( ! empty( $global_marketing_overrides_post_content ) ) : ?>
+        <div class="notice notice-info inline">
+          <p>
+            <?php
+            printf(
+              wp_kses(
+                /* translators: %s: URL to the global marketing settings screen */
+                __( 'Marketing content is currently controlled by the <a href="%s">global marketing settings</a>. Anything entered here is ignored until those settings change.', 'memberful' ),
+                array( 'a' => array( 'href' => array() ) )
+              ),
+              esc_url( memberful_wp_plugin_global_marketing_url() )
+            );
+            ?>
+          </p>
+        </div>
+      <?php else : ?>
+        <?php
+        $editor_id = 'memberful_marketing_content';
+        $settings  = array();
+        wp_editor( $marketing_content , $editor_id, $settings );
+        ?>
+        <div class="memberful-marketing-content-description">
+          <a href="<?php echo esc_url( memberful_wp_plugin_global_marketing_url() ); ?>">
+            <?php _e( 'Click Here', 'memberful' ); ?>
+          </a>
+          <?php _e( 'to manage global marketing content.', 'memberful' ); ?>
+        </div>
+      <?php endif; ?>
     </div>
   </div>
 <?php else: ?>
