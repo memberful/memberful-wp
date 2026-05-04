@@ -47,7 +47,7 @@ class Memberful_Paywall_Preview {
 	public static function document( array $config ): string {
 		$body = Memberful_Paywall_Renderer::render( $config );
 
-		$paywall_css = plugins_url( 'stylesheets/paywall.css', MEMBERFUL_PLUGIN_FILE );
+		$paywall_css = add_query_arg( 'ver', MEMBERFUL_VERSION, plugins_url( 'stylesheets/paywall.css', MEMBERFUL_PLUGIN_FILE ) );
 		$theme_css   = get_stylesheet_uri();
 
 		$links = sprintf( '<link rel="stylesheet" href="%s">', esc_url( $paywall_css ) );
@@ -55,10 +55,12 @@ class Memberful_Paywall_Preview {
 			$links .= sprintf( '<link rel="stylesheet" href="%s">', esc_url( $theme_css ) );
 		}
 
-		$teaser_class = 'memberful-global-teaser-content memberful-global-teaser-content--mf-' . $config['layout'];
+		$layout       = ( isset( $config['layout'] ) && in_array( $config['layout'], Memberful_Paywall_Config::LAYOUTS, true ) ) ? $config['layout'] : 'card';
+		$teaser_class = 'memberful-global-teaser-content memberful-global-teaser-content--memberful-' . $layout;
 		$teaser       = sprintf(
-			'<div class="%s" aria-hidden="true"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vitae urna id quam faucibus gravida ac sed ipsum. Quisque eget velit dictum leo tempor bibendum nec sed odio.</p></div>',
-			esc_attr( $teaser_class )
+			'<div class="%1$s" aria-hidden="true"><p>%2$s</p></div>',
+			esc_attr( $teaser_class ),
+			esc_html__( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vitae urna id quam faucibus gravida ac sed ipsum. Quisque eget velit dictum leo tempor bibendum nec sed odio.', 'memberful' )
 		);
 
 		$styles = 'html,body{background:#fff;color:#1b1b1b;font-size:16px;line-height:1.6;margin:0;}'

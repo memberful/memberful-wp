@@ -2,7 +2,7 @@ jQuery(function ($) {
   const $form       = $('.memberful-paywall-builder__panel[data-panel="builder"]');
   const $modeInputs = $('input[name="memberful_paywall[mode]"]');
   const $panels     = $('.memberful-paywall-builder__panel');
-  const $preview    = $('#mf-paywall-preview');
+  const $preview    = $('#memberful-paywall-preview');
   const $colorInput = $('.memberful-paywall-builder__color');
 
   const preview = window.memberfulPaywallPreview || {};

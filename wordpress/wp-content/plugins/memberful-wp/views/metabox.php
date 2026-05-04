@@ -24,7 +24,7 @@
         <?php
         $editor_id = 'memberful_marketing_content';
         $settings  = array();
-        wp_editor( $marketing_content , $editor_id, $settings );
+        wp_editor( $marketing_content, $editor_id, $settings );
         ?>
         <div class="memberful-marketing-content-description">
           <a href="<?php echo esc_url( memberful_wp_plugin_global_marketing_url() ); ?>">

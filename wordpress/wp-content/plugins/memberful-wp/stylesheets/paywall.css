@@ -3,16 +3,16 @@
  */
 
 .memberful-paywall {
-	--mf-border: #e5e5e5;
-	--mf-brand: var(--wp--preset--color--primary, var(--wp--preset--color--accent, var(--wp-admin-theme-color, #2271b1)));
-	--mf-muted: #666;
-	--mf-muted-soft: #999;
-	--mf-radius: 0;
-	--mf-surface: #fff;
-	--mf-text: #1a1a1a;
+	--memberful-border: #e5e5e5;
+	--memberful-brand: var(--wp--preset--color--primary, var(--wp--preset--color--accent, var(--wp-admin-theme-color, #2271b1)));
+	--memberful-muted: #666;
+	--memberful-muted-soft: #999;
+	--memberful-radius: 0;
+	--memberful-surface: #fff;
+	--memberful-text: #1a1a1a;
 
 	box-sizing: border-box;
-	color: var(--mf-text);
+	color: var(--memberful-text);
 	font-family: inherit;
 	line-height: 1.5;
 	margin: 0;
@@ -30,39 +30,39 @@
 .memberful-paywall__inner {
 	margin: 0 auto;
 	max-width: 600px;
-	padding: 2rem 1.5rem 1.5rem;
+	padding: var(--wp--preset--spacing--50, 2rem) var(--wp--preset--spacing--40, 1.5rem) var(--wp--preset--spacing--40, 1.5rem);
 	text-align: center;
 }
 
 .memberful-paywall__heading {
-	color: var(--mf-text);
+	color: var(--memberful-text);
 	font-weight: 600;
 	line-height: 1.3;
 	margin: 0 0 0.5rem;
 }
 
 h1.memberful-paywall__heading {
-	font-size: 1.5rem;
+	font-size: var(--wp--preset--font-size--large, 1.5rem);
 }
 
 h2.memberful-paywall__heading {
-	font-size: 1.125rem;
+	font-size: var(--wp--preset--font-size--medium, 1.125rem);
 }
 
 h3.memberful-paywall__heading {
-	font-size: 1rem;
+	font-size: var(--wp--preset--font-size--medium, 1rem);
 }
 
 .memberful-paywall__subheading {
-	color: var(--mf-muted);
-	font-size: 0.875rem;
+	color: var(--memberful-muted);
+	font-size: var(--wp--preset--font-size--small, 0.875rem);
 	margin: 0 auto 1.25rem;
 	max-width: 28rem;
 }
 
 .memberful-paywall__features {
-	color: var(--mf-muted);
-	column-gap: 1.5rem;
+	color: var(--memberful-muted);
+	column-gap: var(--wp--preset--spacing--40, 1.5rem);
 	display: inline-grid;
 	font-size: 0.9375rem;
 	grid-template-columns: repeat(2, auto);
@@ -80,7 +80,7 @@ h3.memberful-paywall__heading {
 }
 
 .memberful-paywall__check {
-	color: var(--mf-brand);
+	color: var(--memberful-brand);
 	flex: 0 0 auto;
 	margin-top: 0.2rem;
 }
@@ -96,9 +96,9 @@ h3.memberful-paywall__heading {
 
 .memberful-paywall__button {
 	border: 1px solid transparent;
-	border-radius: var(--mf-radius);
+	border-radius: var(--memberful-radius);
 	display: inline-block;
-	font-size: 0.875rem;
+	font-size: var(--wp--preset--font-size--small, 0.875rem);
 	font-weight: 600;
 	line-height: 1.2;
 	padding: 0.5rem 1.5rem;
@@ -107,8 +107,8 @@ h3.memberful-paywall__heading {
 }
 
 .memberful-paywall__button--primary {
-	background: var(--mf-brand);
-	border-color: var(--mf-brand);
+	background: var(--memberful-brand);
+	border-color: var(--memberful-brand);
 	color: #fff;
 }
 
@@ -118,19 +118,19 @@ h3.memberful-paywall__heading {
 }
 
 .memberful-paywall__signin {
-	color: var(--mf-muted-soft);
+	color: var(--memberful-muted-soft);
 	font-size: 0.75rem;
-	margin: 1rem 0 0;
+	margin: var(--wp--preset--spacing--30, 1rem) 0 0;
 }
 
 .memberful-paywall__signin-link {
-	color: var(--mf-brand);
+	color: var(--memberful-brand);
 	text-decoration: underline;
 }
 
 .memberful-paywall__lock {
 	align-items: center;
-	background: var(--mf-brand);
+	background: var(--memberful-brand);
 	border-radius: 50%;
 	color: #fff;
 	display: inline-flex;
@@ -142,19 +142,19 @@ h3.memberful-paywall__heading {
 
 /* Simple — top-divider band on white. */
 .memberful-paywall--simple {
-	background: var(--mf-surface);
-	border-top: 1px solid var(--mf-border);
+	background: var(--memberful-surface);
+	border-top: 1px solid var(--memberful-border);
 }
 
 /* Card — centred white card on muted page. */
 .memberful-paywall--card {
-	--mf-surface: #f8f8f8;
+	--memberful-surface: #f8f8f8;
 
-	background: var(--mf-surface);
+	background: var(--memberful-surface);
 }
 
 .memberful-paywall--card .memberful-paywall__inner {
-	padding: 1.5rem;
+	padding: var(--wp--preset--spacing--40, 1.5rem);
 }
 
 .memberful-paywall--card .memberful-paywall__card {
@@ -164,7 +164,7 @@ h3.memberful-paywall__heading {
 	box-shadow: 0 10px 25px rgba(15, 23, 42, 0.1);
 	margin: 0 auto;
 	max-width: 24rem;
-	padding: 2rem;
+	padding: var(--wp--preset--spacing--50, 2rem);
 }
 
 .memberful-paywall--card .memberful-paywall__heading {
@@ -179,12 +179,12 @@ h3.memberful-paywall__heading {
 
 /* Banner — full-bleed dark band, always viewport width. */
 .memberful-paywall--banner {
-	--mf-muted: #a0a5aa;
-	--mf-muted-soft: #72777c;
-	--mf-surface: #1d2327;
-	--mf-text: #fff;
+	--memberful-muted: #a0a5aa;
+	--memberful-muted-soft: #72777c;
+	--memberful-surface: #1d2327;
+	--memberful-text: #fff;
 
-	background: var(--mf-surface);
+	background: var(--memberful-surface);
 	margin-inline: calc(50% - 50vw);
 	width: 100vw;
 }
@@ -198,7 +198,7 @@ h3.memberful-paywall__heading {
 }
 
 .memberful-paywall--banner h2.memberful-paywall__heading {
-	font-size: 1.25rem;
+	font-size: var(--wp--preset--font-size--medium, 1.25rem);
 }
 
 .memberful-paywall--banner .memberful-paywall__subheading {
@@ -214,11 +214,11 @@ h3.memberful-paywall__heading {
 }
 
 /* Teaser fade. */
-.memberful-global-teaser-content[class*="--mf-"] {
+.memberful-global-teaser-content[class*="--memberful-"] {
 	position: relative;
 }
 
-.memberful-global-teaser-content[class*="--mf-"]::after {
+.memberful-global-teaser-content[class*="--memberful-"]::after {
 	background: linear-gradient(transparent, var(--wp--preset--color--background, #fff));
 	bottom: 0;
 	content: "";

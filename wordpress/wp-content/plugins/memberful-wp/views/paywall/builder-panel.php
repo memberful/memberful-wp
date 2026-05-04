@@ -120,7 +120,7 @@ $features_textarea = implode( "\n", (array) $paywall_config['features'] );
     <div class="memberful-paywall-builder__preview">
       <h3 class="memberful-paywall-builder__section-heading"><?php esc_html_e( 'Preview', 'memberful' ); ?></h3>
       <iframe
-        id="mf-paywall-preview"
+        id="memberful-paywall-preview"
         class="memberful-paywall-builder__preview-frame"
         title="<?php esc_attr_e( 'Paywall preview', 'memberful' ); ?>"
         srcdoc="<?php echo esc_attr( Memberful_Paywall_Preview::document( $paywall_config ) ); ?>"
