@@ -19,6 +19,13 @@ function memberful_wp_metabox_types() {
   return apply_filters( 'memberful_metabox_post_types', $types );
 }
 
+function memberful_global_marketing_overrides_post_content() {
+  $paywall_config = Memberful_Paywall_Config::get();
+
+  return get_option( 'memberful_global_marketing_override' )
+    || 'builder' === $paywall_config['mode'];
+}
+
 function memberful_wp_add_metabox() {
   if ( ! get_option('memberful_site', FALSE) )
     return;
@@ -54,10 +61,7 @@ function memberful_wp_metabox( $post ) {
   $view_vars['marketing_content'] = reset($marketing_content);
   $view_vars['viewable_by_any_registered_users'] = memberful_wp_get_post_available_to_any_registered_users( $post->ID );
   $view_vars['viewable_by_anybody_subscribed_to_a_plan'] = memberful_wp_get_post_available_to_anybody_subscribed_to_a_plan( $post->ID );
-
-  $paywall_config = Memberful_Paywall_Config::get();
-  $view_vars['global_marketing_overrides_post_content'] = (bool) get_option( 'memberful_global_marketing_override' )
-    || 'builder' === $paywall_config['mode'];
+  $view_vars['global_marketing_overrides_post_content'] = memberful_global_marketing_overrides_post_content();
 
   memberful_wp_render( 'metabox', $view_vars );
 }
@@ -158,10 +162,7 @@ function memberful_wp_add_term_metabox( $term ) {
     $view_vars['marketing_content'] = reset($marketing_content);
     $view_vars['viewable_by_any_registered_users'] = memberful_wp_is_term_available_to_any_registered_users( $term->term_id );
     $view_vars['viewable_by_anybody_subscribed_to_a_plan'] = memberful_wp_is_term_available_to_anybody_subscribed_to_a_plan( $term->term_id );
-
-    $paywall_config = Memberful_Paywall_Config::get();
-    $view_vars['global_marketing_overrides_post_content'] = (bool) get_option( 'memberful_global_marketing_override' )
-      || 'builder' === $paywall_config['mode'];
+    $view_vars['global_marketing_overrides_post_content'] = memberful_global_marketing_overrides_post_content();
 
     memberful_wp_render( 'metabox', $view_vars );
 }

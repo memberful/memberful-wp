@@ -726,7 +726,7 @@ function memberful_wp_global_marketing() {
         Memberful_Paywall_Config::save( $paywall_input );
       }
 
-      $config_mode = $paywall_input['mode'] ?? 'builder';
+      $config_mode = ( is_array( $paywall_input ) && isset( $paywall_input['mode'] ) ) ? $paywall_input['mode'] : 'builder';
       if ( 'custom_html' === $config_mode ) {
         update_option( 'memberful_global_marketing_content', memberful_wp_kses_post( filter_input( INPUT_POST, 'memberful_global_marketing_content' ) ) );
       }

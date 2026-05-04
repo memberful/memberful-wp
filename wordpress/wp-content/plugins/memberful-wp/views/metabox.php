@@ -28,15 +28,14 @@
         ?>
         <div class="memberful-marketing-content-description">
           <a href="<?php echo esc_url( memberful_wp_plugin_global_marketing_url() ); ?>">
-            <?php _e( 'Click Here', 'memberful' ); ?>
+            <?php esc_html_e( 'Manage global marketing content', 'memberful' ); ?>
           </a>
-          <?php _e( 'to manage global marketing content.', 'memberful' ); ?>
         </div>
       <?php endif; ?>
     </div>
   </div>
 <?php else: ?>
   <div>
-    <p><em><?php _e( "We couldn't find any products or subscriptions in your Memberful account. You'll need to add some before you can restrict access.", 'memberful' ); ?></em></p>
+    <p><em><?php esc_html_e( "We couldn't find any products or subscriptions in your Memberful account. You'll need to add some before you can restrict access.", 'memberful' ); ?></em></p>
   </div>
 <?php endif; ?>
