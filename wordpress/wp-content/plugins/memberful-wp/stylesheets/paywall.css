@@ -187,6 +187,7 @@ h3.memberful-paywall__heading {
 	background: var(--memberful-surface);
 	margin-inline: calc(50% - 50vw);
 	width: 100vw;
+	z-index: 99999;
 }
 
 .memberful-paywall--banner .memberful-paywall__inner {

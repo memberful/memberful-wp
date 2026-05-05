@@ -12,7 +12,7 @@
             printf(
               wp_kses(
                 /* translators: %s: URL to the global marketing settings screen */
-                __( 'Marketing content is currently controlled by the <a href="%s">global marketing settings</a>. Anything entered here is ignored until those settings change.', 'memberful' ),
+                __( 'Marketing content is currently controlled by the <a href="%s">global marketing settings</a>.', 'memberful' ),
                 array( 'a' => array( 'href' => array() ) )
               ),
               esc_url( memberful_wp_plugin_global_marketing_url() )

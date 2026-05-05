@@ -20,10 +20,8 @@ function memberful_wp_metabox_types() {
 }
 
 function memberful_global_marketing_overrides_post_content() {
-  $paywall_config = Memberful_Paywall_Config::get();
-
-  return get_option( 'memberful_global_marketing_override' )
-    || 'builder' === $paywall_config['mode'];
+  return get_option( 'memberful_use_global_marketing' )
+    && get_option( 'memberful_global_marketing_override' );
 }
 
 function memberful_wp_add_metabox() {
