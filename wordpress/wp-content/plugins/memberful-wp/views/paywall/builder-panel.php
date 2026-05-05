@@ -5,11 +5,12 @@
  * @package memberful-wp
  *
  * @var array $paywall_config
+ * @var bool  $is_active
  */
 
 $features_textarea = implode( "\n", (array) $paywall_config['features'] );
 ?>
-<div class="memberful-paywall-builder__panel" data-panel="builder">
+<div class="memberful-paywall-builder__panel" data-panel="builder"<?php if ( ! $is_active ) echo ' style="display:none"'; ?>>
   <fieldset class="memberful-paywall-builder__layout">
     <legend class="memberful-paywall-builder__section-heading"><?php esc_html_e( 'Choose a template', 'memberful' ); ?></legend>
     <div class="memberful-paywall-builder__template-grid">
