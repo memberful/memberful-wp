@@ -97,6 +97,18 @@ class Memberful_Paywall_Renderer {
       array(),
       MEMBERFUL_VERSION
     );
+
+    if ( function_exists( 'wp_is_block_theme' ) && wp_is_block_theme() ) {
+      return;
+    }
+
+    wp_enqueue_script(
+      'memberful-paywall-banner',
+      MEMBERFUL_URL . '/js/src/paywall-banner.js',
+      array(),
+      MEMBERFUL_VERSION,
+      true
+    );
   }
 
   /**

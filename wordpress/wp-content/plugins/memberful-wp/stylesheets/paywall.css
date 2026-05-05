@@ -120,7 +120,7 @@ h3.memberful-paywall__heading {
 .memberful-paywall__signin {
 	color: var(--memberful-muted-soft);
 	font-size: 0.75rem;
-	margin: var(--wp--preset--spacing--30, 1rem) 0 0;
+	margin: var(--wp--preset--spacing--30, 1rem) 0 0 !important; /* fixes compatibility with some themes */
 }
 
 .memberful-paywall__signin-link {
