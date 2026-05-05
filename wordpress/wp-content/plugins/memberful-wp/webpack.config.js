@@ -5,6 +5,7 @@ module.exports = {
   entry: {
     ...defaultConfig.entry,
     "editor-scripts": "./js/src/editor-scripts.js",
+    "paywall-banner": "./js/src/paywall-banner.js",
     "paywall-builder": "./js/src/paywall-builder.js",
   },
 };

@@ -726,9 +726,9 @@ function memberful_wp_global_marketing() {
         Memberful_Paywall_Config::save( $paywall_input );
       }
 
-      $config_mode = ( is_array( $paywall_input ) && isset( $paywall_input['mode'] ) ) ? $paywall_input['mode'] : 'builder';
+      $config_mode = ( is_array( $paywall_input ) && isset( $paywall_input['mode'] ) && in_array( $paywall_input['mode'], Memberful_Paywall_Config::MODES, true ) ) ? $paywall_input['mode'] : 'builder';
       if ( 'custom_html' === $config_mode ) {
-        update_option( 'memberful_global_marketing_content', memberful_wp_kses_post( filter_input( INPUT_POST, 'memberful_global_marketing_content' ) ) );
+        update_option( 'memberful_global_marketing_content', memberful_wp_kses_post( (string) filter_input( INPUT_POST, 'memberful_global_marketing_content' ) ) );
       }
     } else {
       update_option( 'memberful_use_global_marketing', false );

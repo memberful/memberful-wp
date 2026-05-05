@@ -50,7 +50,7 @@ h2.memberful-paywall__heading {
 }
 
 h3.memberful-paywall__heading {
-	font-size: var(--wp--preset--font-size--medium, 1rem);
+	font-size: var(--wp--preset--font-size--small, 1rem);
 }
 
 .memberful-paywall__subheading {

@@ -55,7 +55,7 @@
 			</div>
 
 			<div class="memberful-paywall-builder" data-depends-on="use_global_marketing_checkbox" data-depends-value="1"<?php if ( ! $use_global_marketing ) echo ' style="display:none"'; ?>>
-				<?php $paywall_mode = isset( $paywall_config['mode'] ) ? $paywall_config['mode'] : 'builder'; ?>
+				<?php $paywall_mode = ( isset( $paywall_config['mode'] ) && in_array( $paywall_config['mode'], Memberful_Paywall_Config::MODES, true ) ) ? $paywall_config['mode'] : 'builder'; ?>
 				<?php memberful_wp_render( 'paywall/mode-radio', array( 'paywall_config' => $paywall_config ) ); ?>
 				<?php memberful_wp_render( 'paywall/builder-panel', array( 'paywall_config' => $paywall_config, 'is_active' => 'builder' === $paywall_mode ) ); ?>
 				<?php memberful_wp_render( 'paywall/custom-html-panel', array( 'global_marketing_content' => $global_marketing_content, 'is_active' => 'custom_html' === $paywall_mode ) ); ?>
