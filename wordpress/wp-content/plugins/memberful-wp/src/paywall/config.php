@@ -13,7 +13,6 @@ class Memberful_Paywall_Config {
 
 	const MODES         = array( 'builder', 'custom_html' );
 	const LAYOUTS       = array( 'inline', 'card' );
-	const HEADING_TAGS  = array( 'h1', 'h2', 'h3' );
 	const BUTTON_SHAPES = array( 'pill', 'rounded', 'square' );
 
 	/**
@@ -26,7 +25,6 @@ class Memberful_Paywall_Config {
 			'mode'          => 'builder',
 			'layout'        => 'card',
 			'heading'       => __( 'Subscribe to keep reading', 'memberful' ),
-			'heading_tag'   => 'h2',
 			'subheading'    => __( 'This post is for paying subscribers.', 'memberful' ),
 			'features'      => array(),
 			'button_label'  => __( 'Subscribe', 'memberful' ),

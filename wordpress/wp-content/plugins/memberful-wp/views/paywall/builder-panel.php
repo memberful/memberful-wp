@@ -11,55 +11,45 @@
 $features_textarea = implode( "\n", (array) $paywall_config['features'] );
 ?>
 <div class="memberful-paywall-builder__panel" data-panel="builder"<?php if ( ! $is_active ) echo ' style="display:none"'; ?>>
-  <fieldset class="memberful-paywall-builder__layout">
-    <legend class="memberful-paywall-builder__section-heading"><?php esc_html_e( 'Choose a template', 'memberful' ); ?></legend>
-    <div class="memberful-paywall-builder__template-grid">
-      <label class="memberful-paywall-builder__template-card">
-        <input type="radio" name="memberful_paywall[layout]" value="inline" <?php checked( 'inline', $paywall_config['layout'] ); ?>>
-        <span class="memberful-paywall-builder__template-card-inner">
-          <span class="memberful-paywall-builder__template-thumb memberful-paywall-builder__template-thumb--inline" aria-hidden="true">
-            <span class="memberful-paywall-builder__thumb-line"></span>
-            <span class="memberful-paywall-builder__thumb-button"></span>
+  <div class="memberful-paywall-builder__settings">
+    <fieldset class="memberful-paywall-builder__layout">
+      <legend class="memberful-paywall-builder__section-heading"><?php esc_html_e( '1. Choose a template', 'memberful' ); ?></legend>
+      <div class="memberful-paywall-builder__template-grid">
+        <label class="memberful-paywall-builder__template-card">
+          <input type="radio" name="memberful_paywall[layout]" value="inline" <?php checked( 'inline', $paywall_config['layout'] ); ?>>
+          <span class="memberful-paywall-builder__template-card-inner">
+            <span class="memberful-paywall-builder__template-thumb memberful-paywall-builder__template-thumb--inline" aria-hidden="true">
+              <span class="memberful-paywall-builder__thumb-line"></span>
+              <span class="memberful-paywall-builder__thumb-button"></span>
+            </span>
+            <span class="memberful-paywall-builder__template-meta">
+              <strong><?php esc_html_e( 'Inline', 'memberful' ); ?></strong>
+              <small><?php esc_html_e( 'Flows with your content', 'memberful' ); ?></small>
+            </span>
           </span>
-          <span class="memberful-paywall-builder__template-meta">
-            <strong><?php esc_html_e( 'Inline', 'memberful' ); ?></strong>
-            <small><?php esc_html_e( 'Flows with your content', 'memberful' ); ?></small>
+        </label>
+        <label class="memberful-paywall-builder__template-card">
+          <input type="radio" name="memberful_paywall[layout]" value="card" <?php checked( 'card', $paywall_config['layout'] ); ?>>
+          <span class="memberful-paywall-builder__template-card-inner">
+            <span class="memberful-paywall-builder__template-thumb memberful-paywall-builder__template-thumb--card" aria-hidden="true">
+              <span class="memberful-paywall-builder__thumb-lock"></span>
+            </span>
+            <span class="memberful-paywall-builder__template-meta">
+              <strong><?php esc_html_e( 'Card', 'memberful' ); ?></strong>
+              <small><?php esc_html_e( 'Centered card with lock icon', 'memberful' ); ?></small>
+            </span>
           </span>
-        </span>
-      </label>
-      <label class="memberful-paywall-builder__template-card">
-        <input type="radio" name="memberful_paywall[layout]" value="card" <?php checked( 'card', $paywall_config['layout'] ); ?>>
-        <span class="memberful-paywall-builder__template-card-inner">
-          <span class="memberful-paywall-builder__template-thumb memberful-paywall-builder__template-thumb--card" aria-hidden="true">
-            <span class="memberful-paywall-builder__thumb-lock"></span>
-          </span>
-          <span class="memberful-paywall-builder__template-meta">
-            <strong><?php esc_html_e( 'Card', 'memberful' ); ?></strong>
-            <small><?php esc_html_e( 'Centered card with lock icon', 'memberful' ); ?></small>
-          </span>
-        </span>
-      </label>
-    </div>
-  </fieldset>
-
-  <div class="memberful-paywall-builder__split">
-    <div class="memberful-paywall-builder__customize">
-      <h3 class="memberful-paywall-builder__section-heading"><?php esc_html_e( 'Customize', 'memberful' ); ?></h3>
-
-      <div class="memberful-paywall-builder__field memberful-paywall-builder__field--paired">
-        <p class="memberful-paywall-builder__field-main">
-          <label for="memberful-paywall-heading"><?php esc_html_e( 'Title', 'memberful' ); ?></label>
-          <input id="memberful-paywall-heading" type="text" name="memberful_paywall[heading]" value="<?php echo esc_attr( $paywall_config['heading'] ); ?>">
-        </p>
-        <p class="memberful-paywall-builder__field-aside">
-          <label for="memberful-paywall-heading-tag"><?php esc_html_e( 'Style', 'memberful' ); ?></label>
-          <select id="memberful-paywall-heading-tag" name="memberful_paywall[heading_tag]">
-            <option value="h1" <?php selected( 'h1', $paywall_config['heading_tag'] ); ?>>H1</option>
-            <option value="h2" <?php selected( 'h2', $paywall_config['heading_tag'] ); ?>>H2</option>
-            <option value="h3" <?php selected( 'h3', $paywall_config['heading_tag'] ); ?>>H3</option>
-          </select>
-        </p>
+        </label>
       </div>
+    </fieldset>
+
+    <div class="memberful-paywall-builder__customize">
+      <h3 class="memberful-paywall-builder__section-heading"><?php esc_html_e( '2. Customize the content', 'memberful' ); ?></h3>
+
+      <p class="memberful-paywall-builder__field">
+        <label for="memberful-paywall-heading"><?php esc_html_e( 'Title', 'memberful' ); ?></label>
+        <input id="memberful-paywall-heading" type="text" name="memberful_paywall[heading]" value="<?php echo esc_attr( $paywall_config['heading'] ); ?>" maxlength="80">
+      </p>
 
       <p class="memberful-paywall-builder__field">
         <label for="memberful-paywall-subheading"><?php esc_html_e( 'Description', 'memberful' ); ?></label>
@@ -104,16 +94,16 @@ $features_textarea = implode( "\n", (array) $paywall_config['features'] );
         <span class="description"><?php esc_html_e( 'Leave blank to use your Memberful sign-in link.', 'memberful' ); ?></span>
       </p>
     </div>
+  </div>
 
-    <div class="memberful-paywall-builder__preview">
-      <h3 class="memberful-paywall-builder__section-heading"><?php esc_html_e( 'Preview', 'memberful' ); ?></h3>
-      <iframe
-        id="memberful-paywall-preview"
-        class="memberful-paywall-builder__preview-frame"
-        title="<?php esc_attr_e( 'Paywall preview', 'memberful' ); ?>"
-        srcdoc="<?php echo esc_attr( Memberful_Paywall_Preview::document( $paywall_config ) ); ?>"
-        sandbox
-      ></iframe>
-    </div>
+  <div class="memberful-paywall-builder__preview">
+    <h3 class="memberful-paywall-builder__section-heading"><?php esc_html_e( 'Preview', 'memberful' ); ?></h3>
+    <iframe
+      id="memberful-paywall-preview"
+      class="memberful-paywall-builder__preview-frame"
+      title="<?php esc_attr_e( 'Paywall preview', 'memberful' ); ?>"
+      srcdoc="<?php echo esc_attr( Memberful_Paywall_Preview::document( $paywall_config ) ); ?>"
+      sandbox
+    ></iframe>
   </div>
 </div>

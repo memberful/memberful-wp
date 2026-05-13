@@ -45,7 +45,6 @@ jQuery(function ($) {
       mode:           $('input[name="memberful_paywall[mode]"]:checked').val() || 'builder',
       layout:         $('input[name="memberful_paywall[layout]"]:checked').val() || 'card',
       heading:        $('#memberful-paywall-heading').val() || '',
-      heading_tag:    $('#memberful-paywall-heading-tag').val() || 'h2',
       subheading:     $('#memberful-paywall-subheading').val() || '',
       features:       $('#memberful-paywall-features').val() || '',
       button_label:   $('#memberful-paywall-button-label').val() || '',

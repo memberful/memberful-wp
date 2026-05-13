@@ -24,7 +24,6 @@ class Memberful_Paywall_Sanitizer {
 		$enums = array(
 			'mode'         => Memberful_Paywall_Config::MODES,
 			'layout'       => Memberful_Paywall_Config::LAYOUTS,
-			'heading_tag'  => Memberful_Paywall_Config::HEADING_TAGS,
 			'button_shape' => Memberful_Paywall_Config::BUTTON_SHAPES,
 		);
 

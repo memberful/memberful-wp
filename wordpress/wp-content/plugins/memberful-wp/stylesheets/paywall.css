@@ -41,16 +41,8 @@
 	margin: 0 0 0.5rem;
 }
 
-h1.memberful-paywall__heading {
-	font-size: var(--wp--preset--font-size--large, 1.5rem);
-}
-
-h2.memberful-paywall__heading {
+.memberful-paywall__heading {
 	font-size: var(--wp--preset--font-size--medium, 1.125rem);
-}
-
-h3.memberful-paywall__heading {
-	font-size: var(--wp--preset--font-size--small, 1rem);
 }
 
 .memberful-paywall__subheading {

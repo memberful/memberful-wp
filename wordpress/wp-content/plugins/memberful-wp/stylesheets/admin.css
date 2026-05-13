@@ -441,16 +441,24 @@ Paywall Builder
   line-height: 1.35;
 }
 
-/* Two-column split: customize | preview */
-.memberful-paywall-builder__split {
+/* Two-column layout: settings | preview */
+.memberful-paywall-builder__panel[data-panel="builder"] {
   align-items: start;
   display: grid;
   gap: 32px;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 540px) minmax(0, 1fr);
+}
+.memberful-paywall-builder__preview {
+  align-self: start;
+  position: sticky;
+  top: 32px;
 }
 @media (max-width: 900px) {
-  .memberful-paywall-builder__split {
+  .memberful-paywall-builder__panel[data-panel="builder"] {
     grid-template-columns: minmax(0, 1fr);
+  }
+  .memberful-paywall-builder__preview {
+    position: static;
   }
 }
 

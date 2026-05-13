@@ -163,17 +163,15 @@ class Memberful_Paywall_Renderer {
   }
 
   /**
-   * Heading element with the configured tag.
+   * Heading element.
    *
    * @param array $config Sanitized config.
    *
    * @return string
    */
   private static function heading_block( array $config ): string {
-    $tag = in_array( $config['heading_tag'], Memberful_Paywall_Config::HEADING_TAGS, true ) ? $config['heading_tag'] : 'h2';
     return sprintf(
-      '<%1$s class="memberful-paywall__heading">%2$s</%1$s>',
-      tag_escape( $tag ),
+      '<h2 class="memberful-paywall__heading">%s</h2>',
       esc_html( $config['heading'] )
     );
   }
