@@ -46,7 +46,9 @@ jQuery(function ($) {
       layout:         $('input[name="memberful_paywall[layout]"]:checked').val() || 'card',
       heading:        $('#memberful-paywall-heading').val() || '',
       subheading:     $('#memberful-paywall-subheading').val() || '',
-      features:       $('#memberful-paywall-features').val() || '',
+      features:       $('#memberful-paywall-benefits .memberful-paywall-builder__benefit-input').map(function () {
+        return $(this).val();
+      }).get(),
       button_label:   $('#memberful-paywall-button-label').val() || '',
       subscribe_url:  $('#memberful-paywall-subscribe-url').val() || '',
       sign_in_url:    $('#memberful-paywall-signin-url').val() || '',
@@ -69,7 +71,14 @@ jQuery(function ($) {
 
     const config = collectConfig();
     Object.keys(config).forEach(function (key) {
-      body.append('config[' + key + ']', config[key]);
+      const value = config[key];
+      if (Array.isArray(value)) {
+        value.forEach(function (item) {
+          body.append('config[' + key + '][]', item);
+        });
+      } else {
+        body.append('config[' + key + ']', value);
+      }
     });
 
     fetch(preview.ajaxUrl, {
@@ -106,6 +115,26 @@ jQuery(function ($) {
 
   $form.on('input', 'input[type="text"], input[type="url"], textarea', scheduleRefresh);
   $form.on('change', 'input[type="radio"], select', refreshPreview);
+
+  $form.on('click', '.memberful-paywall-builder__benefit-add', function (e) {
+    e.preventDefault();
+
+    const template = document.getElementById('memberful-paywall-benefit-template');
+    const list     = document.getElementById('memberful-paywall-benefits');
+    if (!template || !list) {
+      return;
+    }
+
+    list.appendChild(template.content.cloneNode(true));
+    $(list).find('.memberful-paywall-builder__benefit-input').last().trigger('focus');
+    refreshPreview();
+  });
+
+  $form.on('click', '.memberful-paywall-builder__benefit-remove', function (e) {
+    e.preventDefault();
+    $(this).closest('.memberful-paywall-builder__benefit').remove();
+    refreshPreview();
+  });
 
   if (($modeInputs.filter(':checked').val() || 'builder') === 'builder') {
     refreshPreview();

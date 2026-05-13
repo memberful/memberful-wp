@@ -463,12 +463,10 @@ Paywall Builder
 }
 
 .memberful-paywall-builder__customize .memberful-paywall-builder__field {
-  display: block;
   margin: 0 0 1rem;
 }
 .memberful-paywall-builder__customize label {
   display: block;
-  font-size: 13px;
   font-weight: 600;
   margin-bottom: 4px;
 }
@@ -498,6 +496,60 @@ Paywall Builder
 }
 .memberful-paywall-builder__field--paired .memberful-paywall-builder__field-aside select {
   min-width: 80px;
+}
+
+/* Benefits */
+.memberful-paywall-builder__benefits-label {
+  font-weight: 600;
+  margin-bottom: 8px;
+  padding: 0;
+}
+.memberful-paywall-builder__benefit-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.memberful-paywall-builder__benefit {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+}
+.memberful-paywall-builder__benefit-icon {
+  color: var(--wp-admin-theme-color);
+  flex: 0 0 auto;
+}
+.memberful-paywall-builder__customize .memberful-paywall-builder__benefit-label {
+  flex: 1;
+  margin: 0;
+}
+.memberful-paywall-builder__benefit-remove {
+  background: none;
+  border: 0;
+  color: #646970;
+  cursor: pointer;
+  display: inline-flex;
+  opacity: 0;
+  padding: 4px;
+  transition: opacity 120ms ease;
+}
+.memberful-paywall-builder__benefit:hover .memberful-paywall-builder__benefit-remove,
+.memberful-paywall-builder__benefit-remove:focus-visible {
+  opacity: 1;
+}
+.memberful-paywall-builder__benefit-remove:hover {
+  color: #1d2327;
+}
+.memberful-paywall-builder__benefit-add {
+  background: none;
+  border: 0;
+  color: var(--wp-admin-theme-color);
+  cursor: pointer;
+  font-weight: 500;
+  padding: 4px 0;
+}
+.memberful-paywall-builder__benefit-add:hover {
+  color: var(--wp-admin-theme-color-darker-10);
 }
 
 .memberful-paywall-builder__preview-frame {

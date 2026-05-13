@@ -8,7 +8,6 @@
  * @var bool  $is_active
  */
 
-$features_textarea = implode( "\n", (array) $paywall_config['features'] );
 ?>
 <div class="memberful-paywall-builder__panel" data-panel="builder"<?php if ( ! $is_active ) echo ' style="display:none"'; ?>>
   <div class="memberful-paywall-builder__settings">
@@ -71,11 +70,36 @@ $features_textarea = implode( "\n", (array) $paywall_config['features'] );
         </p>
       </div>
 
-      <p class="memberful-paywall-builder__field">
-        <label for="memberful-paywall-features"><?php esc_html_e( 'Features', 'memberful' ); ?></label>
-        <textarea id="memberful-paywall-features" rows="4" name="memberful_paywall[features]"><?php echo esc_textarea( $features_textarea ); ?></textarea>
-        <span class="description"><?php esc_html_e( 'One feature per line. Each line renders as a check-marked list item.', 'memberful' ); ?></span>
-      </p>
+      <fieldset class="memberful-paywall-builder__field memberful-paywall-builder__benefits">
+        <legend class="memberful-paywall-builder__benefits-label"><?php esc_html_e( 'What subscribers get', 'memberful' ); ?></legend>
+        <div class="memberful-paywall-builder__benefit-list" id="memberful-paywall-benefits">
+          <?php foreach ( (array) $paywall_config['features'] as $feature ) : ?>
+            <div class="memberful-paywall-builder__benefit">
+              <svg class="memberful-paywall-builder__benefit-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              <label class="memberful-paywall-builder__benefit-label">
+                <span class="screen-reader-text"><?php esc_html_e( 'Benefit', 'memberful' ); ?></span>
+                <input type="text" class="memberful-paywall-builder__benefit-input" name="memberful_paywall[features][]" value="<?php echo esc_attr( $feature ); ?>" placeholder="<?php esc_attr_e( 'e.g. Ad-free listening', 'memberful' ); ?>">
+              </label>
+              <button type="button" class="memberful-paywall-builder__benefit-remove" aria-label="<?php esc_attr_e( 'Remove benefit', 'memberful' ); ?>">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+              </button>
+            </div>
+          <?php endforeach; ?>
+        </div>
+        <button type="button" class="memberful-paywall-builder__benefit-add" id="memberful-paywall-benefit-add">+ <?php esc_html_e( 'Add benefit', 'memberful' ); ?></button>
+        <template id="memberful-paywall-benefit-template">
+          <div class="memberful-paywall-builder__benefit">
+            <svg class="memberful-paywall-builder__benefit-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+            <label class="memberful-paywall-builder__benefit-label">
+              <span class="screen-reader-text"><?php esc_html_e( 'Benefit', 'memberful' ); ?></span>
+              <input type="text" class="memberful-paywall-builder__benefit-input" name="memberful_paywall[features][]" value="" placeholder="<?php esc_attr_e( 'e.g. Ad-free listening', 'memberful' ); ?>">
+            </label>
+            <button type="button" class="memberful-paywall-builder__benefit-remove" aria-label="<?php esc_attr_e( 'Remove benefit', 'memberful' ); ?>">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+            </button>
+          </div>
+        </template>
+      </fieldset>
 
       <p class="memberful-paywall-builder__field">
         <label for="memberful-paywall-brand-color"><?php esc_html_e( 'Brand colour', 'memberful' ); ?></label>
