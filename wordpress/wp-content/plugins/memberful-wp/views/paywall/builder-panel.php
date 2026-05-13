@@ -140,17 +140,24 @@
         </div>
       </div>
 
-      <p class="memberful-paywall-builder__field">
-        <label for="memberful-paywall-subscribe-url"><?php esc_html_e( 'Subscribe URL', 'memberful' ); ?></label>
-        <input id="memberful-paywall-subscribe-url" type="url" name="memberful_paywall[subscribe_url]" value="<?php echo esc_attr( $paywall_config['subscribe_url'] ); ?>" placeholder="<?php echo esc_attr( memberful_registration_page_url() ); ?>">
-        <span class="description"><?php esc_html_e( 'Leave blank to use your Memberful registration page.', 'memberful' ); ?></span>
-      </p>
+      <details class="memberful-paywall-builder__advanced">
+        <summary class="memberful-paywall-builder__advanced-summary">
+          <span><?php esc_html_e( 'Advanced settings', 'memberful' ); ?></span>
+          <svg class="memberful-paywall-builder__advanced-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
 
-      <p class="memberful-paywall-builder__field">
-        <label for="memberful-paywall-signin-url"><?php esc_html_e( 'Sign-in URL', 'memberful' ); ?></label>
-        <input id="memberful-paywall-signin-url" type="url" name="memberful_paywall[sign_in_url]" value="<?php echo esc_attr( $paywall_config['sign_in_url'] ); ?>" placeholder="<?php echo esc_attr( memberful_sign_in_url() ); ?>">
-        <span class="description"><?php esc_html_e( 'Leave blank to use your Memberful sign-in link.', 'memberful' ); ?></span>
-      </p>
+        <p class="memberful-paywall-builder__field">
+          <label for="memberful-paywall-subscribe-url"><?php esc_html_e( 'Subscribe URL', 'memberful' ); ?></label>
+          <input id="memberful-paywall-subscribe-url" type="url" name="memberful_paywall[subscribe_url]" value="<?php echo esc_attr( $paywall_config['subscribe_url'] ); ?>" placeholder="<?php echo esc_attr( memberful_registration_page_url() ); ?>">
+          <span class="description"><?php esc_html_e( 'Leave blank to use your Memberful registration page.', 'memberful' ); ?></span>
+        </p>
+
+        <p class="memberful-paywall-builder__field">
+          <label for="memberful-paywall-signin-url"><?php esc_html_e( 'Sign-in URL', 'memberful' ); ?></label>
+          <input id="memberful-paywall-signin-url" type="url" name="memberful_paywall[sign_in_url]" value="<?php echo esc_attr( $paywall_config['sign_in_url'] ); ?>" placeholder="<?php echo esc_attr( memberful_sign_in_url() ); ?>">
+          <span class="description"><?php esc_html_e( 'Leave blank to use your Memberful sign-in link.', 'memberful' ); ?></span>
+        </p>
+      </details>
     </div>
   </div>
 
