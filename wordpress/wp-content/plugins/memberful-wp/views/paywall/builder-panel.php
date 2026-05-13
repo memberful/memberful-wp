@@ -55,21 +55,6 @@
         <textarea id="memberful-paywall-subheading" rows="3" name="memberful_paywall[subheading]"><?php echo esc_textarea( $paywall_config['subheading'] ); ?></textarea>
       </p>
 
-      <div class="memberful-paywall-builder__field memberful-paywall-builder__field--paired">
-        <p class="memberful-paywall-builder__field-main">
-          <label for="memberful-paywall-button-label"><?php esc_html_e( 'Button label', 'memberful' ); ?></label>
-          <input id="memberful-paywall-button-label" type="text" name="memberful_paywall[button_label]" value="<?php echo esc_attr( $paywall_config['button_label'] ); ?>">
-        </p>
-        <p class="memberful-paywall-builder__field-aside">
-          <label for="memberful-paywall-button-shape"><?php esc_html_e( 'Shape', 'memberful' ); ?></label>
-          <select id="memberful-paywall-button-shape" name="memberful_paywall[button_shape]">
-            <option value="pill" <?php selected( 'pill', $paywall_config['button_shape'] ); ?>><?php esc_html_e( 'Pill', 'memberful' ); ?></option>
-            <option value="rounded" <?php selected( 'rounded', $paywall_config['button_shape'] ); ?>><?php esc_html_e( 'Rounded', 'memberful' ); ?></option>
-            <option value="square" <?php selected( 'square', $paywall_config['button_shape'] ); ?>><?php esc_html_e( 'Square', 'memberful' ); ?></option>
-          </select>
-        </p>
-      </div>
-
       <fieldset class="memberful-paywall-builder__field memberful-paywall-builder__benefits">
         <legend class="memberful-paywall-builder__benefits-label"><?php esc_html_e( 'What subscribers get', 'memberful' ); ?></legend>
         <div class="memberful-paywall-builder__benefit-list" id="memberful-paywall-benefits">
@@ -100,6 +85,21 @@
           </div>
         </template>
       </fieldset>
+
+      <div class="memberful-paywall-builder__field memberful-paywall-builder__field--paired">
+        <p class="memberful-paywall-builder__field-main">
+          <label for="memberful-paywall-button-label"><?php esc_html_e( 'Button label', 'memberful' ); ?></label>
+          <input id="memberful-paywall-button-label" type="text" name="memberful_paywall[button_label]" value="<?php echo esc_attr( $paywall_config['button_label'] ); ?>">
+        </p>
+        <p class="memberful-paywall-builder__field-aside">
+          <label for="memberful-paywall-button-shape"><?php esc_html_e( 'Shape', 'memberful' ); ?></label>
+          <select id="memberful-paywall-button-shape" name="memberful_paywall[button_shape]">
+            <option value="pill" <?php selected( 'pill', $paywall_config['button_shape'] ); ?>><?php esc_html_e( 'Pill', 'memberful' ); ?></option>
+            <option value="rounded" <?php selected( 'rounded', $paywall_config['button_shape'] ); ?>><?php esc_html_e( 'Rounded', 'memberful' ); ?></option>
+            <option value="square" <?php selected( 'square', $paywall_config['button_shape'] ); ?>><?php esc_html_e( 'Square', 'memberful' ); ?></option>
+          </select>
+        </p>
+      </div>
 
       <p class="memberful-paywall-builder__field">
         <label for="memberful-paywall-brand-color"><?php esc_html_e( 'Brand colour', 'memberful' ); ?></label>

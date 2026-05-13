@@ -465,10 +465,14 @@ Paywall Builder
 .memberful-paywall-builder__customize .memberful-paywall-builder__field {
   margin: 0 0 1rem;
 }
-.memberful-paywall-builder__customize label {
+.memberful-paywall-builder__customize label,
+.memberful-paywall-builder__benefits-label {
+  color: #6b7280;
   display: block;
-  font-weight: 600;
+  font-size: 13px;
+  font-weight: 500;
   margin-bottom: 4px;
+  text-transform: uppercase;
 }
 .memberful-paywall-builder__customize input[type="text"],
 .memberful-paywall-builder__customize input[type="url"],
@@ -500,7 +504,6 @@ Paywall Builder
 
 /* Benefits */
 .memberful-paywall-builder__benefits-label {
-  font-weight: 600;
   margin-bottom: 8px;
   padding: 0;
 }
