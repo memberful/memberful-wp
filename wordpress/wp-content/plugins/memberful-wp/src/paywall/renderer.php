@@ -97,18 +97,6 @@ class Memberful_Paywall_Renderer {
       array(),
       MEMBERFUL_VERSION
     );
-
-    if ( function_exists( 'wp_is_block_theme' ) && wp_is_block_theme() ) {
-      return;
-    }
-
-    wp_enqueue_script(
-      'memberful-paywall-banner',
-      MEMBERFUL_URL . '/js/build/paywall-banner.js',
-      array(),
-      MEMBERFUL_VERSION,
-      true
-    );
   }
 
   /**
@@ -133,13 +121,13 @@ class Memberful_Paywall_Renderer {
   }
 
   /**
-   * Render the "simple" layout — minimal text + CTA on a transparent band.
+   * Render the "inline" layout - minimal text + CTA on a transparent band.
    *
    * @param array $config Sanitized config.
    *
    * @return string
    */
-  private static function render_simple( array $config ): string {
+  private static function render_inline( array $config ): string {
     return '<div class="memberful-paywall__inner">' . self::render_inner( $config ) . '</div>';
   }
 
@@ -157,17 +145,6 @@ class Memberful_Paywall_Renderer {
            . self::render_inner( $config )
            . '</div>'
            . '</div>';
-  }
-
-  /**
-   * Render the "banner" layout — full-width dark band.
-   *
-   * @param array $config Sanitized config.
-   *
-   * @return string
-   */
-  private static function render_banner( array $config ): string {
-    return '<div class="memberful-paywall__inner">' . self::render_inner( $config ) . '</div>';
   }
 
   /**

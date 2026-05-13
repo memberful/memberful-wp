@@ -344,7 +344,7 @@ Paywall Builder
 .memberful-paywall-builder__template-grid {
   display: grid;
   gap: 16px;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 .memberful-paywall-builder__template-card {
   cursor: pointer;
@@ -399,17 +399,11 @@ Paywall Builder
   justify-content: center;
   position: relative;
 }
-.memberful-paywall-builder__template-thumb--simple {
+.memberful-paywall-builder__template-thumb--inline {
   background: #f6f7f7;
 }
 .memberful-paywall-builder__template-thumb--card {
   background: #f0f0f1;
-}
-.memberful-paywall-builder__template-thumb--banner {
-  background: #1d2327;
-}
-.memberful-paywall-builder__template-thumb--banner .memberful-paywall-builder__thumb-line {
-  background: #50575e;
 }
 .memberful-paywall-builder__thumb-line {
   background: #c3c4c7;

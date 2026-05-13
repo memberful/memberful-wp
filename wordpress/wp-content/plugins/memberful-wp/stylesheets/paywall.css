@@ -140,10 +140,10 @@ h3.memberful-paywall__heading {
 	width: 40px;
 }
 
-/* Simple — top-divider band on white. */
-.memberful-paywall--simple {
+/* Inline - top-divider band on white. */
+.memberful-paywall--inline {
 	background: var(--memberful-surface);
-	border-top: 1px solid var(--memberful-border);
+	border-top: 2px solid var(--memberful-brand);
 }
 
 /* Card — centred white card on muted page. */
@@ -175,43 +175,6 @@ h3.memberful-paywall__heading {
 	display: block;
 	padding: 0.625rem 1.5rem;
 	width: 100%;
-}
-
-/* Banner — full-bleed dark band, always viewport width. */
-.memberful-paywall--banner {
-	--memberful-muted: #a0a5aa;
-	--memberful-muted-soft: #72777c;
-	--memberful-surface: #1d2327;
-	--memberful-text: #fff;
-
-	background: var(--memberful-surface);
-	margin-inline: calc(50% - 50vw);
-	width: 100vw;
-	z-index: 99999;
-}
-
-.memberful-paywall--banner .memberful-paywall__inner {
-	padding: 2.5rem 2rem;
-}
-
-.memberful-paywall--banner .memberful-paywall__heading {
-	font-weight: 700;
-}
-
-.memberful-paywall--banner h2.memberful-paywall__heading {
-	font-size: var(--wp--preset--font-size--medium, 1.25rem);
-}
-
-.memberful-paywall--banner .memberful-paywall__subheading {
-	max-width: 32rem;
-}
-
-.memberful-paywall--banner .memberful-paywall__signin-link {
-	color: #72aee6;
-}
-
-.memberful-paywall--banner .memberful-paywall__button--primary {
-	padding: 0.75rem 2rem;
 }
 
 /* Teaser fade. */

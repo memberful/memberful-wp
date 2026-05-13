@@ -12,7 +12,7 @@ class Memberful_Paywall_Config {
 	const OPTION_KEY = 'memberful_paywall_config';
 
 	const MODES         = array( 'builder', 'custom_html' );
-	const LAYOUTS       = array( 'simple', 'card', 'banner' );
+	const LAYOUTS       = array( 'inline', 'card' );
 	const HEADING_TAGS  = array( 'h1', 'h2', 'h3' );
 	const BUTTON_SHAPES = array( 'pill', 'rounded', 'square' );
 
