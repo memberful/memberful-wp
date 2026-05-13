@@ -46,8 +46,11 @@
       <h3 class="memberful-paywall-builder__section-heading"><?php esc_html_e( '2. Customize the content', 'memberful' ); ?></h3>
 
       <p class="memberful-paywall-builder__field">
-        <label for="memberful-paywall-heading"><?php esc_html_e( 'Title', 'memberful' ); ?></label>
-        <input id="memberful-paywall-heading" type="text" name="memberful_paywall[heading]" value="<?php echo esc_attr( $paywall_config['heading'] ); ?>" maxlength="80">
+        <span class="memberful-paywall-builder__field-row">
+          <label for="memberful-paywall-heading"><?php esc_html_e( 'Headline', 'memberful' ); ?></label>
+          <span class="memberful-paywall-builder__counter" data-counter-for="memberful-paywall-heading" data-max="60"><?php echo (int) mb_strlen( $paywall_config['heading'] ); ?>/60</span>
+        </span>
+        <input id="memberful-paywall-heading" type="text" name="memberful_paywall[heading]" value="<?php echo esc_attr( $paywall_config['heading'] ); ?>" maxlength="60">
       </p>
 
       <p class="memberful-paywall-builder__field">
@@ -86,20 +89,37 @@
         </template>
       </fieldset>
 
-      <div class="memberful-paywall-builder__field memberful-paywall-builder__field--paired">
-        <p class="memberful-paywall-builder__field-main">
-          <label for="memberful-paywall-button-label"><?php esc_html_e( 'Button label', 'memberful' ); ?></label>
-          <input id="memberful-paywall-button-label" type="text" name="memberful_paywall[button_label]" value="<?php echo esc_attr( $paywall_config['button_label'] ); ?>">
-        </p>
-        <p class="memberful-paywall-builder__field-aside">
-          <label for="memberful-paywall-button-shape"><?php esc_html_e( 'Shape', 'memberful' ); ?></label>
-          <select id="memberful-paywall-button-shape" name="memberful_paywall[button_shape]">
-            <option value="pill" <?php selected( 'pill', $paywall_config['button_shape'] ); ?>><?php esc_html_e( 'Pill', 'memberful' ); ?></option>
-            <option value="rounded" <?php selected( 'rounded', $paywall_config['button_shape'] ); ?>><?php esc_html_e( 'Rounded', 'memberful' ); ?></option>
-            <option value="square" <?php selected( 'square', $paywall_config['button_shape'] ); ?>><?php esc_html_e( 'Square', 'memberful' ); ?></option>
-          </select>
-        </p>
-      </div>
+      <p class="memberful-paywall-builder__field">
+        <label for="memberful-paywall-button-label"><?php esc_html_e( 'Button label', 'memberful' ); ?></label>
+        <input id="memberful-paywall-button-label" type="text" name="memberful_paywall[button_label]" value="<?php echo esc_attr( $paywall_config['button_label'] ); ?>">
+      </p>
+
+      <fieldset class="memberful-paywall-builder__field memberful-paywall-builder__button-shape">
+        <legend class="memberful-paywall-builder__button-shape-label"><?php esc_html_e( 'Button shape', 'memberful' ); ?></legend>
+        <div class="memberful-paywall-builder__segmented">
+          <label class="memberful-paywall-builder__segmented-option">
+            <input type="radio" name="memberful_paywall[button_shape]" value="square" <?php checked( 'square', $paywall_config['button_shape'] ); ?>>
+            <span class="memberful-paywall-builder__segmented-option-inner">
+              <svg width="20" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="5" y="5" width="14" height="14" rx="0"/></svg>
+              <?php esc_html_e( 'Square', 'memberful' ); ?>
+            </span>
+          </label>
+          <label class="memberful-paywall-builder__segmented-option">
+            <input type="radio" name="memberful_paywall[button_shape]" value="rounded" <?php checked( 'rounded', $paywall_config['button_shape'] ); ?>>
+            <span class="memberful-paywall-builder__segmented-option-inner">
+              <svg width="20" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="2" y="7" width="20" height="10" rx="3"/></svg>
+              <?php esc_html_e( 'Rounded', 'memberful' ); ?>
+            </span>
+          </label>
+          <label class="memberful-paywall-builder__segmented-option">
+            <input type="radio" name="memberful_paywall[button_shape]" value="pill" <?php checked( 'pill', $paywall_config['button_shape'] ); ?>>
+            <span class="memberful-paywall-builder__segmented-option-inner">
+              <svg width="20" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="2" y="7" width="20" height="10" rx="5"/></svg>
+              <?php esc_html_e( 'Pill', 'memberful' ); ?>
+            </span>
+          </label>
+        </div>
+      </fieldset>
 
       <?php
       $palette_settings = wp_get_global_settings( array( 'color', 'palette' ) );
@@ -128,16 +148,14 @@
 
       $background_palette = array( '#ffffff', '#f5f5f4', '#0f172a' );
       ?>
-      <div class="memberful-paywall-builder__field memberful-paywall-builder__colors-row">
-        <div>
-          <label for="memberful-paywall-brand-color"><?php esc_html_e( 'Accent color', 'memberful' ); ?></label>
-          <input id="memberful-paywall-brand-color" type="text" class="memberful-paywall-builder__color" name="memberful_paywall[brand_color]" value="<?php echo esc_attr( $paywall_config['brand_color'] ); ?>" data-palettes="<?php echo esc_attr( wp_json_encode( $brand_palette ) ); ?>">
-        </div>
-        <div>
-          <label for="memberful-paywall-background-color"><?php esc_html_e( 'Background color', 'memberful' ); ?></label>
-          <input id="memberful-paywall-background-color" type="text" class="memberful-paywall-builder__color" name="memberful_paywall[background_color]" value="<?php echo esc_attr( $paywall_config['background_color'] ); ?>" data-palettes="<?php echo esc_attr( wp_json_encode( $background_palette ) ); ?>">
-          <span class="description"><?php esc_html_e( 'Text color adjusts automatically for contrast.', 'memberful' ); ?></span>
-        </div>
+      <div class="memberful-paywall-builder__field">
+        <label for="memberful-paywall-brand-color"><?php esc_html_e( 'Accent color', 'memberful' ); ?></label>
+        <input id="memberful-paywall-brand-color" type="text" class="memberful-paywall-builder__color" name="memberful_paywall[brand_color]" value="<?php echo esc_attr( $paywall_config['brand_color'] ); ?>" data-palettes="<?php echo esc_attr( wp_json_encode( $brand_palette ) ); ?>">
+      </div>
+      <div class="memberful-paywall-builder__field">
+        <label for="memberful-paywall-background-color"><?php esc_html_e( 'Background color', 'memberful' ); ?></label>
+        <input id="memberful-paywall-background-color" type="text" class="memberful-paywall-builder__color" name="memberful_paywall[background_color]" value="<?php echo esc_attr( $paywall_config['background_color'] ); ?>" data-palettes="<?php echo esc_attr( wp_json_encode( $background_palette ) ); ?>">
+        <span class="description"><?php esc_html_e( 'Text color adjusts automatically for contrast.', 'memberful' ); ?></span>
       </div>
 
       <details class="memberful-paywall-builder__advanced">

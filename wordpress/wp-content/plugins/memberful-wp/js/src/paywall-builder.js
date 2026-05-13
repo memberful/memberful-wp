@@ -71,7 +71,7 @@ jQuery(function ($) {
       sign_in_url:      $('#memberful-paywall-signin-url').val() || '',
       brand_color:      $('#memberful-paywall-brand-color').val() || '',
       background_color: $('#memberful-paywall-background-color').val() || '',
-      button_shape:     $('#memberful-paywall-button-shape').val() || 'rounded',
+      button_shape:     $('input[name="memberful_paywall[button_shape]"]:checked').val() || 'rounded',
     };
   }
 
@@ -152,6 +152,13 @@ jQuery(function ($) {
     e.preventDefault();
     $(this).closest('.memberful-paywall-builder__benefit').remove();
     refreshPreview();
+  });
+
+  const $headingInput   = $('#memberful-paywall-heading');
+  const $headingCounter = $('[data-counter-for="memberful-paywall-heading"]');
+  const headingMax      = parseInt($headingCounter.attr('data-max'), 10) || 60;
+  $headingInput.on('input', function () {
+    $headingCounter.text(this.value.length + '/' + headingMax);
   });
 
   if (($modeInputs.filter(':checked').val() || 'builder') === 'builder') {
