@@ -1,9 +1,9 @@
 jQuery(function ($) {
-  const $form       = $('.memberful-paywall-builder__panel[data-panel="builder"]');
-  const $modeInputs = $('input[name="memberful_paywall[mode]"]');
-  const $panels     = $('.memberful-paywall-builder__panel');
-  const $preview    = $('#memberful-paywall-preview');
-  const $colorInput = $('.memberful-paywall-builder__color');
+  const $form        = $('.memberful-paywall-builder__panel[data-panel="builder"]');
+  const $modeInputs  = $('input[name="memberful_paywall[mode]"]');
+  const $panels      = $('.memberful-paywall-builder__panel');
+  const $preview     = $('#memberful-paywall-preview');
+  const $colorInputs = $('.memberful-paywall-builder__color');
 
   const preview = window.memberfulPaywallPreview || {};
   const DEBOUNCE_MS = 250;
@@ -11,13 +11,30 @@ jQuery(function ($) {
   let debounceTimer = null;
   let requestSeq = 0;
 
-  $colorInput.wpColorPicker({
-    change: function () {
-      setTimeout(scheduleRefresh, 0);
-    },
-    clear: function () {
-      setTimeout(scheduleRefresh, 0);
-    },
+  $colorInputs.each(function () {
+    const $input = $(this);
+    let palettes = true;
+    const palettesAttr = $input.attr('data-palettes');
+    if (palettesAttr) {
+      try {
+        const parsed = JSON.parse(palettesAttr);
+        if (Array.isArray(parsed) && parsed.length) {
+          palettes = parsed;
+        }
+      } catch (e) {
+        // Fall back to wpColorPicker's default palette.
+      }
+    }
+
+    $input.wpColorPicker({
+      palettes: palettes,
+      change: function () {
+        setTimeout(scheduleRefresh, 0);
+      },
+      clear: function () {
+        setTimeout(scheduleRefresh, 0);
+      },
+    });
   });
 
   function applyMode(mode) {
@@ -42,18 +59,19 @@ jQuery(function ($) {
 
   function collectConfig() {
     return {
-      mode:           $('input[name="memberful_paywall[mode]"]:checked').val() || 'builder',
-      layout:         $('input[name="memberful_paywall[layout]"]:checked').val() || 'card',
-      heading:        $('#memberful-paywall-heading').val() || '',
-      subheading:     $('#memberful-paywall-subheading').val() || '',
-      features:       $('#memberful-paywall-benefits .memberful-paywall-builder__benefit-input').map(function () {
+      mode:             $('input[name="memberful_paywall[mode]"]:checked').val() || 'builder',
+      layout:           $('input[name="memberful_paywall[layout]"]:checked').val() || 'card',
+      heading:          $('#memberful-paywall-heading').val() || '',
+      subheading:       $('#memberful-paywall-subheading').val() || '',
+      features:         $('#memberful-paywall-benefits .memberful-paywall-builder__benefit-input').map(function () {
         return $(this).val();
       }).get(),
-      button_label:   $('#memberful-paywall-button-label').val() || '',
-      subscribe_url:  $('#memberful-paywall-subscribe-url').val() || '',
-      sign_in_url:    $('#memberful-paywall-signin-url').val() || '',
-      brand_color:    $colorInput.val() || '',
-      button_shape:   $('#memberful-paywall-button-shape').val() || 'rounded',
+      button_label:     $('#memberful-paywall-button-label').val() || '',
+      subscribe_url:    $('#memberful-paywall-subscribe-url').val() || '',
+      sign_in_url:      $('#memberful-paywall-signin-url').val() || '',
+      brand_color:      $('#memberful-paywall-brand-color').val() || '',
+      background_color: $('#memberful-paywall-background-color').val() || '',
+      button_shape:     $('#memberful-paywall-button-shape').val() || 'rounded',
     };
   }
 

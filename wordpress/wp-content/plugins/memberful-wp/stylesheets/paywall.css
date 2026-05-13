@@ -5,11 +5,11 @@
 .memberful-paywall {
 	--memberful-border: #e5e5e5;
 	--memberful-brand: var(--wp--preset--color--primary, var(--wp--preset--color--accent, var(--wp-admin-theme-color, #2271b1)));
-	--memberful-muted: #666;
-	--memberful-muted-soft: #999;
 	--memberful-radius: 0;
 	--memberful-surface: #fff;
 	--memberful-text: #1a1a1a;
+	--memberful-muted: color-mix(in srgb, var(--memberful-text) 60%, transparent);
+	--memberful-muted-soft: color-mix(in srgb, var(--memberful-text) 40%, transparent);
 
 	box-sizing: border-box;
 	color: var(--memberful-text);
@@ -137,11 +137,9 @@
 	border-top: 2px solid var(--memberful-brand);
 }
 
-/* Card — centred white card on muted page. */
+/* Card - centred card surface on a fixed muted page. */
 .memberful-paywall--card {
-	--memberful-surface: #f8f8f8;
-
-	background: var(--memberful-surface);
+	background: #f8f8f8;
 }
 
 .memberful-paywall--card .memberful-paywall__inner {
@@ -149,7 +147,7 @@
 }
 
 .memberful-paywall--card .memberful-paywall__card {
-	background: #fff;
+	background: var(--memberful-surface);
 	border: 1px solid #e0e0e0;
 	border-radius: 0.5rem;
 	box-shadow: 0 10px 25px rgba(15, 23, 42, 0.1);

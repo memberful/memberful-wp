@@ -502,6 +502,18 @@ Paywall Builder
   min-width: 80px;
 }
 
+/* Accent + Background colours on one row */
+.memberful-paywall-builder__colors-row {
+  align-items: start;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 32px;
+}
+
+.memberful-paywall-builder__colors-row .wp-color-result.button {
+  margin: 0;
+}
+
 /* Benefits */
 .memberful-paywall-builder__benefits-label {
   margin-bottom: 8px;

@@ -101,10 +101,44 @@
         </p>
       </div>
 
-      <p class="memberful-paywall-builder__field">
-        <label for="memberful-paywall-brand-color"><?php esc_html_e( 'Brand colour', 'memberful' ); ?></label>
-        <input id="memberful-paywall-brand-color" type="text" class="memberful-paywall-builder__color" name="memberful_paywall[brand_color]" value="<?php echo esc_attr( $paywall_config['brand_color'] ); ?>">
-      </p>
+      <?php
+      $palette_settings = wp_get_global_settings( array( 'color', 'palette' ) );
+      $palette_entries  = array();
+      if ( is_array( $palette_settings ) ) {
+        if ( isset( $palette_settings['theme'] ) ) {
+          $palette_entries = (array) $palette_settings['theme'];
+        } elseif ( isset( $palette_settings[0] ) ) {
+          $palette_entries = $palette_settings;
+        }
+      }
+
+      $brand_palette = array();
+      foreach ( $palette_entries as $palette_entry ) {
+        if ( is_array( $palette_entry ) && isset( $palette_entry['color'] ) ) {
+          $palette_hex = sanitize_hex_color( $palette_entry['color'] );
+          if ( $palette_hex ) {
+            $brand_palette[] = $palette_hex;
+          }
+        }
+      }
+
+      if ( empty( $brand_palette ) ) {
+        $brand_palette = array( '#2563eb', '#0f172a', '#dc2626', '#16a34a', '#9333ea', '#ea580c' );
+      }
+
+      $background_palette = array( '#ffffff', '#f5f5f4', '#0f172a' );
+      ?>
+      <div class="memberful-paywall-builder__field memberful-paywall-builder__colors-row">
+        <div>
+          <label for="memberful-paywall-brand-color"><?php esc_html_e( 'Accent color', 'memberful' ); ?></label>
+          <input id="memberful-paywall-brand-color" type="text" class="memberful-paywall-builder__color" name="memberful_paywall[brand_color]" value="<?php echo esc_attr( $paywall_config['brand_color'] ); ?>" data-palettes="<?php echo esc_attr( wp_json_encode( $brand_palette ) ); ?>">
+        </div>
+        <div>
+          <label for="memberful-paywall-background-color"><?php esc_html_e( 'Background color', 'memberful' ); ?></label>
+          <input id="memberful-paywall-background-color" type="text" class="memberful-paywall-builder__color" name="memberful_paywall[background_color]" value="<?php echo esc_attr( $paywall_config['background_color'] ); ?>" data-palettes="<?php echo esc_attr( wp_json_encode( $background_palette ) ); ?>">
+          <span class="description"><?php esc_html_e( 'Text color adjusts automatically for contrast.', 'memberful' ); ?></span>
+        </div>
+      </div>
 
       <p class="memberful-paywall-builder__field">
         <label for="memberful-paywall-subscribe-url"><?php esc_html_e( 'Subscribe URL', 'memberful' ); ?></label>

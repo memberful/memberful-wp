@@ -273,6 +273,12 @@ class Memberful_Paywall_Renderer {
       $parts[] = '--memberful-brand:' . $brand_color;
     }
 
+    $background_color = isset( $config['background_color'] ) ? sanitize_hex_color( (string) $config['background_color'] ) : '';
+    if ( ! empty( $background_color ) ) {
+      $parts[] = '--memberful-surface:' . $background_color;
+      $parts[] = '--memberful-text:' . Memberful_Paywall_Color::contrast_text_color( $background_color );
+    }
+
     return implode( ';', $parts ) . ';';
   }
 

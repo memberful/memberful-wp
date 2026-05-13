@@ -57,10 +57,12 @@ class Memberful_Paywall_Sanitizer {
 			}
 		}
 
-		if ( isset( $input['brand_color'] ) ) {
-			$color = sanitize_hex_color( (string) $input['brand_color'] );
-			if ( null !== $color && '' !== $color ) {
-				$clean['brand_color'] = $color;
+		foreach ( array( 'brand_color', 'background_color' ) as $color_key ) {
+			if ( isset( $input[ $color_key ] ) ) {
+				$color = sanitize_hex_color( (string) $input[ $color_key ] );
+				if ( null !== $color && '' !== $color ) {
+					$clean[ $color_key ] = $color;
+				}
 			}
 		}
 
