@@ -144,7 +144,7 @@
       $brand_palette = array_values( array_unique( $brand_palette ) );
 
       if ( empty( $brand_palette ) ) {
-        $brand_palette = array( '#2563eb', '#0f172a', '#dc2626', '#16a34a', '#9333ea', '#ea580c' );
+        $brand_palette = array( '#0065F4', '#0B172B', '#F00013', '#00A63D', '#A02AF4', '#FD4900' );
       }
 
       $background_palette = array( '#ffffff', '#f5f5f4', '#0f172a' );
