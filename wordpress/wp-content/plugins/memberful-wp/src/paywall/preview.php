@@ -67,9 +67,10 @@ class Memberful_Paywall_Preview {
 			esc_html__( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vitae urna id quam faucibus gravida ac sed ipsum. Quisque eget velit dictum leo tempor bibendum nec sed odio.', 'memberful' )
 		);
 
-		$styles = 'html,body{background:#fff;color:#1b1b1b;font-size:16px;line-height:1.6;margin:0;}'
+		$styles = 'html,body{background:#fff;color:#1b1b1b;font-size:16px;line-height:1.6;margin:0;overflow:hidden;}'
 			. '.memberful-global-teaser-content{padding:24px 24px 0;}'
-			. '.memberful-global-teaser-content p{margin:0; padding-bottom: 1rem;}';
+			. '.memberful-global-teaser-content p{margin:0; padding-bottom: 1rem;}'
+      . '.memberful-paywall__inner {padding:0 !important;}';
 
 		return '<!doctype html>'
 			. '<html lang="' . esc_attr( get_bloginfo( 'language' ) ) . '">'
