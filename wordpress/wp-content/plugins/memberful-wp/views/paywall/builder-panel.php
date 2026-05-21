@@ -186,7 +186,7 @@
       class="memberful-paywall-builder__preview-frame"
       title="<?php esc_attr_e( 'Paywall preview', 'memberful' ); ?>"
       srcdoc="<?php echo esc_attr( Memberful_Paywall_Preview::document( $paywall_config ) ); ?>"
-      sandbox
+      sandbox="allow-same-origin"
     ></iframe>
   </div>
 </div>

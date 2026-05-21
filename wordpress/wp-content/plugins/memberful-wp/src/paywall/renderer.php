@@ -102,11 +102,12 @@ class Memberful_Paywall_Renderer {
   /**
    * Render a paywall config to HTML.
    *
-   * @param array $config Config shape from Memberful_Paywall_Config::get().
+   * @param array $config      Config shape from Memberful_Paywall_Config::get().
+   * @param bool  $interactive Whether links should navigate when clicked.
    *
    * @return string
    */
-  public static function render( array $config ): string {
+  public static function render( array $config, bool $interactive = true ): string {
     $config = wp_parse_args( $config, Memberful_Paywall_Config::defaults() );
 
     $layout = in_array( $config['layout'], Memberful_Paywall_Config::LAYOUTS, true ) ? $config['layout'] : 'card';
@@ -116,7 +117,7 @@ class Memberful_Paywall_Renderer {
       '<div class="memberful-paywall memberful-paywall--%1$s" style="%2$s">%3$s</div>',
       esc_attr( $layout ),
       esc_attr( self::wrapper_style( $config ) ),
-      self::$method( $config )
+      self::$method( $config, $interactive )
     );
   }
 
@@ -127,8 +128,8 @@ class Memberful_Paywall_Renderer {
    *
    * @return string
    */
-  private static function render_inline( array $config ): string {
-    return '<div class="memberful-paywall__inner">' . self::render_inner( $config ) . '</div>';
+  private static function render_inline( array $config, bool $interactive ): string {
+    return '<div class="memberful-paywall__inner">' . self::render_inner( $config, $interactive ) . '</div>';
   }
 
   /**
@@ -138,11 +139,11 @@ class Memberful_Paywall_Renderer {
    *
    * @return string
    */
-  private static function render_card( array $config ): string {
+  private static function render_card( array $config, bool $interactive ): string {
     return '<div class="memberful-paywall__inner">'
            . '<div class="memberful-paywall__card">'
            . self::lock_badge()
-           . self::render_inner( $config )
+           . self::render_inner( $config, $interactive )
            . '</div>'
            . '</div>';
   }
@@ -154,12 +155,12 @@ class Memberful_Paywall_Renderer {
    *
    * @return string
    */
-  private static function render_inner( array $config ): string {
+  private static function render_inner( array $config, bool $interactive ): string {
     return self::heading_block( $config )
            . self::subheading_block( $config )
            . self::features_block( $config )
-           . '<div class="memberful-paywall__actions">' . self::primary_cta( $config ) . '</div>'
-           . self::sign_in_prompt( $config );
+           . '<div class="memberful-paywall__actions">' . self::primary_cta( $config, $interactive ) . '</div>'
+           . self::sign_in_prompt( $config, $interactive );
   }
 
   /**
@@ -221,7 +222,14 @@ class Memberful_Paywall_Renderer {
    *
    * @return string
    */
-  private static function primary_cta( array $config ): string {
+  private static function primary_cta( array $config, bool $interactive ): string {
+    if ( ! $interactive ) {
+      return sprintf(
+        '<span class="memberful-paywall__button memberful-paywall__button--primary" aria-disabled="true">%s</span>',
+        esc_html( $config['button_label'] )
+      );
+    }
+
     return sprintf(
       '<a class="memberful-paywall__button memberful-paywall__button--primary" href="%s">%s</a>',
       esc_url( self::subscribe_url( $config ) ),
@@ -236,7 +244,15 @@ class Memberful_Paywall_Renderer {
    *
    * @return string
    */
-  private static function sign_in_prompt( array $config ): string {
+  private static function sign_in_prompt( array $config, bool $interactive ): string {
+    if ( ! $interactive ) {
+      return sprintf(
+        '<p class="memberful-paywall__signin">%s <span class="memberful-paywall__signin-link" aria-disabled="true">%s</span></p>',
+        esc_html__( 'Already a subscriber?', 'memberful' ),
+        esc_html__( 'Sign in', 'memberful' )
+      );
+    }
+
     return sprintf(
       '<p class="memberful-paywall__signin">%s <a class="memberful-paywall__signin-link" href="%s">%s</a></p>',
       esc_html__( 'Already a subscriber?', 'memberful' ),
