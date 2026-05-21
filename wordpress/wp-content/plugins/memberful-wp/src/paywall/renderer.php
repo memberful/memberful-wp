@@ -82,6 +82,10 @@ class Memberful_Paywall_Renderer {
    * Render paywall styles.
    */
   public static function maybe_print_styles(): void {
+    if ( ! file_exists( MEMBERFUL_DIR . '/stylesheets/paywall.css' ) ) {
+      return;
+    }
+
     /**
      * Filter whether the bundled paywall stylesheet should be enqueued.
      *
@@ -95,7 +99,7 @@ class Memberful_Paywall_Renderer {
       'memberful-paywall',
       MEMBERFUL_URL . '/stylesheets/paywall.css',
       array(),
-      MEMBERFUL_VERSION
+      filemtime( MEMBERFUL_DIR . '/stylesheets/paywall.css' )
     );
   }
 

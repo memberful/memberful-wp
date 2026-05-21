@@ -113,11 +113,14 @@ function memberful_wp_menu() {
 
 function memberful_wp_admin_enqueue_scripts() {
   $screen = get_current_screen();
+  $admin_css_path = MEMBERFUL_DIR . '/stylesheets/admin.css';
 
   if ( strpos( 'memberful', $screen->id ) !== null ) {
     wp_enqueue_style(
       'memberful-admin',
-      plugins_url( 'stylesheets/admin.css' , dirname(__FILE__) )
+      plugins_url( 'stylesheets/admin.css' , dirname(__FILE__) ),
+      array(),
+      file_exists( $admin_css_path ) ? filemtime( $admin_css_path ) : MEMBERFUL_VERSION
     );
     wp_enqueue_script(
       'memberful-admin',
@@ -131,20 +134,21 @@ function memberful_wp_admin_enqueue_scripts() {
     'memberful_options' === filter_input( INPUT_GET, 'page' )
     && 'global_marketing' === filter_input( INPUT_GET, 'subpage' )
   ) {
-    wp_enqueue_style( 'wp-color-picker' );
+    $paywall_css_path = MEMBERFUL_DIR . '/stylesheets/paywall.css';
+    $paywall_builder_path = MEMBERFUL_DIR . '/js/build/paywall-builder.js';
 
     wp_enqueue_style(
       'memberful-paywall',
       MEMBERFUL_URL . '/stylesheets/paywall.css',
       array(),
-      MEMBERFUL_VERSION
+      file_exists( $paywall_css_path ) ? filemtime( $paywall_css_path ) : MEMBERFUL_VERSION
     );
 
     wp_enqueue_script(
       'memberful-paywall-builder',
       MEMBERFUL_URL . '/js/build/paywall-builder.js',
-      array( 'jquery', 'wp-color-picker' ),
-      MEMBERFUL_VERSION,
+      array('jquery'),
+      file_exists( $paywall_builder_path ) ? filemtime( $paywall_builder_path ) : MEMBERFUL_VERSION,
       true
     );
 

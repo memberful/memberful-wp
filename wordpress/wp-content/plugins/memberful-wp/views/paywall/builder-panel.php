@@ -141,22 +141,63 @@
           }
         }
       }
+      $brand_palette = array_values( array_unique( $brand_palette ) );
 
       if ( empty( $brand_palette ) ) {
         $brand_palette = array( '#2563eb', '#0f172a', '#dc2626', '#16a34a', '#9333ea', '#ea580c' );
       }
 
       $background_palette = array( '#ffffff', '#f5f5f4', '#0f172a' );
+
+      $brand_current       = sanitize_hex_color( (string) $paywall_config['brand_color'] );
+      $brand_lower         = $brand_current ? strtolower( $brand_current ) : '';
+      $brand_palette_lower = array_map( 'strtolower', $brand_palette );
+      $brand_is_preset     = '' !== $brand_lower && in_array( $brand_lower, $brand_palette_lower, true );
+      $brand_custom_value  = $brand_current ? $brand_current : $brand_palette[0];
+
+      $background_current       = sanitize_hex_color( (string) $paywall_config['background_color'] );
+      $background_lower         = $background_current ? strtolower( $background_current ) : '';
+      $background_palette_lower = array_map( 'strtolower', $background_palette );
+      $background_is_preset     = '' !== $background_lower && in_array( $background_lower, $background_palette_lower, true );
+      $background_custom_value  = $background_current ? $background_current : $background_palette[0];
       ?>
-      <div class="memberful-paywall-builder__field">
-        <label for="memberful-paywall-brand-color"><?php esc_html_e( 'Accent color', 'memberful' ); ?></label>
-        <input id="memberful-paywall-brand-color" type="text" class="memberful-paywall-builder__color" name="memberful_paywall[brand_color]" value="<?php echo esc_attr( $paywall_config['brand_color'] ); ?>" data-palettes="<?php echo esc_attr( wp_json_encode( $brand_palette ) ); ?>">
-      </div>
-      <div class="memberful-paywall-builder__field">
-        <label for="memberful-paywall-background-color"><?php esc_html_e( 'Background color', 'memberful' ); ?></label>
-        <input id="memberful-paywall-background-color" type="text" class="memberful-paywall-builder__color" name="memberful_paywall[background_color]" value="<?php echo esc_attr( $paywall_config['background_color'] ); ?>" data-palettes="<?php echo esc_attr( wp_json_encode( $background_palette ) ); ?>">
+      <fieldset class="memberful-paywall-builder__field memberful-paywall-builder__color-field" data-color-field>
+        <legend class="memberful-paywall-builder__color-label"><?php esc_html_e( 'Accent color', 'memberful' ); ?></legend>
+        <div class="memberful-paywall-builder__color-row">
+          <div class="memberful-paywall-builder__swatches" role="group" aria-label="<?php esc_attr_e( 'Accent color presets', 'memberful' ); ?>">
+            <?php foreach ( $brand_palette as $brand_hex ) : ?>
+              <?php $is_selected = '' !== $brand_lower && 0 === strcasecmp( $brand_hex, $brand_current ); ?>
+              <button type="button" class="memberful-paywall-builder__swatch<?php echo $is_selected ? ' is-selected' : ''; ?>" data-color="<?php echo esc_attr( $brand_hex ); ?>" aria-label="<?php echo esc_attr( $brand_hex ); ?>" aria-pressed="<?php echo $is_selected ? 'true' : 'false'; ?>" style="background-color: <?php echo esc_attr( $brand_hex ); ?>"></button>
+            <?php endforeach; ?>
+            <label class="memberful-paywall-builder__swatch memberful-paywall-builder__swatch--custom<?php echo ( '' !== $brand_lower && ! $brand_is_preset ) ? ' is-selected' : ''; ?>"<?php if ( '' !== $brand_lower && ! $brand_is_preset ) echo ' style="--memberful-custom-swatch-color: ' . esc_attr( $brand_current ) . '"'; ?>>
+              <span class="screen-reader-text"><?php esc_html_e( 'Custom accent color', 'memberful' ); ?></span>
+              <svg class="memberful-paywall-builder__swatch-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5v14"/></svg>
+              <input type="color" value="<?php echo esc_attr( $brand_custom_value ); ?>">
+            </label>
+          </div>
+          <button type="button" class="memberful-paywall-builder__color-reset"><?php esc_html_e( 'Reset', 'memberful' ); ?></button>
+        </div>
+        <input type="hidden" id="memberful-paywall-brand-color" class="memberful-paywall-builder__color-input" name="memberful_paywall[brand_color]" value="<?php echo esc_attr( $brand_current ); ?>">
+      </fieldset>
+      <fieldset class="memberful-paywall-builder__field memberful-paywall-builder__color-field" data-color-field>
+        <legend class="memberful-paywall-builder__color-label"><?php esc_html_e( 'Background color', 'memberful' ); ?></legend>
+        <div class="memberful-paywall-builder__color-row">
+          <div class="memberful-paywall-builder__swatches" role="group" aria-label="<?php esc_attr_e( 'Background color presets', 'memberful' ); ?>">
+            <?php foreach ( $background_palette as $background_hex ) : ?>
+              <?php $is_selected = '' !== $background_lower && 0 === strcasecmp( $background_hex, $background_current ); ?>
+              <button type="button" class="memberful-paywall-builder__swatch<?php echo $is_selected ? ' is-selected' : ''; ?>" data-color="<?php echo esc_attr( $background_hex ); ?>" aria-label="<?php echo esc_attr( $background_hex ); ?>" aria-pressed="<?php echo $is_selected ? 'true' : 'false'; ?>" style="background-color: <?php echo esc_attr( $background_hex ); ?>"></button>
+            <?php endforeach; ?>
+            <label class="memberful-paywall-builder__swatch memberful-paywall-builder__swatch--custom<?php echo ( '' !== $background_lower && ! $background_is_preset ) ? ' is-selected' : ''; ?>"<?php if ( '' !== $background_lower && ! $background_is_preset ) echo ' style="--memberful-custom-swatch-color: ' . esc_attr( $background_current ) . '"'; ?>>
+              <span class="screen-reader-text"><?php esc_html_e( 'Custom background color', 'memberful' ); ?></span>
+              <svg class="memberful-paywall-builder__swatch-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5v14"/></svg>
+              <input type="color" value="<?php echo esc_attr( $background_custom_value ); ?>">
+            </label>
+          </div>
+          <button type="button" class="memberful-paywall-builder__color-reset"><?php esc_html_e( 'Reset', 'memberful' ); ?></button>
+        </div>
+        <input type="hidden" id="memberful-paywall-background-color" class="memberful-paywall-builder__color-input" name="memberful_paywall[background_color]" value="<?php echo esc_attr( $background_current ); ?>">
         <span class="description"><?php esc_html_e( 'Text color adjusts automatically for contrast.', 'memberful' ); ?></span>
-      </div>
+      </fieldset>
 
       <details class="memberful-paywall-builder__advanced">
         <summary class="memberful-paywall-builder__advanced-summary">

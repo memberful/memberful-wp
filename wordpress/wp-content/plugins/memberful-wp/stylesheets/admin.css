@@ -467,7 +467,8 @@ Paywall Builder
 }
 .memberful-paywall-builder__customize label,
 .memberful-paywall-builder__benefits-label,
-.memberful-paywall-builder__button-shape-label {
+.memberful-paywall-builder__button-shape-label,
+.memberful-paywall-builder__color-label {
   color: #6b7280;
   display: block;
   font-size: 13px;
@@ -516,9 +517,105 @@ Paywall Builder
   min-width: 80px;
 }
 
-/* Accent + Background colours */
-.memberful-paywall-builder__field .wp-color-result.button {
+/* Accent + Background colors */
+.memberful-paywall-builder__color-field {
+  border: 0;
+  padding: 0;
+}
+.memberful-paywall-builder__color-label {
+  margin-bottom: 6px;
+  padding: 0;
+}
+.memberful-paywall-builder__color-row {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.memberful-paywall-builder__swatches {
+  align-items: center;
+  display: flex;
+  flex: 1 1 auto;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.memberful-paywall-builder__swatch {
+  align-items: center;
+  appearance: none;
+  background-color: transparent;
+  border: 2px solid #dcdcde;
+  border-radius: 50%;
+  box-sizing: border-box;
+  cursor: pointer;
+  display: inline-flex;
+  height: 28px;
+  justify-content: center;
   margin: 0;
+  padding: 0;
+  position: relative;
+  transition: border-color 120ms ease, transform 120ms ease;
+  width: 28px;
+}
+.memberful-paywall-builder__swatch:hover {
+  transform: scale(1.05);
+}
+.memberful-paywall-builder__swatch:focus-visible {
+  outline: 2px solid var(--wp-admin-theme-color);
+  outline-offset: 2px;
+}
+.memberful-paywall-builder__swatch.is-selected {
+  border-width: 4px;
+  border-color: var(--wp-admin-theme-color);
+  transform: scale(1.08);
+}
+.memberful-paywall-builder__customize label.memberful-paywall-builder__swatch--custom {
+  background: #fff;
+  border: 2px dashed #c3c4c7;
+  color: #646970;
+  display: inline-flex;
+  margin: 0;
+  text-transform: none;
+}
+.memberful-paywall-builder__swatch--custom:hover {
+  border-color: #1d2327;
+  color: #1d2327;
+}
+.memberful-paywall-builder__swatch--custom:focus-within {
+  outline: 2px solid var(--wp-admin-theme-color);
+  outline-offset: 2px;
+}
+.memberful-paywall-builder__customize label.memberful-paywall-builder__swatch--custom.is-selected {
+  background-color: var(--memberful-custom-swatch-color, #fff);
+  border-color: var(--wp-admin-theme-color);
+  border-style: solid;
+}
+.memberful-paywall-builder__swatch--custom.is-selected .memberful-paywall-builder__swatch-icon {
+  display: none;
+}
+.memberful-paywall-builder__swatch--custom input[type="color"] {
+  border: 0;
+  cursor: pointer;
+  height: 100%;
+  inset: 0;
+  opacity: 0;
+  padding: 0;
+  position: absolute;
+  width: 100%;
+}
+.memberful-paywall-builder__color-reset {
+  background: none;
+  border: 0;
+  color: var(--wp-admin-theme-color);
+  cursor: pointer;
+  font-weight: 500;
+  padding: 4px 0;
+}
+.memberful-paywall-builder__color-reset:hover {
+  color: var(--wp-admin-theme-color-darker-10);
+}
+.memberful-paywall-builder__color-reset:disabled {
+  color: #8c8f94;
+  cursor: default;
 }
 
 /* Button shape controls */
