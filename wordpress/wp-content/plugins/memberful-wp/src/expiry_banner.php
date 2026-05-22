@@ -154,7 +154,7 @@ function memberful_wp_enqueue_expiry_banner_script() {
  * @return array|null
  */
 function memberful_wp_get_soonest_expiring_subscription( $user_id ) {
-  $subscriptions = get_user_meta( $user_id, 'memberful_subscription', true );
+  $subscriptions = get_user_meta( $user_id, 'memberful_purchased_subscription', true );
 
   if ( empty( $subscriptions ) || ! is_array( $subscriptions ) ) {
     return null;
@@ -174,6 +174,17 @@ function memberful_wp_get_soonest_expiring_subscription( $user_id ) {
 
   $now = time();
   $threshold_timestamp = $now + ( $days_threshold * DAY_IN_SECONDS );
+
+  /**
+   * Filters how many days after expiry the banner stops showing an expired subscription.
+   *
+   * @param int $expired_cutoff_days The default cutoff in days. Return 0 to never stop showing.
+   *
+   * @return int The filtered cutoff in days.
+   */
+  $expired_cutoff_days = (int) apply_filters( 'memberful_expiry_banner_expired_cutoff_days', 14 );
+  $expired_cutoff_seconds = max( 0, $expired_cutoff_days ) * DAY_IN_SECONDS;
+
   $soonest = null;
   $expiring_subscriptions_count = 0;
   $expired_subscriptions_count = 0;
@@ -199,6 +210,10 @@ function memberful_wp_get_soonest_expiring_subscription( $user_id ) {
 
     $seconds_remaining = $expires_at - $now;
     $is_expired = $seconds_remaining < 0;
+
+    if ( $is_expired && $expired_cutoff_seconds > 0 && $expires_at < ( $now - $expired_cutoff_seconds ) ) {
+      continue;
+    }
 
     if ( ! $is_expired && memberful_wp_subscription_has_autorenew_enabled( $subscription ) ) {
       ++$active_subscriptions_count;

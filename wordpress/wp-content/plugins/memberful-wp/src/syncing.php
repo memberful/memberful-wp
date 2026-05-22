@@ -66,12 +66,15 @@ function memberful_wp_sync_user( $account, $mapping_context, $lock_timeout ) {
         Memberful_Wp_User_Downloads::sync($user->ID, array());
         Memberful_Wp_User_Feeds::sync($user->ID, array());
         Memberful_Wp_User_Subscriptions::sync($user->ID, array());
+        Memberful_Wp_User_Purchased_Subscriptions::sync($user->ID, array());
         Memberful_Wp_User_Role_Decision::ensure_user_role_is_correct( $user );
       }
     } else {
       Memberful_Wp_User_Downloads::sync($user->ID, $account->products);
       Memberful_Wp_User_Feeds::sync($user->ID, $account->feeds);
       Memberful_Wp_User_Subscriptions::sync($user->ID, $account->subscriptions);
+      $purchased_subscriptions = isset( $account->purchased_subscriptions ) ? $account->purchased_subscriptions : array();
+      Memberful_Wp_User_Purchased_Subscriptions::sync($user->ID, $purchased_subscriptions);
       Memberful_Wp_User_Role_Decision::ensure_user_role_is_correct( $user );
     }
     $wpdb->query( "COMMIT" );
