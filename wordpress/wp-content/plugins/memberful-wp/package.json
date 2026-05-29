@@ -1,6 +1,6 @@
 {
   "name": "memberful-wp",
-  "version": "1.78.0",
+  "version": "1.78.1",
   "description": "Better membership software for WordPress.",
   "main": "js/index.js",
   "scripts": {
