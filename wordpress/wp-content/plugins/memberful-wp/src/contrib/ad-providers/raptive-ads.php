@@ -44,7 +44,8 @@ class Memberful_Wp_Integration_Ad_Provider_Raptive extends Memberful_Wp_Integrat
   /**
    * Disable ads for the Raptive Ads provider.
    *
-   * Uses the adthrive-disable-all body class to disable ads.
+   * Uses the adthrive-disable-all body class to disable ads, plus
+   * adthrive-disable-video to disable video players.
    *
    * @see \AdThrive_Ads\Components\Ads\Main::body_class()
    *
@@ -53,6 +54,7 @@ class Memberful_Wp_Integration_Ad_Provider_Raptive extends Memberful_Wp_Integrat
    */
   public function disable_ads_body_class( $classes ) {
     $classes[] = 'adthrive-disable-all';
+    $classes[] = 'adthrive-disable-video';
     return $classes;
   }
 }
