@@ -1,5 +1,5 @@
 (() => {
-  const dismissStorageKey = "memberful_expiry_banner_dismissed";
+  const settings = window.memberful_expiry_banner || {};
   const hiddenClass = "memberful-expiry-banner--js-hidden";
   const visibleClass = "memberful-expiry-banner-visible";
   const banner = document.getElementById("memberful-expiry-banner");
@@ -26,43 +26,36 @@
     bumpStyle.textContent = `@media screen { html { margin-top: calc(var(--wp-admin--admin-bar--height, 0px) + ${height}px) !important; } }`;
   };
 
-  const isDismissed = () => {
-    if (!window.sessionStorage) {
-      return false;
-    }
+  const persistDismissal = () => {
+    const { ajaxUrl, nonce, signature } = settings;
 
-    try {
-      return window.sessionStorage.getItem(dismissStorageKey) === "1";
-    } catch (error) {
-      return false;
-    }
-  };
-
-  const markDismissed = () => {
-    if (!window.sessionStorage) {
+    if (!ajaxUrl || !nonce) {
       return;
     }
 
-    try {
-      window.sessionStorage.setItem(dismissStorageKey, "1");
-    } catch (error) {
-      // Ignore session storage write failures.
-    }
+    const body = new URLSearchParams({
+      action: "memberful_dismiss_expiry_banner",
+      memberful_nonce: nonce,
+      signature: signature || "",
+    });
+
+    fetch(ajaxUrl, {
+      method: "POST",
+      credentials: "same-origin",
+      body,
+    }).catch(() => {});
   };
 
-  if (isDismissed()) {
-    banner.classList.add(hiddenClass);
-  } else {
-    banner.classList.remove(hiddenClass);
-    const dismissButton = banner.querySelector(".memberful-expiry-banner__dismiss");
+  banner.classList.remove(hiddenClass);
 
-    if (dismissButton) {
-      dismissButton.addEventListener("click", () => {
-        markDismissed();
-        banner.classList.add(hiddenClass);
-        refreshOffset();
-      });
-    }
+  const dismissButton = banner.querySelector(".memberful-expiry-banner__dismiss");
+
+  if (dismissButton) {
+    dismissButton.addEventListener("click", () => {
+      banner.classList.add(hiddenClass);
+      refreshOffset();
+      persistDismissal();
+    });
   }
 
   window.addEventListener("resize", refreshOffset);

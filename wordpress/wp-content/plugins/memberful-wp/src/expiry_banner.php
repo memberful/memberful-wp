@@ -2,6 +2,7 @@
 
 add_action( 'wp_body_open', 'memberful_wp_render_expiry_banner' );
 add_action( 'wp_footer', 'memberful_wp_render_expiry_banner_fallback' );
+add_action( 'wp_ajax_memberful_dismiss_expiry_banner', 'memberful_wp_ajax_dismiss_expiry_banner' );
 
 /**
  * Renders the expiry banner in footer for themes without wp_body_open support.
@@ -53,6 +54,12 @@ function memberful_wp_render_expiry_banner() {
     return;
   }
 
+  $dismissal_signature = memberful_wp_expiry_banner_dismissal_signature( $expiry_data );
+
+  if ( memberful_wp_expiry_banner_is_dismissed( get_current_user_id(), $dismissal_signature ) ) {
+    return;
+  }
+
   $account_url = memberful_account_url();
   $message = memberful_wp_expiry_banner_message( $expiry_data, $account_url );
 
@@ -91,7 +98,7 @@ function memberful_wp_render_expiry_banner() {
   $aria_live = isset( $aria_attributes['live'] ) ? (string) $aria_attributes['live'] : 'polite';
 
   $has_rendered = true;
-  memberful_wp_enqueue_expiry_banner_script();
+  memberful_wp_enqueue_expiry_banner_script( $dismissal_signature );
 
   ob_start();
   memberful_wp_render(
@@ -118,9 +125,9 @@ function memberful_wp_render_expiry_banner() {
 /**
  * Enqueues the expiry banner script.
  *
- * @return void
+ * @param string $dismissal_signature Current banner dismissal signature.
  */
-function memberful_wp_enqueue_expiry_banner_script() {
+function memberful_wp_enqueue_expiry_banner_script( string $dismissal_signature ): void {
   static $is_enqueued = false;
 
   if ( $is_enqueued ) {
@@ -143,7 +150,91 @@ function memberful_wp_enqueue_expiry_banner_script() {
     true
   );
 
+  wp_localize_script(
+    'memberful-expiry-banner',
+    'memberful_expiry_banner',
+    array(
+      'ajaxUrl' => admin_url( 'admin-ajax.php' ),
+      'nonce' => wp_create_nonce( 'memberful_dismiss_expiry_banner' ),
+      'signature' => $dismissal_signature,
+    )
+  );
+
   $is_enqueued = true;
+}
+
+/**
+ * Builds a signature describing the dismissable state of the banner.
+ *
+ * @param array $expiry_data Expiry data from memberful_wp_get_soonest_expiring_subscription().
+ *
+ * @return string
+ */
+function memberful_wp_expiry_banner_dismissal_signature( array $expiry_data ): string {
+  $expires_at = isset( $expiry_data['expires_at'] ) ? (int) $expiry_data['expires_at'] : 0;
+  $state = empty( $expiry_data['is_expired'] ) ? 'expiring' : 'expired';
+
+  return $expires_at . ':' . $state;
+}
+
+/**
+ * Determines whether the current banner state has been dismissed by the user.
+ *
+ * @param int    $user_id   User ID.
+ * @param string $signature Current banner dismissal signature.
+ *
+ * @return bool
+ */
+function memberful_wp_expiry_banner_is_dismissed( int $user_id, string $signature ): bool {
+  $dismissed = get_user_meta( $user_id, 'memberful_expiry_banner_dismissed', true );
+
+  if ( ! is_array( $dismissed ) || empty( $dismissed['signature'] ) || $dismissed['signature'] !== $signature ) {
+    return false;
+  }
+
+  /**
+   * Filters how long, in seconds, an expiry banner dismissal persists.
+   *
+   * @param int $lifetime The dismissal lifetime in seconds. 0 means indefinite.
+   *
+   * @return int The filtered lifetime in seconds.
+   */
+  $lifetime = (int) apply_filters( 'memberful_expiry_banner_dismissal_lifetime', 0 );
+
+  if ( $lifetime <= 0 ) {
+    return true;
+  }
+
+  $dismissed_at = isset( $dismissed['dismissed_at'] ) ? (int) $dismissed['dismissed_at'] : 0;
+
+  return ( time() - $dismissed_at ) < $lifetime;
+}
+
+/**
+ * Persists an expiry banner dismissal for the current logged-in user.
+ */
+function memberful_wp_ajax_dismiss_expiry_banner(): void {
+  if ( ! memberful_wp_valid_nonce( 'memberful_dismiss_expiry_banner' ) ) {
+    wp_send_json_error( null, 403 );
+  }
+
+  $signature = filter_input( INPUT_POST, 'signature' );
+  $signature = is_string( $signature ) ? sanitize_text_field( $signature ) : '';
+
+  if ( '' === $signature ) {
+    wp_send_json_error( null, 400 );
+  }
+
+  update_user_meta(
+    get_current_user_id(),
+    'memberful_expiry_banner_dismissed',
+    array(
+      'signature' => $signature,
+      'dismissed_at' => time(),
+    )
+  );
+
+  wp_send_json_success();
 }
 
 /**
@@ -155,6 +246,10 @@ function memberful_wp_enqueue_expiry_banner_script() {
  */
 function memberful_wp_get_soonest_expiring_subscription( $user_id ) {
   $subscriptions = get_user_meta( $user_id, 'memberful_purchased_subscription', true );
+
+  if ( empty( $subscriptions ) || ! is_array( $subscriptions ) ) {
+    $subscriptions = get_user_meta( $user_id, 'memberful_subscription', true );
+  }
 
   if ( empty( $subscriptions ) || ! is_array( $subscriptions ) ) {
     return null;
