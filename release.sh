@@ -56,6 +56,11 @@ ask_for_release_confirmation() {
   fi
 }
 
+build_js() {
+  echo "Building plugin JS in $PLUGIN_DIR"
+  (cd "$PLUGIN_DIR" && npm ci && npm run build)
+}
+
 push_to_wordpress_svn() {
   echo "Creating local copy of SVN repo in $SVN_LOCAL_PATH"
   svn co $SVN_URL $SVN_LOCAL_PATH
@@ -124,6 +129,7 @@ ask_for_release_confirmation
 if [ "$1" == "--assets" ]; then
   push_assets_to_wordpress_svn
 else
+  build_js
   push_to_wordpress_svn
 fi
 
