@@ -29,3 +29,25 @@ class Memberful_Wp_User_Subscriptions extends Memberful_Wp_User_Entity {
     );
   }
 }
+
+/**
+ * Stores the member's full purchased-subscription history (active and expired).
+ */
+class Memberful_Wp_User_Purchased_Subscriptions extends Memberful_Wp_User_Subscriptions {
+
+  static public function sync( $user_id, $entities ) {
+    $syncer = new Memberful_Wp_User_Purchased_Subscriptions($user_id);
+    return $syncer->set($entities);
+  }
+
+  protected function entity_type() {
+    return 'purchased_subscription';
+  }
+
+  protected function format( $entity ) {
+    $data = parent::format($entity);
+    $data['id'] = $entity->id; // Key by the unique purchased-subscription id.
+
+    return $data;
+  }
+}
