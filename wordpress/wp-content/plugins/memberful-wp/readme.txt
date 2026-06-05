@@ -4,7 +4,7 @@ Tags: membership, subscriptions, paywall, stripe, recurring payments, memberful,
 Requires at least: 6.3
 Tested up to: 6.9.1
 Requires PHP: 7.4
-Stable tag: 1.79.0
+Stable tag: 1.80.0
 License: GPLv2 or later
 
 Sell memberships and restrict access to content with WordPress and Memberful.
@@ -112,7 +112,7 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 == Changelog ==
 
-= unreleased =
+= 1.80.0 =
 
 * Add an optional banner notifying members of expiring or expired memberships
 * Disable Raptive video players on mobile devices for members
