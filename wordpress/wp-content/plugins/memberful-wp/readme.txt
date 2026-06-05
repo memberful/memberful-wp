@@ -112,6 +112,10 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 == Changelog ==
 
+= unreleased =
+
+* Add an optional banner notifying members of expiring or expired memberships
+
 = 1.79.0 =
 
 * Add Paywall Divider block to mark where protected content starts
