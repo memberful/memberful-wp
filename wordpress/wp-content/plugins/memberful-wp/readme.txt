@@ -115,6 +115,7 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 = unreleased =
 
 * Add an optional banner notifying members of expiring or expired memberships
+* Disable Raptive video players on mobile devices for members
 
 = 1.79.0 =
 
