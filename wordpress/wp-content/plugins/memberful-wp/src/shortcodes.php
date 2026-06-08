@@ -62,7 +62,7 @@ function memberful_wp_shortcode_account_link( $atts, $content ) {
 }
 
 function memberful_wp_shortcode_subscriptions_link( $atts, $content ) {
-  return '<a href="'.memberful_subscriptions_url().'" role="subscriptions">'.do_shortcode($content).'</a>';
+  return '<a href="'.esc_url(memberful_subscriptions_url()).'" role="subscriptions">'.do_shortcode($content).'</a>';
 }
 
 function memberful_wp_shortcode_feeds_link( $atts, $content ) {
