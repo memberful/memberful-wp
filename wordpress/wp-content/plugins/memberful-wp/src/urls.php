@@ -25,6 +25,10 @@ function memberful_account_url( $format = MEMBERFUL_HTML ) {
   return memberful_url( 'account', $format );
 }
 
+function memberful_subscriptions_url( $format = MEMBERFUL_HTML ) {
+  return memberful_url( 'account/subscriptions', $format );
+}
+
 function memberful_registration_page_url() {
   return memberful_url( 'register' );
 }
