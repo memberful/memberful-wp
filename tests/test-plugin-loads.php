@@ -6,9 +6,9 @@
  */
 
 /**
- * Class PluginLoadsTest
+ * Class Tests_Plugin_Loads
  */
-class PluginLoadsTest extends WP_UnitTestCase {
+class Tests_Plugin_Loads extends WP_UnitTestCase {
 
   public function test_plugin_version_constant_is_defined() {
     $this->assertTrue( defined( 'MEMBERFUL_VERSION' ) );

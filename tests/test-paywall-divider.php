@@ -6,9 +6,9 @@
  */
 
 /**
- * Class PaywallDividerTest
+ * Class Tests_Paywall_Divider
  */
-class PaywallDividerTest extends WP_UnitTestCase {
+class Tests_Paywall_Divider extends WP_UnitTestCase {
 
   public function test_splits_content_at_divider_marker() {
     $marker = memberful_wp_get_paywall_divider_marker();

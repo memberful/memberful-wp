@@ -7,9 +7,9 @@
  */
 
 /**
- *  Class VersionSyncTest
+ *  Class Tests_Version_Sync
  */
-class VersionSyncTest extends WP_UnitTestCase {
+class Tests_Version_Sync extends WP_UnitTestCase {
 
   public function test_version_matches_across_header_constant_and_readme() {
     $root        = dirname( __DIR__ );

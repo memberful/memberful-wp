@@ -6,9 +6,9 @@
  */
 
 /**
- * Class ShortcodeArgsTest
+ * Class Tests_Shortcode_Args
  */
-class ShortcodeArgsTest extends WP_UnitTestCase {
+class Tests_Shortcode_Args extends WP_UnitTestCase {
 
   public function test_extract_id_from_slug_with_name() {
     $this->assertSame( 123, memberful_wp_extract_id_from_slug( '123-some-plan' ) );
