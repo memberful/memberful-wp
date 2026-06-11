@@ -10,6 +10,10 @@ node_modules/
 /vendor/*
 !/vendor/reporting.php
 
+composer.lock
+.phpunit.result.cache
+.phpunit.cache
+
 # Claude Code - https://code.claude.com/docs/en/settings
 .claude/settings.local.json
 .claude/worktrees

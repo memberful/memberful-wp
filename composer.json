@@ -1,0 +1,17 @@
+{
+  "name": "memberful/memberful-wp",
+  "description": "Sell memberships and restrict access to content with WordPress and Memberful.",
+  "type": "wordpress-plugin",
+  "license": "GPL-2.0-or-later",
+  "require": {
+    "php": ">=7.4"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^9.6",
+    "yoast/phpunit-polyfills": "^4.0",
+    "wp-phpunit/wp-phpunit": "^6.3 || ^7.0"
+  },
+  "scripts": {
+    "test": "phpunit"
+  }
+}
