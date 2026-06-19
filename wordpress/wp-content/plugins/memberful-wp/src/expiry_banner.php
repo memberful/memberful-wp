@@ -60,8 +60,8 @@ function memberful_wp_render_expiry_banner() {
     return;
   }
 
-  $account_url = memberful_account_url();
-  $message = memberful_wp_expiry_banner_message( $expiry_data, $account_url );
+  $renew_url = memberful_subscriptions_url();
+  $message = memberful_wp_expiry_banner_message( $expiry_data, $renew_url );
 
   /**
    * Filters the rendered expiry banner message.
@@ -360,14 +360,14 @@ function memberful_wp_get_soonest_expiring_subscription( $user_id ) {
  * Builds the user-facing banner message.
  *
  * @param array  $expiry_data Expiry information array.
- * @param string $account_url Memberful account URL.
+ * @param string $renew_url   Renewal link URL (the subscriptions section of the member's account).
  *
  * @return string
  */
-function memberful_wp_expiry_banner_message( array $expiry_data, $account_url ) {
+function memberful_wp_expiry_banner_message( array $expiry_data, $renew_url ) {
   $link = wp_sprintf(
     '<a href="%s">%s</a>',
-    esc_url( $account_url ),
+    esc_url( $renew_url ),
     esc_html__( 'Renew now', 'memberful' )
   );
   $expiring_subscriptions_count = max( 1, (int) ( $expiry_data['expiring_subscriptions_count'] ?? 1 ) );
