@@ -1,0 +1,6 @@
+if [ ! -f vendor/bin/phpcs-changed ]; then
+  echo "memberful-wp: vendor/bin/phpcs-changed not found — run 'composer install' to enable PHP pre-commit linting. Skipping."
+  exit 0
+fi
+
+npx lint-staged

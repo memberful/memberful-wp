@@ -14,7 +14,8 @@
     "env:update": "wp-env start --update",
     "env:cli": "wp-env run cli wp",
     "env:logs": "wp-env logs",
-    "env:status": "wp-env status"
+    "env:status": "wp-env status",
+    "prepare": "husky"
   },
   "repository": {
     "type": "git",
@@ -31,8 +32,13 @@
     "url": "https://github.com/memberful/memberful-wp/issues"
   },
   "homepage": "https://github.com/memberful/memberful-wp#readme",
+  "lint-staged": {
+    "*.php": "vendor/bin/phpcs-changed --git --standard phpcs.xml -s --warning-severity 0"
+  },
   "devDependencies": {
     "@wordpress/env": "^10.39.0",
-    "@wordpress/scripts": "^34.0.0"
+    "@wordpress/scripts": "^31.3.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.5.2"
   }
 }
