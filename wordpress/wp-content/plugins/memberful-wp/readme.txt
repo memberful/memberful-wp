@@ -112,6 +112,10 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 == Changelog ==
 
+= unreleased =
+
+* Add the `memberful_subscriptions_link` shortcode for linking to the subscriptions page
+
 = 1.80.0 =
 
 * Add an optional banner notifying members of expiring or expired memberships
