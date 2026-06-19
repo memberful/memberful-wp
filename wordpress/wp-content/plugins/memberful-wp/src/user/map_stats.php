@@ -21,8 +21,7 @@ class Memberful_User_Map_Stats {
 
     return $wpdb->get_var(
       'SELECT COUNT(DISTINCT `mapping`.`wp_user_id`) FROM '.$this->table.' AS `mapping` '.
-      'INNER JOIN '.$wpdb->users.' AS `users` ON `users`.`ID` = `mapping`.`wp_user_id` '.
-      'WHERE `mapping`.`wp_user_id` > 0'
+      'INNER JOIN '.$wpdb->users.' AS `users` ON `users`.`ID` = `mapping`.`wp_user_id`'
     );
   }
 }
