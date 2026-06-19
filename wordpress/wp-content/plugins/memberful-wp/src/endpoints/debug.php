@@ -26,7 +26,7 @@ class Memberful_Wp_Endpoint_Debug implements Memberful_Wp_Endpoint {
 
   public function process() {
     ob_start();
-    memberful_wp_debug();
+    memberful_wp_debug( TRUE );
     print html_entity_decode( strip_tags( ob_get_clean() ), ENT_QUOTES );
     exit;
   }
