@@ -59,8 +59,7 @@ class Memberful_Paywall_Preview {
 		$links .= self::global_styles();
 		$links .= sprintf( '<link rel="stylesheet" href="%s">', esc_url( $paywall_css ) );
 
-		$layout       = ( isset( $config['layout'] ) && in_array( $config['layout'], Memberful_Paywall_Config::LAYOUTS, true ) ) ? $config['layout'] : 'card';
-		$teaser_class = 'memberful-global-teaser-content memberful-global-teaser-content--memberful-' . $layout;
+		$teaser_class = 'memberful-global-teaser-content';
 		$teaser       = sprintf(
 			'<div class="%1$s" aria-hidden="true"><p>%2$s</p></div>',
 			esc_attr( $teaser_class ),

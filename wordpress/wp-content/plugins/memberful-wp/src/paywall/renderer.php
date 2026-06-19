@@ -26,25 +26,7 @@ class Memberful_Paywall_Renderer {
   public static function register(): void {
     add_filter( 'memberful_wp_protect_content', array( __CLASS__, 'protect_content' ) );
     add_action( 'wp_footer', array( __CLASS__, 'maybe_print_styles' ) );
-    add_filter( 'memberful_global_teaser_class', array( __CLASS__, 'filter_teaser_class' ) );
     add_filter( 'memberful_teaser_css', array( __CLASS__, 'filter_teaser_css' ) );
-  }
-
-  /**
-   * Append a layout modifier to the teaser wrapper class when the builder paywall is active.
-   *
-   * @param string $classes Default teaser wrapper class list.
-   *
-   * @return string
-   */
-  public static function filter_teaser_class( string $classes ): string {
-    if ( ! self::is_builder_mode() ) {
-      return $classes;
-    }
-
-    $config = Memberful_Paywall_Config::get();
-
-    return $classes . ' memberful-global-teaser-content--memberful-' . $config['layout'];
   }
 
   /**
@@ -160,10 +142,13 @@ class Memberful_Paywall_Renderer {
    * @return string
    */
   private static function render_inner( array $config, bool $interactive ): string {
+    $cta     = self::primary_cta( $config, $interactive );
+    $actions = '' === $cta ? '' : '<div class="memberful-paywall__actions">' . $cta . '</div>';
+
     return self::heading_block( $config )
            . self::subheading_block( $config )
            . self::features_block( $config )
-           . '<div class="memberful-paywall__actions">' . self::primary_cta( $config, $interactive ) . '</div>'
+           . $actions
            . self::sign_in_prompt( $config, $interactive );
   }
 
@@ -220,13 +205,19 @@ class Memberful_Paywall_Renderer {
   }
 
   /**
-   * Primary subscribe CTA anchor.
+   * Primary subscribe CTA, or empty when there is no usable destination.
    *
    * @param array $config Sanitized config.
    *
    * @return string
    */
   private static function primary_cta( array $config, bool $interactive ): string {
+    $url = self::subscribe_url( $config );
+
+    if ( '' === $url ) {
+      return '';
+    }
+
     if ( ! $interactive ) {
       return sprintf(
         '<span class="memberful-paywall__button memberful-paywall__button--primary" aria-disabled="true">%s</span>',
@@ -236,7 +227,7 @@ class Memberful_Paywall_Renderer {
 
     return sprintf(
       '<a class="memberful-paywall__button memberful-paywall__button--primary" href="%s">%s</a>',
-      esc_url( self::subscribe_url( $config ) ),
+      esc_url( $url ),
       esc_html( $config['button_label'] )
     );
   }
@@ -322,14 +313,20 @@ class Memberful_Paywall_Renderer {
   }
 
   /**
-   * Resolve the subscribe URL, falling back to the Memberful registration page.
+   * Resolve the subscribe URL, falling back to the Memberful registration page when it resolves to an absolute URL.
    *
    * @param array $config Sanitized config.
    *
    * @return string
    */
   private static function subscribe_url( array $config ): string {
-    return ! empty( $config['subscribe_url'] ) ? $config['subscribe_url'] : memberful_registration_page_url();
+    if ( ! empty( $config['subscribe_url'] ) ) {
+      return $config['subscribe_url'];
+    }
+
+    $registration_url = memberful_registration_page_url();
+
+    return wp_parse_url( $registration_url, PHP_URL_HOST ) ? $registration_url : '';
   }
 
   /**
