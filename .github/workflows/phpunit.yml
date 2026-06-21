@@ -44,7 +44,7 @@ jobs:
     env:
       WP_INSTALL_TESTS_SKIP_UPDATE_CHECK: 'true'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
@@ -55,7 +55,7 @@ jobs:
           tools: composer
 
       - name: Install Composer dependencies
-        uses: ramsey/composer-install@v3
+        uses: ramsey/composer-install@v4
         with:
           dependency-versions: highest
 
