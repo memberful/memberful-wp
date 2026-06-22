@@ -95,11 +95,11 @@ const MemberfulVisibilityControlsOptions = (props) => {
           { value: "none", label: __("All users (Default)", "memberful") },
           {
             value: "logged_in",
-            label: __("All logged-in members", "memberful"),
+            label: __("All members (active, inactive, or free)", "memberful"),
           },
           {
             value: "specific",
-            label: __("Specific membership plan", "memberful"),
+            label: __("Members with an active subscription", "memberful"),
           },
         ]}
       />
@@ -149,7 +149,7 @@ const MemberfulVisibilityControls = createHigherOrderComponent((BlockEdit) => {
         {props.isSelected && !excludedBlocks.includes(props.name) && (
           <InspectorControls>
             <PanelBody
-              title={__("Memberful Visibility", "memberful")}
+              title={__("Memberful: Restrict Access", "memberful")}
               initialOpen={false}
             >
               {MemberfulVisibilityControlsOptions(props)}
