@@ -77,53 +77,33 @@ segment is a separate number. i.e. `1.12.0` > `1.11.0`.
 
 ## Releasing a new version of the plugin
 
+Releases are published to WordPress.org automatically by the **Deploy to WordPress.org** GitHub Actions workflow (`.github/workflows/deploy.yml`) whenever a GitHub release is published.
+
 ### Prerequisites
 
-Make sure you're added as a committer in WordPress.
-
-The release script retrieves the WordPress committer username from the `svn` server config file.
-
-To setup, enter `~/.subversion/servers` and add a group with a URL match for WP's server URL, as well as your WP username, like so:
-
-```
-[groups]
-
-memberful-wp = plugins.svn.wordpress.org
-
-[memberful-wp]
-
-username = YOUR_WP_COMMITTER_USERNAME
-```
-
-Any `svn` actions to `plugins.svn.wordpress.org` that require authentication will then use the username from the config file.
+Deployment authenticates to the WordPress.org SVN repository with the `SVN_USERNAME` and `SVN_PASSWORD` repository secrets. These belong to a user with commit access to the plugin on WordPress.org and are configured once under **Settings → Secrets and variables → Actions**. No local SVN setup is required.
 
 ### Release steps
 
 * Make sure that every change has an appropriate changelog entry in `readme.txt`.
 * Set correct version number in `readme.txt` and `memberful-wp.php`.
 * Ensure that all changes are ready in the `main` branch.
-* Run `npm install && npm run build` from the repository root to build plugin assets.
-* Run `./release.sh`.
-* A copy of the wordpress.org svn repo will be downloaded into `/tmp`, the
-  version you tagged will be copied across to the `tags` and `trunk`
-  directories, (sans development files) and then committed to the svn repo,
-  causing wordpress.org to release a new version.
-* The script will remove the `svn` directory.
+* Create a new GitHub release from `main` with a tag that matches the `Stable tag`, e.g. `1.16.0`.
 
-### Updating WordPress SVN without a new plugin version
+Publishing the release triggers the **Deploy to WordPress.org** workflow (`.github/workflows/deploy.yml`), which:
 
-From time to time we need to update WordPress SVN without releasing a new plugin
-version. For example we need to do this after updating "Tested up to" in
-`readme.txt`. To do this simply follow the release instructions above without
-updating the plugin version.
+* verifies the release tag matches the `Stable tag` in `readme.txt`,
+* builds the production assets (`npm install && npm run build`),
+* commits the plugin to the WordPress.org SVN `trunk` and tags the new version, causing WordPress.org to release the update, and
+* attaches the generated plugin zip to the GitHub release.
+
+### Building a release zip manually
+
+To produce an installable plugin zip without publishing to WordPress.org (for testing, or to distribute a build from any branch) run the **Build release zip** workflow (`.github/workflows/build-zip.yml`) from the Actions tab via **Run workflow**. The zip is uploaded as a workflow artifact (retained for 5 days).
 
 ### Updating assets for the WordPress plugin page
 
-Very occasionally we may need to update the assets for the WordPress plugin. This
-includes the banner image, the icon, and the screenshots. To do this:
-
-* Update the assets in the `.wordpress-org` directory.
-* Run `./release.sh --assets`.
+The banner image, icon, and screenshots live in the `.wordpress-org` directory. The deploy workflow pushes this directory to the WordPress.org SVN `assets` directory automatically on each release. To update them, commit the new files in `.wordpress-org` and they ship with the next release. The same applies to `readme.txt`-only changes such as bumping "Tested up to".
 
 ## Rolling back
 

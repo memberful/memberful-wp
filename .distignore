@@ -42,7 +42,6 @@
 /README.md
 /SECURITY.md
 /CONTRIBUTING.md
-/release.sh
 
 # wp.org banners/icons/screenshots — deployed to the SVN /assets dir automatically
 # by the action, so they must not also ship inside the plugin trunk.

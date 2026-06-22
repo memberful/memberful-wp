@@ -33,11 +33,11 @@ Validate changes in the local `wp-env` environment, then smoke-test the affected
 ## Commit & Pull Request Guidelines
 
 Recent history favors short, imperative commit subjects such as `Fix PHP 8.3 deprecation notice` or `Add filter comment`. Keep commits focused and avoid mixing release prep with feature work. Pull requests should describe the behavior change, link the relevant issue, note any manual test coverage, and include screenshots for admin-facing UI changes. If a change affects plugin behavior or release notes, update `readme.txt`.
-Do not run `./release.sh` as part of normal contributor or agent work unless a maintainer explicitly asks for a release.
+Releases are published by the **Deploy to WordPress.org** GitHub Actions workflow when a GitHub release is created; do not cut a release (or otherwise trigger the deploy) as part of normal contributor or agent work unless a maintainer explicitly asks for one.
 
 ## Versioning
 
-The plugin version must match in three places: the `Stable tag` field in `readme.txt`, the `Version` header in `memberful-wp.php`, and the `MEMBERFUL_VERSION` constant in the same file. `release.sh` validates this before publishing. During feature development, use `= unreleased =` as the changelog heading in `readme.txt`. When a release is cut, that heading is replaced with the actual version number and all three locations are updated together. Do not bump the version unless explicitly asked.
+The plugin version must match in three places: the `Stable tag` field in `readme.txt`, the `Version` header in `memberful-wp.php`, and the `MEMBERFUL_VERSION` constant in the same file. The deploy workflow verifies the release tag matches the `Stable tag` before publishing to WordPress.org. During feature development, use `= unreleased =` as the changelog heading in `readme.txt`. When a release is cut, that heading is replaced with the actual version number and all three locations are updated together. Do not bump the version unless explicitly asked.
 
 ### Changelog updates before a version bump
 
