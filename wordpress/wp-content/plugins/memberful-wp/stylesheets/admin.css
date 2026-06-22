@@ -483,6 +483,10 @@ Paywall Builder
   max-width: 100%;
   width: 100%;
 }
+.memberful-paywall-builder__customize input[type="url"]::placeholder {
+  color: #a8a29e;
+  opacity: 1;
+}
 .memberful-paywall-builder__customize .description {
   color: #646970;
   display: block;
@@ -710,31 +714,6 @@ Paywall Builder
 }
 .memberful-paywall-builder__benefit-add:hover {
   color: var(--wp-admin-theme-color-darker-10);
-}
-
-/* Advanced settings */
-.memberful-paywall-builder__advanced {
-  border-top: 1px solid var(--wp-editor-canvas-background);
-  margin-top: 1.5rem;
-  padding-top: 1rem;
-}
-.memberful-paywall-builder__advanced-summary {
-  align-items: center;
-  cursor: pointer;
-  display: flex;
-  font-weight: 600;
-  justify-content: space-between;
-  margin-bottom: 1rem;
-}
-.memberful-paywall-builder__advanced-summary::-webkit-details-marker {
-  display: none;
-}
-.memberful-paywall-builder__advanced-chevron {
-  color: #646970;
-  transition: transform 150ms ease;
-}
-.memberful-paywall-builder__advanced[open] .memberful-paywall-builder__advanced-chevron {
-  transform: rotate(180deg);
 }
 
 .memberful-paywall-builder__preview-frame {
