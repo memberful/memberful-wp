@@ -25,7 +25,7 @@
 # Tests, build sources and scripts (js/build IS shipped; js/src is not)
 /tests
 /bin
-/js/src
+/js/src/blocks
 
 # Composer / npm manifests
 /composer.json
