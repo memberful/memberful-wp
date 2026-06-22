@@ -1,4 +1,5 @@
 import {
+  __experimentalSpacer as Spacer,
   ToggleControl,
   SelectControl,
   CheckboxControl,
@@ -123,9 +124,11 @@ const MemberfulVisibilityControlsOptions = (props) => {
             />
           ))}
           {memberful_visibility_plans.length === 0 && (
-            <Notice status="error" isDismissible={false}>
-              {__("Please select at least one plan.", "memberful")}
-            </Notice>
+            <Spacer marginBottom={3}>
+              <Notice status="error" isDismissible={false}>
+                {__("Please select at least one plan.", "memberful")}
+              </Notice>
+            </Spacer>
           )}
         </>
       )}
