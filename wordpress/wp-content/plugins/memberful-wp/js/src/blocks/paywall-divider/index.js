@@ -14,7 +14,7 @@ registerBlockType(metadata.name, {
         {...blockProps}
         style={{
           borderTop: "2px dashed currentColor",
-          margin: "16px 0",
+          margin: "16px auto",
           paddingTop: "8px",
           opacity: 0.6,
         }}
