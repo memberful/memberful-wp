@@ -199,12 +199,6 @@
         <span class="description"><?php esc_html_e( 'Text color adjusts automatically for contrast.', 'memberful' ); ?></span>
       </fieldset>
 
-      <?php if ( empty( $paywall_config['subscribe_url'] ) ) : ?>
-        <div class="notice notice-warning inline">
-          <p><?php esc_html_e( 'With no Subscribe URL set, the Subscribe button links to your Memberful registration page, which only works if free registration is enabled. To send visitors to a checkout or pricing page instead, set a Subscribe URL below.', 'memberful' ); ?></p>
-        </div>
-      <?php endif; ?>
-
       <p class="memberful-paywall-builder__field">
         <label for="memberful-paywall-subscribe-url"><?php esc_html_e( 'Subscribe URL', 'memberful' ); ?></label>
         <input id="memberful-paywall-subscribe-url" type="url" name="memberful_paywall[subscribe_url]" value="<?php echo esc_attr( $paywall_config['subscribe_url'] ); ?>" placeholder="<?php echo esc_attr( memberful_registration_page_url() ); ?>">

@@ -104,7 +104,9 @@
 
 .memberful-paywall__button--primary:hover,
 .memberful-paywall__button--primary:focus {
+	background: var(--memberful-brand) !important;
 	filter: brightness(0.92);
+	text-decoration: none !important;
 }
 
 .memberful-paywall__signin {
