@@ -8,30 +8,20 @@ class Memberful_User_Map_Stats {
     $this->table = $table_name;
   }
 
-  public function unmapped_users() {
-    global $wpdb;
-
-    $query = 'SELECT `mapping`.`wp_user_id` FROM '.$this->table.' AS `mapping`';
-
-    $mapped_users = array_filter( $wpdb->get_col($query) );
-
-    $query = 'SELECT users.* FROM '.$wpdb->users.' AS `users`';
-
-    if( !empty( $mapped_users ) )
-      $query .= ' WHERE ID NOT IN('.implode(',', $mapped_users).')';
-
-    return $wpdb->get_results($query);
-  }
-
   public function count_mapping_records() {
     global $wpdb;
 
     return $wpdb->get_var('SELECT COUNT(*) FROM '.$this->table);
   }
 
-  public function mapping_records() {
+  // Joins against wp_users (and counts distinct ids) so orphaned and duplicate
+  // mappings don't inflate the figure beyond the number of real mapped users.
+  public function count_mapped_users() {
     global $wpdb;
 
-    return $wpdb->get_results('SELECT * FROM '.$this->table);
+    return $wpdb->get_var(
+      'SELECT COUNT(DISTINCT `mapping`.`wp_user_id`) FROM '.$this->table.' AS `mapping` '.
+      'INNER JOIN '.$wpdb->users.' AS `users` ON `users`.`ID` = `mapping`.`wp_user_id`'
+    );
   }
 }

@@ -115,6 +115,7 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 = unreleased =
 
 * Add the `memberful_subscriptions_link` shortcode for linking to the subscriptions page
+* Improve the debug tool
 
 = 1.80.0 =
 

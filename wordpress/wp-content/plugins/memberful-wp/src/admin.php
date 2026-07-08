@@ -190,7 +190,25 @@ function _memberful_wp_debug_all_post_meta() {
   return $meta;
 }
 
-function memberful_wp_debug() {
+function memberful_wp_mask_secret( $value ) {
+  $value = (string) $value;
+
+  return $value === '' ? '' : '****'.substr( $value, -4 );
+}
+
+function memberful_wp_redact_secrets( $data, array $search, array $replace ) {
+  if ( empty( $search ) )
+    return $data;
+
+  if ( is_array( $data ) )
+    return array_map( function ( $item ) use ( $search, $replace ) {
+      return memberful_wp_redact_secrets( $item, $search, $replace );
+    }, $data );
+
+  return is_string( $data ) ? str_replace( $search, $replace, $data ) : $data;
+}
+
+function memberful_wp_debug( $is_endpoint = FALSE ) {
   global $wp_version;
 
   if ( ! function_exists( 'get_plugins' ) ) {
@@ -200,13 +218,11 @@ function memberful_wp_debug() {
   $mapping_stats = new Memberful_User_Map_Stats(Memberful_User_Mapping_Repository::table());
   $counts = count_users();
 
-  $mapping_records       = $mapping_stats->mapping_records();
   $total_mapping_records = $mapping_stats->count_mapping_records();
-  $unmapped_users        = $mapping_stats->unmapped_users();
+  $total_mapped_users    = $mapping_stats->count_mapped_users();
 
   $total_users           = $counts['total_users'];
-  $total_unmapped_users  = count($unmapped_users);
-  $total_mapped_users    = $total_users - $total_unmapped_users;
+  $total_unmapped_users  = max( 0, $total_users - $total_mapped_users );
   $config                = memberful_wp_option_values();
   $acl_for_all_posts     = _memberful_wp_debug_all_post_meta();
   $plugins               = get_plugins();
@@ -214,24 +230,163 @@ function memberful_wp_debug() {
 
   unset( $config['memberful_error_log'] );
 
+  // Connection credentials are shown masked to their last four characters, both
+  // in the config and in the error log, where they appear inside request URLs.
+  $secrets = array();
+  $masks   = array();
+  foreach ( memberful_wp_connection_options() as $option ) {
+    if ( empty( $config[$option] ) )
+      continue;
+
+    $secrets[]       = $config[$option];
+    $masks[]         = memberful_wp_mask_secret( $config[$option] );
+    $config[$option] = memberful_wp_mask_secret( $config[$option] );
+  }
+
+  $error_log = memberful_wp_redact_secrets( $error_log, $secrets, $masks );
+
+  $lookup_inputs = array(
+    'email'      => isset( $_GET['member_email'] ) ? trim( $_GET['member_email'] ) : '',
+    'member_id'  => isset( $_GET['member_id'] ) ? intval( $_GET['member_id'] ) : 0,
+    'wp_user_id' => isset( $_GET['wp_user_id'] ) ? intval( $_GET['wp_user_id'] ) : 0,
+  );
+
+  $lookup = NULL;
+
+  if ( $lookup_inputs['email'] !== '' || $lookup_inputs['member_id'] > 0 || $lookup_inputs['wp_user_id'] > 0 ) {
+    $lookup = memberful_wp_debug_lookup(
+      $lookup_inputs['email'],
+      $lookup_inputs['member_id'],
+      $lookup_inputs['wp_user_id']
+    );
+  }
+
   memberful_wp_render(
     'debug',
     compact(
-      'unmapped_users',
       'total_users',
       'total_unmapped_users',
       'total_mapped_users',
       'total_mapping_records',
-      'mapping_records',
       'config',
       'acl_for_all_posts',
       'wp_version',
       'plugins',
-      'error_log'
+      'error_log',
+      'lookup_inputs',
+      'lookup',
+      'is_endpoint'
     )
   );
 }
 
+/**
+ * Resolves each supplied identifier (email, member_id, wp_user_id) independently
+ * into a "subject" describing a WP user and/or mapping row.
+ */
+function memberful_wp_debug_lookup( $email, $member_id, $wp_user_id ) {
+  $subjects = array();
+
+  if ( $email !== '' ) {
+    $users = get_users( array( 'search' => $email, 'search_columns' => array( 'user_email' ) ) );
+
+    if ( empty( $users ) ) {
+      $subjects[] = array( 'source' => "email: $email", 'flags' => array( 'No WP account with this email' ) );
+    } else {
+      $duplicate = count( $users ) > 1;
+
+      foreach ( $users as $user ) {
+        $subject = _memberful_wp_debug_subject_for_user( $user );
+        $subject['source'] = "email: $email";
+
+        if ( $duplicate )
+          $subject['flags'][] = 'Duplicate accounts share this email ('.count( $users ).')';
+
+        $subjects[] = $subject;
+      }
+    }
+  }
+
+  if ( $wp_user_id > 0 ) {
+    $user    = get_user_by( 'id', $wp_user_id );
+    $mapping = Memberful_User_Mapping_Repository::find_by_wp_user_id( $wp_user_id );
+
+    if ( $user ) {
+      $subject = _memberful_wp_debug_subject_for_user( $user, $mapping );
+    } elseif ( $mapping ) {
+      $subject = _memberful_wp_debug_subject_for_mapping( $mapping );
+    } else {
+      $subject = array( 'flags' => array( 'No WP user and no mapping for this ID' ) );
+    }
+
+    $subject['source'] = "wp_user_id: $wp_user_id";
+    $subjects[] = $subject;
+  }
+
+  if ( $member_id > 0 ) {
+    $mapping = Memberful_User_Mapping_Repository::find_by_member_id( $member_id );
+
+    if ( ! $mapping ) {
+      $subject = array( 'flags' => array( 'Member unknown locally (no mapping row)' ) );
+    } else {
+      $subject = _memberful_wp_debug_subject_for_mapping( $mapping );
+    }
+
+    $subject['source'] = "member_id: $member_id";
+    $subjects[] = $subject;
+  }
+
+  return $subjects;
+}
+
+function _memberful_wp_debug_subject_for_mapping( $mapping ) {
+  $user = ( $mapping->wp_user_id > 0 ) ? get_user_by( 'id', $mapping->wp_user_id ) : FALSE;
+
+  if ( $user )
+    return _memberful_wp_debug_subject_for_user( $user, $mapping );
+
+  $subject = _memberful_wp_debug_mapping_details( $mapping );
+
+  if ( empty( $mapping->wp_user_id ) )
+    $subject['flags'][] = 'Member not mapped to any WP user';
+  else
+    $subject['flags'][] = 'Orphaned mapping: WP user '.$mapping->wp_user_id.' no longer exists';
+
+  return $subject;
+}
+
+function _memberful_wp_debug_subject_for_user( $user, $mapping = NULL ) {
+  if ( $mapping === NULL )
+    $mapping = Memberful_User_Mapping_Repository::find_by_wp_user_id( $user->ID );
+
+  $subject = array(
+    'wp_user_id'   => $user->ID,
+    'user_login'   => $user->user_login,
+    'user_email'   => $user->user_email,
+    'display_name' => $user->display_name,
+    'registered'   => $user->user_registered,
+    'roles'        => $user->roles,
+    'flags'        => array(),
+  );
+
+  if ( $mapping ) {
+    $subject = array_merge( $subject, _memberful_wp_debug_mapping_details( $mapping ) );
+  } else {
+    $subject['member_id'] = NULL;
+    $subject['flags'][]   = 'Unmapped user';
+  }
+
+  return $subject;
+}
+
+function _memberful_wp_debug_mapping_details( $mapping ) {
+  return array(
+    'member_id'         => $mapping->member_id,
+    'last_sync_at'      => empty( $mapping->last_sync_at ) ? 'never' : date( 'r', $mapping->last_sync_at ),
+    'has_refresh_token' => ! empty( $mapping->refresh_token ),
+    'flags'             => empty( $mapping->refresh_token ) ? array( 'No refresh token' ) : array(),
+  );
+}
 
 /**
  * Displays the memberful options page

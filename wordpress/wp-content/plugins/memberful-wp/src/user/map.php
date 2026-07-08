@@ -266,6 +266,20 @@ class Memberful_User_Mapping_Repository {
     );
   }
 
+  static public function find_by_member_id( $member_id ) {
+    global $wpdb;
+
+    return $wpdb->get_row( $wpdb->prepare(
+      'SELECT * FROM '.self::table().' WHERE member_id = %d', $member_id ) );
+  }
+
+  static public function find_by_wp_user_id( $wp_user_id ) {
+    global $wpdb;
+
+    return $wpdb->get_row( $wpdb->prepare(
+      'SELECT * FROM '.self::table().' WHERE wp_user_id = %d', $wp_user_id ) );
+  }
+
 
   /**
    * Attempts to find the ID of the user who the specified member maps to in
