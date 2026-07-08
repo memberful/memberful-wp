@@ -34,9 +34,9 @@ Add a "debug_tab" parameter to choose what to render:
 For a lookup, pass one or more of these parameters (debug_tab=lookup is
 implied whenever any of them are present):
 
-  lookup_email       Look up by email address
-  lookup_member_id   Look up by Memberful member ID
-  lookup_wp_user_id  Look up by WordPress user ID
+  member_email       Look up by email address
+  member_id          Look up by Memberful member ID
+  wp_user_id         Look up by WordPress user ID
 </code></pre>
 <?php endif; ?>
 
@@ -113,15 +113,15 @@ endforeach; ?>
   <table class="form-table" role="presentation">
     <tr>
       <th scope="row"><label for="memberful-lookup-email"><?php _e( 'Email', 'memberful' ); ?></label></th>
-      <td><input type="text" id="memberful-lookup-email" class="regular-text" name="lookup_email" value="<?php echo esc_attr( $lookup_inputs['email'] ); ?>" /></td>
+      <td><input type="text" id="memberful-lookup-email" class="regular-text" name="member_email" value="<?php echo esc_attr( $lookup_inputs['email'] ); ?>" /></td>
     </tr>
     <tr>
       <th scope="row"><label for="memberful-lookup-member-id"><?php _e( 'Member ID', 'memberful' ); ?></label></th>
-      <td><input type="text" id="memberful-lookup-member-id" class="regular-text" name="lookup_member_id" value="<?php echo $lookup_inputs['member_id'] > 0 ? intval( $lookup_inputs['member_id'] ) : ''; ?>" /></td>
+      <td><input type="text" id="memberful-lookup-member-id" class="regular-text" name="member_id" value="<?php echo $lookup_inputs['member_id'] > 0 ? intval( $lookup_inputs['member_id'] ) : ''; ?>" /></td>
     </tr>
     <tr>
       <th scope="row"><label for="memberful-lookup-wp-user-id"><?php _e( 'WP user ID', 'memberful' ); ?></label></th>
-      <td><input type="text" id="memberful-lookup-wp-user-id" class="regular-text" name="lookup_wp_user_id" value="<?php echo $lookup_inputs['wp_user_id'] > 0 ? intval( $lookup_inputs['wp_user_id'] ) : ''; ?>" /></td>
+      <td><input type="text" id="memberful-lookup-wp-user-id" class="regular-text" name="wp_user_id" value="<?php echo $lookup_inputs['wp_user_id'] > 0 ? intval( $lookup_inputs['wp_user_id'] ) : ''; ?>" /></td>
     </tr>
   </table>
   <p class="submit"><button type="submit" class="button button-primary"><?php _e( 'Look up', 'memberful' ); ?></button></p>
@@ -161,8 +161,8 @@ endforeach; ?>
 </pre>
 <?php elseif ( $is_endpoint ): ?>
 <pre><code style="display:block;">
-No lookup parameters supplied. Pass one or more of: lookup_email,
-lookup_member_id, lookup_wp_user_id.
+No lookup parameters supplied. Pass one or more of: member_email,
+member_id, wp_user_id.
 </code></pre>
 <?php endif; ?>
 <?php endif; ?>

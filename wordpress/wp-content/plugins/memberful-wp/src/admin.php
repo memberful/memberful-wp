@@ -246,9 +246,9 @@ function memberful_wp_debug( $is_endpoint = FALSE ) {
   $error_log = memberful_wp_redact_secrets( $error_log, $secrets, $masks );
 
   $lookup_inputs = array(
-    'email'      => isset( $_GET['lookup_email'] ) ? trim( $_GET['lookup_email'] ) : '',
-    'member_id'  => isset( $_GET['lookup_member_id'] ) ? intval( $_GET['lookup_member_id'] ) : 0,
-    'wp_user_id' => isset( $_GET['lookup_wp_user_id'] ) ? intval( $_GET['lookup_wp_user_id'] ) : 0,
+    'email'      => isset( $_GET['member_email'] ) ? trim( $_GET['member_email'] ) : '',
+    'member_id'  => isset( $_GET['member_id'] ) ? intval( $_GET['member_id'] ) : 0,
+    'wp_user_id' => isset( $_GET['wp_user_id'] ) ? intval( $_GET['wp_user_id'] ) : 0,
   );
 
   $lookup = NULL;
