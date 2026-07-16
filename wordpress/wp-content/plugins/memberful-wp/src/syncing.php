@@ -70,6 +70,15 @@ function memberful_wp_sync_user( $account, $mapping_context, $lock_timeout ) {
         Memberful_Wp_User_Role_Decision::ensure_user_role_is_correct( $user );
       }
     } else {
+      // On multisite, make sure the member actually belongs to the current
+      // site (their account may have been created by another site's sync)
+      if ( is_multisite() && ! is_user_member_of_blog( $user->ID ) ) {
+        add_user_to_blog( get_current_blog_id(), $user->ID, get_option( 'default_role', 'subscriber' ) );
+
+        // Refresh so the role decision below sees the newly assigned role
+        $user = new WP_User( $user->ID );
+      }
+
       Memberful_Wp_User_Downloads::sync($user->ID, $account->products);
       Memberful_Wp_User_Feeds::sync($user->ID, $account->feeds);
       Memberful_Wp_User_Subscriptions::sync($user->ID, $account->subscriptions);

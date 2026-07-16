@@ -87,7 +87,54 @@ function memberful_wp_plugin_migrate_db() {
     $db_version = 3;
   }
 
+  if ( $db_version < 4 ) {
+    if ( is_multisite() ) {
+      memberful_wp_migrate_user_meta_to_blog_scoped_keys();
+    }
+
+    $db_version = 4;
+  }
+
   update_option( 'memberful_db_version', $db_version );
+}
+
+/**
+ * On multisite the usermeta table is shared network-wide, so each site's
+ * member data is stored under blog-scoped keys (see memberful_wp_user_meta_key).
+ * Copy the old un-scoped values over to this site's scoped keys for every
+ * user mapped to a member of this site's Memberful account.
+ *
+ * The un-scoped values are left in place because other sites in the network
+ * may not have migrated yet. Stale values self-correct on the next member
+ * sync for each site.
+ */
+function memberful_wp_migrate_user_meta_to_blog_scoped_keys() {
+  $meta_keys = array(
+    'memberful_product',
+    'memberful_subscription',
+    'memberful_purchased_subscription',
+    'memberful_feed',
+    MEMBERFUL_WP_SINGLE_CUSTOM_FIELD_META_KEY,
+    'memberful_private_user_feed_token',
+    'memberful_expiry_banner_dismissed',
+  );
+
+  $user_ids = Memberful_User_Mapping_Repository::fetch_user_ids_of_all_mapped_members();
+
+  foreach ( $user_ids as $user_id ) {
+    foreach ( $meta_keys as $meta_key ) {
+      $scoped_key = memberful_wp_user_meta_key( $meta_key );
+
+      if ( $scoped_key === $meta_key || metadata_exists( 'user', $user_id, $scoped_key ) )
+        continue;
+
+      $value = get_user_meta( $user_id, $meta_key, TRUE );
+
+      if ( $value !== '' && $value !== FALSE ) {
+        update_user_meta( $user_id, $scoped_key, $value );
+      }
+    }
+  }
 }
 
 /**

@@ -63,7 +63,13 @@ class Memberful_User_Map {
     if ( $there_is_already_a_user_with_members_email && ! $the_member_is_mapped_to_a_user ) {
       $user_has_not_verified_they_want_to_link_these_accounts = empty($context['user_verified_they_want_to_sync_accounts']) || $context['id_of_user_who_has_verified_the_sync_link'] !== (int) $existing_user_with_email->ID;
 
-      if ( $user_has_not_verified_they_want_to_link_these_accounts ) {
+      // On multisite the user account may have been created by Memberful on
+      // another site in the network (each site has its own Memberful account,
+      // but wp_users is shared). OAuth has already proven the member owns
+      // this email address, so no password verification is needed.
+      $user_is_managed_by_memberful_on_another_site = $this->repository()->user_is_mapped_on_another_site( $existing_user_with_email );
+
+      if ( $user_has_not_verified_they_want_to_link_these_accounts && ! $user_is_managed_by_memberful_on_another_site ) {
         return new WP_Error(
           'user_already_exists',
           "A user exists in WordPress with the same email address as a Memberful member, but we're not sure they belong to the same user",
@@ -151,6 +157,23 @@ class Memberful_User_Map {
   }
 }
 
+/**
+ * Whether the WordPress user is mapped to a member of the current site's
+ * Memberful account.
+ *
+ * @param WP_User $user
+ * @return bool
+ */
+function memberful_wp_user_is_mapped_to_member( WP_User $user ) {
+  if ( $user->ID === 0 )
+    return FALSE;
+
+  $repository = new Memberful_User_Mapping_Repository();
+  $mapping    = $repository->find_member_user_is_mapped_to( $user );
+
+  return $mapping['mapping_exists'];
+}
+
 class Memberful_User_Mapping_Ensure_User {
 
   private $wp_user;
@@ -233,8 +256,10 @@ class Memberful_User_Mapping_Ensure_User {
   }
 
   private function update_user_meta() {
+    memberful_wp_update_user_meta( $this->wp_user->ID, 'memberful_full_name', $this->member->full_name );
+
     if ( ! empty( $this->member->custom_field ) ) {
-      update_user_meta( $this->wp_user->ID, MEMBERFUL_WP_SINGLE_CUSTOM_FIELD_META_KEY, $this->member->custom_field );
+      memberful_wp_update_user_meta( $this->wp_user->ID, MEMBERFUL_WP_SINGLE_CUSTOM_FIELD_META_KEY, $this->member->custom_field );
     }
   }
 
@@ -467,6 +492,41 @@ class Memberful_User_Mapping_Repository {
     global $wpdb;
 
     return $wpdb->delete(self::table(), array( "wp_user_id" => $user_id ) );
+  }
+
+  /**
+   * Checks whether the user is mapped to a member in another site's mapping
+   * table. Only relevant on multisite, where each site connects to its own
+   * Memberful account and keeps its own mapping table, but user accounts are
+   * shared across the network.
+   *
+   * @param WP_User|FALSE $user
+   * @return bool
+   */
+  public function user_is_mapped_on_another_site( $user ) {
+    global $wpdb;
+
+    if ( ! is_multisite() || $user === FALSE )
+      return FALSE;
+
+    $sites = get_sites( array( 'number' => 0, 'site__not_in' => array( get_current_blog_id() ) ) );
+
+    foreach ( $sites as $site ) {
+      $table = $wpdb->get_blog_prefix( $site->blog_id ).'memberful_mapping';
+
+      // The plugin may not be active on every site in the network
+      $table_exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $wpdb->esc_like( $table ) ) ) === $table;
+
+      if ( ! $table_exists )
+        continue;
+
+      $mapping_count = $wpdb->get_var( $wpdb->prepare( 'SELECT COUNT(*) FROM `'.$table.'` WHERE `wp_user_id` = %d', $user->ID ) );
+
+      if ( $mapping_count > 0 )
+        return TRUE;
+    }
+
+    return FALSE;
   }
 
   /**

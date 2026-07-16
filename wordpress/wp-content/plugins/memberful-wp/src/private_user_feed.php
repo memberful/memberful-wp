@@ -34,7 +34,7 @@ function memberful_private_user_feed_init() {
   // We'll take "all" users with the token match.
   $user_query = new WP_User_Query(
     array(
-      'meta_key' => 'memberful_private_user_feed_token',
+      'meta_key' => memberful_wp_user_meta_key( 'memberful_private_user_feed_token' ),
       'meta_value' => $feedUserToken
     )
   );
@@ -92,11 +92,11 @@ function memberful_private_rss_feed_link($success_message = '', $error_message =
   if(!is_subscribed_to_memberful_plan($requiredPlan, $current_user_id))
     return memberful_private_rss_feed_link_response_helper($error_message, $return);
 
-  $feedToken = get_user_meta($current_user_id, 'memberful_private_user_feed_token', true);
+  $feedToken = memberful_wp_get_user_meta($current_user_id, 'memberful_private_user_feed_token', true);
 
   if($feedToken == false || $feedToken == '') {
     $feedToken = substr(md5(uniqid(rand(1,10000))), 2, 30);
-    update_user_meta($current_user_id, 'memberful_private_user_feed_token', $feedToken);
+    memberful_wp_update_user_meta($current_user_id, 'memberful_private_user_feed_token', $feedToken);
   }
 
   $link = (get_home_url() . '/' . memberful_private_user_feed_get_url_identifier($feedToken) );
