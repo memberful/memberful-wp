@@ -104,11 +104,17 @@ function memberful_wp_plugin_migrate_db() {
  * Copy the old un-scoped values over to this site's scoped keys for every
  * user mapped to a member of this site's Memberful account.
  *
+ * The copy is done in SQL rather than through the meta API so that sites
+ * with a large number of members migrate in one pass without exhausting
+ * memory (the meta API caches every user's meta as it goes).
+ *
  * The un-scoped values are left in place because other sites in the network
  * may not have migrated yet. Stale values self-correct on the next member
  * sync for each site.
  */
 function memberful_wp_migrate_user_meta_to_blog_scoped_keys() {
+  global $wpdb;
+
   $meta_keys = array(
     'memberful_product',
     'memberful_subscription',
@@ -119,22 +125,28 @@ function memberful_wp_migrate_user_meta_to_blog_scoped_keys() {
     'memberful_expiry_banner_dismissed',
   );
 
-  $user_ids = Memberful_User_Mapping_Repository::fetch_user_ids_of_all_mapped_members();
+  foreach ( $meta_keys as $meta_key ) {
+    $scoped_key = memberful_wp_user_meta_key( $meta_key );
 
-  foreach ( $user_ids as $user_id ) {
-    foreach ( $meta_keys as $meta_key ) {
-      $scoped_key = memberful_wp_user_meta_key( $meta_key );
+    if ( $scoped_key === $meta_key )
+      continue;
 
-      if ( $scoped_key === $meta_key || metadata_exists( 'user', $user_id, $scoped_key ) )
-        continue;
-
-      $value = get_user_meta( $user_id, $meta_key, TRUE );
-
-      if ( $value !== '' && $value !== FALSE ) {
-        update_user_meta( $user_id, $scoped_key, $value );
-      }
-    }
+    $wpdb->query( $wpdb->prepare(
+      'INSERT INTO `'.$wpdb->usermeta.'` (`user_id`, `meta_key`, `meta_value`) '.
+      'SELECT `meta`.`user_id`, %s, `meta`.`meta_value` '.
+      'FROM `'.$wpdb->usermeta.'` AS `meta` '.
+      'INNER JOIN `'.Memberful_User_Mapping_Repository::table().'` AS `mapping` ON `mapping`.`wp_user_id` = `meta`.`user_id` '.
+      'WHERE `meta`.`meta_key` = %s '.
+      'AND NOT EXISTS ('.
+        'SELECT 1 FROM `'.$wpdb->usermeta.'` AS `scoped` '.
+        'WHERE `scoped`.`user_id` = `meta`.`user_id` AND `scoped`.`meta_key` = %s'.
+      ')',
+      $scoped_key, $meta_key, $scoped_key
+    ) );
   }
+
+  // The direct inserts bypass the meta cache, which may be persistent
+  wp_cache_flush();
 }
 
 /**
