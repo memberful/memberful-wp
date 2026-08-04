@@ -209,6 +209,9 @@ $metering_enabled = class_exists( 'Memberful_Metering_Config' ) && ! empty( Memb
             <span class="description"><?php esc_html_e( 'Leave blank to use your Memberful registration page.', 'memberful' ); ?></span>
           </p>
         </fieldset>
+      <?php else : ?>
+        <input type="hidden" name="memberful_paywall[free_button_label]" value="<?php echo esc_attr( $paywall_config['free_button_label'] ); ?>">
+        <input type="hidden" name="memberful_paywall[free_button_url]" value="<?php echo esc_attr( $paywall_config['free_button_url'] ); ?>">
       <?php endif; ?>
 
       <fieldset class="memberful-paywall-builder__field memberful-paywall-builder__button-set">
