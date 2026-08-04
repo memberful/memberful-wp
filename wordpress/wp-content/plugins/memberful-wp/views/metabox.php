@@ -28,7 +28,7 @@
         ?>
         <div class="memberful-marketing-content-description">
           <a href="<?php echo esc_url( memberful_wp_plugin_global_marketing_url() ); ?>">
-            <?php esc_html_e( 'Manage global marketing content', 'memberful' ); ?>
+            <?php esc_html_e( 'Manage global paywall', 'memberful' ); ?>
           </a>
         </div>
       <?php endif; ?>

@@ -71,6 +71,8 @@ jQuery(function ($) {
       }).get(),
       button_label:     $('#memberful-paywall-button-label').val() || '',
       subscribe_url:    $('#memberful-paywall-subscribe-url').val() || '',
+      free_button_label: $('#memberful-paywall-free-button-label').val() || '',
+      free_button_url:   $('#memberful-paywall-free-button-url').val() || '',
       sign_in_url:      $('#memberful-paywall-signin-url').val() || '',
       brand_color:      $('#memberful-paywall-brand-color').val() || '',
       background_color: $('#memberful-paywall-background-color').val() || '',

@@ -22,17 +22,19 @@ class Memberful_Paywall_Config {
 	 */
 	public static function defaults(): array {
 		return array(
-			'mode'             => 'builder',
-			'layout'           => 'card',
-			'heading'          => __( 'Subscribe to keep reading', 'memberful' ),
-			'subheading'       => __( 'This post is for paying subscribers.', 'memberful' ),
-			'features'         => array(),
-			'button_label'     => __( 'Subscribe', 'memberful' ),
-			'subscribe_url'    => '',
-			'sign_in_url'      => '',
-			'brand_color'      => '',
-			'background_color' => '',
-			'button_shape'     => 'square',
+			'mode'              => 'builder',
+			'layout'            => 'card',
+			'heading'           => __( 'Subscribe to keep reading', 'memberful' ),
+			'subheading'        => __( 'This post is for paying subscribers.', 'memberful' ),
+			'features'          => array(),
+			'button_label'      => __( 'Subscribe', 'memberful' ),
+			'subscribe_url'     => '',
+			'free_button_label' => __( 'Create a free account', 'memberful' ),
+			'free_button_url'   => '',
+			'sign_in_url'       => '',
+			'brand_color'       => '',
+			'background_color'  => '',
+			'button_shape'      => 'square',
 		);
 	}
 

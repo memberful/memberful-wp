@@ -8,6 +8,7 @@
  * @var bool  $is_active
  */
 
+$metering_enabled = class_exists( 'Memberful_Metering_Config' ) && ! empty( Memberful_Metering_Config::get()['enabled'] );
 ?>
 <div class="memberful-paywall-builder__panel" data-panel="builder"<?php if ( ! $is_active ) echo ' style="display:none"'; ?>>
   <div class="memberful-paywall-builder__settings">
@@ -88,11 +89,6 @@
           </div>
         </template>
       </fieldset>
-
-      <p class="memberful-paywall-builder__field">
-        <label for="memberful-paywall-button-label"><?php esc_html_e( 'Button label', 'memberful' ); ?></label>
-        <input id="memberful-paywall-button-label" type="text" name="memberful_paywall[button_label]" value="<?php echo esc_attr( $paywall_config['button_label'] ); ?>">
-      </p>
 
       <fieldset class="memberful-paywall-builder__field memberful-paywall-builder__button-shape">
         <legend class="memberful-paywall-builder__button-shape-label"><?php esc_html_e( 'Button shape', 'memberful' ); ?></legend>
@@ -199,11 +195,34 @@
         <span class="description"><?php esc_html_e( 'Text color adjusts automatically for contrast.', 'memberful' ); ?></span>
       </fieldset>
 
-      <p class="memberful-paywall-builder__field">
-        <label for="memberful-paywall-subscribe-url"><?php esc_html_e( 'Subscribe URL', 'memberful' ); ?></label>
-        <input id="memberful-paywall-subscribe-url" type="url" name="memberful_paywall[subscribe_url]" value="<?php echo esc_attr( $paywall_config['subscribe_url'] ); ?>" placeholder="<?php echo esc_attr( memberful_registration_page_url() ); ?>">
-        <span class="description"><?php esc_html_e( 'Leave blank to use your Memberful registration page (only works if free registration is enabled). Otherwise link to your checkout or pricing page.', 'memberful' ); ?></span>
-      </p>
+      <?php if ( $metering_enabled ) : ?>
+        <fieldset class="memberful-paywall-builder__field memberful-paywall-builder__button-set">
+          <legend class="memberful-paywall-builder__button-set-label"><?php esc_html_e( 'Free registration button', 'memberful' ); ?></legend>
+          <span class="description memberful-paywall-builder__button-set-description"><?php esc_html_e( 'Shown instead of the subscribe button when a logged-out visitor hits the metered limit and free members get a higher limit.', 'memberful' ); ?></span>
+          <p class="memberful-paywall-builder__field">
+            <label for="memberful-paywall-free-button-label"><?php esc_html_e( 'Button label', 'memberful' ); ?></label>
+            <input id="memberful-paywall-free-button-label" type="text" name="memberful_paywall[free_button_label]" value="<?php echo esc_attr( $paywall_config['free_button_label'] ); ?>">
+          </p>
+          <p class="memberful-paywall-builder__field">
+            <label for="memberful-paywall-free-button-url"><?php esc_html_e( 'Button URL', 'memberful' ); ?></label>
+            <input id="memberful-paywall-free-button-url" type="url" name="memberful_paywall[free_button_url]" value="<?php echo esc_attr( $paywall_config['free_button_url'] ); ?>" placeholder="<?php echo esc_attr( memberful_registration_page_url() ); ?>">
+            <span class="description"><?php esc_html_e( 'Leave blank to use your Memberful registration page.', 'memberful' ); ?></span>
+          </p>
+        </fieldset>
+      <?php endif; ?>
+
+      <fieldset class="memberful-paywall-builder__field memberful-paywall-builder__button-set">
+        <legend class="memberful-paywall-builder__button-set-label"><?php esc_html_e( 'Subscribe button', 'memberful' ); ?></legend>
+        <p class="memberful-paywall-builder__field">
+          <label for="memberful-paywall-button-label"><?php esc_html_e( 'Button label', 'memberful' ); ?></label>
+          <input id="memberful-paywall-button-label" type="text" name="memberful_paywall[button_label]" value="<?php echo esc_attr( $paywall_config['button_label'] ); ?>">
+        </p>
+        <p class="memberful-paywall-builder__field">
+          <label for="memberful-paywall-subscribe-url"><?php esc_html_e( 'Button URL', 'memberful' ); ?></label>
+          <input id="memberful-paywall-subscribe-url" type="url" name="memberful_paywall[subscribe_url]" value="<?php echo esc_attr( $paywall_config['subscribe_url'] ); ?>" placeholder="<?php echo esc_attr( memberful_registration_page_url() ); ?>">
+          <span class="description"><?php esc_html_e( 'Leave blank to use your Memberful registration page (only works if free registration is enabled). Otherwise link to your checkout or pricing page.', 'memberful' ); ?></span>
+        </p>
+      </fieldset>
 
       <p class="memberful-paywall-builder__field">
         <label for="memberful-paywall-signin-url"><?php esc_html_e( 'Sign-in URL', 'memberful' ); ?></label>

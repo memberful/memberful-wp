@@ -521,6 +521,28 @@ Paywall Builder
   min-width: 80px;
 }
 
+/* Free / paid button sets */
+.memberful-paywall-builder__button-set {
+  border: 0;
+  margin: 0 0 1.25rem;
+  padding: 0;
+}
+.memberful-paywall-builder__button-set-label {
+  color: #1d2327;
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  padding: 0;
+  text-transform: uppercase;
+}
+.memberful-paywall-builder__customize .memberful-paywall-builder__button-set-description {
+  margin: 0 0 8px;
+}
+.memberful-paywall-builder__button-set .memberful-paywall-builder__field:last-child {
+  margin-bottom: 0;
+}
+
 /* Accent + Background colors */
 .memberful-paywall-builder__color-field {
   border: 0;

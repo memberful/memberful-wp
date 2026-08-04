@@ -21,7 +21,7 @@
 		<?php memberful_wp_nonce_field( 'memberful_options' ); ?>
 
 		<div class="memberful-bulk-apply-box memberful-bulk-apply-box--wide">
-			<h3><?php esc_html_e( 'Global marketing content', 'memberful' ); ?></h3>
+			<h3><?php esc_html_e( 'Global Paywall', 'memberful' ); ?></h3>
 			<p>
 				<label for="use_global_marketing_checkbox">
 					<input id="use_global_marketing_checkbox" class="memberful-label__checkbox--multiline" type="checkbox" name="memberful_use_global_marketing" <?php checked( $use_global_marketing ); ?>>
@@ -33,16 +33,6 @@
 			</p>
 
 			<div id="global_marketing_options" data-depends-on="use_global_marketing_checkbox" data-depends-value="1"<?php if ( ! $use_global_marketing ) echo ' style="display:none"'; ?>>
-				<label for="global_marketing_override_radio_true">
-					<input id="global_marketing_override_radio_true" type="radio" name="memberful_global_marketing_override" value="1" <?php checked( $global_marketing_override ); ?>>
-					<?php esc_html_e( 'Override all marketing content.', 'memberful' ); ?>
-				</label>
-				<label for="global_marketing_override_radio_false">
-					<input id="global_marketing_override_radio_false" type="radio" name="memberful_global_marketing_override" value="0" <?php checked( ! $global_marketing_override ); ?>>
-					<?php esc_html_e( "Only use the global marketing content when other content doesn't exist.", 'memberful' ); ?>
-				</label>
-				<hr>
-
 				<div id="global_marketing_snippet_options">
 					<label for="use_global_snippets_checkbox">
 						<input id="use_global_snippets_checkbox" class="memberful-label__checkbox--multiline" type="checkbox" name="memberful_use_global_snippets" <?php checked( $use_global_snippets ); ?>>
@@ -52,6 +42,16 @@
 						</small>
 					</label>
 				</div>
+				<hr>
+
+				<label for="global_marketing_override_radio_true">
+					<input id="global_marketing_override_radio_true" type="radio" name="memberful_global_marketing_override" value="1" <?php checked( $global_marketing_override ); ?>>
+					<?php esc_html_e( 'Override all marketing content.', 'memberful' ); ?>
+				</label>
+				<label for="global_marketing_override_radio_false">
+					<input id="global_marketing_override_radio_false" type="radio" name="memberful_global_marketing_override" value="0" <?php checked( ! $global_marketing_override ); ?>>
+					<?php esc_html_e( "Only use the global marketing content when other content doesn't exist.", 'memberful' ); ?>
+				</label>
 			</div>
 
 			<div class="memberful-paywall-builder" data-depends-on="use_global_marketing_checkbox" data-depends-value="1"<?php if ( ! $use_global_marketing ) echo ' style="display:none"'; ?>>
