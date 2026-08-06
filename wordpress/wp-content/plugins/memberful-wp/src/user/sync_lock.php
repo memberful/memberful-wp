@@ -32,6 +32,13 @@ class Memberful_User_Sync_Lock {
   private function lock_identifier() {
     $id = $this->member_id;
 
+    // Member ids are only unique within one Memberful account, so on
+    // multisite (where each site connects to its own account) scope the
+    // lock per site to avoid contention between unrelated members
+    if ( is_multisite() ) {
+      return "memberful-member-mapping-".get_current_blog_id()."-$id";
+    }
+
     return "memberful-member-mapping-$id";
   }
 }

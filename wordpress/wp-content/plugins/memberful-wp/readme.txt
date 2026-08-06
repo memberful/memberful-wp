@@ -116,6 +116,7 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 * Add the `memberful_subscriptions_link` shortcode for linking to the subscriptions page
 * Improve the debug tool
+* Add WordPress Multisite support: store member data per site and sign members in across sites connected to different Memberful accounts
 
 = 1.80.0 =
 

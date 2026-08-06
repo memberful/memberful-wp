@@ -87,7 +87,66 @@ function memberful_wp_plugin_migrate_db() {
     $db_version = 3;
   }
 
+  if ( $db_version < 4 ) {
+    if ( is_multisite() ) {
+      memberful_wp_migrate_user_meta_to_blog_scoped_keys();
+    }
+
+    $db_version = 4;
+  }
+
   update_option( 'memberful_db_version', $db_version );
+}
+
+/**
+ * On multisite the usermeta table is shared network-wide, so each site's
+ * member data is stored under blog-scoped keys (see memberful_wp_user_meta_key).
+ * Copy the old un-scoped values over to this site's scoped keys for every
+ * user mapped to a member of this site's Memberful account.
+ *
+ * The copy is done in SQL rather than through the meta API so that sites
+ * with a large number of members migrate in one pass without exhausting
+ * memory (the meta API caches every user's meta as it goes).
+ *
+ * The un-scoped values are left in place because other sites in the network
+ * may not have migrated yet. Stale values self-correct on the next member
+ * sync for each site.
+ */
+function memberful_wp_migrate_user_meta_to_blog_scoped_keys() {
+  global $wpdb;
+
+  $meta_keys = array(
+    'memberful_product',
+    'memberful_subscription',
+    'memberful_purchased_subscription',
+    'memberful_feed',
+    MEMBERFUL_WP_SINGLE_CUSTOM_FIELD_META_KEY,
+    'memberful_private_user_feed_token',
+    'memberful_expiry_banner_dismissed',
+  );
+
+  foreach ( $meta_keys as $meta_key ) {
+    $scoped_key = memberful_wp_user_meta_key( $meta_key );
+
+    if ( $scoped_key === $meta_key )
+      continue;
+
+    $wpdb->query( $wpdb->prepare(
+      'INSERT INTO `'.$wpdb->usermeta.'` (`user_id`, `meta_key`, `meta_value`) '.
+      'SELECT `meta`.`user_id`, %s, `meta`.`meta_value` '.
+      'FROM `'.$wpdb->usermeta.'` AS `meta` '.
+      'INNER JOIN `'.Memberful_User_Mapping_Repository::table().'` AS `mapping` ON `mapping`.`wp_user_id` = `meta`.`user_id` '.
+      'WHERE `meta`.`meta_key` = %s '.
+      'AND NOT EXISTS ('.
+        'SELECT 1 FROM `'.$wpdb->usermeta.'` AS `scoped` '.
+        'WHERE `scoped`.`user_id` = `meta`.`user_id` AND `scoped`.`meta_key` = %s'.
+      ')',
+      $scoped_key, $meta_key, $scoped_key
+    ) );
+  }
+
+  // The direct inserts bypass the meta cache, which may be persistent
+  wp_cache_flush();
 }
 
 /**
