@@ -12,7 +12,7 @@ $links = array(
   ),
   array(
     'id'    => 'global_marketing',
-    'title' => __('Global marketing content'),
+    'title' => __('Global Paywall'),
     'url'   => memberful_wp_plugin_global_marketing_url()
   ),
   array(
