@@ -8,7 +8,10 @@ add_action( 'admin_head',            'memberful_wp_announce_plans_and_download_i
 add_action( 'admin_menu',            'memberful_wp_menu' );
 add_action( 'admin_init',            'memberful_wp_register_options' );
 add_action( 'admin_init',            'memberful_wp_activation_redirect' );
-add_action( 'admin_init',            'memberful_wp_plugin_migrate_db' );
+// Runs on `init` rather than `admin_init` so that front-end requests migrate
+// too: on multisite every site must migrate its user meta to blog-scoped keys
+// before members regain access, and some sites may not see an admin for days
+add_action( 'init',                  'memberful_wp_plugin_migrate_db' );
 add_action( 'admin_enqueue_scripts', 'memberful_wp_admin_enqueue_scripts' );
 add_filter( 'display_post_states',   'memberful_wp_add_protected_state_to_post_list', 10, 2 );
 
