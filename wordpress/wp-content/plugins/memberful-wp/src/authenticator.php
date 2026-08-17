@@ -82,7 +82,10 @@ class Memberful_Authenticator {
       $account = $this->get_member_data( $tokens->access_token );
 
       $lock_timeout = 10;
-      $user = memberful_wp_sync_member_account( $account,  array( 'refresh_token' => $tokens->refresh_token ), $lock_timeout );
+      // `oauth_sign_in` marks that the member has just proven, via OAuth,
+      // that they control this Memberful account — as opposed to syncs
+      // triggered by webhooks or cron, where no such proof exists
+      $user = memberful_wp_sync_member_account( $account,  array( 'refresh_token' => $tokens->refresh_token, 'oauth_sign_in' => TRUE ), $lock_timeout );
 
       if ( is_wp_error( $user ) ) {
         if ( $user->get_error_code() === 'user_already_exists' ) {

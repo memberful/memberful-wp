@@ -65,11 +65,17 @@ class Memberful_User_Map {
 
       // On multisite the user account may have been created by Memberful on
       // another site in the network (each site has its own Memberful account,
-      // but wp_users is shared). OAuth has already proven the member owns
-      // this email address, so no password verification is needed.
-      $user_is_managed_by_memberful_on_another_site = $this->repository()->user_is_mapped_on_another_site( $existing_user_with_email );
+      // but wp_users is shared). If the member has just signed in via OAuth
+      // they've proven they control the Memberful account holding this email
+      // address, so no password verification is needed. Syncs triggered by
+      // webhooks or cron carry no such proof — member records can be created
+      // with any email address from the Memberful dashboard — so they still
+      // require verification.
+      $member_signed_in_and_is_managed_by_memberful_on_another_site =
+        ! empty( $context['oauth_sign_in'] )
+        && $this->repository()->user_is_mapped_on_another_site( $existing_user_with_email );
 
-      if ( $user_has_not_verified_they_want_to_link_these_accounts && ! $user_is_managed_by_memberful_on_another_site ) {
+      if ( $user_has_not_verified_they_want_to_link_these_accounts && ! $member_signed_in_and_is_managed_by_memberful_on_another_site ) {
         return new WP_Error(
           'user_already_exists',
           "A user exists in WordPress with the same email address as a Memberful member, but we're not sure they belong to the same user",
