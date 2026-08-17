@@ -244,7 +244,9 @@ class Memberful_Sync_Verification {
   public function setup_nonce( $wp_user, $member, array $context ) {
     $nonce = $this->get_nonce();
 
-    update_user_meta(
+    // Scoped per site: each site verifies against its own Memberful account,
+    // so a nonce issued by one site must not be consumable on another
+    memberful_wp_update_user_meta(
       $wp_user->ID,
       self::NONCE_META_KEY,
       array(
@@ -271,11 +273,11 @@ class Memberful_Sync_Verification {
   }
 
   public function confirm_verification( $user, $nonce ) {
-    if ( $user->has_prop( self::NONCE_META_KEY ) ) {
-      $potential_mapping = $user->get( self::NONCE_META_KEY );
+    if ( $user->has_prop( memberful_wp_user_meta_key( self::NONCE_META_KEY ) ) ) {
+      $potential_mapping = $user->get( memberful_wp_user_meta_key( self::NONCE_META_KEY ) );
 
       if ( $potential_mapping['member']->email === $user->user_email && $nonce === $potential_mapping['nonce'] ) {
-        delete_user_meta( $user->ID, self::NONCE_META_KEY );
+        memberful_wp_delete_user_meta( $user->ID, self::NONCE_META_KEY );
 
         $potential_mapping['context']['user_verified_they_want_to_sync_accounts'] = TRUE;
         $potential_mapping['context']['id_of_user_who_has_verified_the_sync_link'] = (int) $user->ID;
