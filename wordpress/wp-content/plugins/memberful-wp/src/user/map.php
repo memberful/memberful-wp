@@ -114,7 +114,15 @@ class Memberful_User_Map {
 
     if ( is_wp_error( $result ) ) {
       if ( $result->get_error_code() === "duplicate_user_for_member" && ! $wp_user_existed_before_request ) {
-        wp_delete_user( $wp_user->ID );
+        // The user was created by us during this request, so on multisite
+        // remove them from the whole network (wp_delete_user() would only
+        // remove them from the current site, leaving an orphaned account)
+        if ( is_multisite() ) {
+          require_once ABSPATH . 'wp-admin/includes/ms.php';
+          wpmu_delete_user( $wp_user->ID );
+        } else {
+          wp_delete_user( $wp_user->ID );
+        }
       }
 
       return $result;

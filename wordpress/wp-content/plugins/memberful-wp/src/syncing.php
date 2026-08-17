@@ -60,6 +60,14 @@ function memberful_wp_sync_user( $account, $mapping_context, $lock_timeout ) {
   if ( ! is_wp_error( $user ) ) {
     if ( isset( $member->deleted ) ) {
       if ( memberful_is_safe_to_delete( $user ) ) {
+        // On multisite wp_delete_user() only removes the user from the
+        // current site; their account and usermeta survive network-wide,
+        // so clear this site's member data or the ACL will keep granting
+        // them access
+        if ( is_multisite() ) {
+          memberful_wp_delete_member_user_meta( $user->ID );
+        }
+
         wp_delete_user( $user->ID );
         (new Memberful_User_Mapping_Repository())->delete_mapping( $user->ID );
       } else {

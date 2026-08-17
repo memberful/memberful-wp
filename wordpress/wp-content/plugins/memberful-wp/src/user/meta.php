@@ -26,6 +26,41 @@ function memberful_wp_update_user_meta( $user_id, $meta_key, $value ) {
   return update_user_meta( $user_id, memberful_wp_user_meta_key( $meta_key ), $value );
 }
 
+function memberful_wp_delete_user_meta( $user_id, $meta_key ) {
+  return delete_user_meta( $user_id, memberful_wp_user_meta_key( $meta_key ) );
+}
+
+/**
+ * Every user meta key the plugin stores member data under.
+ *
+ * @return array
+ */
+function memberful_wp_member_user_meta_keys() {
+  return array(
+    'memberful_product',
+    'memberful_subscription',
+    'memberful_purchased_subscription',
+    'memberful_feed',
+    MEMBERFUL_WP_SINGLE_CUSTOM_FIELD_META_KEY,
+    'memberful_private_user_feed_token',
+    'memberful_expiry_banner_dismissed',
+    'memberful_full_name',
+  );
+}
+
+/**
+ * Deletes all of the current site's member data for the user.
+ *
+ * Needed on multisite when a member is deleted: `wp_delete_user()` only
+ * removes the user from the current site, leaving their usermeta in the
+ * shared table, and the ACL grants access based on that meta.
+ */
+function memberful_wp_delete_member_user_meta( $user_id ) {
+  foreach ( memberful_wp_member_user_meta_keys() as $meta_key ) {
+    memberful_wp_delete_user_meta( $user_id, $meta_key );
+  }
+}
+
 function memberful_custom_field( WP_User $user ) {
   return memberful_wp_get_user_meta( $user->ID, MEMBERFUL_WP_SINGLE_CUSTOM_FIELD_META_KEY, true );
 }

@@ -118,17 +118,7 @@ function memberful_wp_plugin_migrate_db() {
 function memberful_wp_migrate_user_meta_to_blog_scoped_keys() {
   global $wpdb;
 
-  $meta_keys = array(
-    'memberful_product',
-    'memberful_subscription',
-    'memberful_purchased_subscription',
-    'memberful_feed',
-    MEMBERFUL_WP_SINGLE_CUSTOM_FIELD_META_KEY,
-    'memberful_private_user_feed_token',
-    'memberful_expiry_banner_dismissed',
-  );
-
-  foreach ( $meta_keys as $meta_key ) {
+  foreach ( memberful_wp_member_user_meta_keys() as $meta_key ) {
     $scoped_key = memberful_wp_user_meta_key( $meta_key );
 
     if ( $scoped_key === $meta_key )
