@@ -64,16 +64,17 @@ jQuery(document).ready(function($){
     let editor = tinyMCE.editors[0];
     let globalContent=$('#use_global_marketing_checkbox');
     let snippetContent=$('#use_global_snippets_checkbox');
+    let modeRadios=$('input[name="memberful_paywall[mode]"]');
 
     function checkGlobalValidity(e){
       let isGlobal=globalContent.is(':checked');
-      let isSnippets=snippetContent.is(':checked');
+      let isCustomHtml=modeRadios.filter(':checked').val() === 'custom_html';
       let submit=$('button[type="submit"]');
       let isContentEmpty=!editor.getContent().trim();
 
       let warning=$('#global_content_required');
 
-      if( isGlobal && isContentEmpty ){
+      if( isGlobal && isCustomHtml && isContentEmpty ){
         submit.prop('disabled', true);
         warning.show();
 
@@ -86,6 +87,7 @@ jQuery(document).ready(function($){
 
     globalContent.change(checkGlobalValidity)
     snippetContent.change(checkGlobalValidity)
+    modeRadios.change(checkGlobalValidity)
     editor.on('change', checkGlobalValidity);
   }
 
