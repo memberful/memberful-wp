@@ -4,14 +4,15 @@
 
 ### Setup instructions
 
+This project uses [`@wordpress/env`](https://developer.wordpress.org/block-editor/reference-guides/packages/packages-env/) (wp-env) for local development, which requires [Docker](https://www.docker.com/get-started).
+
 - Install [Docker](https://www.docker.com/get-started).
-- Run `docker compose up` to start all needed containers. You can stop them with Ctrl+C.
-  - Alternatively, you can run `docker compose up -d` to start them in the detached mode and `docker compose stop` to stop them.
-- Run `./docker-provision.sh` for the initial WordPress setup.
+- From the repository root, run `npm install` to install dependencies.
+- Run `npm run env:start` to start the local WordPress environment.
 
-You should be able to access the WP admin panel now: http://wordpress.localhost/wp-admin
+You should be able to access the WP admin panel now: http://localhost:8888/wp-admin
 
-The default username/password is admin/admin.
+The default username/password is admin/password.
 
 Once signed in you'll need to go to your local Memberful site, and setup a WordPress integration
 (`Memberful Admin -> Website -> External Website -> Connect my WordPress site`), then copy and paste the activation
@@ -20,39 +21,30 @@ WordPress should be connected to your local vm, ready for development!
 
 ### Resetting the local environment
 
-Run `docker compose down` to remove the Docker containers and follow the previous section to start them again.
+Run `npm run env:clean` to reset the database, or `npm run env:destroy` to remove the environment entirely. Run `npm run env:start` again to recreate it.
 
-### Updating Docker images
+### Updating WordPress / PHP versions
 
-If you need to update the Docker images, you can run `docker compose pull` to pull the latest images. Then you can run `docker compose up` to start the updated containers.
+The environment is configured in `.wp-env.json` (`core` and `phpVersion`). After changing it, run `npm run env:update`.
 
 ### Using the WP-CLI
 
-The command-line interface from WordPress can be useful in debugging plugin issues and reading/editing the database.
+The command-line interface from WordPress can be useful in debugging plugin issues and reading/editing the database. Run WP-CLI commands inside the environment with:
 
 An easy way to work with the CLI from outside the container is to take the `wp()` bash function from the provision script:
 ```bash
-wp() {
-  docker run -it --rm \
-    --volumes-from memberful-wp-wordpress-1 \
-    --network container:memberful-wp-wordpress-1 \
-    --env-file envfile \
-    --user 33:33 \
-    wordpress:cli wp $@
-}
+npm run env:cli -- <command>
 ```
 
-If your volume and container names match you can take the above function, copy/paste it into your command prompt, and then run `wp` commands as if WordPress was installed directly (outside a container).
-
 For example, to see all the metadata for user 2 directly from the db:
-`wp user meta list 2`
+`npm run env:cli -- user meta list 2`
 
 
 ## Building plugin assets
 
 The plugin's JavaScript files are compiled with WP Scripts and Webpack.
 
-Run `npm install` from the plugin root folder (`wordpress/wp-content/plugins/memberful-wp`) to install the necessary dependencies.
+Run `npm install` from the repository root to install the necessary dependencies.
 
 When in local development mode, run `npm run start` to start WP Scripts in "watch" mode. This will automatically re-build assets when changes are made.
 
@@ -112,7 +104,7 @@ Any `svn` actions to `plugins.svn.wordpress.org` that require authentication wil
 * Make sure that every change has an appropriate changelog entry in `readme.txt`.
 * Set correct version number in `readme.txt` and `memberful-wp.php`.
 * Ensure that all changes are ready in the `main` branch.
-* Run `npm install && npm run build` from the plugin root to build plugin assets.
+* Run `npm install && npm run build` from the repository root to build plugin assets.
 * Run `./release.sh`.
 * A copy of the wordpress.org svn repo will be downloaded into `/tmp`, the
   version you tagged will be copied across to the `tags` and `trunk`
@@ -132,7 +124,7 @@ updating the plugin version.
 Very occasionally we may need to update the assets for the WordPress plugin. This
 includes the banner image, the icon, and the screenshots. To do this:
 
-* Update the assets in the `assets` directory.
+* Update the assets in the `.wordpress-org` directory.
 * Run `./release.sh --assets`.
 
 ## Rolling back

@@ -1,0 +1,68 @@
+name: PHPUnit
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: PHP ${{ matrix.php }} / WP ${{ matrix.wp }}${{ matrix.multisite == 1 && ' multisite' || '' }}
+    runs-on: ubuntu-latest
+    continue-on-error: ${{ matrix.experimental || false }}
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -proot"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { php: '7.4', wp: '6.3' }
+          - { php: '8.0', wp: 'latest' }
+          - { php: '8.1', wp: 'latest' }
+          - { php: '8.2', wp: 'latest' }
+          - { php: '8.3', wp: 'latest' }
+          - { php: '8.4', wp: 'latest' }
+          - { php: '8.2', wp: 'latest', multisite: 1 }
+          - { php: '8.4', wp: 'nightly', experimental: true }
+    env:
+      WP_INSTALL_TESTS_SKIP_UPDATE_CHECK: 'true'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: mysqli
+          coverage: none
+          tools: composer
+
+      - name: Install Composer dependencies
+        uses: ramsey/composer-install@v3
+        with:
+          dependency-versions: highest
+
+      - name: Install WordPress test suite
+        run: bash bin/install-wp-tests.sh wordpress_test root root 127.0.0.1 ${{ matrix.wp }}
+
+      - name: Run tests
+        env:
+          WP_MULTISITE: ${{ matrix.multisite || 0 }}
+        run: composer test
