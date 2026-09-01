@@ -116,6 +116,10 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 * Add a visual paywall builder for creating branded paywalls without writing HTML
 * Allow customizing how many paragraphs appear before the paywall
+* Fix the comments feed on sites with no protected posts
+* Fix PHP warning when checking comment access on feed requests for missing posts
+* Hide comments on term-protected posts from comment feeds
+* Apply term protections to pages and custom post types in search and comment feeds
 
 = 1.81.0 =
 
