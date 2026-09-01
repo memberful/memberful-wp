@@ -415,7 +415,7 @@ function _memberful_wp_posts_with_terms( $terms ) {
     $tax_query = array_merge( array( 'relation' => 'OR' ), $tax_query );
   }
 
-  return get_posts( array( 'tax_query' => $tax_query, 'fields' => 'ids', 'numberposts' => -1 ) );
+  return get_posts( array( 'post_type' => 'any', 'tax_query' => $tax_query, 'fields' => 'ids', 'numberposts' => -1 ) );
 }
 
 function _memberful_wp_group_terms_by_taxonomy( $term_ids ) {
