@@ -10,6 +10,6 @@
 		"SCRIPT_DEBUG": true
 	},
 	"lifecycleScripts": {
-		"afterStart": "wp-env run cli wp theme activate twentytwentyone && wp-env run cli wp widget add memberful_wp_profile_widget sidebar-1 1"
+		"afterStart": "wp-env run cli wp theme activate twentytwentyone && wp-env run cli wp eval-file wp-content/plugins/memberful-wp/dev/ensure-profile-widget.php"
 	}
 }
