@@ -4,6 +4,10 @@
 	"phpVersion": "8.2",
 	"plugins": [ "." ],
 	"themes": [ "https://downloads.wordpress.org/theme/twentytwentyone.zip" ],
+	"mappings": {
+		"wp-content/plugins": "./dev/plugins",
+		"wp-content/themes": "./dev/themes"
+	},
 	"config": {
 		"WP_DEBUG": true,
 		"WP_DEBUG_LOG": true,

@@ -40,6 +40,14 @@ resolves every `*.localhost` hostname to loopback (RFC 6761) without consulting 
 the container loopback is the container itself, so requests to `apps.memberful.localhost` would never
 leave it. The plugin pins `*.memberful.localhost` to the Docker host via `CURLOPT_RESOLVE`.
 
+### Installing other plugins and themes
+
+`wp-content/plugins` and `wp-content/themes` are mapped to the git-ignored `dev/plugins` and
+`dev/themes` directories, so plugins and themes you install in wp-admin (or unzip there yourself) stay
+on your machine. wp-env re-downloads WordPress whenever `.wp-env.json` or `.wp-env.override.json`
+changes, on `npm run env:update` and on `npm run env:destroy`; `dev/plugins` and `dev/themes` survive
+all of that.
+
 ### Resetting the local environment
 
 Run `npm run env:clean` to reset the database, or `npm run env:destroy` to remove the environment entirely. Run `npm run env:start` again to recreate it.
