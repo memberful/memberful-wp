@@ -22,7 +22,7 @@ The local environment uses [`@wordpress/env`](https://developer.wordpress.org/bl
 - `npm run start`: watch and rebuild JS during development.
 - `npm run build`: create production JS bundles for release checks.
 
-By default the plugin connects to memberful.com. `.wp-env.json` is the shared configuration and must stay neutral: do not add `MEMBERFUL_*` constants or Memberful-internal mappings to it. Per-developer settings belong in the git-ignored `.wp-env.override.json`; Memberful staff generate it with `npm run env:local-memberful`, which points the plugin at a local Memberful app (`https://apps.memberful.localhost`) and mounts `dev/mu-plugins/memberful-dev-resolve.php` as a must-use plugin so `*.memberful.localhost` requests reach the Docker host (libcurl otherwise resolves `*.localhost` to loopback). Files under `dev/` are development tooling and are never shipped with the plugin.
+By default the plugin connects to memberful.com. `.wp-env.json` is the shared configuration and must stay neutral: do not add `MEMBERFUL_*` constants or Memberful-internal mappings to it. Per-developer settings belong in the git-ignored `.wp-env.override.json`; Memberful staff generate it with `npm run env:local-memberful`, which points the plugin at a local Memberful app (`https://apps.memberful.localhost`), serves the site at `http://wordpress.localhost` via puma-dev (`dev/mu-plugins/memberful-dev-site-url.php` strips the port wp-env appends to `WP_HOME`), and mounts `dev/mu-plugins/memberful-dev-resolve.php` as a must-use plugin so `*.memberful.localhost` requests reach the Docker host (libcurl otherwise resolves `*.localhost` to loopback). Files under `dev/` are development tooling and are never shipped with the plugin.
 
 ## Coding Style & Naming Conventions
 

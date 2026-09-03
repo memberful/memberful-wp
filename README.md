@@ -31,8 +31,9 @@ npm run env:local-memberful
 ```
 
 This writes a `.wp-env.override.json` (git-ignored) that points the plugin at
-`https://apps.memberful.localhost` and restarts the environment. To go back to memberful.com, delete
-`.wp-env.override.json` and run `npm run env:start`.
+https://apps.memberful.localhost, serves the site at http://wordpress.localhost through puma-dev and
+restarts the environment. To go back to memberful.com, delete `.wp-env.override.json` and run
+`npm run env:start`.
 
 This will also mount `dev/mu-plugins/memberful-dev-resolve.php` as a must-use plugin. It is needed because libcurl
 resolves every `*.localhost` hostname to loopback (RFC 6761) without consulting `/etc/hosts`, and inside
