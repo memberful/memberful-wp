@@ -14,10 +14,30 @@ You should be able to access the WP admin panel now: http://localhost:8888/wp-ad
 
 The default username/password is admin/password.
 
-Once signed in you'll need to go to your local Memberful site, and setup a WordPress integration
+Once signed in you'll need to go to your Memberful site, and setup a WordPress integration
 (`Memberful Admin -> Website -> External Website -> Connect my WordPress site`), then copy and paste the activation
 code into the WordPress admin panel (WP admin -> Settings -> Memberful). Submit the form and then
-WordPress should be connected to your local vm, ready for development!
+WordPress should be connected to Memberful, ready for development!
+
+By default the plugin connects to memberful.com, so any Memberful account works. Use a dedicated
+test site rather than a live one.
+
+### Connecting to a local Memberful app (Memberful staff)
+
+If you run the Memberful app locally behind puma-dev, run:
+
+```bash
+npm run env:local-memberful
+```
+
+This writes a `.wp-env.override.json` (git-ignored) that points the plugin at
+`https://apps.memberful.localhost` and restarts the environment. To go back to memberful.com, delete
+`.wp-env.override.json` and run `npm run env:start`.
+
+This will also mount `dev/mu-plugins/memberful-dev-resolve.php` as a must-use plugin. It is needed because libcurl
+resolves every `*.localhost` hostname to loopback (RFC 6761) without consulting `/etc/hosts`, and inside
+the container loopback is the container itself, so requests to `apps.memberful.localhost` would never
+leave it. The plugin pins `*.memberful.localhost` to the Docker host via `CURLOPT_RESOLVE`.
 
 ### Resetting the local environment
 

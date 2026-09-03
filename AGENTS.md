@@ -22,6 +22,8 @@ The local environment uses [`@wordpress/env`](https://developer.wordpress.org/bl
 - `npm run start`: watch and rebuild JS during development.
 - `npm run build`: create production JS bundles for release checks.
 
+By default the plugin connects to memberful.com. `.wp-env.json` is the shared configuration and must stay neutral: do not add `MEMBERFUL_*` constants or Memberful-internal mappings to it. Per-developer settings belong in the git-ignored `.wp-env.override.json`; Memberful staff generate it with `npm run env:local-memberful`, which points the plugin at a local Memberful app (`https://apps.memberful.localhost`) and mounts `dev/mu-plugins/memberful-dev-resolve.php` as a must-use plugin so `*.memberful.localhost` requests reach the Docker host (libcurl otherwise resolves `*.localhost` to loopback). Files under `dev/` are development tooling and are never shipped with the plugin.
+
 ## Coding Style & Naming Conventions
 
 Match the surrounding code rather than reformatting broadly. PHP follows the existing WordPress-style conventions used here: 2-space indentation, snake_case functions, uppercase `TRUE`/`FALSE` where already present, and `Memberful_*` class names. Keep filenames consistent with nearby modules, for example `src/private_user_feed.php` or `src/endpoints/webhook.php`. JavaScript is built with `@wordpress/scripts`; keep source files in `js/src` and let Webpack produce `js/build`.
