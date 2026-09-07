@@ -94,7 +94,15 @@ class Memberful_Paywall_Renderer {
    * @return string
    */
   public static function render( array $config, bool $interactive = true ): string {
-    $config = wp_parse_args( $config, Memberful_Paywall_Config::defaults() );
+    $defaults = Memberful_Paywall_Config::defaults();
+    $config   = wp_parse_args( $config, $defaults );
+
+    // A cleared label is stored as an empty string, which would render a button with no text.
+    foreach ( array( 'button_label', 'free_button_label' ) as $key ) {
+      if ( '' === trim( (string) $config[ $key ] ) ) {
+        $config[ $key ] = $defaults[ $key ];
+      }
+    }
 
     $layout = in_array( $config['layout'], Memberful_Paywall_Config::LAYOUTS, true ) ? $config['layout'] : 'card';
     $method = 'render_' . $layout;
@@ -145,11 +153,54 @@ class Memberful_Paywall_Renderer {
     $cta     = self::primary_cta( $config, $interactive );
     $actions = '' === $cta ? '' : '<div class="memberful-paywall__actions">' . $cta . '</div>';
 
-    return self::heading_block( $config )
+    return self::meter_block( $config )
+           . self::heading_block( $config )
            . self::subheading_block( $config )
            . self::features_block( $config )
            . $actions
            . self::sign_in_prompt( $config, $interactive );
+  }
+
+  /**
+   * Free-view counter eyebrow, or empty when disabled or the current view is not metered.
+   *
+   * The same builder markup also fronts the hard paywall on members-only posts, so the counter only renders when a
+   * listener on memberful_paywall_free_view_limit returns the applicable limit; the metering module does so when the
+   * meter blocked the post under view. A zero limit has nothing to count, so it hides the counter too.
+   *
+   * @param array $config Sanitized config.
+   *
+   * @return string
+   */
+  private static function meter_block( array $config ): string {
+    if ( empty( $config['show_counter'] ) ) {
+      return '';
+    }
+
+    $template = isset( $config['counter_template'] ) ? (string) $config['counter_template'] : '';
+    if ( '' === trim( $template ) ) {
+      return '';
+    }
+
+    /**
+     * Filter the free-view limit shown in the paywall counter.
+     *
+     * Return null (the default) to hide the counter when the current view is not metered. The metering module
+     * returns the anonymous or registered limit when the meter blocked the post under view. Only a positive
+     * integer renders the counter.
+     *
+     * @param int|null $limit  Applicable free-view limit, or null when the current view is not metered.
+     * @param array    $config Sanitized paywall config.
+     */
+    $limit = apply_filters( 'memberful_paywall_free_view_limit', null, $config );
+    if ( null === $limit || (int) $limit < 1 ) {
+      return '';
+    }
+
+    return sprintf(
+      '<p class="memberful-paywall__meter">%s</p>',
+      esc_html( str_replace( '{limit}', number_format_i18n( (int) $limit ), $template ) )
+    );
   }
 
   /**
@@ -205,14 +256,28 @@ class Memberful_Paywall_Renderer {
   }
 
   /**
-   * Primary subscribe CTA, or empty when there is no usable destination.
+   * Primary CTA, or empty when there is no usable destination.
+   *
+   * Renders the free-registration upsell instead of the subscribe button when the visitor was blocked by the meter
+   * and creating a free account would grant additional views. Falls back to the subscribe button when the free
+   * destination resolves to nothing usable.
    *
    * @param array $config Sanitized config.
    *
    * @return string
    */
   private static function primary_cta( array $config, bool $interactive ): string {
-    $url = self::subscribe_url( $config );
+    $label = $config['button_label'];
+    $url   = self::subscribe_url( $config );
+
+    if ( self::should_show_free_registration_cta() ) {
+      $free_url = self::free_registration_url( $config );
+
+      if ( '' !== $free_url ) {
+        $label = $config['free_button_label'];
+        $url   = $free_url;
+      }
+    }
 
     if ( '' === $url ) {
       return '';
@@ -221,15 +286,66 @@ class Memberful_Paywall_Renderer {
     if ( ! $interactive ) {
       return sprintf(
         '<span class="memberful-paywall__button memberful-paywall__button--primary" aria-disabled="true">%s</span>',
-        esc_html( $config['button_label'] )
+        esc_html( $label )
       );
     }
 
     return sprintf(
       '<a class="memberful-paywall__button memberful-paywall__button--primary" href="%s">%s</a>',
       esc_url( $url ),
-      esc_html( $config['button_label'] )
+      esc_html( $label )
     );
+  }
+
+  /**
+   * Whether the paywall should upsell a free registration instead of a paid subscription.
+   *
+   * True only when a logged-out visitor was blocked by the meter on the post under view and free members have a
+   * metered allowance of their own. Anonymous and registered allowances are independent, so registering always
+   * grants the full registered limit; only a zero registered limit would make the upsell pointless.
+   *
+   * @return bool
+   */
+  private static function should_show_free_registration_cta(): bool {
+    if ( is_user_logged_in() ) {
+      return false;
+    }
+
+    if ( ! class_exists( 'Memberful_Metering_Access' ) || ! class_exists( 'Memberful_Metering_Config' ) ) {
+      return false;
+    }
+
+    $post_id = (int) get_queried_object_id();
+
+    if ( ! $post_id || Memberful_Metering_Access::DECISION_TRIP_METER !== Memberful_Metering_Access::get_current_decision( $post_id ) ) {
+      return false;
+    }
+
+    $metering = Memberful_Metering_Config::get();
+
+    if ( empty( $metering['enabled'] ) ) {
+      return false;
+    }
+
+    return (int) $metering['registered_limit'] > 0;
+  }
+
+  /**
+   * Resolve the free-registration URL, falling back to the Memberful registration page when it resolves to an
+   * absolute URL.
+   *
+   * @param array $config Sanitized config.
+   *
+   * @return string
+   */
+  private static function free_registration_url( array $config ): string {
+    if ( ! empty( $config['free_button_url'] ) ) {
+      return $config['free_button_url'];
+    }
+
+    $registration_url = memberful_registration_page_url();
+
+    return wp_parse_url( $registration_url, PHP_URL_HOST ) ? $registration_url : '';
   }
 
   /**

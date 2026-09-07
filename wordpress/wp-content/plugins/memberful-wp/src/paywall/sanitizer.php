@@ -33,10 +33,14 @@ class Memberful_Paywall_Sanitizer {
 			}
 		}
 
-		foreach ( array( 'heading', 'subheading', 'button_label', 'free_button_label' ) as $key ) {
+		foreach ( array( 'heading', 'subheading', 'button_label', 'free_button_label', 'counter_template' ) as $key ) {
 			if ( isset( $input[ $key ] ) ) {
 				$clean[ $key ] = sanitize_text_field( (string) $input[ $key ] );
 			}
+		}
+
+		if ( isset( $input['show_counter'] ) ) {
+			$clean['show_counter'] = ! empty( $input['show_counter'] );
 		}
 
 		if ( isset( $input['features'] ) ) {

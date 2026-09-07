@@ -110,12 +110,24 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 18. View metrics and revenue reports
 19. View membership information
 
+== For developers ==
+
+The metered paywall exposes a few extension points:
+
+* Filter `memberful_paywall_free_view_limit` - the number shown in the paywall's optional free-view counter (the `{limit}` placeholder). Passed null and the paywall config; return a positive integer to show the counter, or null to hide it.
+* Block `memberful/metering-countdown` - shows a visitor's remaining free views (use the `{count}` placeholder in the block text).
+
+Anonymous and free-member allowances are independent: signing up grants the full free-member allowance rather than the remainder of the anonymous one. Metering only runs while the global paywall is enabled, since that is what visitors see once the meter trips. Anonymous views are tracked in a signed cookie and metered pages are served with no-store / DONOTCACHEPAGE headers. A cache that ignores those headers for logged-out visitors, such as WP Engine's Edge Full Page Cache, can serve one visitor's page to everyone, so anonymous metering is not supported on such hosts in this release.
+
 == Changelog ==
 
 = unreleased =
 
 * Add a visual paywall builder for creating branded paywalls without writing HTML
 * Allow customizing how many paragraphs appear before the paywall
+* Add a metered paywall with per-tier free reading limits and a rule builder for choosing which posts count
+* Add a countdown block showing how many free articles a visitor has left
+* Show an optional free-view count and a free-registration button in the paywall
 
 = 1.81.0 =
 
