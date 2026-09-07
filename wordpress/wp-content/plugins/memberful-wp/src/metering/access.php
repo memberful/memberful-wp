@@ -206,6 +206,10 @@ class Memberful_Metering_Access {
   private static function emit_no_cache_headers(): void {
     nocache_headers();
 
+    // WordPress before 6.8 leaves no-store and private out of Cache-Control for logged-out visitors. A metered page
+    // (or a rejected prefetch) must never be reused from any cache, so send the full directive set explicitly.
+    header( 'Cache-Control: no-cache, must-revalidate, max-age=0, no-store, private' );
+
     if ( ! defined( 'DONOTCACHEPAGE' ) ) {
       define( 'DONOTCACHEPAGE', true );
     }
@@ -239,15 +243,14 @@ class Memberful_Metering_Access {
   }
 
   /**
-   * Whether the browser fetched this page speculatively (prefetch, prerender, or a Safari preview) rather than for a
-   * reader. Covers Speculation Rules and modern browsers (Sec-Purpose), legacy Chrome (Purpose), Firefox (X-Moz)
-   * and WebKit (X-Purpose).
+   * Whether the browser fetched this page speculatively (prefetch or prerender) rather than for a reader.
+   * Covers Speculation Rules and modern browsers (Sec-Purpose), legacy Chrome (Purpose) and Firefox (X-Moz).
    *
    * @return bool
    */
   private static function is_prefetch_request(): bool {
-    foreach ( array( 'HTTP_SEC_PURPOSE', 'HTTP_PURPOSE', 'HTTP_X_MOZ', 'HTTP_X_PURPOSE' ) as $header ) {
-      if ( isset( $_SERVER[ $header ] ) && preg_match( '/prefetch|prerender|preview/i', (string) wp_unslash( $_SERVER[ $header ] ) ) ) {
+    foreach ( array( 'HTTP_SEC_PURPOSE', 'HTTP_PURPOSE', 'HTTP_X_MOZ' ) as $header ) {
+      if ( isset( $_SERVER[ $header ] ) && preg_match( '/^prefetch(?:\s*;|$)/i', trim( (string) wp_unslash( $_SERVER[ $header ] ) ) ) ) {
         return true;
       }
     }
