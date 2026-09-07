@@ -18,6 +18,7 @@
 /.wp-env.json
 /.editorconfig
 /.idea
+/dev
 /node_modules
 /.phpunit.result.cache
 .DS_Store
