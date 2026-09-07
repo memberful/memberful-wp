@@ -1,0 +1,38 @@
+name: Deploy to WordPress.org
+
+on:
+  release:
+    types: [released]
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    name: New release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Check release tag matches version
+        run: |
+          v=$(grep -oiP '^Stable tag:\s*\K\S+' readme.txt)
+          [ "$v" = "$GITHUB_REF_NAME" ] || { echo "::error::Release tag $GITHUB_REF_NAME != Stable tag $v"; exit 1; }
+
+      - name: Build
+        run: |
+          npm install
+          npm run build
+
+      - name: WordPress plugin deploy
+        id: deploy
+        uses: 10up/action-wordpress-plugin-deploy@stable
+        with:
+          generate-zip: true
+        env:
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+
+      - name: Upload release asset
+        uses: softprops/action-gh-release@v3
+        with:
+          files: ${{ steps.deploy.outputs.zip-path }}

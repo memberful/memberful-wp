@@ -4,14 +4,15 @@
 
 ### Setup instructions
 
+This project uses [`@wordpress/env`](https://developer.wordpress.org/block-editor/reference-guides/packages/packages-env/) (wp-env) for local development, which requires [Docker](https://www.docker.com/get-started).
+
 - Install [Docker](https://www.docker.com/get-started).
-- Run `docker compose up` to start all needed containers. You can stop them with Ctrl+C.
-  - Alternatively, you can run `docker compose up -d` to start them in the detached mode and `docker compose stop` to stop them.
-- Run `./docker-provision.sh` for the initial WordPress setup.
+- From the repository root, run `npm install` to install dependencies.
+- Run `npm run env:start` to start the local WordPress environment.
 
-You should be able to access the WP admin panel now: http://wordpress.localhost/wp-admin
+You should be able to access the WP admin panel now: http://localhost:8888/wp-admin
 
-The default username/password is admin/admin.
+The default username/password is admin/password.
 
 Once signed in you'll need to go to your local Memberful site, and setup a WordPress integration
 (`Memberful Admin -> Website -> External Website -> Connect my WordPress site`), then copy and paste the activation
@@ -20,39 +21,30 @@ WordPress should be connected to your local vm, ready for development!
 
 ### Resetting the local environment
 
-Run `docker compose down` to remove the Docker containers and follow the previous section to start them again.
+Run `npm run env:clean` to reset the database, or `npm run env:destroy` to remove the environment entirely. Run `npm run env:start` again to recreate it.
 
-### Updating Docker images
+### Updating WordPress / PHP versions
 
-If you need to update the Docker images, you can run `docker compose pull` to pull the latest images. Then you can run `docker compose up` to start the updated containers.
+The environment is configured in `.wp-env.json` (`core` and `phpVersion`). After changing it, run `npm run env:update`.
 
 ### Using the WP-CLI
 
-The command-line interface from WordPress can be useful in debugging plugin issues and reading/editing the database.
+The command-line interface from WordPress can be useful in debugging plugin issues and reading/editing the database. Run WP-CLI commands inside the environment with:
 
 An easy way to work with the CLI from outside the container is to take the `wp()` bash function from the provision script:
 ```bash
-wp() {
-  docker run -it --rm \
-    --volumes-from memberful-wp-wordpress-1 \
-    --network container:memberful-wp-wordpress-1 \
-    --env-file envfile \
-    --user 33:33 \
-    wordpress:cli wp $@
-}
+npm run env:cli -- <command>
 ```
 
-If your volume and container names match you can take the above function, copy/paste it into your command prompt, and then run `wp` commands as if WordPress was installed directly (outside a container).
-
 For example, to see all the metadata for user 2 directly from the db:
-`wp user meta list 2`
+`npm run env:cli -- user meta list 2`
 
 
 ## Building plugin assets
 
 The plugin's JavaScript files are compiled with WP Scripts and Webpack.
 
-Run `npm install` from the plugin root folder (`wordpress/wp-content/plugins/memberful-wp`) to install the necessary dependencies.
+Run `npm install` from the repository root to install the necessary dependencies.
 
 When in local development mode, run `npm run start` to start WP Scripts in "watch" mode. This will automatically re-build assets when changes are made.
 
@@ -87,53 +79,33 @@ segment is a separate number. i.e. `1.12.0` > `1.11.0`.
 
 ## Releasing a new version of the plugin
 
+Releases are published to WordPress.org automatically by the **Deploy to WordPress.org** GitHub Actions workflow (`.github/workflows/deploy.yml`) whenever a GitHub release is published.
+
 ### Prerequisites
 
-Make sure you're added as a committer in WordPress.
-
-The release script retrieves the WordPress committer username from the `svn` server config file.
-
-To setup, enter `~/.subversion/servers` and add a group with a URL match for WP's server URL, as well as your WP username, like so:
-
-```
-[groups]
-
-memberful-wp = plugins.svn.wordpress.org
-
-[memberful-wp]
-
-username = YOUR_WP_COMMITTER_USERNAME
-```
-
-Any `svn` actions to `plugins.svn.wordpress.org` that require authentication will then use the username from the config file.
+Deployment authenticates to the WordPress.org SVN repository with the `SVN_USERNAME` and `SVN_PASSWORD` repository secrets. These belong to a user with commit access to the plugin on WordPress.org and are configured once under **Settings → Secrets and variables → Actions**. No local SVN setup is required.
 
 ### Release steps
 
 * Make sure that every change has an appropriate changelog entry in `readme.txt`.
 * Set correct version number in `readme.txt` and `memberful-wp.php`.
 * Ensure that all changes are ready in the `main` branch.
-* Run `npm install && npm run build` from the plugin root to build plugin assets.
-* Run `./release.sh`.
-* A copy of the wordpress.org svn repo will be downloaded into `/tmp`, the
-  version you tagged will be copied across to the `tags` and `trunk`
-  directories, (sans development files) and then committed to the svn repo,
-  causing wordpress.org to release a new version.
-* The script will remove the `svn` directory.
+* Create a new GitHub release from `main` with a tag that matches the `Stable tag`, e.g. `1.16.0`.
 
-### Updating WordPress SVN without a new plugin version
+Publishing the release triggers the **Deploy to WordPress.org** workflow (`.github/workflows/deploy.yml`), which:
 
-From time to time we need to update WordPress SVN without releasing a new plugin
-version. For example we need to do this after updating "Tested up to" in
-`readme.txt`. To do this simply follow the release instructions above without
-updating the plugin version.
+* verifies the release tag matches the `Stable tag` in `readme.txt`,
+* builds the production assets (`npm install && npm run build`),
+* commits the plugin to the WordPress.org SVN `trunk` and tags the new version, causing WordPress.org to release the update, and
+* attaches the generated plugin zip to the GitHub release.
+
+### Building a release zip manually
+
+To produce an installable plugin zip without publishing to WordPress.org (for testing, or to distribute a build from any branch) run the **Build release zip** workflow (`.github/workflows/build-zip.yml`) from the Actions tab via **Run workflow**. The zip is uploaded as a workflow artifact (retained for 5 days).
 
 ### Updating assets for the WordPress plugin page
 
-Very occasionally we may need to update the assets for the WordPress plugin. This
-includes the banner image, the icon, and the screenshots. To do this:
-
-* Update the assets in the `assets` directory.
-* Run `./release.sh --assets`.
+The banner image, icon, and screenshots live in the `.wordpress-org` directory. The deploy workflow pushes this directory to the WordPress.org SVN `assets` directory automatically on each release. To update them, commit the new files in `.wordpress-org` and they ship with the next release. The same applies to `readme.txt`-only changes such as bumping "Tested up to".
 
 ## Rolling back
 

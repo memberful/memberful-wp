@@ -1,0 +1,22 @@
+name: Build release zip
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build release zip
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Build plugin
+        run: |
+          npm install
+          npm run build
+
+      - name: Generate zip
+        uses: 10up/action-wordpress-plugin-build-zip@stable
+        with:
+          retention-days: 5
