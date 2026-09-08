@@ -217,14 +217,6 @@ function memberful_wp_protect_content( $content ) {
       return memberful_wp_listing_excerpt( $content, $content_split );
     }
 
-    // Disable Beaver Builder while the marketing content is built, so nested
-    // `the_content` calls can't render the protected layout into it.
-    $beaver_builder_priority = has_filter( 'the_content', 'FLBuilder::render_content' );
-
-    if ( FALSE !== $beaver_builder_priority ) {
-      remove_action( 'the_content', 'FLBuilder::render_content', $beaver_builder_priority );
-    }
-
     // Remove Elementor action hook
     if (get_queried_object_id() === $post->ID) {
       remove_action("elementor/frontend/the_content", "memberful_wp_protect_content");
@@ -246,22 +238,6 @@ function memberful_wp_protect_content( $content ) {
       }
     } else {
       $protected_content = apply_filters( 'memberful_wp_protect_content', $memberful_marketing_content );
-    }
-
-    // Restore Beaver Builder after this `the_content` run finishes, so a
-    // same-run callback at an earlier priority (e.g. Sensei's filter at -10)
-    // cannot let Beaver Builder replace paywall output with the protected layout.
-    if ( FALSE !== $beaver_builder_priority ) {
-      if ( doing_filter( 'the_content' ) ) {
-        $restore_beaver_builder = function( $content ) use ( $beaver_builder_priority, &$restore_beaver_builder ) {
-          remove_filter( 'the_content', $restore_beaver_builder, 9999 );
-          add_filter( 'the_content', 'FLBuilder::render_content', $beaver_builder_priority );
-          return $content;
-        };
-        add_filter( 'the_content', $restore_beaver_builder, 9999 );
-      } else {
-        add_filter( 'the_content', 'FLBuilder::render_content', $beaver_builder_priority );
-      }
     }
 
     return $protected_content;

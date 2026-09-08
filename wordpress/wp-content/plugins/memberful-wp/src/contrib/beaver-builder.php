@@ -4,6 +4,11 @@
  *
  * Adds Memberful visibility settings to the Advanced tab of Beaver Builder rows, columns, and modules, mirroring the
  * Gutenberg block visibility controls in src/block-editor.php.
+ *
+ * Also keeps Beaver Builder from rendering a protected layout in place of, or inside, the Memberful paywall.
+ *
+ * Hook callbacks leave the filtered value untyped on purpose: a wrong type returned by another plugin's callback on the
+ * same hook should fail in that plugin, not as a TypeError here.
  */
 
 add_action( 'plugins_loaded', 'memberful_wp_beaver_builder_init' );
@@ -16,16 +21,21 @@ function memberful_wp_beaver_builder_init() {
   add_filter( 'fl_builder_register_settings_form', 'memberful_wp_beaver_builder_add_visibility_section', 10, 2 );
   add_filter( 'fl_builder_is_node_visible', 'memberful_wp_beaver_builder_is_node_visible', 10, 2 );
   add_filter( 'fl_builder_render_module_html_content', 'memberful_wp_beaver_builder_filter_editor_export_content', 10, 3 );
+  add_filter( 'fl_builder_do_render_content', 'memberful_wp_beaver_builder_do_render_content', 10, 2 );
+
+  // The `memberful_wp_protect_content` filter only runs while a paywall is being built, so it doubles as the
+  // "this post is paywalled" signal.
+  add_filter( 'memberful_wp_protect_content', 'memberful_wp_beaver_builder_remember_paywalled_post' );
 }
 
 /**
  * Add the Memberful Visibility section to the Advanced tab of every Beaver Builder row, column, and module settings form.
  *
- * @param array  $form The settings form config.
+ * @param array  $form The settings form config, as filtered so far.
  * @param string $id   The form id ("row", "col", or "module_advanced").
  * @return array The settings form config.
  */
-function memberful_wp_beaver_builder_add_visibility_section( array $form, string $id ): array {
+function memberful_wp_beaver_builder_add_visibility_section( $form, string $id ): array {
   if ( 'row' === $id || 'col' === $id ) {
     $form['tabs']['advanced']['sections']['memberful_visibility'] = memberful_wp_beaver_builder_visibility_section();
   }
@@ -95,18 +105,18 @@ function memberful_wp_beaver_builder_visibility_section(): array {
 /**
  * Apply the Memberful visibility rule when Beaver Builder decides whether to render a row, column, or module.
  *
- * @param bool   $is_visible Whether Beaver Builder considers the node visible.
+ * @param bool   $is_visible Whether Beaver Builder considers the node visible, as filtered so far.
  * @param object $node       The node.
  * @return bool Whether the node should be rendered.
  */
-function memberful_wp_beaver_builder_is_node_visible( bool $is_visible, object $node ): bool {
+function memberful_wp_beaver_builder_is_node_visible( $is_visible, object $node ): bool {
   if ( ! $is_visible ) {
-    return $is_visible;
+    return FALSE;
   }
 
   // Always show nodes while editing in the builder UI.
   if ( FLBuilderModel::is_builder_active() ) {
-    return $is_visible;
+    return TRUE;
   }
 
   $rule = isset( $node->settings->memberful_visibility ) ? $node->settings->memberful_visibility : '';
@@ -119,7 +129,7 @@ function memberful_wp_beaver_builder_is_node_visible( bool $is_visible, object $
     return memberful_wp_beaver_builder_specific_plans_rule_allows( $node->settings );
   }
 
-  return $is_visible;
+  return TRUE;
 }
 
 /**
@@ -165,18 +175,76 @@ function memberful_wp_beaver_builder_specific_plans_rule_allows( object $setting
 }
 
 /**
+ * Posts Memberful has paywalled during this request, keyed by the post ID Beaver Builder renders layouts for.
+ *
+ * @param int|null $add A post ID to record.
+ * @return array<int, true>
+ */
+function memberful_wp_beaver_builder_paywalled_post_ids( ?int $add = null ): array {
+  static $ids = array();
+
+  if ( null !== $add && $add > 0 ) {
+    $ids[ $add ] = true;
+  }
+
+  return $ids;
+}
+
+/**
+ * Record the post whose paywall is being built.
+ *
+ * Uses the post Beaver Builder itself would render the layout for (the main loop post, otherwise the global post)
+ * rather than $post, because integrations like Sensei point $post at a different post while calling
+ * memberful_wp_protect_content().
+ *
+ * @param mixed $content The marketing content being filtered.
+ * @return mixed The content, unchanged.
+ */
+function memberful_wp_beaver_builder_remember_paywalled_post( $content ) {
+  memberful_wp_beaver_builder_paywalled_post_ids( (int) FLBuilderModel::get_post_id( true ) );
+
+  return $content;
+}
+
+/**
+ * Keep Beaver Builder from rendering a layout in place of, or inside, Memberful paywall output.
+ *
+ * This is the filter Beaver Builder's own integrations use for the same purpose, see
+ * FLBuilderCompatibility::wc_memberships_support(). It avoids unhooking FLBuilder::render_content from `the_content`,
+ * which needed restoring from inside the same run and made WP_Hook skip the next priority bucket.
+ *
+ * @param mixed $do_render Whether Beaver Builder intends to render the layout, as filtered so far.
+ * @param mixed $post_id   The post whose layout would render.
+ * @return mixed
+ */
+function memberful_wp_beaver_builder_do_render_content( $do_render, $post_id ) {
+  // Nested `the_content` runs while the paywall is being built, e.g. global snippets reading the post body.
+  if ( doing_filter( 'memberful_wp_protect_content' ) || doing_filter( 'memberful_marketing_content' ) ) {
+    return FALSE;
+  }
+
+  // The paywall already replaced this post's content earlier in the request, possibly from a `the_content`
+  // callback that runs before Beaver Builder's, e.g. Sensei's at -10.
+  if ( isset( memberful_wp_beaver_builder_paywalled_post_ids()[ (int) $post_id ] ) ) {
+    return FALSE;
+  }
+
+  return $do_render;
+}
+
+/**
  * Keep restricted module content out of the plain-text fallback that Beaver Builder saves to `post_content` on publish.
  *
  * Beaver Builder skips nodes with its native visibility rules when building that fallback (FLBuilder::render_editor_content()), but it doesn't know
  * about our fields, so we drop any module carrying a Memberful rule (regardless of who is publishing) to keep restricted
  * text out of search, excerpts, and feeds.
  *
- * @param string $content  The rendered module HTML.
+ * @param string $content  The rendered module HTML, as filtered so far.
  * @param string $type     The module type.
  * @param object $settings The module settings.
- * @return string The module HTML, or an empty string during the editor export.
+ * @return mixed The module HTML unchanged, or an empty string during the editor export.
  */
-function memberful_wp_beaver_builder_filter_editor_export_content( string $content, string $type, object $settings ): string {
+function memberful_wp_beaver_builder_filter_editor_export_content( $content, string $type, object $settings ) {
   if ( ! memberful_wp_beaver_builder_doing_editor_export() ) {
     return $content;
   }
