@@ -119,6 +119,12 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 * Add a metered paywall with per-tier free reading limits and a rule builder for choosing which posts count
 * Add a countdown block showing how many free articles a visitor has left
 * Show an optional free-view count and a free-registration button in the paywall
+* Add Memberful visibility settings to the Advanced tab of Beaver Builder rows, columns, and modules, matching the block editor visibility controls
+* Fix Beaver Builder layouts not rendering for other posts after a protected post in the same request
+* Fix duplicate content-protection filter registered when building the global marketing teaser
+* Fix shortcodes emitted by blocks in marketing content never executing (run blocks before shortcodes, matching core)
+* Fix empty teaser wrapper and teaser CSS being output when a protected post has no teaser content
+* Fix Sensei integration failing to unhook content protection due to a missing filter priority
 
 = 1.81.0 =
 
