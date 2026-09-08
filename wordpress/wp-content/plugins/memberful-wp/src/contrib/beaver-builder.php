@@ -204,6 +204,10 @@ function memberful_wp_beaver_builder_paywalled_post_ids( ?int $add = null ): arr
  * @return mixed The content, unchanged.
  */
 function memberful_wp_beaver_builder_remember_paywalled_post( $content ) {
+  if ( ! doing_filter( 'the_content' ) ) {
+    return $content;
+  }
+
   memberful_wp_beaver_builder_paywalled_post_ids( (int) FLBuilderModel::get_post_id( true ) );
 
   return $content;
