@@ -8,7 +8,10 @@ add_action( 'admin_head',            'memberful_wp_announce_plans_and_download_i
 add_action( 'admin_menu',            'memberful_wp_menu' );
 add_action( 'admin_init',            'memberful_wp_register_options' );
 add_action( 'admin_init',            'memberful_wp_activation_redirect' );
-add_action( 'admin_init',            'memberful_wp_plugin_migrate_db' );
+// Runs on `init` rather than `admin_init` so that front-end requests migrate
+// too: on multisite every site must migrate its user meta to blog-scoped keys
+// before members regain access, and some sites may not see an admin for days
+add_action( 'init',                  'memberful_wp_plugin_migrate_db' );
 add_action( 'admin_enqueue_scripts', 'memberful_wp_admin_enqueue_scripts' );
 add_filter( 'display_post_states',   'memberful_wp_add_protected_state_to_post_list', 10, 2 );
 
@@ -87,7 +90,56 @@ function memberful_wp_plugin_migrate_db() {
     $db_version = 3;
   }
 
+  if ( $db_version < 4 ) {
+    if ( is_multisite() ) {
+      memberful_wp_migrate_user_meta_to_blog_scoped_keys();
+    }
+
+    $db_version = 4;
+  }
+
   update_option( 'memberful_db_version', $db_version );
+}
+
+/**
+ * On multisite the usermeta table is shared network-wide, so each site's
+ * member data is stored under blog-scoped keys (see memberful_wp_user_meta_key).
+ * Copy the old un-scoped values over to this site's scoped keys for every
+ * user mapped to a member of this site's Memberful account.
+ *
+ * The copy is done in SQL rather than through the meta API so that sites
+ * with a large number of members migrate in one pass without exhausting
+ * memory (the meta API caches every user's meta as it goes).
+ *
+ * The un-scoped values are left in place because other sites in the network
+ * may not have migrated yet. Stale values self-correct on the next member
+ * sync for each site.
+ */
+function memberful_wp_migrate_user_meta_to_blog_scoped_keys() {
+  global $wpdb;
+
+  foreach ( memberful_wp_member_user_meta_keys() as $meta_key ) {
+    $scoped_key = memberful_wp_user_meta_key( $meta_key );
+
+    if ( $scoped_key === $meta_key )
+      continue;
+
+    $wpdb->query( $wpdb->prepare(
+      'INSERT INTO `'.$wpdb->usermeta.'` (`user_id`, `meta_key`, `meta_value`) '.
+      'SELECT `meta`.`user_id`, %s, `meta`.`meta_value` '.
+      'FROM `'.$wpdb->usermeta.'` AS `meta` '.
+      'INNER JOIN `'.Memberful_User_Mapping_Repository::table().'` AS `mapping` ON `mapping`.`wp_user_id` = `meta`.`user_id` '.
+      'WHERE `meta`.`meta_key` = %s '.
+      'AND NOT EXISTS ('.
+        'SELECT 1 FROM `'.$wpdb->usermeta.'` AS `scoped` '.
+        'WHERE `scoped`.`user_id` = `meta`.`user_id` AND `scoped`.`meta_key` = %s'.
+      ')',
+      $scoped_key, $meta_key, $scoped_key
+    ) );
+  }
+
+  // The direct inserts bypass the meta cache, which may be persistent
+  wp_cache_flush();
 }
 
 /**

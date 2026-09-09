@@ -197,7 +197,7 @@ function memberful_wp_user_plans_subscribed_to( $user_id ) {
  * we return an empty one.
  */
 function memberful_wp_get_user_meta_for_acl($user_id, $meta_key, $single = TRUE) {
-  $meta = get_user_meta($user_id, $meta_key, $single);
+  $meta = memberful_wp_get_user_meta($user_id, $meta_key, $single);
 
   if ($meta == false)
     $meta = array();

@@ -186,7 +186,7 @@ function memberful_wp_expiry_banner_dismissal_signature( array $expiry_data ): s
  * @return bool
  */
 function memberful_wp_expiry_banner_is_dismissed( int $user_id, string $signature ): bool {
-  $dismissed = get_user_meta( $user_id, 'memberful_expiry_banner_dismissed', true );
+  $dismissed = memberful_wp_get_user_meta( $user_id, 'memberful_expiry_banner_dismissed', true );
 
   if ( ! is_array( $dismissed ) || empty( $dismissed['signature'] ) || $dismissed['signature'] !== $signature ) {
     return false;
@@ -225,7 +225,7 @@ function memberful_wp_ajax_dismiss_expiry_banner(): void {
     wp_send_json_error( null, 400 );
   }
 
-  update_user_meta(
+  memberful_wp_update_user_meta(
     get_current_user_id(),
     'memberful_expiry_banner_dismissed',
     array(
@@ -245,10 +245,10 @@ function memberful_wp_ajax_dismiss_expiry_banner(): void {
  * @return array|null
  */
 function memberful_wp_get_soonest_expiring_subscription( $user_id ) {
-  $subscriptions = get_user_meta( $user_id, 'memberful_purchased_subscription', true );
+  $subscriptions = memberful_wp_get_user_meta( $user_id, 'memberful_purchased_subscription', true );
 
   if ( empty( $subscriptions ) || ! is_array( $subscriptions ) ) {
-    $subscriptions = get_user_meta( $user_id, 'memberful_subscription', true );
+    $subscriptions = memberful_wp_get_user_meta( $user_id, 'memberful_subscription', true );
   }
 
   if ( empty( $subscriptions ) || ! is_array( $subscriptions ) ) {

@@ -2,12 +2,12 @@
 <?php if ( ! empty($title) ): ?>
   <?php echo $before_title, $title, $after_title ?>
 <?php endif; ?>
-<?php if ( is_user_logged_in() ): ?>
+<?php if ( ! empty( $show_member_profile ) ): ?>
   <div class="memberful-profile-gravatar">
     <?php echo get_avatar( wp_get_current_user()->user_email, 48 ); ?>
   </div>
   <div class="memberful-profile-info">
-    <div class="memberful-profile-name"><?php echo wp_get_current_user()->user_firstname . ' ' . wp_get_current_user()->user_lastname;  ?></div>
+    <div class="memberful-profile-name"><?php echo esc_html( memberful_wp_member_name( wp_get_current_user() ) );  ?></div>
     <div class="memberful-profile-links">
       <?php echo memberful_wp_format_widget_links($signed_in_links); ?>
     </div>
