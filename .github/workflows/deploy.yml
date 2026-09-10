@@ -12,20 +12,24 @@ jobs:
     name: New release
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
-      - name: Check release tag matches version
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Check release tag matches plugin version
         run: |
-          v=$(grep -oiP '^Stable tag:\s*\K\S+' readme.txt)
-          [ "$v" = "$GITHUB_REF_NAME" ] || { echo "::error::Release tag $GITHUB_REF_NAME != Stable tag $v"; exit 1; }
+          stable=$(grep -oP '^Stable tag:\s*\K\S+' readme.txt)
+          header=$(grep -oP '^Version:\s*\K\S+' memberful-wp.php)
+          const=$(grep -oP "define\(\s*'MEMBERFUL_VERSION',\s*'\K[^']+" memberful-wp.php)
+          for v in "$stable" "$header" "$const"; do
+            [ "$v" = "$GITHUB_REF_NAME" ] || { echo "::error::Release tag $GITHUB_REF_NAME does not match: Stable tag=$stable, Version=$header, MEMBERFUL_VERSION=$const"; exit 1; }
+          done
 
       - name: Build
         run: |
-          npm install
+          npm ci
           npm run build
 
       - name: WordPress plugin deploy
         id: deploy
-        uses: 10up/action-wordpress-plugin-deploy@stable
+        uses: 10up/action-wordpress-plugin-deploy@54bd289b8525fd23a5c365ec369185f2966529c2 # 2.3.0
         with:
           generate-zip: true
         env:
@@ -33,6 +37,6 @@ jobs:
           SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
 
       - name: Upload release asset
-        uses: softprops/action-gh-release@v3
+        uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3.0.3
         with:
           files: ${{ steps.deploy.outputs.zip-path }}

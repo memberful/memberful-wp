@@ -9,14 +9,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Build plugin
         run: |
-          npm install
+          npm ci
           npm run build
 
       - name: Generate zip
-        uses: 10up/action-wordpress-plugin-build-zip@stable
+        uses: 10up/action-wordpress-plugin-build-zip@b9e621e1261ccf51592b6f3943e4dc4518fca0d1 # 1.0.2
         with:
           retention-days: 5

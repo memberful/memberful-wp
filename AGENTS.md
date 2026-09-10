@@ -37,7 +37,7 @@ Releases are published by the **Deploy to WordPress.org** GitHub Actions workflo
 
 ## Versioning
 
-The plugin version must match in three places: the `Stable tag` field in `readme.txt`, the `Version` header in `memberful-wp.php`, and the `MEMBERFUL_VERSION` constant in the same file. The deploy workflow verifies the release tag matches the `Stable tag` before publishing to WordPress.org. During feature development, use `= unreleased =` as the changelog heading in `readme.txt`. When a release is cut, that heading is replaced with the actual version number and all three locations are updated together. Do not bump the version unless explicitly asked.
+The plugin version must match in three places: the `Stable tag` field in `readme.txt`, the `Version` header in `memberful-wp.php`, and the `MEMBERFUL_VERSION` constant in the same file. The deploy workflow verifies the release tag matches all three before publishing to WordPress.org. During feature development, use `= unreleased =` as the changelog heading in `readme.txt`. When a release is cut, that heading is replaced with the actual version number and all three locations are updated together. Do not bump the version unless explicitly asked.
 
 ### Changelog updates before a version bump
 
