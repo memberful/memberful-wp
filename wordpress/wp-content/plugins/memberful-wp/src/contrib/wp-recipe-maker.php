@@ -24,13 +24,6 @@ class Memberful_Wp_Integration_WP_Recipe_Maker {
   protected static ?Memberful_Wp_Integration_WP_Recipe_Maker $_instance = null;
 
   /**
-   * Whether the recipe ID discovery filters should pass through unfiltered.
-   *
-   * @var bool
-   */
-  private bool $bypass_recipe_id_filters = false;
-
-  /**
    * Get the class instance.
    *
    * @return Memberful_Wp_Integration_WP_Recipe_Maker The class instance.
@@ -58,8 +51,6 @@ class Memberful_Wp_Integration_WP_Recipe_Maker {
     add_filter( 'wprm_recipe_snippet_shortcode_output', array( $this, 'filter_recipe_snippet_shortcode_output' ), 100, 3 );
     add_filter( 'render_block', array( $this, 'filter_rendered_block' ), 100, 2 );
     add_filter( 'do_shortcode_tag', array( $this, 'filter_shortcode_tag' ), 100, 3 );
-    add_filter( 'wprm_get_recipe_ids_from_post', array( $this, 'filter_recipe_ids_from_post' ), 10, 2 );
-    add_filter( 'wprm_get_recipe_ids_from_content', array( $this, 'filter_recipe_ids_from_content' ) );
     add_filter( 'wprm_recipes_on_page', array( $this, 'filter_recipes_on_page' ), 1000 );
     add_filter( 'wprm_recipe_metadata_cache_enabled', array( $this, 'filter_metadata_cache_enabled' ), 10, 2 );
     add_filter( 'wprm_recipe_metadata', array( $this, 'filter_recipe_metadata' ), 10, 2 );
@@ -240,43 +231,6 @@ class Memberful_Wp_Integration_WP_Recipe_Maker {
   }
 
   /**
-   * Filter recipe IDs detected from a post.
-   *
-   * @param array|mixed $recipe_ids The detected recipe IDs.
-   * @param int|mixed   $post_id    The post ID.
-   * @return array|mixed The filtered recipe IDs.
-   */
-  public function filter_recipe_ids_from_post( $recipe_ids, $post_id ) {
-    if ( ! is_array( $recipe_ids ) || $this->bypass_recipe_id_filters ) {
-      return $recipe_ids;
-    }
-
-    if ( $this->should_lock_recipe_for_current_user( false, is_numeric( $post_id ) ? absint( $post_id ) : 0 ) ) {
-      return array();
-    }
-
-    return $recipe_ids;
-  }
-
-  /**
-   * Filter recipe IDs detected from content.
-   *
-   * @param array|mixed $recipe_ids The detected recipe IDs.
-   * @return array|mixed The filtered recipe IDs.
-   */
-  public function filter_recipe_ids_from_content( $recipe_ids ) {
-    if ( ! is_array( $recipe_ids ) || $this->bypass_recipe_id_filters ) {
-      return $recipe_ids;
-    }
-
-    if ( $this->should_lock_recipe_for_current_user() ) {
-      return array();
-    }
-
-    return $recipe_ids;
-  }
-
-  /**
    * Filter recipe IDs tracked on the current page.
    *
    * @param array|mixed $recipe_ids The recipe IDs on the page.
@@ -302,7 +256,8 @@ class Memberful_Wp_Integration_WP_Recipe_Maker {
    * Check a recipe lock where the loop's global $post is unreliable.
    *
    * Footer aggregates like WPRM's recipe JSON run after the loop, so the global $post is whichever post rendered last,
-   * not the recipe's post.
+   * not the recipe's post. The queried post covers recipes reused in a locked post; the recipe's own parent post
+   * covers pages that embed other posts, such as a Query Loop, where the queried post is not the locked one.
    *
    * @param int $recipe_id The recipe ID.
    * @return bool True when the recipe should be locked for the current user.
@@ -310,8 +265,8 @@ class Memberful_Wp_Integration_WP_Recipe_Maker {
   private function should_lock_recipe_id_outside_loop( int $recipe_id ): bool {
     $queried_post_id = $this->queried_non_recipe_post_id();
 
-    if ( $queried_post_id ) {
-      return $this->should_lock_recipe_id_for_current_user( $recipe_id, $queried_post_id );
+    if ( $queried_post_id && $this->should_lock_recipe_id_for_current_user( $recipe_id, $queried_post_id ) ) {
+      return true;
     }
 
     $parent_post_id = $this->recipe_parent_post_id( $this->recipe_for_id( absint( $recipe_id ) ) );
@@ -625,7 +580,8 @@ class Memberful_Wp_Integration_WP_Recipe_Maker {
     }
 
     // A metered sample view releases the whole post body, recipe cards included.
-    if ( function_exists( 'memberful_metering_is_releasing' ) && memberful_metering_is_releasing( $lock_post_id ) ) {
+    if ( class_exists( 'Memberful_Metering_Access' )
+      && Memberful_Metering_Access::get_current_decision( $lock_post_id ) === Memberful_Metering_Access::DECISION_ALLOW_SAMPLE ) {
       return false;
     }
 
@@ -881,9 +837,6 @@ class Memberful_Wp_Integration_WP_Recipe_Maker {
   /**
    * Find recipe IDs in content using WPRM's own discovery.
    *
-   * Uses get_recipe_ids_from_content because get_recipe_ids_from_post caches its result after our own filters have
-   * already emptied it for locked posts.
-   *
    * @param string $content The post content.
    * @return array Recipe IDs in content order.
    */
@@ -892,9 +845,7 @@ class Memberful_Wp_Integration_WP_Recipe_Maker {
       return array();
     }
 
-    $this->bypass_recipe_id_filters = true;
     $recipe_ids = WPRM_Recipe_Manager::get_recipe_ids_from_content( $content );
-    $this->bypass_recipe_id_filters = false;
 
     if ( ! is_array( $recipe_ids ) ) {
       return array();
