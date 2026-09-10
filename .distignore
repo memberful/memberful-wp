@@ -16,6 +16,7 @@
 
 # Local dev environment & editor tooling
 /.wp-env.json
+/.wp-env.override.json
 /.editorconfig
 /.idea
 /dev

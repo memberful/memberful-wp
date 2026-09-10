@@ -94,8 +94,8 @@ Deployment authenticates to the WordPress.org SVN repository with the `SVN_USERN
 
 Publishing the release triggers the **Deploy to WordPress.org** workflow (`.github/workflows/deploy.yml`), which:
 
-* verifies the release tag matches the `Stable tag` in `readme.txt`,
-* builds the production assets (`npm install && npm run build`),
+* verifies the release tag matches the `Stable tag` in `readme.txt` and the `Version` header and `MEMBERFUL_VERSION` constant in `memberful-wp.php`,
+* builds the production assets (`npm ci && npm run build`),
 * commits the plugin to the WordPress.org SVN `trunk` and tags the new version, causing WordPress.org to release the update, and
 * attaches the generated plugin zip to the GitHub release.
 
