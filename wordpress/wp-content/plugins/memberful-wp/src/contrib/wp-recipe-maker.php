@@ -63,6 +63,7 @@ class Memberful_Wp_Integration_WP_Recipe_Maker {
     add_filter( 'wprm_recipes_on_page', array( $this, 'filter_recipes_on_page' ), 1000 );
     add_filter( 'wprm_recipe_metadata_cache_enabled', array( $this, 'filter_metadata_cache_enabled' ), 10, 2 );
     add_filter( 'wprm_recipe_metadata', array( $this, 'filter_recipe_metadata' ), 10, 2 );
+    add_filter( 'wprm_recipe_frontend_data', array( $this, 'filter_recipe_frontend_data' ), 100, 2 );
     add_filter( 'wprm_print_output', array( $this, 'filter_print_output' ), 1000 );
     add_action( 'init', array( $this, 'register_rest_hooks' ) );
     add_filter( 'memberful_teaser_content', array( $this, 'add_locked_recipe_preview_to_teaser' ), 20, 2 );
@@ -356,6 +357,29 @@ class Memberful_Wp_Integration_WP_Recipe_Maker {
   }
 
   /**
+   * Strip locked ingredients from the recipe data WPRM hands to its scripts.
+   *
+   * Covers the footer recipe JSON and the public manage/recipe REST route WPRM's script falls back to when a recipe
+   * is missing from that JSON. Both run without a reliable loop context, so the lock resolves the same way as the
+   * footer recipe list.
+   *
+   * @param array|mixed $data   The frontend recipe data.
+   * @param mixed       $recipe The WP Recipe Maker recipe object.
+   * @return array|mixed The filtered frontend recipe data.
+   */
+  public function filter_recipe_frontend_data( $data, $recipe ) {
+    if ( ! is_array( $data ) || ! is_object( $recipe ) || ! method_exists( $recipe, 'id' ) ) {
+      return $data;
+    }
+
+    if ( $this->should_lock_recipe_id_outside_loop( absint( $recipe->id() ) ) ) {
+      $data['ingredients'] = array();
+    }
+
+    return $data;
+  }
+
+  /**
    * Filter WP Recipe Maker print output for locked recipes.
    *
    * @param array|false $output The print output data.
@@ -419,6 +443,13 @@ class Memberful_Wp_Integration_WP_Recipe_Maker {
       $data['content']['rendered'] = '';
     }
 
+    // Ingredient and equipment terms resolve to names through the public term endpoints.
+    foreach ( array( 'wprm_ingredient', 'wprm_equipment' ) as $taxonomy ) {
+      if ( isset( $data[ $taxonomy ] ) ) {
+        $data[ $taxonomy ] = array();
+      }
+    }
+
     $response->set_data( $data );
 
     return $response;
@@ -463,7 +494,8 @@ class Memberful_Wp_Integration_WP_Recipe_Maker {
       return $content;
     }
 
-    if ( get_option( 'memberful_use_global_snippets' ) && has_block( 'memberful/paywall-divider', $post ) ) {
+    // Divider posts get their preview through the memberful_teaser_content filter.
+    if ( has_block( 'memberful/paywall-divider', $post ) ) {
       return $content;
     }
 

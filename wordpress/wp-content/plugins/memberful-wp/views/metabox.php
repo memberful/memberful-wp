@@ -14,6 +14,9 @@
           <p class="description">
             <?php _e( 'When this post is protected by Memberful, show the recipe card layout while hiding protected recipe details from non-members.', 'memberful' ); ?>
           </p>
+          <p class="description">
+            <?php _e( 'Recipes are protected through the post they were created in. A recipe reused in another post is not protected there.', 'memberful' ); ?>
+          </p>
         </div>
       <?php endif; ?>
     </div>

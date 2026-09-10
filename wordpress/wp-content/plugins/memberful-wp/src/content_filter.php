@@ -107,14 +107,18 @@ function memberful_wp_wrap_teaser_content( $content ) {
 }
 
 /**
- * Apply teaser wrapper and CSS for divider content when snippets are enabled.
+ * Format content above the paywall divider as the teaser.
+ *
+ * Integrations always get to add to the teaser; the wrapper and CSS only apply when snippets are enabled.
  *
  * @param string $content Rendered content above the paywall divider.
  * @return string Formatted teaser content.
  */
 function memberful_wp_format_divider_teaser_content( $content ) {
+  global $post;
+
   if ( ! get_option( 'memberful_use_global_snippets' ) ) {
-    return $content;
+    return apply_filters( 'memberful_teaser_content', $content, $post );
   }
 
   $wrapped_content = memberful_wp_wrap_teaser_content( $content );
