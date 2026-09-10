@@ -35,6 +35,8 @@ class Memberful_Paywall_Config {
 			'brand_color'       => '',
 			'background_color'  => '',
 			'button_shape'      => 'square',
+			'show_counter'      => false,
+			'counter_template'  => __( 'You\'ve used all {limit} of your free articles.', 'memberful' ),
 		);
 	}
 

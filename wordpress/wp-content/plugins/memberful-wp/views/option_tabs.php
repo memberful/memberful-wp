@@ -16,6 +16,11 @@ $links = array(
     'url'   => memberful_wp_plugin_global_marketing_url()
   ),
   array(
+    'id'    => 'metering',
+    'title' => __( 'Metering', 'memberful' ),
+    'url'   => memberful_wp_plugin_metering_url()
+  ),
+  array(
     'id'    => 'ad_provider_settings',
     'title' => __('Hide ads'),
     'url'   => memberful_wp_plugin_ad_provider_settings_url()

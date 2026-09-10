@@ -116,6 +116,11 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 * Add a visual paywall builder for creating branded paywalls without writing HTML
 * Allow customizing how many paragraphs appear before the paywall
+* Add a metered paywall with per-tier free reading limits and a rule builder for choosing which posts count
+* Add a countdown block showing how many free articles a visitor has left
+* Show an optional free-view count and a free-registration button in the paywall
+* Add Memberful visibility settings to Beaver Builder rows, columns, and modules
+* Fix Beaver Builder layouts not rendering after a protected post in the same request
 
 = 1.81.0 =
 
