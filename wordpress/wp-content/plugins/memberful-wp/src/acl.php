@@ -10,6 +10,12 @@ require_once MEMBERFUL_DIR . '/src/acl/term_options.php';
  * @return array An array of post IDs that the user is not allowed to access.
  */
 function memberful_wp_user_disallowed_post_ids( $user_id ) {
+  static $cache = array();
+
+  if ( isset( $cache[$user_id] ) ) {
+    return $cache[$user_id];
+  }
+
   $user_posts = _memberful_wp_items_from_acl(
     get_option( 'memberful_acl', array() ),
     $user_id,
@@ -33,7 +39,9 @@ function memberful_wp_user_disallowed_post_ids( $user_id ) {
   // Remove posts allowed by Post ACL or Term ACL
   $disallowed_posts = array_diff( $disallowed_posts, $user_posts['allowed'], $posts_allowed_by_terms );
 
-  return $disallowed_posts;
+  $cache[$user_id] = $disallowed_posts;
+
+  return $cache[$user_id];
 }
 
 /**
@@ -415,7 +423,9 @@ function _memberful_wp_posts_with_terms( $terms ) {
     $tax_query = array_merge( array( 'relation' => 'OR' ), $tax_query );
   }
 
-  return get_posts( array( 'tax_query' => $tax_query, 'fields' => 'ids', 'numberposts' => -1 ) );
+  $post_types = array_values( memberful_wp_metabox_types() );
+
+  return get_posts( array( 'post_type' => $post_types, 'orderby' => 'none', 'tax_query' => $tax_query, 'fields' => 'ids', 'numberposts' => -1 ) );
 }
 
 function _memberful_wp_group_terms_by_taxonomy( $term_ids ) {

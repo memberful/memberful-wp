@@ -33,11 +33,13 @@ function memberful_user_can_access_comments(){
 
   global $post;
 
-  // User has access to this post, we won't do anything.
-  if ( memberful_can_user_access_post( wp_get_current_user()->ID, $post->ID ) )
+  $post_id = isset( $post->ID ) ? (int) $post->ID : get_queried_object_id();
+
+  if ( ! $post_id )
     return true;
 
-  return false;
+  // User has access to this post, we won't do anything.
+  return memberful_can_user_access_post( wp_get_current_user()->ID, $post_id );
 }
 
 
@@ -49,13 +51,7 @@ add_action( 'do_feed_atom', 'memberful_single_feed_comments_protection', 9, 1 );
 *@return null
 */
 function memberful_single_feed_comments_protection($for_comments){
-    if(!$for_comments)
-      return;
-      
-    if(!is_singular())
-      return;
-
-    if(is_singular() && !memberful_post_is_protected())
+    if ( ! $for_comments || ! is_singular() || ! memberful_post_is_protected() )
       return;
 
     memberful_remove_feed();
@@ -71,9 +67,10 @@ function memberful_post_is_protected($post_id=null){
   if(!isset($post_id))
     $post_id=get_the_ID();
 
-  $acl= get_option( 'memberful_acl', array());
-  $restricted=memberful_get_protected_post_IDS();
-  return in_array($post_id, $restricted);
+  if ( empty( $post_id ) )
+    return false;
+
+  return ! memberful_can_user_access_post( 0, $post_id );
 }
 
 /**
@@ -85,24 +82,6 @@ function memberful_remove_feed(){
   remove_action( 'do_feed_atom', 'do_feed_atom', 10, 1 );
 }
 
-/**
-* Return an array of all post IDs that are protected by the memberful plugin
-*/
-function memberful_get_protected_post_IDS(){
-  $acl= get_option( 'memberful_acl', array());
-  $registered=get_option('memberful_posts_available_to_any_registered_user', array());
-  $private=array();
-  foreach($acl as $restricted){
-    if(!is_array($restricted))
-      continue;
-    foreach($restricted as $protected_posts){
-      $private=array_merge($private, $protected_posts);
-    }
-  }
-  return array_unique(array_merge($private, $registered));
-}
-
-
 add_filter('comment_feed_where', 'memberful_comment_feed_cwhere_filter', 10, 2);
 
 /**
@@ -111,12 +90,18 @@ add_filter('comment_feed_where', 'memberful_comment_feed_cwhere_filter', 10, 2);
 */
 
 function memberful_comment_feed_cwhere_filter($cwhere, $query){
-  if(!$query->is_feed() || is_singular())
+  if ( ! $query->is_feed() || $query->is_singular() )
+    return $cwhere;
+
+  $restricted = memberful_wp_user_disallowed_post_ids( 0 );
+
+  if ( empty( $restricted ) )
     return $cwhere;
 
   global $wpdb;
-  $restricted=implode(',', memberful_get_protected_post_IDS());
-  $cwhere.= "AND {$wpdb->posts}.ID NOT IN ($restricted)";
+  $ids     = implode( ',', array_map( 'absint', $restricted ) );
+  $cwhere .= " AND {$wpdb->posts}.ID NOT IN ($ids)";
+
   return $cwhere;
 }
 ?>
