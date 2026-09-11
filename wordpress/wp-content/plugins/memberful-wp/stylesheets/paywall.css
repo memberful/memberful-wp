@@ -34,6 +34,13 @@
 	text-align: center;
 }
 
+.memberful-paywall__meter {
+	color: var(--memberful-muted);
+	font-size: var(--wp--preset--font-size--small, 0.875rem);
+	font-weight: 600;
+	margin: 0 0 0.75rem;
+}
+
 .memberful-paywall__heading {
 	color: var(--memberful-text);
 	font-weight: 600;

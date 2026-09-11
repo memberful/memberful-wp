@@ -198,7 +198,7 @@ $metering_enabled = class_exists( 'Memberful_Metering_Config' ) && ! empty( Memb
       <?php if ( $metering_enabled ) : ?>
         <fieldset class="memberful-paywall-builder__field memberful-paywall-builder__button-set">
           <legend class="memberful-paywall-builder__button-set-label"><?php esc_html_e( 'Free registration button', 'memberful' ); ?></legend>
-          <span class="description memberful-paywall-builder__button-set-description"><?php esc_html_e( 'Shown instead of the subscribe button when a logged-out visitor hits the metered limit and free members get a higher limit.', 'memberful' ); ?></span>
+          <span class="description memberful-paywall-builder__button-set-description"><?php esc_html_e( 'Shown instead of the subscribe button when a logged-out visitor hits the metered limit. Free members get their own allowance, so registering always unlocks more articles.', 'memberful' ); ?></span>
           <p class="memberful-paywall-builder__field">
             <label for="memberful-paywall-free-button-label"><?php esc_html_e( 'Button label', 'memberful' ); ?></label>
             <input id="memberful-paywall-free-button-label" type="text" name="memberful_paywall[free_button_label]" value="<?php echo esc_attr( $paywall_config['free_button_label'] ); ?>">
@@ -209,9 +209,26 @@ $metering_enabled = class_exists( 'Memberful_Metering_Config' ) && ! empty( Memb
             <span class="description"><?php esc_html_e( 'Leave blank to use your Memberful registration page.', 'memberful' ); ?></span>
           </p>
         </fieldset>
+
+        <fieldset class="memberful-paywall-builder__field memberful-paywall-builder__button-set">
+          <legend class="memberful-paywall-builder__button-set-label"><?php esc_html_e( 'Free-view count', 'memberful' ); ?></legend>
+          <label class="memberful-paywall-builder__checkline">
+            <input type="checkbox" id="memberful-paywall-show-counter" name="memberful_paywall[show_counter]" value="1" <?php checked( ! empty( $paywall_config['show_counter'] ) ); ?>>
+            <?php esc_html_e( 'Show how many free articles the visitor has used', 'memberful' ); ?>
+          </label>
+          <p class="memberful-paywall-builder__field">
+            <label for="memberful-paywall-counter-template"><?php esc_html_e( 'Message', 'memberful' ); ?></label>
+            <input id="memberful-paywall-counter-template" type="text" name="memberful_paywall[counter_template]" value="<?php echo esc_attr( $paywall_config['counter_template'] ); ?>">
+            <span class="description"><?php esc_html_e( 'Only appears when the meter has blocked the visitor. Use {limit} for their number of free articles.', 'memberful' ); ?></span>
+          </p>
+        </fieldset>
       <?php else : ?>
         <input type="hidden" name="memberful_paywall[free_button_label]" value="<?php echo esc_attr( $paywall_config['free_button_label'] ); ?>">
         <input type="hidden" name="memberful_paywall[free_button_url]" value="<?php echo esc_attr( $paywall_config['free_button_url'] ); ?>">
+        <?php if ( ! empty( $paywall_config['show_counter'] ) ) : ?>
+          <input type="hidden" name="memberful_paywall[show_counter]" value="1">
+        <?php endif; ?>
+        <input type="hidden" name="memberful_paywall[counter_template]" value="<?php echo esc_attr( $paywall_config['counter_template'] ); ?>">
       <?php endif; ?>
 
       <fieldset class="memberful-paywall-builder__field memberful-paywall-builder__button-set">

@@ -45,7 +45,10 @@ class Memberful_Paywall_Preview {
 	 * @return string
 	 */
 	public static function document( array $config ): string {
+		// The builder preview has no live metered context, so seed a sample limit to show the free-view counter.
+		add_filter( 'memberful_paywall_free_view_limit', array( __CLASS__, 'sample_free_view_limit' ) );
 		$body = Memberful_Paywall_Renderer::render( $config, false );
+		remove_filter( 'memberful_paywall_free_view_limit', array( __CLASS__, 'sample_free_view_limit' ) );
 
 		$paywall_css = add_query_arg( 'ver', MEMBERFUL_VERSION, plugins_url( 'stylesheets/paywall.css', MEMBERFUL_PLUGIN_FILE ) );
 		$theme_css   = get_stylesheet_uri();
@@ -81,6 +84,30 @@ class Memberful_Paywall_Preview {
 			. '</head>'
 			. '<body>' . $teaser . $body . '</body>'
 			. '</html>';
+	}
+
+	/**
+	 * Sample free-view limit so the counter renders in the builder preview, which has no live metered context. Keeps
+	 * the incoming null while metering is disabled, matching the live paywall, which never shows the counter then.
+	 * Uses the higher of the two tier limits so the preview still shows the counter when one tier is set to zero.
+	 * Untyped because memberful_paywall_free_view_limit is a public filter and earlier callbacks may pass anything.
+	 *
+	 * @param int|null $limit Incoming limit.
+	 *
+	 * @return int|null
+	 */
+	public static function sample_free_view_limit( $limit ) {
+		if ( ! class_exists( 'Memberful_Metering_Config' ) ) {
+			return $limit;
+		}
+
+		$config = Memberful_Metering_Config::get();
+
+		if ( empty( $config['enabled'] ) ) {
+			return $limit;
+		}
+
+		return max( (int) $config['anonymous_limit'], (int) $config['registered_limit'] );
 	}
 
 	/**

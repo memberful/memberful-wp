@@ -159,6 +159,31 @@ function memberful_wp_admin_enqueue_scripts() {
     );
   }
 
+  if (
+    'memberful_options' === filter_input( INPUT_GET, 'page' )
+    && 'metering' === filter_input( INPUT_GET, 'subpage' )
+  ) {
+    wp_enqueue_script(
+      'memberful-metering-admin',
+      MEMBERFUL_URL . '/js/build/metering-admin.js',
+      array( 'wp-api-fetch', 'wp-dom-ready' ),
+      MEMBERFUL_VERSION,
+      true
+    );
+
+    wp_localize_script(
+      'memberful-metering-admin',
+      'memberfulMeteringAdmin',
+      array(
+        'operators' => Memberful_Metering_Config::operators(),
+        'postTypes' => memberful_wp_metering_post_type_options(),
+        'labels'    => array(
+          'noResults' => __( 'No matches', 'memberful' ),
+        ),
+      )
+    );
+  }
+
   wp_enqueue_script(
     'memberful-menu',
     plugins_url( 'js/src/menu.js', dirname( __FILE__ ) ),
@@ -488,6 +513,8 @@ function memberful_wp_options() {
       return memberful_wp_render('cookies_test');
     case 'global_marketing':
       return memberful_wp_global_marketing();
+    case 'metering':
+      return memberful_wp_metering_settings();
     case 'ad_provider_settings':
       return memberful_wp_ad_provider_settings();
     }
@@ -899,6 +926,11 @@ function memberful_wp_global_marketing() {
     } else {
       update_option( 'memberful_use_global_marketing', false );
     }
+
+    Memberful_Wp_Reporting::report( __( 'Settings updated', 'memberful' ) );
+
+    wp_redirect( memberful_wp_plugin_global_marketing_url() );
+    exit;
   }
 
   $use_global_marketing = get_option( 'memberful_use_global_marketing' );
@@ -916,7 +948,7 @@ function memberful_wp_global_marketing() {
       'global_marketing_content'  => $global_marketing_content,
       'global_marketing_override' => $global_marketing_override,
       'paywall_config'            => Memberful_Paywall_Config::get(),
-      'form_target'               => memberful_wp_plugin_global_marketing_url(),
+      'form_target'               => memberful_wp_plugin_global_marketing_url( true ),
     )
   );
 }

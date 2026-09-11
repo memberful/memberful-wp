@@ -88,6 +88,10 @@ function memberful_wp_plugin_global_marketing_url( $no_header = FALSE) {
   return memberful_wp_plugin_settings_url( $no_header, 'global_marketing' );
 }
 
+function memberful_wp_plugin_metering_url( $no_header = FALSE ) {
+  return memberful_wp_plugin_settings_url( $no_header, 'metering' );
+}
+
 function memberful_wp_plugin_ad_provider_settings_url( $no_header = FALSE ) {
   return memberful_wp_plugin_settings_url( $no_header, 'ad_provider_settings' );
 }

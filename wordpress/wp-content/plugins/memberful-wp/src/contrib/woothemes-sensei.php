@@ -79,7 +79,7 @@ class Memberful_Wp_Integration_WooThemes_Sensei {
         remove_all_actions( 'sensei_lesson_single_meta' );
 
         // Now the funky filtering part.
-        remove_action( 'the_content', 'memberful_wp_protect_content' );
+        remove_action( 'the_content', 'memberful_wp_protect_content', 100 );
         add_action( 'the_content', array( $this, 'single_lesson_special_content_filter' ), -10 );
       }
     } else {

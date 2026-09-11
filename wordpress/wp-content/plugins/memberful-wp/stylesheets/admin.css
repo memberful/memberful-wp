@@ -180,6 +180,300 @@ Global Marketing Tools
   text-transform: uppercase;
 }
 
+/* ---------------------------------------------------------
+Metering
+------------------------------------------------------------ */
+.memberful-metering {
+  max-width: 900px;
+}
+.memberful-metering-section-heading {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0;
+}
+.memberful-metering-section-intro {
+  color: #646970;
+  margin: 4px 0 16px;
+}
+.memberful-metering .description {
+  color: #646970;
+  display: block;
+  font-size: 12px;
+  font-weight: 400;
+  margin-top: 4px;
+}
+.memberful-metering-section + .memberful-metering-section {
+  border-top: 1px solid #dcdcde;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+}
+.memberful-metering-field {
+  align-items: start;
+  border-top: 1px solid #f0f0f1;
+  display: grid;
+  gap: 8px 24px;
+  grid-template-columns: 200px minmax(0, 1fr);
+  padding: 12px 0;
+}
+.memberful-metering-field:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+.memberful-metering-field__label,
+.memberful-metering-field__label label {
+  font-weight: 600;
+  padding-top: 4px;
+}
+.memberful-metering-field__control {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+}
+.memberful-metering-field__suffix {
+  color: #646970;
+}
+.memberful-metering-checkline {
+  align-items: flex-start;
+  display: flex;
+  gap: 8px;
+  margin: 0;
+}
+.memberful-metering-checkline input[type="checkbox"] {
+  margin-top: 3px;
+}
+.memberful-metering-ruleset {
+  margin-bottom: 24px;
+}
+.memberful-metering-ruleset__label {
+  color: #646970;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  margin: 0 0 8px;
+  text-transform: uppercase;
+}
+.memberful-metering-empty {
+  color: #646970;
+  margin: 0 0 12px;
+}
+.memberful-metering-rule-group {
+  background: #fff;
+  border: 1px solid #dcdcde;
+  border-radius: 6px;
+  margin: 0 0 12px;
+}
+.memberful-metering-ruleset--except .memberful-metering-rule-group {
+  border-color: #e3c7c7;
+}
+.memberful-metering-rule-group__header {
+  align-items: center;
+  border-bottom: 1px solid #dcdcde;
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
+  padding: 8px 14px;
+}
+.memberful-metering-ruleset--except .memberful-metering-rule-group__header {
+  border-bottom-color: #ecd7d7;
+}
+.memberful-metering-rule-group__intro {
+  color: #1d2327;
+  margin: 0;
+}
+.memberful-metering-rule-group__match {
+  margin: 0 2px;
+}
+.memberful-metering-remove-group {
+  background: none;
+  border: 0;
+  color: #b32d2e;
+  cursor: pointer;
+  display: inline-flex;
+  flex: 0 0 auto;
+  padding: 2px;
+}
+.memberful-metering-remove-group:hover {
+  color: #8a2424;
+}
+.memberful-metering-condition {
+  align-items: center;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 150px 130px minmax(0, 1fr) auto;
+  padding: 12px 14px;
+}
+.memberful-metering-condition + .memberful-metering-condition {
+  border-top: 1px solid #f0f0f1;
+}
+.memberful-metering-condition > select {
+  max-width: 100%;
+}
+.memberful-metering-condition-values {
+  align-self: stretch;
+  display: flex;
+}
+.memberful-metering-condition-values > * {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.memberful-metering-condition-text {
+  width: 100%;
+}
+.memberful-metering-remove-condition {
+  background: none;
+  border: 0;
+  color: #646970;
+  cursor: pointer;
+  display: inline-flex;
+  padding: 6px 2px;
+}
+.memberful-metering-remove-condition:hover:not(:disabled) {
+  color: #b32d2e;
+}
+.memberful-metering-remove-condition:disabled {
+  cursor: default;
+  opacity: 0.35;
+}
+.memberful-metering-rule-group__footer {
+  border-top: 1px solid #dcdcde;
+  padding: 6px 14px;
+}
+.memberful-metering-ruleset--except .memberful-metering-rule-group__footer {
+  border-top-color: #ecd7d7;
+}
+.memberful-metering-add-condition {
+  background: none;
+  border: 0;
+  color: var(--wp-admin-theme-color);
+  cursor: pointer;
+  font-weight: 500;
+  padding: 4px 0;
+}
+.memberful-metering-add-condition:hover {
+  color: var(--wp-admin-theme-color-darker-10);
+}
+.memberful-metering-add-group {
+  margin-top: 4px;
+}
+.memberful-metering-tokenfield {
+  align-items: center;
+  align-self: stretch;
+  background: #fff;
+  border: 1px solid #8c8f94;
+  border-radius: 4px;
+  box-sizing: border-box;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  min-height: 30px;
+  padding: 3px 12px;
+  position: relative;
+}
+.memberful-metering-tokenfield:focus-within {
+  border-color: var(--wp-admin-theme-color);
+  box-shadow: 0 0 0 1px var(--wp-admin-theme-color);
+}
+.memberful-metering-tokenfield__input {
+  border: 0 !important;
+  box-shadow: none !important;
+  flex: 1 0 80px;
+  height: auto !important;
+  margin: 0 !important;
+  min-height: 0 !important;
+  min-width: 80px;
+  outline: 0;
+  padding: 0 !important;
+}
+.memberful-metering-tokenfield__list {
+  background: #fff;
+  border: 1px solid #8c8f94;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  left: 0;
+  list-style: none;
+  margin: 2px 0 0;
+  max-height: 200px;
+  overflow-y: auto;
+  padding: 4px;
+  position: absolute;
+  right: 0;
+  top: 100%;
+  z-index: 10;
+}
+.memberful-metering-tokenfield__option {
+  border-radius: 3px;
+  cursor: pointer;
+  margin: 0;
+  padding: 6px 8px;
+}
+.memberful-metering-tokenfield__option.is-active,
+.memberful-metering-tokenfield__option:hover {
+  background: var(--wp-admin-theme-color);
+  color: #fff;
+}
+.memberful-metering-tokenfield__empty {
+  color: #646970;
+  margin: 0;
+  padding: 6px 8px;
+}
+.memberful-metering-chip {
+  align-items: center;
+  background: #f0f0f1;
+  border-radius: 3px;
+  display: inline-flex;
+  gap: 2px;
+  padding: 2px 4px 2px 8px;
+}
+.memberful-metering-chip__label {
+  font-size: 12px;
+  line-height: 1.4;
+}
+.memberful-metering-chip__remove {
+  background: none;
+  border: 0;
+  color: #646970;
+  cursor: pointer;
+  display: inline-flex;
+  padding: 2px;
+}
+.memberful-metering-chip__remove:hover {
+  color: #b32d2e;
+}
+.memberful-metering-notes {
+  border-top: 1px solid #f0f0f1;
+  margin-top: 8px;
+  padding-top: 12px;
+}
+.memberful-metering-notes__summary {
+  align-items: center;
+  color: #646970;
+  cursor: pointer;
+  display: flex;
+  font-weight: 500;
+  gap: 6px;
+}
+.memberful-metering-notes__summary::-webkit-details-marker {
+  display: none;
+}
+.memberful-metering-notes__chevron {
+  transition: transform 150ms ease;
+}
+.memberful-metering-notes[open] .memberful-metering-notes__chevron {
+  transform: rotate(180deg);
+}
+.memberful-metering-notes__body {
+  color: #646970;
+  margin-top: 8px;
+  max-width: 720px;
+}
+
+@media (max-width: 782px) {
+  .memberful-metering-field,
+  .memberful-metering-condition {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
 /*---------------------------------------------------------
 Restrict Access Metabox
 ------------------------------------------------------------ */
@@ -489,6 +783,19 @@ Paywall Builder
   margin-bottom: 4px;
   text-transform: uppercase;
 }
+.memberful-paywall-builder__customize .memberful-paywall-builder__checkline {
+  align-items: flex-start;
+  color: inherit;
+  display: flex;
+  font-size: 13px;
+  font-weight: 400;
+  gap: 8px;
+  margin-bottom: 8px;
+  text-transform: none;
+}
+.memberful-paywall-builder__customize .memberful-paywall-builder__checkline input[type="checkbox"] {
+  margin-top: 2px;
+}
 .memberful-paywall-builder__customize input[type="text"],
 .memberful-paywall-builder__customize input[type="url"],
 .memberful-paywall-builder__customize textarea {
@@ -500,6 +807,7 @@ Paywall Builder
   color: #a8a29e;
   opacity: 1;
 }
+#memberful_metering_exempt .description,
 .memberful-paywall-builder__customize .description {
   color: #646970;
   display: block;
