@@ -3,6 +3,22 @@
     <div class="memberful-restrict-access-options">
       <h4 style="font-size: 13px;"><?php _e( 'Who has access?', 'memberful' ); ?></h4>
       <?php memberful_wp_render( 'acl_selection', compact( 'subscriptions', 'products', 'viewable_by_any_registered_users', 'viewable_by_anybody_subscribed_to_a_plan' ) ); ?>
+      <?php if ( isset( $wprm_recipe_cards_locked ) ) : ?>
+        <div class="memberful-wprm-recipe-card-protection">
+          <h4 style="font-size: 13px;"><?php _e( 'Recipe cards', 'memberful' ); ?></h4>
+          <input type="hidden" name="memberful_wprm_lock_recipe_cards_present" value="1" />
+          <label>
+            <input type="checkbox" name="memberful_wprm_lock_recipe_cards" value="1" <?php checked( $wprm_recipe_cards_locked ); ?> />
+            <?php _e( 'Lock WP Recipe Maker recipe cards in this post', 'memberful' ); ?>
+          </label>
+          <p class="description">
+            <?php _e( 'When this post is protected by Memberful, show the recipe card layout while hiding protected recipe details from non-members.', 'memberful' ); ?>
+          </p>
+          <p class="description">
+            <?php _e( 'Recipes are protected through the post they were created in. A recipe reused in another post is not protected there.', 'memberful' ); ?>
+          </p>
+        </div>
+      <?php endif; ?>
     </div>
     <div class="memberful-marketing-content">
       <?php if ( ! empty( $global_marketing_overrides_post_content ) ) : ?>

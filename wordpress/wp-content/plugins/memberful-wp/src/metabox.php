@@ -61,6 +61,14 @@ function memberful_wp_metabox( $post ) {
   $view_vars['viewable_by_anybody_subscribed_to_a_plan'] = memberful_wp_get_post_available_to_anybody_subscribed_to_a_plan( $post->ID );
   $view_vars['global_marketing_overrides_post_content'] = memberful_global_marketing_overrides_post_content();
 
+  /**
+   * Filters variables passed to the Memberful post metabox view.
+   *
+   * @param array   $view_vars The metabox view variables.
+   * @param WP_Post $post      The post being edited.
+   */
+  $view_vars = apply_filters( 'memberful_metabox_view_vars', $view_vars, $post );
+
   memberful_wp_render( 'metabox', $view_vars );
 }
 
@@ -127,6 +135,13 @@ function memberful_wp_save_postdata( $post_id ) {
     $viewable_by_anybody_subscribed_to_a_plan = false;
   }
   memberful_wp_set_post_available_to_anybody_subscribed_to_a_plan( $post_id, $viewable_by_anybody_subscribed_to_a_plan );
+
+  /**
+   * Fires after Memberful post access settings are saved.
+   *
+   * @param int $post_id The saved post ID.
+   */
+  do_action( 'memberful_save_postdata', $post_id );
 
   if(!isset($_POST['memberful_marketing_content']))
     return;

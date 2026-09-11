@@ -83,23 +83,47 @@ function memberful_wp_split_post_content_at_paywall_divider( $content ) {
 }
 
 /**
- * Apply teaser wrapper and CSS for divider content when snippets are enabled.
+ * Wrap teaser content and allow integrations to add to it.
+ *
+ * @param string $content Rendered teaser content.
+ * @return string Wrapped teaser content.
+ */
+function memberful_wp_wrap_teaser_content( $content ) {
+  global $post;
+
+  /**
+   * Filters teaser content before the global teaser wrapper is rendered.
+   *
+   * @param string       $content Rendered teaser content.
+   * @param WP_Post|null $post    Current post, when available.
+   */
+  $content = apply_filters( 'memberful_teaser_content', $content, $post );
+
+  if ( '' === trim( (string) $content ) ) {
+    return $content;
+  }
+
+  return "<div class='memberful-global-teaser-content'>$content</div>";
+}
+
+/**
+ * Format content above the paywall divider as the teaser.
+ *
+ * Integrations always get to add to the teaser; the wrapper and CSS only apply when snippets are enabled.
  *
  * @param string $content Rendered content above the paywall divider.
  * @return string Formatted teaser content.
  */
 function memberful_wp_format_divider_teaser_content( $content ) {
-  if ( '' === trim( (string) $content ) ) {
-    return $content;
-  }
+  global $post;
 
   if ( ! get_option( 'memberful_use_global_snippets' ) ) {
-    return $content;
+    return apply_filters( 'memberful_teaser_content', $content, $post );
   }
 
-  $wrapped_content = "<div class='memberful-global-teaser-content'>$content</div>";
+  $wrapped_content = memberful_wp_wrap_teaser_content( $content );
 
-  if ( function_exists( 'memberful_get_teaser_css' ) && ! did_filter( 'memberful_teaser_css' ) ) {
+  if ( '' !== trim( (string) $wrapped_content ) && function_exists( 'memberful_get_teaser_css' ) && ! did_filter( 'memberful_teaser_css' ) ) {
     $wrapped_content .= apply_filters( 'memberful_teaser_css', memberful_get_teaser_css() );
   }
 

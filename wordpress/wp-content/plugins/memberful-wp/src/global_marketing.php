@@ -108,7 +108,7 @@ function memberful_apply_global_snippets_content_filter( $memberful_marketing_co
 function memberful_get_teaser_css(){
   $css = <<<CSS
     <style>
-        .memberful-global-teaser-content p:last-child{
+        .memberful-global-teaser-content > :last-child{
             -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent);
             mask-image: linear-gradient(180deg, #000 0%, transparent);
         }

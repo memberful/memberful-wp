@@ -93,6 +93,10 @@ if ( in_array( 'wp-ultimate-recipe-premium/wp-ultimate-recipe-premium.php', appl
   require_once MEMBERFUL_DIR . '/src/contrib/wp-ultimate-recipe-premium.php';
 }
 
+if ( in_array( 'wp-recipe-maker/wp-recipe-maker.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
+  require_once MEMBERFUL_DIR . '/src/contrib/wp-recipe-maker.php';
+}
+
 function memberful_wp_plugin_activate() {
   add_option( 'memberful_wp_activation_redirect' , true );
   memberful_clear_obsolete_cron_jobs();
