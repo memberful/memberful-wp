@@ -9,6 +9,9 @@ This repository develops the Memberful WordPress plugin.
 - `js/src`: JavaScript sources such as `admin.js` and `editor-scripts.js`.
 - `js/build`: generated assets; rebuild locally instead of editing by hand.
 - `stylesheets`: plugin CSS sources.
+- `tests`: PHPUnit tests, run against the WordPress core test suite.
+- `dev`: local development tooling (wp-env mu-plugins, setup scripts, git-ignored `plugins` and `themes`); never shipped.
+- `bin/install-wp-tests.sh`: installs the WordPress core test suite for PHPUnit in CI.
 - `.wordpress-org`: WordPress.org banner, icon, and screenshot assets.
 
 ## Build, Test, and Development Commands
@@ -16,13 +19,14 @@ This repository develops the Memberful WordPress plugin.
 The local environment uses [`@wordpress/env`](https://developer.wordpress.org/block-editor/reference-guides/packages/packages-env/) (Docker required).
 
 - `npm install`: install JS build dependencies and dev tooling.
-- `npm run env:start`: start the local WordPress environment. Site at `http://localhost:8888`, wp-admin at `http://localhost:8888/wp-admin` (user `admin`, password `password`).
-- `npm run env:stop`: stop it; `npm run env:clean` resets the database; `npm run env:destroy` removes the environment entirely.
+- `npm run env:start`: start the local WordPress environment. Site at `http://localhost:8888`, wp-admin at `http://localhost:8888/wp-admin` (user `admin`, password `password`); `http://wordpress.localhost` after `npm run env:local-memberful`.
+- `npm run env:stop`: stop it; `npm run env:clean` resets the database; `npm run env:destroy` removes the environment entirely; `npm run env:update` re-downloads WordPress after changing `core` or `phpVersion` in `.wp-env.json`.
 - `npm run env:cli -- <args>`: run WP-CLI in the container, e.g. `npm run env:cli -- plugin list`.
 - `npm run start`: watch and rebuild JS during development.
 - `npm run build`: create production JS bundles for release checks.
+- `npm run composer -- <command>`: run Composer inside the wp-env tests container (no local PHP needed). `install` once, then `test` (PHPUnit suite in `tests/`, uses the container's WordPress test suite and database), `lint` (PHPCS with `phpcs.xml`), `compat` (PHP 7.4+ compatibility). The husky pre-commit hook lints staged PHP with `phpcs-changed` when `vendor/` exists (needs PHP on the host) and skips otherwise; use `git commit --no-verify` if it fails without PHP.
 
-By default the plugin connects to memberful.com. `.wp-env.json` is the shared configuration and must stay neutral: do not add `MEMBERFUL_*` constants or Memberful-internal mappings to it. Per-developer settings belong in the git-ignored `.wp-env.override.json`; Memberful staff generate it with `npm run env:local-memberful`, which points the plugin at a local Memberful app (`https://apps.memberful.localhost`), serves the site at `http://wordpress.localhost` via puma-dev (`dev/mu-plugins/memberful-dev-site-url.php` strips the port wp-env appends to `WP_HOME`), and mounts `dev/mu-plugins/memberful-dev-resolve.php` as a must-use plugin so `*.memberful.localhost` requests reach the Docker host (libcurl otherwise resolves `*.localhost` to loopback). Files under `dev/` are development tooling and are never shipped with the plugin; `dev/plugins` and `dev/themes` are the git-ignored directories mapped to `wp-content/plugins` and `wp-content/themes`, holding plugins and themes installed in the local environment.
+By default the plugin connects to memberful.com. Keep `.wp-env.json` neutral: do not add `MEMBERFUL_*` constants or Memberful-internal mappings. Per-developer settings belong in the git-ignored `.wp-env.override.json`. Memberful staff generate it with `npm run env:local-memberful`; see [README.md](README.md#connecting-to-a-local-memberful-app-memberful-staff) for setup details. Installed plugins and themes live in the git-ignored `dev/plugins` and `dev/themes` directories. Nothing under `dev/` ships with the plugin.
 
 ## Coding Style & Naming Conventions
 
@@ -30,7 +34,7 @@ Match the surrounding code rather than reformatting broadly. PHP follows the exi
 
 ## Testing Guidelines
 
-Validate changes in the local `wp-env` environment, then smoke-test the affected flows in `wp-admin` at `http://localhost:8888/wp-admin`. For UI changes, verify both PHP-rendered views and rebuilt JS assets. For integration work, exercise the specific Memberful connection, webhook, or content-protection path you changed.
+Run `npm run composer -- test` and add PHPUnit tests under `tests/` for PHP changes where practical (CI runs the suite across the supported PHP and WordPress versions). Validate changes in the local `wp-env` environment, then smoke-test the affected flows in `wp-admin`. For UI changes, verify both PHP-rendered views and rebuilt JS assets. For integration work, exercise the specific Memberful connection, webhook, or content-protection path you changed.
 
 ## Commit & Pull Request Guidelines
 
