@@ -18,7 +18,7 @@ abstract class Memberful_Wp_User_Entity {
    */
   public function get() {
     if ( $this->entities === NULL ) {
-      $this->entities = get_user_meta( $this->user_id, $this->meta_field() );
+      $this->entities = memberful_wp_get_user_meta( $this->user_id, $this->meta_field() );
     }
 
     return $this->entities;
@@ -38,7 +38,7 @@ abstract class Memberful_Wp_User_Entity {
       $current[$data['id']] = $data;
     }
 
-    update_user_meta( $this->user_id, $this->meta_field(), $current );
+    memberful_wp_update_user_meta( $this->user_id, $this->meta_field(), $current );
   }
 
   public function set( array $entities ) {
@@ -50,7 +50,7 @@ abstract class Memberful_Wp_User_Entity {
       $new_purchasables[$data['id']] = $data;
     }
 
-    update_user_meta( $this->user_id, $this->meta_field(), $new_purchasables );
+    memberful_wp_update_user_meta( $this->user_id, $this->meta_field(), $new_purchasables );
   }
 
   protected function meta_field() {

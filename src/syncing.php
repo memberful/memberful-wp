@@ -60,6 +60,14 @@ function memberful_wp_sync_user( $account, $mapping_context, $lock_timeout ) {
   if ( ! is_wp_error( $user ) ) {
     if ( isset( $member->deleted ) ) {
       if ( memberful_is_safe_to_delete( $user ) ) {
+        // On multisite wp_delete_user() only removes the user from the
+        // current site; their account and usermeta survive network-wide,
+        // so clear this site's member data or the ACL will keep granting
+        // them access
+        if ( is_multisite() ) {
+          memberful_wp_delete_member_user_meta( $user->ID );
+        }
+
         wp_delete_user( $user->ID );
         (new Memberful_User_Mapping_Repository())->delete_mapping( $user->ID );
       } else {
@@ -70,6 +78,15 @@ function memberful_wp_sync_user( $account, $mapping_context, $lock_timeout ) {
         Memberful_Wp_User_Role_Decision::ensure_user_role_is_correct( $user );
       }
     } else {
+      // On multisite, make sure the member actually belongs to the current
+      // site (their account may have been created by another site's sync)
+      if ( is_multisite() && ! is_user_member_of_blog( $user->ID ) ) {
+        add_user_to_blog( get_current_blog_id(), $user->ID, get_option( 'default_role', 'subscriber' ) );
+
+        // Refresh so the role decision below sees the newly assigned role
+        $user = new WP_User( $user->ID );
+      }
+
       Memberful_Wp_User_Downloads::sync($user->ID, $account->products);
       Memberful_Wp_User_Feeds::sync($user->ID, $account->feeds);
       Memberful_Wp_User_Subscriptions::sync($user->ID, $account->subscriptions);

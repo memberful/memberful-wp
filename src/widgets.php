@@ -47,6 +47,12 @@ if ( ! class_exists( 'Memberful_WP_Profile_Widget' ) ) :
         array('href' => memberful_sign_in_url( is_ssl() ? 'https' : 'http' ), 'class' => 'memberful-sign-in-link', 'text' => __( 'Sign in' )),
       );
 
+      // On multisite a WordPress session is shared across the network, so
+      // only treat the user as signed in if they're actually a member of
+      // the current site's Memberful account
+      $args['show_member_profile'] = is_user_logged_in()
+        && ( ! is_multisite() || memberful_wp_user_is_mapped_to_member( wp_get_current_user() ) );
+
       $args = apply_filters( 'memberful_wp_widget_args', $args );
 
       memberful_wp_render( 'profile_widget', $args );
