@@ -1,0 +1,18 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/wp-env.json",
+	"core": null,
+	"phpVersion": "8.2",
+	"plugins": [ "." ],
+	"themes": [ "https://downloads.wordpress.org/theme/twentytwentyone.zip" ],
+	"config": {
+		"WP_DEBUG": true,
+		"WP_DEBUG_LOG": true,
+		"SCRIPT_DEBUG": true,
+		"MEMBERFUL_APPS_HOST": "http://apps.memberful.localhost",
+		"MEMBERFUL_EMBED_HOST": "http://js.memberful.localhost",
+		"MEMBERFUL_SSL_VERIFY": false
+	},
+	"lifecycleScripts": {
+		"afterStart": "wp-env run cli wp theme activate twentytwentyone && wp-env run cli wp widget add memberful_wp_profile_widget sidebar-1 1"
+	}
+}

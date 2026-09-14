@@ -2,23 +2,25 @@
 
 ## Project Structure & Module Organization
 
-This repository develops the Memberful WordPress plugin. The plugin source lives in `wordpress/wp-content/plugins/memberful-wp`, with a convenience symlink at `plugin`.
+This repository develops the Memberful WordPress plugin.
 
-- `wordpress/wp-content/plugins/memberful-wp/src`: PHP feature modules and integrations.
-- `wordpress/wp-content/plugins/memberful-wp/views`: PHP view templates used by admin and frontend output.
-- `wordpress/wp-content/plugins/memberful-wp/js/src`: JavaScript sources such as `admin.js` and `editor-scripts.js`.
-- `wordpress/wp-content/plugins/memberful-wp/js/build`: generated assets; rebuild locally instead of editing by hand.
-- `wordpress/wp-content/plugins/memberful-wp/stylesheets`: plugin CSS sources.
-- `assets`: WordPress.org banner, icon, and screenshot assets.
+- `src`: PHP feature modules and integrations.
+- `views`: PHP view templates used by admin and frontend output.
+- `js/src`: JavaScript sources such as `admin.js` and `editor-scripts.js`.
+- `js/build`: generated assets; rebuild locally instead of editing by hand.
+- `stylesheets`: plugin CSS sources.
+- `.wordpress-org`: WordPress.org banner, icon, and screenshot assets.
 
 ## Build, Test, and Development Commands
 
-- `docker compose up` or `docker compose up -d`: start the local WordPress stack.
-- `./docker-provision.sh`: perform the initial WordPress setup after containers are running.
-- `cd wordpress/wp-content/plugins/memberful-wp && npm install`: install JS build dependencies.
-- `cd wordpress/wp-content/plugins/memberful-wp && npm run start`: watch and rebuild JS during development.
-- `cd wordpress/wp-content/plugins/memberful-wp && npm run build`: create production JS bundles for release checks.
-- `docker compose down`: stop and remove the local stack.
+The local environment uses [`@wordpress/env`](https://developer.wordpress.org/block-editor/reference-guides/packages/packages-env/) (Docker required).
+
+- `npm install`: install JS build dependencies and dev tooling.
+- `npm run env:start`: start the local WordPress environment. Site at `http://localhost:8888`, wp-admin at `http://localhost:8888/wp-admin` (user `admin`, password `password`).
+- `npm run env:stop`: stop it; `npm run env:clean` resets the database; `npm run env:destroy` removes the environment entirely.
+- `npm run env:cli -- <args>`: run WP-CLI in the container, e.g. `npm run env:cli -- plugin list`.
+- `npm run start`: watch and rebuild JS during development.
+- `npm run build`: create production JS bundles for release checks.
 
 ## Coding Style & Naming Conventions
 
@@ -26,11 +28,11 @@ Match the surrounding code rather than reformatting broadly. PHP follows the exi
 
 ## Testing Guidelines
 
-There is no dedicated PHPUnit or JS test suite in this repository today. Validate changes in the Docker environment, then smoke-test the affected flows in `wp-admin` at `http://wordpress.localhost/wp-admin`. For UI changes, verify both PHP-rendered views and rebuilt JS assets. For integration work, exercise the specific Memberful connection, webhook, or content-protection path you changed.
+Validate changes in the local `wp-env` environment, then smoke-test the affected flows in `wp-admin` at `http://localhost:8888/wp-admin`. For UI changes, verify both PHP-rendered views and rebuilt JS assets. For integration work, exercise the specific Memberful connection, webhook, or content-protection path you changed.
 
 ## Commit & Pull Request Guidelines
 
-Recent history favors short, imperative commit subjects such as `Fix PHP 8.3 deprecation notice` or `Add filter comment`. Keep commits focused and avoid mixing release prep with feature work. Pull requests should describe the behavior change, link the relevant issue, note any manual test coverage, and include screenshots for admin-facing UI changes. If a change affects plugin behavior or release notes, update `wordpress/wp-content/plugins/memberful-wp/readme.txt`.
+Recent history favors short, imperative commit subjects such as `Fix PHP 8.3 deprecation notice` or `Add filter comment`. Keep commits focused and avoid mixing release prep with feature work. Pull requests should describe the behavior change, link the relevant issue, note any manual test coverage, and include screenshots for admin-facing UI changes. If a change affects plugin behavior or release notes, update `readme.txt`.
 Do not run `./release.sh` as part of normal contributor or agent work unless a maintainer explicitly asks for a release.
 
 ## Versioning

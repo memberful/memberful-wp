@@ -6,7 +6,15 @@
   "scripts": {
     "start": "wp-scripts start --source-path=js/src --output-path=js/build",
     "build": "wp-scripts build --source-path=js/src --output-path=js/build",
-    "check-engines": "wp-scripts check-engines"
+    "check-engines": "wp-scripts check-engines",
+    "env:start": "wp-env start",
+    "env:stop": "wp-env stop",
+    "env:clean": "wp-env clean all",
+    "env:destroy": "wp-env destroy",
+    "env:update": "wp-env start --update",
+    "env:cli": "wp-env run cli wp",
+    "env:logs": "wp-env logs",
+    "env:status": "wp-env status"
   },
   "repository": {
     "type": "git",
@@ -24,6 +32,7 @@
   },
   "homepage": "https://github.com/memberful/memberful-wp#readme",
   "devDependencies": {
+    "@wordpress/env": "^10.39.0",
     "@wordpress/scripts": "^34.0.0"
   }
 }
