@@ -1,14 +1,27 @@
 .DS_Store
 .idea
 
-# Manage wordpress/wp-content/plugins/memberful-wp and ignore everything else
-# from the wordpress/ folder.
-/wordpress/*
-!/wordpress/wp-content/
-/wordpress/wp-content/*
-!/wordpress/wp-content/plugins
-/wordpress/wp-content/plugins/*
-!/wordpress/wp-content/plugins/memberful-wp
+# Dependencies and build output
+node_modules/
+**/build/**
+
+# Composer dependencies - ignore everything except the hand-vendored
+# reporting.php, which is a runtime file that ships with the plugin.
+/vendor/*
+!/vendor/reporting.php
+
+composer.lock
+.phpunit.result.cache
+.phpunit.cache
+
+# Per-developer wp-env overrides, e.g. written by `npm run env:local-memberful`
+.wp-env.override.json
+
+# Plugins and themes installed in the local environment (mapped to wp-content)
+/dev/plugins/*
+!/dev/plugins/.gitkeep
+/dev/themes/*
+!/dev/themes/.gitkeep
 
 # Claude Code - https://code.claude.com/docs/en/settings
 .claude/settings.local.json

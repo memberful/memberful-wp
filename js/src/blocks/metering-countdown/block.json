@@ -1,0 +1,35 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "memberful/metering-countdown",
+  "version": "1.0.0",
+  "title": "Memberful Metering Countdown",
+  "category": "memberful",
+  "icon": "clock",
+  "description": "Shows visitors how many free articles they have left under metering.",
+  "keywords": [
+    "Memberful",
+    "Metering",
+    "Paywall"
+  ],
+  "textdomain": "memberful",
+  "attributes": {
+    "template": {
+      "type": "string",
+      "default": "You have {count} free articles left."
+    },
+    "singularTemplate": {
+      "type": "string",
+      "default": "You have {count} free article left."
+    },
+    "lastArticleTemplate": {
+      "type": "string",
+      "default": "This is your last free article."
+    }
+  },
+  "supports": {
+    "html": false
+  },
+  "editorScript": "memberful-wp-block-editor",
+  "render": "file:./render.php"
+}
