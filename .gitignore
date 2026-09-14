@@ -5,10 +5,8 @@
 node_modules/
 **/build/**
 
-# Composer dependencies - ignore everything except the hand-vendored
-# reporting.php, which is a runtime file that ships with the plugin.
-/vendor/*
-!/vendor/reporting.php
+# Composer dependencies
+/vendor/
 
 composer.lock
 .phpunit.result.cache
