@@ -1,0 +1,19 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/wp-env.json",
+	"core": null,
+	"phpVersion": "8.2",
+	"plugins": [ "." ],
+	"themes": [ "https://downloads.wordpress.org/theme/twentytwentyone.zip" ],
+	"mappings": {
+		"wp-content/plugins": "./dev/plugins",
+		"wp-content/themes": "./dev/themes"
+	},
+	"config": {
+		"WP_DEBUG": true,
+		"WP_DEBUG_LOG": true,
+		"SCRIPT_DEBUG": true
+	},
+	"lifecycleScripts": {
+		"afterStart": "wp-env run cli wp theme activate twentytwentyone && wp-env run cli wp eval-file wp-content/plugins/memberful-wp/dev/ensure-profile-widget.php"
+	}
+}
