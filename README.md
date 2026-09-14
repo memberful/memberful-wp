@@ -83,8 +83,9 @@ npm run composer -- compat    # PHP 7.4+ compatibility
 CI runs PHPUnit across a PHP and WordPress version matrix, installing the test suite with
 `bin/install-wp-tests.sh`. Coding standards and PHP compatibility checks run on PHP 8.3.
 
-The pre-commit hook lints staged PHP lines with `phpcs-changed` when `vendor/` exists, which needs
-PHP on your machine. Without it, skip the hook with `git commit --no-verify`.
+The pre-commit hook lints staged PHP lines with `phpcs-changed` when `vendor/` exists and PHP is
+installed on your machine (optional, `brew install php` on macOS). Without either, it skips. CI still
+reports coding-standards findings, but only as an advisory check.
 
 ## Building plugin assets
 

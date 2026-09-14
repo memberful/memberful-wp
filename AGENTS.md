@@ -24,7 +24,7 @@ The local environment uses [`@wordpress/env`](https://developer.wordpress.org/bl
 - `npm run env:cli -- <args>`: run WP-CLI in the container, e.g. `npm run env:cli -- plugin list`.
 - `npm run start`: watch and rebuild JS during development.
 - `npm run build`: create production JS bundles for release checks.
-- `npm run composer -- <command>`: run Composer inside the wp-env tests container (no local PHP needed). `install` once, then `test` (PHPUnit suite in `tests/`, uses the container's WordPress test suite and database), `lint` (PHPCS with `phpcs.xml`), `compat` (PHP 7.4+ compatibility). The husky pre-commit hook lints staged PHP with `phpcs-changed` when `vendor/` exists (needs PHP on the host) and skips otherwise; use `git commit --no-verify` if it fails without PHP.
+- `npm run composer -- <command>`: run Composer inside the wp-env tests container (no local PHP needed). `install` once, then `test` (PHPUnit suite in `tests/`, uses the container's WordPress test suite and database), `lint` (PHPCS with `phpcs.xml`), `compat` (PHP 7.4+ compatibility). The husky pre-commit hook lints staged PHP with `phpcs-changed` when `vendor/` exists and PHP is installed on the host, and skips otherwise.
 
 By default the plugin connects to memberful.com. Keep `.wp-env.json` neutral: do not add `MEMBERFUL_*` constants or Memberful-internal mappings. Per-developer settings belong in the git-ignored `.wp-env.override.json`. Memberful staff generate it with `npm run env:local-memberful`; see [README.md](README.md#connecting-to-a-local-memberful-app-memberful-staff) for setup details. Installed plugins and themes live in the git-ignored `dev/plugins` and `dev/themes` directories. Nothing under `dev/` ships with the plugin.
 

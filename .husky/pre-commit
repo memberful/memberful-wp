@@ -3,4 +3,9 @@ if [ ! -f vendor/bin/phpcs-changed ]; then
   exit 0
 fi
 
+if ! command -v php >/dev/null 2>&1; then
+  echo "memberful-wp: php not found — skipping PHP pre-commit linting (CI still runs phpcs). Install PHP to enable it."
+  exit 0
+fi
+
 npx lint-staged
