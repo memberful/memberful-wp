@@ -6,7 +6,7 @@
 
 This project uses [`@wordpress/env`](https://developer.wordpress.org/block-editor/reference-guides/packages/packages-env/) (wp-env) for local development, which requires [Docker](https://www.docker.com/get-started).
 
-- Install [Docker](https://www.docker.com/get-started).
+- Install [Docker](https://www.docker.com/get-started) and Node.js 22.22.1 or newer.
 - From the repository root, run `npm install` to install dependencies.
 - Run `npm run env:start` to start the local WordPress environment.
 
@@ -31,9 +31,9 @@ npm run env:local-memberful
 ```
 
 This writes a `.wp-env.override.json` (git-ignored) that points the plugin at
-https://apps.memberful.localhost, serves the site at http://wordpress.localhost through puma-dev and
-restarts the environment. To go back to memberful.com, delete `.wp-env.override.json` and run
-`npm run env:start`.
+https://apps.memberful.localhost, serves the site at http://wordpress.localhost through puma-dev
+(wp-admin at http://wordpress.localhost/wp-admin) and restarts the environment. To go back to
+memberful.com, delete `.wp-env.override.json` and run `npm run env:start`.
 
 This will also mount `dev/mu-plugins/memberful-dev-resolve.php` as a must-use plugin. It is needed because libcurl
 resolves every `*.localhost` hostname to loopback (RFC 6761) without consulting `/etc/hosts`, and inside
@@ -67,42 +67,40 @@ npm run env:cli -- <command>
 For example, to see all the metadata for user 2 directly from the db:
 `npm run env:cli -- user meta list 2`
 
+## Tests and code style
+
+PHPUnit and PHP_CodeSniffer are Composer dependencies. You don't need PHP or Composer on your machine:
+`npm run composer -- <command>` runs Composer inside the wp-env tests container, which also has the
+WordPress core test suite and a test database ready.
+
+```bash
+npm run composer -- install   # once
+npm run composer -- test      # PHPUnit tests in tests/
+npm run composer -- lint      # WordPress coding standards (phpcs.xml); lint:fix fixes what it can
+npm run composer -- compat    # PHP 7.4+ compatibility
+```
+
+CI runs PHPUnit across a PHP and WordPress version matrix, installing the test suite with
+`bin/install-wp-tests.sh`. Coding standards and PHP compatibility checks run on PHP 8.3.
+
+The pre-commit hook lints staged PHP lines with `phpcs-changed` when `vendor/` exists, which needs
+PHP on your machine. Without it, skip the hook with `git commit --no-verify`.
+
 ## Building plugin assets
 
 The plugin's JavaScript files are compiled with WP Scripts and Webpack.
-
-Run `npm install` from the repository root to install the necessary dependencies.
 
 When in local development mode, run `npm run start` to start WP Scripts in "watch" mode. This will automatically re-build assets when changes are made.
 
 When preparing for plugin release, run `npm run build` to build the final versions of the assets for release. The built files will be excluded from git.
 
-
 ## Versioning
 
 The plugin is versioned using [Semantic Versioning](http://semver.org).
 
-The gist of it is as follows:
-
-```
-                                                                        
-                    +---+ Increment this number on every normal release 
-                    |     that adds features and is not intended to     
-                    v     break/remove existing features.               
-                 1.12.0                                                 
-                 ^    ^                                                 
-                 |    |                                                 
-      +----------+    +----------+ Change this number if you need to    
-      +                            release an update that ONLY includes 
-  Increment this number            bug fixes.                           
-  if you change compatibility                                           
-  or stop supporting an old                                              
-  version of WordPress.                                                 
-                                                                        
-```
-
-It's worth noting that the version number is not a decimal number, and each
-segment is a separate number. i.e. `1.12.0` > `1.11.0`.
+- Increment the major version for breaking changes or when dropping support for an older WordPress version.
+- Increment the minor version when adding features without breaking compatibility.
+- Increment the patch version for bug fixes.
 
 ## Releasing a new version of the plugin
 
@@ -115,7 +113,8 @@ Deployment authenticates to the WordPress.org SVN repository with the `SVN_USERN
 ### Release steps
 
 * Make sure that every change has an appropriate changelog entry in `readme.txt`.
-* Set correct version number in `readme.txt` and `memberful-wp.php`.
+* Set the same version in the `Stable tag` field in `readme.txt` and the `Version` header and `MEMBERFUL_VERSION` constant in `memberful-wp.php`.
+* Replace the `= unreleased =` changelog heading in `readme.txt` with the release version.
 * Ensure that all changes are ready in the `main` branch.
 * Create a new GitHub release from `main` with a tag that matches the `Stable tag`, e.g. `1.16.0`.
 

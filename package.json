@@ -15,6 +15,7 @@
     "env:logs": "wp-env logs",
     "env:status": "wp-env status",
     "env:local-memberful": "bash dev/setup-local-memberful.sh",
+    "composer": "wp-env run tests-cli --env-cwd=wp-content/plugins/memberful-wp composer",
     "prepare": "husky"
   },
   "repository": {

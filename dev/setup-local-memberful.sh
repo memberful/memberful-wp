@@ -52,7 +52,12 @@ PUMA_DEV_ENTRY="$HOME/.puma-dev/wordpress"
 if [ -d "$HOME/.puma-dev" ]; then
   if [ "$(cat "$PUMA_DEV_ENTRY" 2>/dev/null)" != "8888" ]; then
     echo 8888 > "$PUMA_DEV_ENTRY"
-    echo "puma-dev: wrote $PUMA_DEV_ENTRY. Restart puma-dev for http://wordpress.localhost to reach wp-env."
+    echo "puma-dev: wrote $PUMA_DEV_ENTRY. puma-dev caches proxy targets, so restart it for http://wordpress.localhost to reach wp-env:"
+    if [ "$(uname)" = "Darwin" ]; then
+      echo "  launchctl kickstart -k gui/\$(id -u)/io.puma.dev"
+    else
+      echo "  sudo systemctl restart puma-dev   (or stop and start it if you run it in the foreground)"
+    fi
   fi
 else
   echo "puma-dev not found (~/.puma-dev missing): http://wordpress.localhost will not resolve, use http://localhost:8888"
