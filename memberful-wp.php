@@ -58,7 +58,7 @@ require_once MEMBERFUL_DIR . '/src/roles.php';
 require_once MEMBERFUL_DIR . '/src/syncing.php';
 require_once MEMBERFUL_DIR . '/src/logout_hooks.php';
 require_once MEMBERFUL_DIR . '/src/contrib/bbpress.php';
-require_once MEMBERFUL_DIR . '/vendor/reporting.php';
+require_once MEMBERFUL_DIR . '/src/reporting.php';
 require_once MEMBERFUL_DIR . '/src/private_user_feed.php';
 require_once MEMBERFUL_DIR . '/src/comments_protection.php';
 require_once MEMBERFUL_DIR . '/src/nav_menus.php';

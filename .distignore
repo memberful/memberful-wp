@@ -1,11 +1,4 @@
 # Files and directories excluded from the WordPress.org plugin package (SVN trunk).
-#
-# Syntax note: .distignore is IGNORE-ONLY — it does not support negation (!) like
-# .gitignore. So we cannot "exclude vendor/ except reporting.php". Instead, the
-# deploy workflow does NOT run `composer install`, so a fresh checkout's vendor/
-# contains only the committed vendor/reporting.php (the dev dependencies are
-# git-ignored and therefore absent). That is why vendor/ is intentionally NOT
-# listed below: vendor/reporting.php must ship and is the only thing in vendor/.
 
 # Version control & CI
 /.git
@@ -21,6 +14,7 @@
 /.idea
 /dev
 /node_modules
+/vendor
 /.phpunit.result.cache
 .DS_Store
 
