@@ -5,6 +5,7 @@
   "scripts": {
     "start": "wp-scripts start --source-path=js/src --output-path=js/build",
     "build": "wp-scripts build --source-path=js/src --output-path=js/build",
+    "test": "node --test js/*.test.js",
     "check-engines": "wp-scripts check-engines",
     "env:start": "wp-env start",
     "env:stop": "wp-env stop",

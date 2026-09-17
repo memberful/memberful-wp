@@ -1,0 +1,18 @@
+/* ---------------------------------------------------------
+Metering runtime (cache-safe front-end gate)
+
+Free posts keep their body in the cached HTML and toggle to the paywall client-side once the meter trips. Protected
+samples ship only the paywall; the body slot stays hidden via the `hidden` attribute until the endpoint releases it.
+Visual paywall styling lives in paywall.css.
+------------------------------------------------------------ */
+.memberful-metering[data-memberful-metering="free"] .memberful-metering__paywall {
+  display: none;
+}
+
+html.memberful-metering-tripped .memberful-metering[data-memberful-metering="free"] .memberful-metering__content {
+  display: none;
+}
+
+html.memberful-metering-tripped .memberful-metering[data-memberful-metering="free"] .memberful-metering__paywall {
+  display: block;
+}
