@@ -491,8 +491,8 @@ add_filter( 'the_content', 'memberful_metering_render_anonymous', 101 );
 function memberful_metering_wrap_free( string $body, string $paywall ): string {
   return sprintf(
     '<div class="memberful-metering" data-memberful-metering="free"><div class="memberful-metering__content">%s</div><div class="memberful-metering__paywall">%s</div></div>',
-    $body,
-    $paywall
+    force_balance_tags( $body ),
+    force_balance_tags( $paywall )
   );
 }
 
@@ -506,7 +506,9 @@ function memberful_metering_wrap_free( string $body, string $paywall ): string {
 function memberful_metering_wrap_protected( string $gated ): string {
   return sprintf(
     '<div class="memberful-metering" data-memberful-metering="protected"><div class="memberful-metering__paywall">%s</div><div class="memberful-metering__content" hidden></div></div>',
-    $gated
+    // A divider nested in a Group or Columns block leaves the teaser's wrapper unclosed; balance it so the content
+    // slot stays a sibling of the paywall rather than being swallowed by it.
+    force_balance_tags( $gated )
   );
 }
 

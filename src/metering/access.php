@@ -123,6 +123,12 @@ class Memberful_Metering_Access {
       return self::RENDER_NONE;
     }
 
+    // A WordPress password-protected post is gated by its password form, not by the meter. Metering it would let the
+    // paywall's global snippet render the raw body for visitors who never entered the password.
+    if ( post_password_required( $post ) ) {
+      return self::RENDER_NONE;
+    }
+
     if (
       ! self::post_matches_any_group( $post, $config['rules'] )
       || self::post_matches_any_group( $post, $config['exclude_rules'] )
