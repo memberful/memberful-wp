@@ -141,6 +141,19 @@
 
   const setTripped = () => {
     document.documentElement.classList.add('memberful-metering-tripped');
+
+    // Toggle the slots with the hidden attribute as well, so the swap does not depend on the stylesheet loading.
+    // Every free wrapper on the page: a theme may render the queried post's content more than once.
+    document.querySelectorAll('.memberful-metering[data-memberful-metering="free"]').forEach((container) => {
+      const content = container.querySelector('.memberful-metering__content');
+      const paywall = container.querySelector('.memberful-metering__paywall');
+      if (content) {
+        content.hidden = true;
+      }
+      if (paywall) {
+        paywall.hidden = false;
+      }
+    });
   };
 
   // Hydrate every placeholder on the page: the block may sit in the theme template, the post body, or both.

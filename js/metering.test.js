@@ -12,7 +12,7 @@ const makeCountdownNode = (attributes) => ({
   hidden: true,
 });
 
-const runRuntime = async ({ mode, stored = null, response = { success: true, data: {} }, countdownNode = null, countdownNodes = countdownNode ? [countdownNode] : [], limit = 3, container = null }) => {
+const runRuntime = async ({ mode, stored = null, response = { success: true, data: {} }, countdownNode = null, countdownNodes = countdownNode ? [countdownNode] : [], limit = 3, container = null, freeWrappers = [] }) => {
   const requests = [];
   const values = new Map();
 
@@ -35,7 +35,12 @@ const runRuntime = async ({ mode, stored = null, response = { success: true, dat
       }
       return null;
     },
-    querySelectorAll: (selector) => (selector === '[data-memberful-countdown]' ? countdownNodes : []),
+    querySelectorAll: (selector) => {
+      if (selector === '[data-memberful-countdown]') {
+        return countdownNodes;
+      }
+      return selector === '.memberful-metering[data-memberful-metering="free"]' ? freeWrappers : [];
+    },
   };
   const window = {
     URLSearchParams,
@@ -256,4 +261,30 @@ test('acknowledges pending public views even when a protected sample is denied',
   });
 
   assert.deepEqual(result.stored.pending, {});
+});
+
+test('swaps every free wrapper to the paywall with the hidden attribute when the meter trips', async () => {
+  const makeWrapper = () => {
+    const wrapper = { content: { hidden: false }, paywall: { hidden: true } };
+    wrapper.querySelector = (selector) => {
+      if (selector === '.memberful-metering__content') {
+        return wrapper.content;
+      }
+      return selector === '.memberful-metering__paywall' ? wrapper.paywall : null;
+    };
+    return wrapper;
+  };
+  const wrappers = [makeWrapper(), makeWrapper()];
+  const now = Math.floor(Date.now() / 1000);
+
+  await runRuntime({
+    mode: 'free_meter',
+    stored: { views: { 1: now, 2: now, 3: now }, pending: {} },
+    freeWrappers: wrappers,
+  });
+
+  wrappers.forEach((wrapper) => {
+    assert.equal(wrapper.content.hidden, true);
+    assert.equal(wrapper.paywall.hidden, false);
+  });
 });

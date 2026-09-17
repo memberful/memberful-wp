@@ -218,7 +218,33 @@ class Memberful_Metering_Sample {
       return true;
     }
 
-    return strtolower( $source_host ) !== strtolower( $site_host );
+    if ( strtolower( $source_host ) !== strtolower( $site_host ) ) {
+      return true;
+    }
+
+    // Same host is not the same origin: a service on another scheme or port of this host must not spend a visitor's
+    // allowance, so compare the full origin, defaulting the port from the scheme.
+    return self::origin_scheme_port( $source ) !== self::origin_scheme_port( home_url() );
+  }
+
+  /**
+   * The "scheme:port" pair of a URL, with the port defaulted from the scheme. Empty when the URL has no usable scheme.
+   *
+   * @param string $url URL to inspect.
+   *
+   * @return string
+   */
+  private static function origin_scheme_port( string $url ): string {
+    $parts  = wp_parse_url( $url );
+    $scheme = isset( $parts['scheme'] ) ? strtolower( (string) $parts['scheme'] ) : '';
+
+    if ( ! in_array( $scheme, array( 'http', 'https' ), true ) ) {
+      return '';
+    }
+
+    $port = isset( $parts['port'] ) ? (int) $parts['port'] : ( 'https' === $scheme ? 443 : 80 );
+
+    return $scheme . ':' . $port;
   }
 
   /**
@@ -236,10 +262,13 @@ class Memberful_Metering_Sample {
 
     // Increment first, then compare the returned value: concurrent requests get distinct atomic counts, so they cannot
     // all observe an under-limit value and slip through. Over-limit requests still increment, which keeps them blocked.
-    $ip_hits     = Memberful_Metering_Storage::incr_counter( $ip_key, MINUTE_IN_SECONDS );
-    $global_hits = Memberful_Metering_Storage::incr_counter( $global_key, MINUTE_IN_SECONDS );
+    if ( Memberful_Metering_Storage::incr_counter( $ip_key, MINUTE_IN_SECONDS ) > self::RATE_PER_IP ) {
+      return true;
+    }
 
-    return ( $ip_hits > self::RATE_PER_IP || $global_hits > self::RATE_GLOBAL );
+    // Only requests that passed the per-IP limit count towards the site-wide breaker, so a single blocked address
+    // cannot trip it for every other visitor.
+    return Memberful_Metering_Storage::incr_counter( $global_key, MINUTE_IN_SECONDS ) > self::RATE_GLOBAL;
   }
 
   /**

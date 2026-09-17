@@ -242,8 +242,12 @@ class Memberful_Metering_Storage {
   }
 
   /**
-   * Atomically increment a fixed-window counter and return the new value. Atomic on a persistent object cache;
-   * degrades to a best-effort transient counter (approximate under high concurrency) where none is present.
+   * Increment a fixed-window counter and return the new value. Atomic on a persistent object cache; degrades to a
+   * best-effort transient counter (approximate under high concurrency) where none is present.
+   *
+   * The window is fixed, not sliding: the key is suffixed with the current window number, so a new window always
+   * starts from zero. Refreshing the stored entry's expiry on every increment (which set_transient() does) therefore
+   * cannot keep a busy counter alive indefinitely; the previous window's key simply stops being consulted.
    *
    * @param string $key Counter key.
    * @param int    $ttl Window length in seconds.
@@ -251,6 +255,9 @@ class Memberful_Metering_Storage {
    * @return int
    */
   public static function incr_counter( string $key, int $ttl ): int {
+    $ttl = max( 1, $ttl );
+    $key .= '_' . (string) floor( time() / $ttl );
+
     if ( wp_using_ext_object_cache() ) {
       wp_cache_add( $key, 0, self::CACHE_GROUP, $ttl );
       $new = wp_cache_incr( $key, 1, self::CACHE_GROUP );

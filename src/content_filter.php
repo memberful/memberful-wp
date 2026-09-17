@@ -490,7 +490,7 @@ add_filter( 'the_content', 'memberful_metering_render_anonymous', 101 );
  */
 function memberful_metering_wrap_free( string $body, string $paywall ): string {
   return sprintf(
-    '<div class="memberful-metering" data-memberful-metering="free"><div class="memberful-metering__content">%s</div><div class="memberful-metering__paywall">%s</div></div>',
+    '<div class="memberful-metering" data-memberful-metering="free"><div class="memberful-metering__content">%s</div><div class="memberful-metering__paywall" hidden>%s</div></div>',
     force_balance_tags( $body ),
     force_balance_tags( $paywall )
   );
