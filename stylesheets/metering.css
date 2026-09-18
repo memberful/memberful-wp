@@ -1,0 +1,8 @@
+/* Metering: the pre-paint guard adds this class so the swap happens without a flash. Paywall styling is in paywall.css. */
+html.memberful-metering-tripped .memberful-metering[data-memberful-metering="free"] .memberful-metering__content {
+  display: none;
+}
+
+html.memberful-metering-tripped .memberful-metering[data-memberful-metering="free"] .memberful-metering__paywall {
+  display: block;
+}

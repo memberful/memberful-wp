@@ -300,9 +300,12 @@ class Memberful_Paywall_Renderer {
   /**
    * Whether the paywall should upsell a free registration instead of a paid subscription.
    *
-   * True only when a logged-out visitor was blocked by the meter on the post under view and free members have a
-   * metered allowance of their own. Anonymous and registered allowances are independent, so registering always
-   * grants the full registered limit; only a zero registered limit would make the upsell pointless.
+   * True only for an anonymous free-meter render where free members have a metered allowance of their own. The
+   * paywall ships hidden inside the cacheable page and only appears once the client meter trips, so this reaches
+   * exactly the blocked visitors while the page stays byte-identical for caching. Anonymous and registered
+   * allowances are independent, so registering always grants the full registered limit; only a zero registered
+   * limit would make the upsell pointless. Protected samples are excluded on purpose: their paywall is served
+   * visible before the endpoint decides, so blocked-only messaging would show to visitors about to be released.
    *
    * @return bool
    */
@@ -317,7 +320,7 @@ class Memberful_Paywall_Renderer {
 
     $post_id = (int) get_queried_object_id();
 
-    if ( ! $post_id || Memberful_Metering_Access::DECISION_TRIP_METER !== Memberful_Metering_Access::get_current_decision( $post_id ) ) {
+    if ( ! $post_id || Memberful_Metering_Access::RENDER_FREE_METER !== Memberful_Metering_Access::current_anon_mode( $post_id ) ) {
       return false;
     }
 
