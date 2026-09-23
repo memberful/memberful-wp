@@ -562,15 +562,27 @@ function memberful_wp_default_paywall_content(): string {
  * @return string
  */
 function memberful_wp_render_metered_body( WP_Post $post ): string {
-  $original = isset( $GLOBALS['post'] ) ? $GLOBALS['post'] : null;
+  global $wp_query;
+
+  $original    = isset( $GLOBALS['post'] ) ? $GLOBALS['post'] : null;
+  $query       = ( $wp_query instanceof WP_Query ) ? $wp_query : null;
+  $was_in_loop = $query ? (bool) $query->in_the_loop : false;
 
   memberful_metering_releasing_post_id( (int) $post->ID );
   $GLOBALS['post'] = $post;
   setup_postdata( $post );
 
+  // Page builders (Beaver Builder) only render a layout inside the main loop, which admin-ajax never enters.
+  if ( $query ) {
+    $query->in_the_loop = true;
+  }
+
   try {
     $html = apply_filters( 'the_content', $post->post_content );
   } finally {
+    if ( $query ) {
+      $query->in_the_loop = $was_in_loop;
+    }
     wp_reset_postdata();
     $GLOBALS['post'] = $original;
     memberful_metering_releasing_post_id( 0 );
