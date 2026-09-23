@@ -5,7 +5,7 @@
  * server-issued subject cookie and shared ledger work even on hosts that strip cookies from cacheable page views.
  *
  * Release is decided server-side against the subject's ledger (never the client's self-reported count), the request is
- * limited to same-origin callers, and both per-IP and site-wide rate limits bound scripted enumeration/drain attempts.
+ * limited to same-origin callers, and a per-IP rate limit bounds scripted enumeration/drain attempts.
  *
  * @package memberful-wp
  */
@@ -22,14 +22,10 @@ class Memberful_Metering_Sample {
   const OPS = array( 'record_public', 'sample' );
 
   /**
-   * Max calls per operation and client IP per minute before returning 429.
+   * Default max calls per operation and client IP per minute before returning 429. Filterable via
+   * memberful_metering_rate_limit_per_ip; 0 disables the limit.
    */
-  const RATE_PER_IP = 30;
-
-  /**
-   * Max calls per operation site-wide per minute before returning 429 (botnet circuit-breaker).
-   */
-  const RATE_GLOBAL = 600;
+  const RATE_PER_IP = 300;
 
   /**
    * Max first protected-body releases per client IP per hour for subjects without a previous protected release.
@@ -51,7 +47,7 @@ class Memberful_Metering_Sample {
    * Mirror public views or decide server-side whether to release a protected post body.
    *
    * No nonce: a page-embedded nonce goes stale in cache. CSRF is mitigated by the same-origin check. Every supplied post
-   * ID is revalidated, and protected releases remain bounded by the subject ledger plus per-IP/global limits.
+   * ID is revalidated, and protected releases remain bounded by the subject ledger plus the per-IP limits.
    */
   public static function handle(): void {
     nocache_headers();
@@ -248,27 +244,30 @@ class Memberful_Metering_Sample {
   }
 
   /**
-   * Coarse per-IP and site-wide rate limiting via per-operation transient counters. Public synchronization therefore
-   * cannot consume the protected sample budget, while both operations remain bounded independently.
+   * Per-IP rate limiting with a counter per operation, so public synchronization cannot consume the sample budget.
    *
    * @param string $op Valid endpoint operation.
    *
    * @return bool True when the caller should be rejected with 429.
    */
   private static function is_rate_limited( string $op ): bool {
-    $bucket     = ( 'record_public' === $op ) ? 'public' : 'sample';
-    $ip_key     = 'mbf_mtr_rl_' . $bucket . '_' . hash( 'sha256', self::client_ip() . wp_salt( 'auth' ) );
-    $global_key = 'mbf_mtr_rl_global_' . $bucket;
+    /**
+     * Filter the per-IP request limit per operation per minute. Return 0 to disable.
+     *
+     * @param int    $limit Default RATE_PER_IP.
+     * @param string $op    Endpoint operation ('record_public' or 'sample').
+     */
+    $limit = (int) apply_filters( 'memberful_metering_rate_limit_per_ip', self::RATE_PER_IP, $op );
+    if ( $limit <= 0 ) {
+      return false;
+    }
+
+    $bucket = ( 'record_public' === $op ) ? 'public' : 'sample';
+    $ip_key = 'mbf_mtr_rl_' . $bucket . '_' . hash( 'sha256', self::client_ip() . wp_salt( 'auth' ) );
 
     // Increment first, then compare the returned value: concurrent requests get distinct atomic counts, so they cannot
     // all observe an under-limit value and slip through. Over-limit requests still increment, which keeps them blocked.
-    if ( Memberful_Metering_Storage::incr_counter( $ip_key, MINUTE_IN_SECONDS ) > self::RATE_PER_IP ) {
-      return true;
-    }
-
-    // Only requests that passed the per-IP limit count towards the site-wide breaker, so a single blocked address
-    // cannot trip it for every other visitor.
-    return Memberful_Metering_Storage::incr_counter( $global_key, MINUTE_IN_SECONDS ) > self::RATE_GLOBAL;
+    return Memberful_Metering_Storage::incr_counter( $ip_key, MINUTE_IN_SECONDS ) > $limit;
   }
 
   /**
