@@ -483,6 +483,10 @@ add_filter( 'the_content', 'memberful_metering_render_anonymous', 101 );
 /**
  * Markup for a free metered post: full body (visible) plus the paywall (hidden until the client meter trips).
  *
+ * The slots are a <section> and an <aside> so their end tags close any <div> the teaser or body leaves open; a
+ * </div> would only close the innermost one. Tags are not balanced: force_balance_tags() rewrites "<" in inline
+ * scripts.
+ *
  * @param string $body    Full post body.
  * @param string $paywall Rendered paywall/marketing markup.
  *
@@ -490,14 +494,17 @@ add_filter( 'the_content', 'memberful_metering_render_anonymous', 101 );
  */
 function memberful_metering_wrap_free( string $body, string $paywall ): string {
   return sprintf(
-    '<div class="memberful-metering" data-memberful-metering="free"><div class="memberful-metering__content">%s</div><div class="memberful-metering__paywall" hidden>%s</div></div>',
-    force_balance_tags( $body ),
-    force_balance_tags( $paywall )
+    '<div class="memberful-metering" data-memberful-metering="free"><section class="memberful-metering__content">%s</section><aside class="memberful-metering__paywall" hidden>%s</aside></div>',
+    $body,
+    $paywall
   );
 }
 
 /**
- * Markup for a protected sample: the teaser+paywall (visible) plus an empty slot the endpoint fills when released.
+ * Markup for a protected sample: an empty slot the endpoint fills when released, then the teaser+paywall (visible).
+ *
+ * Same slot elements as memberful_metering_wrap_free(). Content slot first so the released body never sits inside
+ * the teaser's open tags.
  *
  * @param string $gated Teaser + paywall produced by the gate.
  *
@@ -505,10 +512,8 @@ function memberful_metering_wrap_free( string $body, string $paywall ): string {
  */
 function memberful_metering_wrap_protected( string $gated ): string {
   return sprintf(
-    '<div class="memberful-metering" data-memberful-metering="protected"><div class="memberful-metering__paywall">%s</div><div class="memberful-metering__content" hidden></div></div>',
-    // A divider nested in a Group or Columns block leaves the teaser's wrapper unclosed; balance it so the content
-    // slot stays a sibling of the paywall rather than being swallowed by it.
-    force_balance_tags( $gated )
+    '<div class="memberful-metering" data-memberful-metering="protected"><section class="memberful-metering__content" hidden></section><aside class="memberful-metering__paywall">%s</aside></div>',
+    $gated
   );
 }
 
