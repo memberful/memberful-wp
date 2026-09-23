@@ -22,6 +22,11 @@ class Memberful_Metering_Sample {
   const OPS = array( 'record_public', 'sample' );
 
   /**
+   * Cron hook that runs core's expired-transient cleanup hourly while the counters live in wp_options.
+   */
+  const CLEANUP_HOOK = 'memberful_metering_cleanup';
+
+  /**
    * Default max calls per operation and client IP per minute before returning 429. Filterable via
    * memberful_metering_rate_limit_per_ip; 0 disables the limit.
    */
@@ -41,6 +46,23 @@ class Memberful_Metering_Sample {
    */
   public static function register(): void {
     add_action( 'wp_ajax_nopriv_' . self::ACTION, array( __CLASS__, 'handle' ) );
+    add_action( self::CLEANUP_HOOK, 'delete_expired_transients' );
+    add_action( 'init', array( __CLASS__, 'schedule_cleanup' ) );
+  }
+
+  /**
+   * Without a persistent object cache the rate-limit counters and visitor ledgers are transients in wp_options;
+   * core only clears expired ones daily. Keep an hourly run scheduled while that applies, and drop it otherwise.
+   */
+  public static function schedule_cleanup(): void {
+    $wanted    = ! wp_using_ext_object_cache() && ! empty( Memberful_Metering_Config::get()['enabled'] );
+    $scheduled = (bool) wp_next_scheduled( self::CLEANUP_HOOK );
+
+    if ( $wanted && ! $scheduled ) {
+      wp_schedule_event( time() + HOUR_IN_SECONDS, 'hourly', self::CLEANUP_HOOK );
+    } elseif ( ! $wanted && $scheduled ) {
+      wp_clear_scheduled_hook( self::CLEANUP_HOOK );
+    }
   }
 
   /**
