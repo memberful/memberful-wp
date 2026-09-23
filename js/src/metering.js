@@ -237,9 +237,19 @@
       });
   };
 
-  if (cfg.mode === 'free_meter') {
-    runFree();
-  } else if (cfg.mode === 'protected_sample') {
-    runProtected();
+  const start = () => {
+    if (cfg.mode === 'free_meter') {
+      runFree();
+    } else if (cfg.mode === 'protected_sample') {
+      runProtected();
+    }
+  };
+
+  // A prerendered page (Speculation Rules, e.g. the Speculative Loading plugin) runs its scripts before the reader
+  // has opened it. Counting there would burn a free view on a link that was only hovered. Wait until the page is shown.
+  if (document.prerendering) {
+    document.addEventListener('prerenderingchange', start, { once: true });
+  } else {
+    start();
   }
 })();

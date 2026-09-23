@@ -12,9 +12,10 @@ const makeCountdownNode = (attributes) => ({
   hidden: true,
 });
 
-const runRuntime = async ({ mode, stored = null, response = { success: true, data: {} }, countdownNode = null, countdownNodes = countdownNode ? [countdownNode] : [], limit = 3, container = null, freeWrappers = [] }) => {
+const runRuntime = async ({ mode, stored = null, response = { success: true, data: {} }, countdownNode = null, countdownNodes = countdownNode ? [countdownNode] : [], limit = 3, container = null, freeWrappers = [], prerendering = false }) => {
   const requests = [];
   const values = new Map();
+  const listeners = {};
 
   if (stored) {
     values.set('memberful_metering', JSON.stringify(stored));
@@ -25,6 +26,10 @@ const runRuntime = async ({ mode, stored = null, response = { success: true, dat
     setItem: (key, value) => values.set(key, value),
   };
   const document = {
+    prerendering,
+    addEventListener: (event, handler, options) => {
+      (listeners[event] = listeners[event] || []).push({ handler, once: Boolean(options && options.once) });
+    },
     documentElement: { classList: { add: () => {} } },
     querySelector: (selector) => {
       if (selector === '[data-memberful-countdown]') {
@@ -66,6 +71,17 @@ const runRuntime = async ({ mode, stored = null, response = { success: true, dat
   return {
     requests,
     stored: JSON.parse(values.get('memberful_metering') || '{}'),
+    readStored: () => JSON.parse(values.get('memberful_metering') || '{}'),
+    dispatch: async (event) => {
+      // Mirror the browser: activation flips prerendering to false before the event fires, and once-listeners go.
+      if (event === 'prerenderingchange') {
+        document.prerendering = false;
+      }
+      const queued = listeners[event] || [];
+      listeners[event] = queued.filter((entry) => !entry.once);
+      queued.forEach((entry) => entry.handler());
+      await new Promise((resolve) => setImmediate(resolve));
+    },
   };
 };
 
@@ -287,4 +303,27 @@ test('swaps every free wrapper to the paywall with the hidden attribute when the
     assert.equal(wrapper.content.hidden, true);
     assert.equal(wrapper.paywall.hidden, false);
   });
+});
+
+test('does not count a prerendered page until it is shown', async () => {
+  const result = await runRuntime({ mode: 'free_meter', prerendering: true });
+
+  assert.equal(result.requests.length, 0);
+  assert.deepEqual(result.stored, {});
+
+  await result.dispatch('prerenderingchange');
+
+  assert.equal(result.requests.length, 1);
+  assert.deepEqual(Object.keys(result.readStored().views), ['42']);
+});
+
+test('does not ask the server for a protected sample while prerendering', async () => {
+  const result = await runRuntime({ mode: 'protected_sample', prerendering: true });
+
+  assert.equal(result.requests.length, 0);
+
+  await result.dispatch('prerenderingchange');
+
+  assert.equal(result.requests.length, 1);
+  assert.equal(new URLSearchParams(result.requests[0].options.body).get('op'), 'sample');
 });
