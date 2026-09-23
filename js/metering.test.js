@@ -27,6 +27,15 @@ const runRuntime = async ({ mode, stored = null, response = { success: true, dat
   };
   const document = {
     prerendering,
+    write: () => {},
+    writeln: () => {},
+    createElement: (tagName) => {
+      const node = { tagName, attributes: {}, textContent: '', listeners: {} };
+      node.setAttribute = (name, value) => { node.attributes[name] = value; };
+      node.addEventListener = (event, handler) => { node.listeners[event] = handler; };
+      Object.defineProperty(node, 'src', { get: () => node.attributes.src || '' });
+      return node;
+    },
     addEventListener: (event, handler, options) => {
       (listeners[event] = listeners[event] || []).push({ handler, once: Boolean(options && options.once) });
     },
@@ -50,6 +59,7 @@ const runRuntime = async ({ mode, stored = null, response = { success: true, dat
   const window = {
     URLSearchParams,
     localStorage,
+    setTimeout: () => 0,
     memberfulMetering: {
       action: 'memberful_metering_sample',
       ajaxUrl: '/wp-admin/admin-ajax.php',
@@ -65,11 +75,14 @@ const runRuntime = async ({ mode, stored = null, response = { success: true, dat
     },
   };
 
+  const originalWrite = document.write;
   vm.runInNewContext(runtime, { document, window });
   await new Promise((resolve) => setImmediate(resolve));
 
   return {
     requests,
+    document,
+    originalWrite,
     stored: JSON.parse(values.get('memberful_metering') || '{}'),
     readStored: () => JSON.parse(values.get('memberful_metering') || '{}'),
     dispatch: async (event) => {
@@ -233,6 +246,7 @@ test('hydrates template and released body countdowns after a protected sample re
   const countdownNodes = [templateNode];
   const content = {
     hidden: true,
+    querySelectorAll: () => [],
     set innerHTML(html) {
       countdownNodes.push(bodyNode);
     },
@@ -326,4 +340,47 @@ test('does not ask the server for a protected sample while prerendering', async 
 
   assert.equal(result.requests.length, 1);
   assert.equal(new URLSearchParams(result.requests[0].options.body).get('op'), 'sample');
+});
+
+test('re-creates released scripts one at a time, waiting for an external script before the next', async () => {
+  const replaced = [];
+  const parentNode = { replaceChild: (n, o) => replaced.push({ n, o }) };
+  const scripts = [
+    { src: '/a.js', nonce: 'abc', attributes: [{ name: 'src', value: '/a.js' }], textContent: '', parentNode },
+    { src: '', attributes: [], textContent: 'window.ran = true;', parentNode },
+    { src: '/b.js', attributes: [{ name: 'src', value: '/b.js' }], textContent: '', parentNode },
+    { src: '', attributes: [], textContent: 'window.after = true;', parentNode },
+  ];
+  const content = { hidden: true, innerHTML: '', querySelectorAll: (selector) => (selector === 'script' ? scripts : []) };
+  const paywall = { hidden: false };
+  const container = { querySelector: (selector) => (selector === '.memberful-metering__content' ? content : selector === '.memberful-metering__paywall' ? paywall : null) };
+
+  const result = await runRuntime({
+    mode: 'protected_sample',
+    container,
+    response: { success: true, data: { released: true, remaining: 2, synced: [], html: '<p>body</p>' } },
+  });
+
+  assert.equal(content.hidden, false);
+  // Only the external script has been inserted; the inline ones wait for it to load.
+  assert.equal(replaced.length, 1);
+  assert.equal(replaced[0].o, scripts[0]);
+  assert.equal(replaced[0].n.attributes.src, '/a.js');
+  assert.equal(replaced[0].n.nonce, 'abc');
+  assert.equal(typeof replaced[0].n.listeners.load, 'function');
+  // document.write is redirected while the queue is running.
+  assert.notEqual(result.document.write, result.originalWrite);
+
+  replaced[0].n.listeners.load();
+
+  // The inline script after it ran, then the second external one was inserted and the queue waits again.
+  assert.equal(replaced.length, 3);
+  assert.equal(replaced[1].n.textContent, 'window.ran = true;');
+  assert.equal(replaced[2].n.attributes.src, '/b.js');
+
+  // A failing external script does not stall the queue, and document.write is restored at the end.
+  replaced[2].n.listeners.error();
+  assert.equal(replaced.length, 4);
+  assert.equal(replaced[3].n.textContent, 'window.after = true;');
+  assert.equal(result.document.write, result.originalWrite);
 });

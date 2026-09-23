@@ -205,6 +205,62 @@
     const container = document.querySelector('.memberful-metering');
     const state = persist(pruneState(readState()));
 
+    // innerHTML never runs scripts. Recreate each script node, one at a time so an inline script waits for the
+    // external one before it. While the queue runs, document.write inserts after the current script instead of
+    // replacing the loaded page.
+    const runScripts = (root) => {
+      const queue = Array.from(root.querySelectorAll('script'));
+      const originalWrite = document.write;
+      const originalWriteln = document.writeln;
+      let current = null;
+      const writeAfterCurrent = (...parts) => {
+        if (current && current.parentNode) {
+          current.insertAdjacentHTML('afterend', parts.join(''));
+        }
+      };
+      document.write = writeAfterCurrent;
+      document.writeln = (...parts) => writeAfterCurrent(parts.join(''), '\n');
+
+      const finish = () => {
+        current = null;
+        document.write = originalWrite;
+        document.writeln = originalWriteln;
+      };
+
+      const next = () => {
+        const old = queue.shift();
+        if (!old) {
+          finish();
+          return;
+        }
+        const script = document.createElement('script');
+        Array.from(old.attributes).forEach((attr) => script.setAttribute(attr.name, attr.value));
+        if (old.nonce) {
+          script.nonce = old.nonce;
+        }
+        script.textContent = old.textContent;
+        current = script;
+        if (old.src) {
+          // A script the browser never fetches (e.g. nomodule) fires neither event; the timer keeps the queue moving.
+          let done = false;
+          const proceed = () => {
+            if (!done) {
+              done = true;
+              next();
+            }
+          };
+          script.addEventListener('load', proceed, { once: true });
+          script.addEventListener('error', proceed, { once: true });
+          window.setTimeout(proceed, 5000);
+          old.parentNode.replaceChild(script, old);
+          return;
+        }
+        old.parentNode.replaceChild(script, old);
+        next();
+      };
+      next();
+    };
+
     endpointPost('sample', false, viewIds(state))
       .then((response) => response.json())
       .then((payload) => {
@@ -224,6 +280,7 @@
         if (content) {
           content.innerHTML = data.html || '';
           content.hidden = false;
+          runScripts(content);
         }
         if (paywall) {
           paywall.hidden = true;
@@ -245,8 +302,7 @@
     }
   };
 
-  // A prerendered page (Speculation Rules, e.g. the Speculative Loading plugin) runs its scripts before the reader
-  // has opened it. Counting there would burn a free view on a link that was only hovered. Wait until the page is shown.
+  // A prerendered page runs its scripts before the reader has opened it. Wait until it is shown before counting.
   if (document.prerendering) {
     document.addEventListener('prerenderingchange', start, { once: true });
   } else {
