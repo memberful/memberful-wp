@@ -6,7 +6,7 @@
 
 This project uses [`@wordpress/env`](https://developer.wordpress.org/block-editor/reference-guides/packages/packages-env/) (wp-env) for local development, which requires [Docker](https://www.docker.com/get-started).
 
-- Install [Docker](https://www.docker.com/get-started) and Node.js 22.22.1 or newer.
+- Install [Docker](https://www.docker.com/get-started) and the Node.js version in `.node-version` (also pinned in `mise.toml` for [mise](https://mise.jdx.dev) users).
 - From the repository root, run `npm install` to install dependencies.
 - Run `npm run env:start` to start the local WordPress environment.
 
