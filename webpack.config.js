@@ -8,5 +8,6 @@ module.exports = {
     "expiry-banner": "./js/src/expiry-banner.js",
     "paywall-builder": "./js/src/paywall-builder.js",
     "metering-admin": "./js/src/metering-admin.js",
+    "metering": "./js/src/metering.js",
   },
 };

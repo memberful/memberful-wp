@@ -585,6 +585,12 @@ class Memberful_Wp_Integration_WP_Recipe_Maker {
       return false;
     }
 
+    // The same applies while the metering endpoint renders a released sample body for a logged-out visitor: that
+    // render happens on admin-ajax, where no page decision exists, and is signalled through the releasing flag.
+    if ( function_exists( 'memberful_metering_is_releasing' ) && memberful_metering_is_releasing( $lock_post_id ) ) {
+      return false;
+    }
+
     return $this->recipe_cards_locked_for_post( $lock_post_id ) && ! memberful_can_user_access_post( get_current_user_id(), $lock_post_id );
   }
 

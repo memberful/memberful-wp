@@ -1,0 +1,23 @@
+/* Metering: the pre-paint guard adds this class so the swap happens without a flash. Paywall styling is in paywall.css. */
+
+/* Themes style section and aside directly (padding, display: block in resets). Reset the slots and keep hidden working. */
+.memberful-metering > .memberful-metering__content,
+.memberful-metering > .memberful-metering__paywall {
+  background: none;
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.memberful-metering > .memberful-metering__content[hidden],
+.memberful-metering > .memberful-metering__paywall[hidden] {
+  display: none;
+}
+
+html.memberful-metering-tripped .memberful-metering[data-memberful-metering="free"] .memberful-metering__content {
+  display: none;
+}
+
+html.memberful-metering-tripped .memberful-metering[data-memberful-metering="free"] .memberful-metering__paywall {
+  display: block;
+}
