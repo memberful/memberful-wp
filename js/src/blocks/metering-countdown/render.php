@@ -44,5 +44,5 @@ if ( '' === trim( $message ) ) {
 printf(
   '<p %s>%s</p>',
   get_block_wrapper_attributes(),
-  wp_kses_post( $message )
+  esc_html( $message )
 );
