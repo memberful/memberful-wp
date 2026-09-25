@@ -180,3 +180,21 @@ function memberful_wp_user_role_for_user( WP_User $user ) {
    */
   return apply_filters( 'memberful_wp_user_role_for_user', $user_role, $user );
 }
+
+/**
+ * Whether the user holds a privileged role, such as editor or administrator.
+ * Checks capabilities rather than roles, since plugins like bbPress give
+ * every user a second role.
+ *
+ * @param WP_User $user The user to check.
+ * @return bool
+ */
+function memberful_wp_user_is_privileged( WP_User $user ) {
+  foreach ( array( 'edit_others_posts', 'edit_users', 'manage_options', 'unfiltered_html' ) as $capability ) {
+    if ( $user->has_cap( $capability ) ) {
+      return TRUE;
+    }
+  }
+
+  return FALSE;
+}

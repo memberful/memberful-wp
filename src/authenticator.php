@@ -12,16 +12,16 @@ class Memberful_Authenticator {
   }
 
   /**
-   * Authentication for subscribers is handled by Memberful.
-   * Prevent subscribers from requesting password resets
+   * Authentication for members is handled by Memberful.
+   * Prevent members from requesting password resets
    *
    * @return boolean
    */
   static public function audit_password_reset( $allowed, $user_id ) {
     $user = new WP_User( $user_id );
-    $member_role = memberful_wp_user_role_for_user( $user );
+    $user_is_linked_to_a_member = Memberful_User_Mapping_Repository::find_by_wp_user_id( $user_id ) !== NULL;
 
-    return $user->has_cap( $member_role ) ? FALSE : $allowed;
+    return $user_is_linked_to_a_member && ! memberful_wp_user_is_privileged( $user ) ? FALSE : $allowed;
   }
 
   /**
