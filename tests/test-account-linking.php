@@ -132,4 +132,56 @@ class Tests_Account_Linking extends WP_UnitTestCase {
 
     $this->assertSame( $user->ID, $result->ID );
   }
+
+  /**
+   * A linked administrator keeps their email address when the member changes theirs.
+   */
+  public function test_keeps_a_linked_administrators_email_when_the_member_changes_theirs() {
+    $user = $this->user_with_members_email( 'administrator' );
+    $this->link_member_to( $user );
+
+    $member        = $this->member();
+    $member->email = 'someone-else@example.com';
+    ( new Memberful_User_Map() )->map( $member );
+
+    $this->assertSame( self::EMAIL, get_user_by( 'id', $user->ID )->user_email );
+  }
+
+  /**
+   * A linked administrator keeps their name when the member changes theirs.
+   */
+  public function test_keeps_a_linked_administrators_name_when_the_member_changes_theirs() {
+    update_option( 'memberful_auto_sync_display_names', true );
+
+    $user = $this->user_with_members_email( 'administrator' );
+    $this->link_member_to( $user );
+    update_user_meta( $user->ID, 'first_name', 'Site' );
+    update_user_meta( $user->ID, 'last_name', 'Owner' );
+
+    $member             = $this->member();
+    $member->first_name = 'Someone';
+    $member->last_name  = 'Else';
+    $member->full_name  = 'Someone Else';
+    ( new Memberful_User_Map() )->map( $member );
+
+    $synced_user = get_user_by( 'id', $user->ID );
+
+    $this->assertSame( 'Site', $synced_user->first_name );
+    $this->assertSame( 'Owner', $synced_user->last_name );
+    $this->assertSame( $user->display_name, $synced_user->display_name );
+  }
+
+  /**
+   * A linked subscriber's email address follows the member's.
+   */
+  public function test_updates_a_linked_subscribers_email_when_the_member_changes_theirs() {
+    $user = $this->user_with_members_email( 'subscriber' );
+    $this->link_member_to( $user );
+
+    $member        = $this->member();
+    $member->email = 'new-address@example.com';
+    ( new Memberful_User_Map() )->map( $member );
+
+    $this->assertSame( 'new-address@example.com', get_user_by( 'id', $user->ID )->user_email );
+  }
 }
