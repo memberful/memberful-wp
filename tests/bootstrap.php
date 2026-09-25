@@ -29,3 +29,7 @@ tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
 
 // Start up the WP testing environment.
 require $_tests_dir . '/includes/bootstrap.php';
+
+// The test installer drops only core tables, so recreate the mapping table the plugin creates on activation.
+$wpdb->query( 'DROP TABLE IF EXISTS ' . Memberful_User_Mapping_Repository::table() ); // phpcs:ignore WordPress.DB -- Drops a fixed table name before any test runs.
+memberful_wp_plugin_migrate_db();
