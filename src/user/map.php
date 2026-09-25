@@ -191,8 +191,10 @@ class Memberful_User_Mapping_Ensure_User {
   }
 
   private function update_user() {
-    $user_data = $this->fields_that_always_sync_from_memberful();
-    $sync_display_name = get_option( 'memberful_auto_sync_display_names' );
+    $memberful_manages_the_user = ! memberful_wp_user_is_privileged( $this->wp_user );
+
+    $user_data = $memberful_manages_the_user ? $this->fields_that_always_sync_from_memberful() : array();
+    $sync_display_name = $memberful_manages_the_user && get_option( 'memberful_auto_sync_display_names' );
 
     $user_data['ID']            = $this->wp_user->ID;
     $user_data['user_login']    = $this->wp_user->user_login;
