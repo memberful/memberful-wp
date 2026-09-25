@@ -93,6 +93,8 @@ class Memberful_Authenticator {
             $error_data['member'],
             $error_data['context']
           );
+        } elseif ( $user->get_error_code() === 'user_is_privileged' ) {
+          wp_die( esc_html__( 'This email address belongs to a site administrator or editor. Use a different email address for your member account.' ) );
         } else {
           return $this->_error( 'memberful_oauth_error' );
         }
