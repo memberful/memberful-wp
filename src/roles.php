@@ -139,18 +139,21 @@ function memberful_wp_set_use_per_plan_roles( $enabled ) {
 
 /**
  * Update all existing users with the new plan role mappings
+ * @param array $previous_plan_roles The roles plans were mapped to before the change
  */
-function memberful_wp_update_all_user_roles_with_plan_mappings() {
+function memberful_wp_update_all_user_roles_with_plan_mappings( array $previous_plan_roles = array() ) {
   $mapped_users = Memberful_User_Mapping_Repository::fetch_user_ids_of_all_mapped_members();
 
   if ( empty( $mapped_users ) ) {
     return;
   }
 
-  $users = get_users( array( 'fields' => 'all', 'include' => $mapped_users ) );
+  $role_decision = Memberful_Wp_User_Role_Decision::build( $previous_plan_roles );
+  $users         = get_users( array( 'fields' => 'all', 'include' => $mapped_users ) );
 
   foreach ( $users as $user ) {
-    Memberful_Wp_User_Role_Decision::ensure_user_role_is_correct( $user );
+    $role_decision->update_user_role( $user );
+    clean_user_cache( $user->ID );
   }
 }
 
