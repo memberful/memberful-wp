@@ -50,6 +50,10 @@ class Memberful_Wp_User_Role_Decision {
   }
 
   public function update_user_role( WP_User $user ) {
+    if ( memberful_is_admin( $user ) ) {
+      return;
+    }
+
     $current_subscriptions = memberful_wp_user_plans_subscribed_to( $user->ID );
     $new_role = $this->role_for_user( reset( $user->roles ), $current_subscriptions );
 
