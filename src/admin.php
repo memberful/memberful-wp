@@ -546,6 +546,7 @@ function memberful_wp_advanced_settings() {
   $subscription_plans    = memberful_subscription_plans();
   $current_mappings      = memberful_wp_get_all_plan_role_mappings();
   $use_per_plan_roles    = memberful_wp_use_per_plan_roles();
+  $current_plan_roles    = $use_per_plan_roles ? array_values( $current_mappings ) : array();
 
   /**
    * Filter to determine if user roles should be automatically updated/synced to existing users on save.
@@ -609,13 +610,17 @@ function memberful_wp_advanced_settings() {
       update_option( 'memberful_plan_role_mappings', $new_plan_mappings );
 
       if ( $should_update_user_roles ) {
-        memberful_wp_update_all_user_roles_with_plan_mappings();
+        memberful_wp_update_all_user_roles_with_plan_mappings( $current_plan_roles );
       }
 
       Memberful_Wp_Reporting::report( __('Per-plan role mappings updated') );
     } else {
       // If disabling, clear mappings
       update_option( 'memberful_plan_role_mappings', array() );
+
+      if ( $use_per_plan_roles && $should_update_user_roles ) {
+        memberful_wp_update_all_user_roles_with_plan_mappings( $current_plan_roles );
+      }
     }
 
     wp_redirect( memberful_wp_plugin_advanced_settings_url() );
