@@ -170,8 +170,7 @@ class Memberful_Metering_Access {
    * Shared by the logged-in page path (user meta) and the anonymous sample endpoint (server-side ledger).
    *
    * The anonymous read-modify-write is not transactional: a burst of concurrent same-subject requests can each read the
-   * pre-write count and release. That leak is bounded by the sample endpoint's per-IP rate limit and cookieless-release
-   * cap.
+   * pre-write count and release. That leak is bounded by the sample endpoint's per-IP rate limit.
    *
    * @param int         $user_id     User ID, or 0 for the anonymous ledger store.
    * @param int         $post_id     Post being viewed.
@@ -401,9 +400,9 @@ class Memberful_Metering_Access {
 
   /**
    * Whether a post is a protected sample that MAY be released to an anonymous visitor, checked with NO side effect (no
-   * subject minted, no view recorded). Lets the endpoint reject ineligible posts and charge the cookieless cap before
-   * evaluate_sample() mints a cookie or records a view. Only a published, publicly viewable, password-free post that
-   * classifies as a protected sample qualifies.
+   * subject minted, no view recorded). Lets the endpoint reject ineligible posts before evaluate_sample() mints a cookie
+   * or records a view. Only a published, publicly viewable, password-free post that classifies as a protected sample
+   * qualifies.
    *
    * @param int $post_id Post ID from the request.
    *
@@ -443,28 +442,6 @@ class Memberful_Metering_Access {
     $views = Memberful_Metering_Storage::prune( $views, (int) $config['period_days'] );
 
     return isset( $views[ $post_id ] ) || count( $views ) < $limit;
-  }
-
-  /**
-   * Whether a subject previously received protected content and may bypass the cookieless-release cap.
-   *
-   * @param string|null $subject Resolved subject id, or null.
-   *
-   * @return bool
-   */
-  public static function subject_has_protected_release( ?string $subject ): bool {
-    if (
-      null === $subject
-      || '' === $subject
-      || ! Memberful_Metering_Storage::has_protected_release( $subject )
-    ) {
-      return false;
-    }
-
-    $period = (int) Memberful_Metering_Config::get()['period_days'];
-    $views  = Memberful_Metering_Storage::prune( Memberful_Metering_Storage::read_ledger_views( $subject ), $period );
-
-    return ! empty( $views );
   }
 
   /**

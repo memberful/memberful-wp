@@ -4,11 +4,10 @@
  *
  * Anonymous visitors are identified by an opaque, server-issued subject id carried in a signed, HttpOnly cookie; their
  * view counts live in a server-side transient ledger keyed by a hash of that subject. The cookie is only a pointer to
- * server state, never the state itself, so deleting or replaying it cannot rewind the meter to an attacker's advantage
- * (a fresh cookie yields a fresh, empty ledger, which the sample endpoint's cookieless-release cap and rate limiting
- * bound). Logged-in visitors
- * use user meta. The subject is minted only in uncached contexts (the admin-ajax sample endpoint, or login), never on a
- * cacheable page — so the anonymous page stays byte-identical and cacheable on hosts that strip cookies before PHP.
+ * server state, never the state itself, so it cannot be edited to change a count; dropping it starts an empty ledger,
+ * bounded by the sample endpoint's rate limit. Logged-in visitors use user meta. The subject is minted only in uncached
+ * contexts (the admin-ajax sample endpoint, or login), never on a cacheable page — so the anonymous page stays
+ * byte-identical and cacheable on hosts that strip cookies before PHP.
  *
  * @package memberful-wp
  */
@@ -24,11 +23,6 @@ class Memberful_Metering_Storage {
    * Transient key prefix for the server-side anonymous ledger.
    */
   const LEDGER_PREFIX = 'mbf_mtr_l_';
-
-  /**
-   * Transient key prefix recording that a subject has previously received protected content.
-   */
-  const PROTECTED_RELEASE_PREFIX = 'mbf_mtr_p_';
 
   /**
    * Object-cache group for atomic rate-limit counters (used only when a persistent object cache is available).
@@ -183,34 +177,6 @@ class Memberful_Metering_Storage {
   }
 
   /**
-   * Whether this subject has successfully received protected content during the current rolling period.
-   *
-   * Public views deliberately do not set this marker: otherwise an attacker could record a public post before each
-   * cookie rotation and bypass the cookieless protected-release cap.
-   *
-   * @param string $subject Subject id.
-   *
-   * @return bool
-   */
-  public static function has_protected_release( string $subject ): bool {
-    return '' !== $subject && (bool) get_transient( self::protected_release_key( $subject ) );
-  }
-
-  /**
-   * Mark a successful protected-content release for cookieless-cap exemption on later requests.
-   *
-   * @param string $subject     Subject id.
-   * @param int    $period_days Rolling-window length in days.
-   */
-  public static function mark_protected_release( string $subject, int $period_days ): void {
-    if ( '' === $subject ) {
-      return;
-    }
-
-    set_transient( self::protected_release_key( $subject ), 1, max( 1, $period_days ) * DAY_IN_SECONDS );
-  }
-
-  /**
    * Read a logged-in user's metering views from user meta.
    *
    * @param int $user_id WP user ID.
@@ -310,17 +276,6 @@ class Memberful_Metering_Storage {
   }
 
   /**
-   * The transient key indicating that a subject has received protected content.
-   *
-   * @param string $subject Subject id.
-   *
-   * @return string
-   */
-  private static function protected_release_key( string $subject ): string {
-    return self::PROTECTED_RELEASE_PREFIX . hash( 'sha256', $subject . wp_salt( 'auth' ) );
-  }
-
-  /**
    * Sign a subject id with an embedded expiry and return "subject.exp.signature".
    *
    * @param string $subject Opaque subject id.
@@ -354,8 +309,7 @@ class Memberful_Metering_Storage {
       return null;
     }
 
-    // Reject an expired token: past its embedded expiry it is treated as no cookie, so the caller falls back to the
-    // cookieless path and its per-IP cap. This stops a retained cookie being replayed indefinitely.
+    // Reject an expired token: past its embedded expiry it is treated as no cookie.
     if ( ! ctype_digit( $expires ) || (int) $expires < time() ) {
       return null;
     }

@@ -33,15 +33,6 @@ class Memberful_Metering_Sample {
   const RATE_PER_IP = 300;
 
   /**
-   * Max first protected-body releases per client IP per hour for subjects without a previous protected release.
-   *
-   * A genuine reader spends this quota only on their first protected sample. A scraper that drops or rotates subjects
-   * spends it on every fresh allowance. Public views never grant an exemption, so recording a public post cannot be
-   * used to bypass the protected-content cap. Filterable; 0 disables the cap.
-   */
-  const COOKIELESS_RELEASE_CAP = 20;
-
-  /**
    * Register the logged-out handler only. Logged-in visitors bypass the cache and are decided on the page path.
    */
   public static function register(): void {
@@ -69,7 +60,7 @@ class Memberful_Metering_Sample {
    * Mirror public views or decide server-side whether to release a protected post body.
    *
    * No nonce: a page-embedded nonce goes stale in cache. CSRF is mitigated by the same-origin check. Every supplied post
-   * ID is revalidated, and protected releases remain bounded by the subject ledger plus the per-IP limits.
+   * ID is revalidated, and protected releases remain bounded by the subject ledger and the per-IP rate limit.
    */
   public static function handle(): void {
     nocache_headers();
@@ -116,24 +107,12 @@ class Memberful_Metering_Sample {
     }
 
     // Re-submit local views before evaluating the protected post so a replaced subject can rebuild its public history.
-    // Public records may mint a subject but never grant the protected-release cap exemption.
-    $public_post_ids       = self::request_post_ids( 'public_post_ids' );
-    $synced                = Memberful_Metering_Access::record_public_views( $public_post_ids );
-    $subject               = Memberful_Metering_Storage::current_subject();
-    $has_protected_release = Memberful_Metering_Access::subject_has_protected_release( $subject );
-    $sync_failed           = count( $synced ) !== count( $public_post_ids );
+    $public_post_ids = self::request_post_ids( 'public_post_ids' );
+    $synced          = Memberful_Metering_Access::record_public_views( $public_post_ids );
+    $subject         = Memberful_Metering_Storage::current_subject();
+    $sync_failed     = count( $synced ) !== count( $public_post_ids );
 
     if ( $sync_failed || ! Memberful_Metering_Access::sample_within_allowance( $post_id, $subject ) ) {
-      wp_send_json_success(
-        array(
-          'released'  => false,
-          'remaining' => 0,
-          'synced'    => $synced,
-        )
-      );
-    }
-
-    if ( ! $has_protected_release && self::cookieless_over_cap() ) {
       wp_send_json_success(
         array(
           'released'  => false,
@@ -152,14 +131,6 @@ class Memberful_Metering_Sample {
           'remaining' => 0,
           'synced'    => $synced,
         )
-      );
-    }
-
-    $subject = Memberful_Metering_Storage::current_subject();
-    if ( null !== $subject ) {
-      Memberful_Metering_Storage::mark_protected_release(
-        $subject,
-        (int) Memberful_Metering_Config::get()['period_days']
       );
     }
 
@@ -301,36 +272,5 @@ class Memberful_Metering_Sample {
     $ip = isset( $_SERVER['REMOTE_ADDR'] ) ? (string) wp_unslash( $_SERVER['REMOTE_ADDR'] ) : '';
 
     return filter_var( $ip, FILTER_VALIDATE_IP ) ? $ip : '0.0.0.0';
-  }
-
-  /**
-   * Atomically count this cookieless request against the client IP's hourly quota and report whether the quota is now
-   * exceeded. Incrementing as part of the check (rather than checking, then incrementing only after release) means
-   * concurrent cookieless requests get distinct counts and cannot all slip under the cap.
-   *
-   * @return bool
-   */
-  private static function cookieless_over_cap(): bool {
-    /**
-     * Filter the per-IP hourly cap on cookieless protected-body releases. Return 0 to disable the cap.
-     *
-     * @param int $cap Default COOKIELESS_RELEASE_CAP.
-     */
-    $cap = (int) apply_filters( 'memberful_metering_cookieless_release_cap', self::COOKIELESS_RELEASE_CAP );
-
-    if ( $cap <= 0 ) {
-      return false;
-    }
-
-    return Memberful_Metering_Storage::incr_counter( self::cookieless_key(), HOUR_IN_SECONDS ) > $cap;
-  }
-
-  /**
-   * Transient key for the per-IP cookieless-release counter (IP hashed with a site salt).
-   *
-   * @return string
-   */
-  private static function cookieless_key(): string {
-    return 'mbf_mtr_cl_' . hash( 'sha256', self::client_ip() . wp_salt( 'auth' ) );
   }
 }
