@@ -152,6 +152,7 @@ Blocks:
 * Fix PHP warning when checking comment access on feed requests for missing posts
 * Hide comments on term-protected posts from comment feeds
 * Apply term protections to pages and custom post types in search and comment feeds
+* Improve the private member feed
 
 = 1.81.0 =
 
