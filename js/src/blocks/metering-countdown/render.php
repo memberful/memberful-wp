@@ -30,12 +30,12 @@ if (
     get_block_wrapper_attributes(
       array(
         'data-memberful-countdown'         => '1',
-        'data-memberful-template'          => wp_strip_all_tags( $template ),
-        'data-memberful-template-singular' => wp_strip_all_tags( $singular ),
-        'data-memberful-template-last'     => wp_strip_all_tags( $last_template ),
+        'data-memberful-template'          => $template,
+        'data-memberful-template-singular' => $singular,
+        'data-memberful-template-last'     => $last_template,
       )
     ),
-    esc_html( wp_strip_all_tags( str_replace( '{count}', '', $template ) ) )
+    esc_html( str_replace( '{count}', '', $template ) )
   );
   return;
 }
