@@ -4,7 +4,7 @@ const path = require('node:path');
 const test = require('node:test');
 const vm = require('node:vm');
 
-const runtime = fs.readFileSync(path.join(__dirname, 'src/metering.js'), 'utf8');
+const runtime = fs.readFileSync(path.join(__dirname, '../../js/src/metering.js'), 'utf8');
 
 const makeCountdownNode = (attributes) => ({
   getAttribute: (name) => (name in attributes ? attributes[name] : null),
