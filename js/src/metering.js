@@ -142,17 +142,22 @@
   const setTripped = () => {
     document.documentElement.classList.add('memberful-metering-tripped');
 
-    // Toggle the slots with the hidden attribute as well, so the swap does not depend on the stylesheet loading.
-    // Every free wrapper on the page: a theme may render the queried post's content more than once.
-    document.querySelectorAll('.memberful-metering[data-memberful-metering="free"]').forEach((container) => {
-      const content = container.querySelector('.memberful-metering__content');
-      const paywall = container.querySelector('.memberful-metering__paywall');
-      if (content) {
-        content.hidden = true;
+    // Hide the body's top-level blocks inline, so the swap holds without the stylesheet, and show the paywall. Every
+    // free paywall on the page: a theme may render the queried post's content more than once.
+    document.querySelectorAll('.memberful-metering__paywall[data-memberful-metering="free"]').forEach((paywall) => {
+      // An unclosed tag in the body can fold the paywall into the last block; move it back beside the body.
+      const home = paywall.closest('.wp-block-post-content, .entry-content');
+      if (home && paywall.parentElement !== home) {
+        let top = paywall;
+        while (top.parentElement !== home) {
+          top = top.parentElement;
+        }
+        top.after(paywall);
       }
-      if (paywall) {
-        paywall.hidden = false;
+      for (let node = paywall.previousElementSibling; node; node = node.previousElementSibling) {
+        node.style.setProperty('display', 'none', 'important');
       }
+      paywall.hidden = false;
     });
   };
 
@@ -202,14 +207,21 @@
   };
 
   const runProtected = () => {
-    const container = document.querySelector('.memberful-metering');
+    const paywall = document.querySelector('.memberful-metering__paywall[data-memberful-metering="protected"]');
     const state = persist(pruneState(readState()));
 
     // innerHTML never runs scripts. Recreate each script node, one at a time so an inline script waits for the
     // external one before it. While the queue runs, document.write inserts after the current script instead of
     // replacing the loaded page.
-    const runScripts = (root) => {
-      const queue = Array.from(root.querySelectorAll('script'));
+    const runScripts = (nodes) => {
+      const queue = [];
+      nodes.forEach((node) => {
+        if (node.nodeName === 'SCRIPT') {
+          queue.push(node);
+        } else if (node.querySelectorAll) {
+          queue.push(...node.querySelectorAll('script'));
+        }
+      });
       const originalWrite = document.write;
       const originalWriteln = document.writeln;
       let current = null;
@@ -271,20 +283,17 @@
 
         acknowledge(Array.isArray(data.synced) ? data.synced.map(String) : []);
 
-        if (!data.released || !container) {
+        if (!data.released || !paywall) {
           return;
         }
 
-        const content = container.querySelector('.memberful-metering__content');
-        const paywall = container.querySelector('.memberful-metering__paywall');
-        if (content) {
-          content.innerHTML = data.html || '';
-          content.hidden = false;
-          runScripts(content);
-        }
-        if (paywall) {
-          paywall.hidden = true;
-        }
+        // Insert the body as top-level blocks before the paywall, where the theme's alignment rules reach them.
+        const template = document.createElement('template');
+        template.innerHTML = data.html || '';
+        const nodes = Array.from(template.content.childNodes);
+        paywall.before(...nodes);
+        paywall.hidden = true;
+        runScripts(nodes);
 
         record(persist(pruneState(readState())), false);
         hydrateCountdown(data.remaining || 0);

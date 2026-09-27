@@ -12,7 +12,7 @@ const makeCountdownNode = (attributes) => ({
   hidden: true,
 });
 
-const runRuntime = async ({ mode, stored = null, response = { success: true, data: {} }, countdownNode = null, countdownNodes = countdownNode ? [countdownNode] : [], limit = 3, container = null, freeWrappers = [], prerendering = false }) => {
+const runRuntime = async ({ mode, stored = null, response = { success: true, data: {} }, countdownNode = null, countdownNodes = countdownNode ? [countdownNode] : [], limit = 3, container = null, freePaywalls = [], templateNodes = [], onTemplateHtml = null, prerendering = false }) => {
   const requests = [];
   const values = new Map();
   const listeners = {};
@@ -30,6 +30,16 @@ const runRuntime = async ({ mode, stored = null, response = { success: true, dat
     write: () => {},
     writeln: () => {},
     createElement: (tagName) => {
+      if (tagName === 'template') {
+        return {
+          content: { childNodes: templateNodes },
+          set innerHTML(html) {
+            if (onTemplateHtml) {
+              onTemplateHtml(html);
+            }
+          },
+        };
+      }
       const node = { tagName, attributes: {}, textContent: '', listeners: {} };
       node.setAttribute = (name, value) => { node.attributes[name] = value; };
       node.addEventListener = (event, handler) => { node.listeners[event] = handler; };
@@ -44,7 +54,7 @@ const runRuntime = async ({ mode, stored = null, response = { success: true, dat
       if (selector === '[data-memberful-countdown]') {
         return countdownNodes[0] || null;
       }
-      if (selector === '.memberful-metering') {
+      if (selector === '.memberful-metering__paywall[data-memberful-metering="protected"]') {
         return container;
       }
       return null;
@@ -53,7 +63,7 @@ const runRuntime = async ({ mode, stored = null, response = { success: true, dat
       if (selector === '[data-memberful-countdown]') {
         return countdownNodes;
       }
-      return selector === '.memberful-metering[data-memberful-metering="free"]' ? freeWrappers : [];
+      return selector === '.memberful-metering__paywall[data-memberful-metering="free"]' ? freePaywalls : [];
     },
   };
   const window = {
@@ -244,34 +254,21 @@ test('hydrates template and released body countdowns after a protected sample re
   const templateNode = makeCountdownNode(countdownTemplates);
   const bodyNode = makeCountdownNode(countdownTemplates);
   const countdownNodes = [templateNode];
-  const content = {
-    hidden: true,
-    querySelectorAll: () => [],
-    set innerHTML(html) {
-      countdownNodes.push(bodyNode);
-    },
-  };
-  const paywall = { hidden: false };
-  const container = {
-    querySelector: (selector) => {
-      if (selector === '.memberful-metering__content') {
-        return content;
-      }
-      if (selector === '.memberful-metering__paywall') {
-        return paywall;
-      }
-      return null;
-    },
-  };
+  const inserted = [];
+  const releasedBlock = { nodeName: 'P', querySelectorAll: () => [] };
+  const paywall = { hidden: false, before: (...nodes) => inserted.push(...nodes) };
 
   await runRuntime({
     mode: 'protected_sample',
-    container,
+    container: paywall,
     countdownNodes,
+    templateNodes: [releasedBlock],
+    onTemplateHtml: () => countdownNodes.push(bodyNode),
     response: { success: true, data: { released: true, html: '<p>Full body</p>', remaining: 1, synced: [] } },
   });
 
-  assert.equal(content.hidden, false);
+  // The released body goes in before the paywall as top-level blocks, and the paywall is hidden.
+  assert.deepEqual(inserted, [releasedBlock]);
   assert.equal(paywall.hidden, true);
   assert.equal(templateNode.textContent, 'You have 1 free article left.');
   assert.equal(templateNode.hidden, false);
@@ -293,30 +290,45 @@ test('acknowledges pending public views even when a protected sample is denied',
   assert.deepEqual(result.stored.pending, {});
 });
 
-test('swaps every free wrapper to the paywall with the hidden attribute when the meter trips', async () => {
-  const makeWrapper = () => {
-    const wrapper = { content: { hidden: false }, paywall: { hidden: true } };
-    wrapper.querySelector = (selector) => {
-      if (selector === '.memberful-metering__content') {
-        return wrapper.content;
-      }
-      return selector === '.memberful-metering__paywall' ? wrapper.paywall : null;
-    };
-    return wrapper;
+test('hides the body blocks before every free paywall and shows the paywall when the meter trips', async () => {
+  const makeBlock = () => {
+    const block = { styles: {} };
+    block.style = { setProperty: (name, value, priority) => { block.styles[name] = `${value} ${priority}`; } };
+    return block;
   };
-  const wrappers = [makeWrapper(), makeWrapper()];
+  const home = {};
+  const makePaywall = (blocks) => {
+    const paywall = { hidden: true, parentElement: home, closest: () => home };
+    paywall.previousElementSibling = blocks[blocks.length - 1];
+    blocks.forEach((block, i) => { block.previousElementSibling = blocks[i - 1] || null; });
+    return paywall;
+  };
+  const firstBody = [makeBlock(), makeBlock()];
+  const secondBody = [makeBlock()];
+  const paywalls = [makePaywall(firstBody), makePaywall(secondBody)];
+
+  // An unclosed tag in the body folded this paywall into its last block; the runtime moves it back beside the body.
+  const folded = makeBlock();
+  folded.parentElement = home;
+  folded.previousElementSibling = null;
+  const foldedPaywall = { hidden: true, closest: () => home, parentElement: folded, previousElementSibling: null };
+  folded.after = (node) => {
+    node.parentElement = home;
+    node.previousElementSibling = folded;
+  };
+  paywalls.push(foldedPaywall);
+
   const now = Math.floor(Date.now() / 1000);
 
   await runRuntime({
     mode: 'free_meter',
     stored: { views: { 1: now, 2: now, 3: now }, pending: {} },
-    freeWrappers: wrappers,
+    freePaywalls: paywalls,
   });
 
-  wrappers.forEach((wrapper) => {
-    assert.equal(wrapper.content.hidden, true);
-    assert.equal(wrapper.paywall.hidden, false);
-  });
+  paywalls.forEach((paywall) => assert.equal(paywall.hidden, false));
+  [...firstBody, ...secondBody, folded].forEach((block) => assert.equal(block.styles.display, 'none important'));
+  assert.equal(foldedPaywall.parentElement, home);
 });
 
 test('does not count a prerendered page until it is shown', async () => {
@@ -346,22 +358,21 @@ test('re-creates released scripts one at a time, waiting for an external script 
   const replaced = [];
   const parentNode = { replaceChild: (n, o) => replaced.push({ n, o }) };
   const scripts = [
-    { src: '/a.js', nonce: 'abc', attributes: [{ name: 'src', value: '/a.js' }], textContent: '', parentNode },
-    { src: '', attributes: [], textContent: 'window.ran = true;', parentNode },
-    { src: '/b.js', attributes: [{ name: 'src', value: '/b.js' }], textContent: '', parentNode },
-    { src: '', attributes: [], textContent: 'window.after = true;', parentNode },
+    { nodeName: 'SCRIPT', src: '/a.js', nonce: 'abc', attributes: [{ name: 'src', value: '/a.js' }], textContent: '', parentNode },
+    { nodeName: 'SCRIPT', src: '', attributes: [], textContent: 'window.ran = true;', parentNode },
+    { nodeName: 'SCRIPT', src: '/b.js', attributes: [{ name: 'src', value: '/b.js' }], textContent: '', parentNode },
+    { nodeName: 'SCRIPT', src: '', attributes: [], textContent: 'window.after = true;', parentNode },
   ];
-  const content = { hidden: true, innerHTML: '', querySelectorAll: (selector) => (selector === 'script' ? scripts : []) };
-  const paywall = { hidden: false };
-  const container = { querySelector: (selector) => (selector === '.memberful-metering__content' ? content : selector === '.memberful-metering__paywall' ? paywall : null) };
+  const paywall = { hidden: false, before: () => {} };
 
   const result = await runRuntime({
     mode: 'protected_sample',
-    container,
+    container: paywall,
+    templateNodes: scripts,
     response: { success: true, data: { released: true, remaining: 2, synced: [], html: '<p>body</p>' } },
   });
 
-  assert.equal(content.hidden, false);
+  assert.equal(paywall.hidden, true);
   // Only the external script has been inserted; the inline ones wait for it to load.
   assert.equal(replaced.length, 1);
   assert.equal(replaced[0].o, scripts[0]);

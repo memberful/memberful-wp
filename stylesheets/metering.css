@@ -1,23 +1,22 @@
 /* Metering: the pre-paint guard adds this class so the swap happens without a flash. Paywall styling is in paywall.css. */
 
-/* Themes style section and aside directly (padding, display: block in resets). Reset the slots and keep hidden working. */
-.memberful-metering > .memberful-metering__content,
-.memberful-metering > .memberful-metering__paywall {
+/* Themes style aside directly (padding, float, display: block in resets). Reset the paywall and keep hidden working. */
+.memberful-metering__paywall[data-memberful-metering] {
   background: none;
   border: 0;
-  margin: 0;
+  float: none;
   padding: 0;
 }
 
-.memberful-metering > .memberful-metering__content[hidden],
-.memberful-metering > .memberful-metering__paywall[hidden] {
+.memberful-metering__paywall[data-memberful-metering][hidden] {
   display: none;
 }
 
-html.memberful-metering-tripped .memberful-metering[data-memberful-metering="free"] .memberful-metering__content {
-  display: none;
+/* The body blocks before a free paywall; the runtime hides them inline, this covers the moment before it runs. */
+html.memberful-metering-tripped :has(~ .memberful-metering__paywall[data-memberful-metering="free"]) {
+  display: none !important;
 }
 
-html.memberful-metering-tripped .memberful-metering[data-memberful-metering="free"] .memberful-metering__paywall {
+html.memberful-metering-tripped .memberful-metering__paywall[data-memberful-metering="free"] {
   display: block;
 }

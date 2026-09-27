@@ -483,9 +483,9 @@ add_filter( 'the_content', 'memberful_metering_render_anonymous', 101 );
 /**
  * Markup for a free metered post: full body (visible) plus the paywall (hidden until the client meter trips).
  *
- * The slots are a <section> and an <aside> so their end tags close any <div> the teaser or body leaves open; a
- * </div> would only close the innermost one. Tags are not balanced: force_balance_tags() rewrites "<" in inline
- * scripts.
+ * The body is not wrapped, so wide and full-width blocks stay direct children of the theme's content container. The
+ * paywall is an <aside> so its end tag closes any <div> the teaser leaves open. Tags are not balanced:
+ * force_balance_tags() rewrites "<" in inline scripts.
  *
  * @param string $body    Full post body.
  * @param string $paywall Rendered paywall/marketing markup.
@@ -493,28 +493,19 @@ add_filter( 'the_content', 'memberful_metering_render_anonymous', 101 );
  * @return string
  */
 function memberful_metering_wrap_free( string $body, string $paywall ): string {
-  return sprintf(
-    '<div class="memberful-metering" data-memberful-metering="free"><section class="memberful-metering__content">%s</section><aside class="memberful-metering__paywall" hidden>%s</aside></div>',
-    $body,
-    $paywall
-  );
+  return $body . sprintf( '<aside class="memberful-metering__paywall" data-memberful-metering="free" hidden>%s</aside>', $paywall );
 }
 
 /**
- * Markup for a protected sample: an empty slot the endpoint fills when released, then the teaser+paywall (visible).
- *
- * Same slot elements as memberful_metering_wrap_free(). Content slot first so the released body never sits inside
- * the teaser's open tags.
+ * Markup for a protected sample: the teaser+paywall in an <aside>. A released body is inserted before it as top-level
+ * blocks, so theme alignment rules apply to them.
  *
  * @param string $gated Teaser + paywall produced by the gate.
  *
  * @return string
  */
 function memberful_metering_wrap_protected( string $gated ): string {
-  return sprintf(
-    '<div class="memberful-metering" data-memberful-metering="protected"><section class="memberful-metering__content" hidden></section><aside class="memberful-metering__paywall">%s</aside></div>',
-    $gated
-  );
+  return sprintf( '<aside class="memberful-metering__paywall" data-memberful-metering="protected">%s</aside>', $gated );
 }
 
 /**
