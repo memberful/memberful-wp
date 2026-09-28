@@ -273,6 +273,23 @@
       next();
     };
 
+    // Elementor starts the documents on the page once, when it loads. Start the ones in a body released after that;
+    // one released before it is picked up by Elementor's own start-up.
+    const startElementor = (nodes) => {
+      const manager = window.elementorFrontend && window.elementorFrontend.documentsManager;
+      if (!manager || !window.jQuery) {
+        return;
+      }
+      nodes.forEach((node) => {
+        if (!node.querySelectorAll) {
+          return;
+        }
+        const documents = node.matches('.elementor') ? [node] : [];
+        documents.push(...node.querySelectorAll('.elementor'));
+        documents.forEach((doc) => manager.attachDocumentClass(window.jQuery(doc)));
+      });
+    };
+
     endpointPost('sample', false, viewIds(state))
       .then((response) => response.json())
       .then((payload) => {
@@ -293,10 +310,13 @@
         const nodes = Array.from(template.content.childNodes);
         paywall.before(...nodes);
         paywall.hidden = true;
-        runScripts(nodes);
 
         record(persist(pruneState(readState())), false);
         hydrateCountdown(data.remaining || 0);
+
+        // Last, so a failing script or third-party start-up cannot skip the view record or the countdown.
+        runScripts(nodes);
+        startElementor(nodes);
       })
       .catch(() => {
         // Endpoint/network failure leaves the cached paywall in place - fail-closed for protected content.

@@ -12,7 +12,7 @@ const makeCountdownNode = (attributes) => ({
   hidden: true,
 });
 
-const runRuntime = async ({ mode, stored = null, response = { success: true, data: {} }, countdownNode = null, countdownNodes = countdownNode ? [countdownNode] : [], limit = 3, container = null, freePaywalls = [], templateNodes = [], onTemplateHtml = null, prerendering = false }) => {
+const runRuntime = async ({ mode, stored = null, response = { success: true, data: {} }, countdownNode = null, countdownNodes = countdownNode ? [countdownNode] : [], limit = 3, container = null, freePaywalls = [], templateNodes = [], onTemplateHtml = null, prerendering = false, elementorFrontend = undefined, jQuery = undefined }) => {
   const requests = [];
   const values = new Map();
   const listeners = {};
@@ -83,6 +83,8 @@ const runRuntime = async ({ mode, stored = null, response = { success: true, dat
       requests.push({ url, options });
       return { json: async () => response };
     },
+    elementorFrontend,
+    jQuery,
   };
 
   const originalWrite = document.write;
@@ -394,4 +396,73 @@ test('re-creates released scripts one at a time, waiting for an external script 
   assert.equal(replaced.length, 4);
   assert.equal(replaced[3].n.textContent, 'window.after = true;');
   assert.equal(result.document.write, result.originalWrite);
+});
+
+const makeElementorBody = () => {
+  const nested = { id: 'template' };
+  return {
+    nested,
+    node: {
+      id: 'post',
+      nodeName: 'DIV',
+      matches: (selector) => selector === '.elementor',
+      querySelectorAll: (selector) => (selector === '.elementor' ? [nested] : []),
+    },
+  };
+};
+const released = { success: true, data: { released: true, remaining: 2, synced: [], html: '<div>body</div>' } };
+const jQuery = (element) => ({ element });
+
+test('starts every Elementor document in a released body once Elementor has started', async () => {
+  const started = [];
+  const body = makeElementorBody();
+  const text = { nodeName: '#text' };
+
+  await runRuntime({
+    mode: 'protected_sample',
+    container: { hidden: false, before: () => {} },
+    templateNodes: [text, body.node],
+    response: released,
+    jQuery,
+    elementorFrontend: { documentsManager: { attachDocumentClass: ($doc) => started.push($doc.element) } },
+  });
+
+  assert.deepEqual(started, [body.node, body.nested]);
+});
+
+test('records the released view and shows the countdown even when Elementor start-up throws', async () => {
+  const body = makeElementorBody();
+  const countdown = makeCountdownNode(countdownTemplates);
+
+  const result = await runRuntime({
+    mode: 'protected_sample',
+    container: { hidden: false, before: () => {} },
+    countdownNode: countdown,
+    templateNodes: [body.node],
+    response: released,
+    jQuery,
+    elementorFrontend: { documentsManager: { attachDocumentClass: () => { throw new Error('broken add-on'); } } },
+  });
+
+  assert.deepEqual(Object.keys(result.readStored().views), ['42']);
+  assert.equal(countdown.textContent, 'You have 2 free articles left.');
+  assert.equal(countdown.hidden, false);
+});
+
+test('records the released view and shows the countdown even when a released script cannot be re-created', async () => {
+  const countdown = makeCountdownNode(countdownTemplates);
+  // An earlier script removed this one from the page, so it has no parent to be replaced in.
+  const detached = { nodeName: 'SCRIPT', src: '', attributes: [], textContent: 'window.ran = true;', parentNode: null };
+
+  const result = await runRuntime({
+    mode: 'protected_sample',
+    container: { hidden: false, before: () => {} },
+    countdownNode: countdown,
+    templateNodes: [detached],
+    response: released,
+  });
+
+  assert.deepEqual(Object.keys(result.readStored().views), ['42']);
+  assert.equal(countdown.textContent, 'You have 2 free articles left.');
+  assert.equal(countdown.hidden, false);
 });
