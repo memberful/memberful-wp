@@ -34,6 +34,7 @@
 /phpunit.xml.dist
 
 # Repo docs & release tooling (readme.txt ships; these do not)
+/.claude
 /AGENTS.md
 /README.md
 /SECURITY.md
