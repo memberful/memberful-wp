@@ -112,21 +112,6 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 == Changelog ==
 
-= unreleased =
-
-* Add a visual paywall builder for creating branded paywalls without writing HTML
-* Allow customizing how many paragraphs appear before the paywall
-* Add a metered paywall with per-tier free reading limits and a rule builder for choosing which posts count
-* Add a countdown block showing how many free articles a visitor has left
-* Show an optional free-view count and a free-registration button in the paywall
-* Add Memberful visibility settings to Beaver Builder rows, columns, and modules
-* Fix Beaver Builder layouts not rendering after a protected post in the same request
-* Fix the comments feed on sites with no protected posts
-* Fix PHP warning when checking comment access on feed requests for missing posts
-* Hide comments on term-protected posts from comment feeds
-* Apply term protections to pages and custom post types in search and comment feeds
-* Improve the private member feed
-
 = 1.81.0 =
 
 * Add the `memberful_subscriptions_link` shortcode for linking to the subscriptions page

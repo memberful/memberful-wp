@@ -12,13 +12,8 @@ $links = array(
   ),
   array(
     'id'    => 'global_marketing',
-    'title' => __('Global Paywall'),
+    'title' => __('Global marketing content'),
     'url'   => memberful_wp_plugin_global_marketing_url()
-  ),
-  array(
-    'id'    => 'metering',
-    'title' => __( 'Metering', 'memberful' ),
-    'url'   => memberful_wp_plugin_metering_url()
   ),
   array(
     'id'    => 'ad_provider_settings',

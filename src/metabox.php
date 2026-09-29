@@ -19,11 +19,6 @@ function memberful_wp_metabox_types() {
   return apply_filters( 'memberful_metabox_post_types', $types );
 }
 
-function memberful_global_marketing_overrides_post_content() {
-  return get_option( 'memberful_use_global_marketing' )
-    && get_option( 'memberful_global_marketing_override' );
-}
-
 function memberful_wp_add_metabox() {
   if ( ! get_option('memberful_site', FALSE) )
     return;
@@ -59,15 +54,6 @@ function memberful_wp_metabox( $post ) {
   $view_vars['marketing_content'] = reset($marketing_content);
   $view_vars['viewable_by_any_registered_users'] = memberful_wp_get_post_available_to_any_registered_users( $post->ID );
   $view_vars['viewable_by_anybody_subscribed_to_a_plan'] = memberful_wp_get_post_available_to_anybody_subscribed_to_a_plan( $post->ID );
-  $view_vars['global_marketing_overrides_post_content'] = memberful_global_marketing_overrides_post_content();
-
-  /**
-   * Filters variables passed to the Memberful post metabox view.
-   *
-   * @param array   $view_vars The metabox view variables.
-   * @param WP_Post $post      The post being edited.
-   */
-  $view_vars = apply_filters( 'memberful_metabox_view_vars', $view_vars, $post );
 
   memberful_wp_render( 'metabox', $view_vars );
 }
@@ -136,13 +122,6 @@ function memberful_wp_save_postdata( $post_id ) {
   }
   memberful_wp_set_post_available_to_anybody_subscribed_to_a_plan( $post_id, $viewable_by_anybody_subscribed_to_a_plan );
 
-  /**
-   * Fires after Memberful post access settings are saved.
-   *
-   * @param int $post_id The saved post ID.
-   */
-  do_action( 'memberful_save_postdata', $post_id );
-
   if(!isset($_POST['memberful_marketing_content']))
     return;
 
@@ -175,7 +154,6 @@ function memberful_wp_add_term_metabox( $term ) {
     $view_vars['marketing_content'] = reset($marketing_content);
     $view_vars['viewable_by_any_registered_users'] = memberful_wp_is_term_available_to_any_registered_users( $term->term_id );
     $view_vars['viewable_by_anybody_subscribed_to_a_plan'] = memberful_wp_is_term_available_to_anybody_subscribed_to_a_plan( $term->term_id );
-    $view_vars['global_marketing_overrides_post_content'] = memberful_global_marketing_overrides_post_content();
 
     memberful_wp_render( 'metabox', $view_vars );
 }

@@ -7,4 +7,3 @@
 // Block imports.
 import "./blocks/extensions";
 import "./blocks/paywall-divider";
-import "./blocks/metering-countdown";

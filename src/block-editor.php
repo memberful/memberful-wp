@@ -91,14 +91,6 @@ class Memberful_WP_Block_Editor {
         'render_callback' => 'memberful_wp_render_paywall_divider_block',
       )
     );
-
-    $countdown_directory = MEMBERFUL_DIR . '/js/build/blocks/metering-countdown';
-
-    if ( ! file_exists( $countdown_directory . '/block.json' ) ) {
-      $countdown_directory = MEMBERFUL_DIR . '/js/src/blocks/metering-countdown';
-    }
-
-    register_block_type( $countdown_directory );
   }
 
   /**

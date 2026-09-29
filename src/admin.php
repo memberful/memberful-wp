@@ -113,74 +113,17 @@ function memberful_wp_menu() {
 
 function memberful_wp_admin_enqueue_scripts() {
   $screen = get_current_screen();
-  $admin_css_path = MEMBERFUL_DIR . '/stylesheets/admin.css';
 
   if ( strpos( 'memberful', $screen->id ) !== null ) {
     wp_enqueue_style(
       'memberful-admin',
-      plugins_url( 'stylesheets/admin.css' , dirname(__FILE__) ),
-      array(),
-      file_exists( $admin_css_path ) ? filemtime( $admin_css_path ) : MEMBERFUL_VERSION
+      plugins_url( 'stylesheets/admin.css' , dirname(__FILE__) )
     );
     wp_enqueue_script(
       'memberful-admin',
       plugins_url( 'js/src/admin.js', dirname( __FILE__ ) ),
       array('jquery'),
       MEMBERFUL_VERSION
-    );
-  }
-
-  if (
-    'memberful_options' === filter_input( INPUT_GET, 'page' )
-    && 'global_marketing' === filter_input( INPUT_GET, 'subpage' )
-  ) {
-    $paywall_css_path = MEMBERFUL_DIR . '/stylesheets/paywall.css';
-    $paywall_builder_path = MEMBERFUL_DIR . '/js/build/paywall-builder.js';
-
-    wp_enqueue_style(
-      'memberful-paywall',
-      MEMBERFUL_URL . '/stylesheets/paywall.css',
-      array(),
-      file_exists( $paywall_css_path ) ? filemtime( $paywall_css_path ) : MEMBERFUL_VERSION
-    );
-
-    wp_enqueue_script(
-      'memberful-paywall-builder',
-      MEMBERFUL_URL . '/js/build/paywall-builder.js',
-      array('jquery'),
-      file_exists( $paywall_builder_path ) ? filemtime( $paywall_builder_path ) : MEMBERFUL_VERSION,
-      true
-    );
-
-    wp_localize_script(
-      'memberful-paywall-builder',
-      'memberfulPaywallPreview',
-      Memberful_Paywall_Preview::script_args()
-    );
-  }
-
-  if (
-    'memberful_options' === filter_input( INPUT_GET, 'page' )
-    && 'metering' === filter_input( INPUT_GET, 'subpage' )
-  ) {
-    wp_enqueue_script(
-      'memberful-metering-admin',
-      MEMBERFUL_URL . '/js/build/metering-admin.js',
-      array( 'wp-api-fetch', 'wp-dom-ready' ),
-      MEMBERFUL_VERSION,
-      true
-    );
-
-    wp_localize_script(
-      'memberful-metering-admin',
-      'memberfulMeteringAdmin',
-      array(
-        'operators' => Memberful_Metering_Config::operators(),
-        'postTypes' => memberful_wp_metering_post_type_options(),
-        'labels'    => array(
-          'noResults' => __( 'No matches', 'memberful' ),
-        ),
-      )
     );
   }
 
@@ -513,8 +456,6 @@ function memberful_wp_options() {
       return memberful_wp_render('cookies_test');
     case 'global_marketing':
       return memberful_wp_global_marketing();
-    case 'metering':
-      return memberful_wp_metering_settings();
     case 'ad_provider_settings':
       return memberful_wp_ad_provider_settings();
     }
@@ -911,44 +852,26 @@ function memberful_wp_global_marketing() {
     if ( isset( $_POST['memberful_use_global_marketing'] ) ) {
       update_option( 'memberful_use_global_marketing', true );
       update_option( 'memberful_global_marketing_override', filter_input( INPUT_POST, 'memberful_global_marketing_override', FILTER_SANITIZE_NUMBER_INT ) );
-      update_option( 'memberful_use_global_snippets', (int) isset( $_POST['memberful_use_global_snippets'] ) );
-      update_option( 'memberful_paragraph_count', memberful_wp_clamp_paragraph_count( (int) filter_input( INPUT_POST, 'memberful_paragraph_count', FILTER_SANITIZE_NUMBER_INT ) ) );
-
-      $paywall_input = filter_input( INPUT_POST, 'memberful_paywall', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
-      if ( is_array( $paywall_input ) && ! empty( $paywall_input ) ) {
-        Memberful_Paywall_Config::save( $paywall_input );
-      }
-
-      $config_mode = ( is_array( $paywall_input ) && isset( $paywall_input['mode'] ) && in_array( $paywall_input['mode'], Memberful_Paywall_Config::MODES, true ) ) ? $paywall_input['mode'] : 'builder';
-      if ( 'custom_html' === $config_mode ) {
-        update_option( 'memberful_global_marketing_content', memberful_wp_kses_post( (string) filter_input( INPUT_POST, 'memberful_global_marketing_content' ) ) );
-      }
+      update_option( 'memberful_global_marketing_content', memberful_wp_kses_post( filter_input( INPUT_POST, 'memberful_global_marketing_content' ) ) );
+      update_option( 'memberful_use_global_snippets', (int) isset($_POST['memberful_use_global_snippets']));
     } else {
       update_option( 'memberful_use_global_marketing', false );
     }
-
-    Memberful_Wp_Reporting::report( __( 'Settings updated', 'memberful' ) );
-
-    wp_redirect( memberful_wp_plugin_global_marketing_url() );
-    exit;
   }
 
   $use_global_marketing = get_option( 'memberful_use_global_marketing' );
   $use_global_snippets = get_option( 'memberful_use_global_snippets');
   $global_marketing_content = get_option( 'memberful_global_marketing_content' );
   $global_marketing_override = get_option( 'memberful_global_marketing_override', true );
-  $paragraph_count = memberful_wp_paragraph_count();
 
   memberful_wp_render(
     'global_marketing',
     array(
-      'use_global_marketing'      => $use_global_marketing,
-      'use_global_snippets'       => $use_global_snippets,
-      'paragraph_count'           => $paragraph_count,
-      'global_marketing_content'  => $global_marketing_content,
+      'use_global_marketing' => $use_global_marketing,
+      'use_global_snippets'  => $use_global_snippets,
+      'global_marketing_content' => $global_marketing_content,
       'global_marketing_override' => $global_marketing_override,
-      'paywall_config'            => Memberful_Paywall_Config::get(),
-      'form_target'               => memberful_wp_plugin_global_marketing_url( true ),
+      'form_target' => memberful_wp_plugin_global_marketing_url()
     )
   );
 }

@@ -20,9 +20,6 @@ function memberful_private_user_feed_init() {
   if(strpos($_SERVER['REQUEST_URI'], memberful_private_user_feed_get_url_identifier()) === false)
     return;
 
-  if(!isset($_GET['member-feed']))
-    return;
-
   // Extract the token from the URL
   $feedUserToken = sanitize_text_field( $_GET['member-feed'] );
 
@@ -33,47 +30,30 @@ function memberful_private_user_feed_init() {
     return;
 
 
-  $user_id = memberful_private_user_feed_user_for_token($feedUserToken);
-
-  if($user_id === FALSE)
-    return;
-
-  if(!is_subscribed_to_memberful_plan($requiredPlan, $user_id))
-    return;
-
-  memberful_private_user_feed_deliver($user_id);
-}
-
-/**
- * Find the member a private feed token belongs to.
- *
- * @param string $token The token taken from the feed URL.
- * @return int|FALSE The id of the member, or FALSE if no member has that token.
- */
-function memberful_private_user_feed_user_for_token($token) {
-  if(!is_string($token) || $token === '')
-    return FALSE;
-
+  // The only reliable way to make sure it works on all WP versions
+  // We'll take "all" users with the token match.
   $user_query = new WP_User_Query(
     array(
-      'meta_query' => array(
-        array(
-          'key'     => 'memberful_private_user_feed_token',
-          'value'   => $token,
-          'compare' => '=',
-        ),
-      ),
-      'fields' => 'ID',
-      'number' => 1,
+      'meta_key' => 'memberful_private_user_feed_token',
+      'meta_value' => $feedUserToken
     )
   );
 
+  // Get the results from the query
   $users = $user_query->get_results();
 
+  // We have no results.
   if(empty($users))
-    return FALSE;
+    return;
 
-  return (int) $users[0];
+  // In case somebody actually maps this with their plugin with a hook, we still need to get the first one.
+  $user = array_shift($users);
+
+  if(!is_subscribed_to_memberful_plan($requiredPlan, $user->ID))
+    return;
+
+  // Everything is in order, we'll deliver the feed.
+  memberful_private_user_feed_deliver($user->ID);
 }
 
 /**
