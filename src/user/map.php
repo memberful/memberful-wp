@@ -61,6 +61,17 @@ class Memberful_User_Map {
     $the_member_is_mapped_to_a_user             = $mapping_from_member['user'] !== FALSE;
 
     if ( $there_is_already_a_user_with_members_email && ! $the_member_is_mapped_to_a_user ) {
+      if ( memberful_wp_user_is_privileged( $existing_user_with_email ) ) {
+        return new WP_Error(
+          'user_is_privileged',
+          'A user exists in WordPress with the same email address as a Memberful member, and they hold a privileged role',
+          array(
+            'existing_user' => $existing_user_with_email,
+            'context'       => $context,
+          )
+        );
+      }
+
       $user_has_not_verified_they_want_to_link_these_accounts = empty($context['user_verified_they_want_to_sync_accounts']) || $context['id_of_user_who_has_verified_the_sync_link'] !== (int) $existing_user_with_email->ID;
 
       if ( $user_has_not_verified_they_want_to_link_these_accounts ) {
@@ -180,8 +191,10 @@ class Memberful_User_Mapping_Ensure_User {
   }
 
   private function update_user() {
-    $user_data = $this->fields_that_always_sync_from_memberful();
-    $sync_display_name = get_option( 'memberful_auto_sync_display_names' );
+    $memberful_manages_the_user = ! memberful_wp_user_is_privileged( $this->wp_user );
+
+    $user_data = $memberful_manages_the_user ? $this->fields_that_always_sync_from_memberful() : array();
+    $sync_display_name = $memberful_manages_the_user && get_option( 'memberful_auto_sync_display_names' );
 
     $user_data['ID']            = $this->wp_user->ID;
     $user_data['user_login']    = $this->wp_user->user_login;
