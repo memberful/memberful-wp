@@ -12,16 +12,16 @@ class Memberful_Authenticator {
   }
 
   /**
-   * Authentication for subscribers is handled by Memberful.
-   * Prevent subscribers from requesting password resets
+   * Authentication for members is handled by Memberful.
+   * Prevent members from requesting password resets
    *
    * @return boolean
    */
   static public function audit_password_reset( $allowed, $user_id ) {
     $user = new WP_User( $user_id );
-    $member_role = memberful_wp_user_role_for_user( $user );
+    $user_is_linked_to_a_member = Memberful_User_Mapping_Repository::find_by_wp_user_id( $user_id ) !== NULL;
 
-    return $user->has_cap( $member_role ) ? FALSE : $allowed;
+    return $user_is_linked_to_a_member && ! memberful_wp_user_is_privileged( $user ) ? FALSE : $allowed;
   }
 
   /**
@@ -33,6 +33,7 @@ class Memberful_Authenticator {
     $params = array(
       'response_type' => 'code',
       'client_id'     => get_option( 'memberful_client_id' ),
+      'state'         => Memberful_Oauth_State::issue(),
     );
 
     if ( $redirect_to ) {
@@ -86,6 +87,12 @@ class Memberful_Authenticator {
 
       if ( is_wp_error( $user ) ) {
         if ( $user->get_error_code() === 'user_already_exists' ) {
+          $state = isset( $_GET['state'] ) ? $_GET['state'] : null;
+
+          if ( ! Memberful_Oauth_State::matches( $state ) ) {
+            return $this->restart_sign_in_from_this_browser( $state );
+          }
+
           $error_data = $user->get_error_data();
 
           return $this->ask_user_to_verify_they_want_to_sync_accounts(
@@ -93,6 +100,8 @@ class Memberful_Authenticator {
             $error_data['member'],
             $error_data['context']
           );
+        } elseif ( $user->get_error_code() === 'user_is_privileged' ) {
+          wp_die( esc_html__( 'This email address belongs to a site administrator or editor. Use a different email address for your member account.' ) );
         } else {
           return $this->_error( 'memberful_oauth_error' );
         }
@@ -103,6 +112,18 @@ class Memberful_Authenticator {
       return $this->_error('memberful_oauth_error', wp_kses_post($_GET['error']));
     }
 
+    $this->send_to_memberful();
+  }
+
+  private function restart_sign_in_from_this_browser( $state ) {
+    if ( isset( $state ) ) {
+      return $this->_error( 'memberful_oauth_state_mismatch', "We couldn't confirm this sign-in started in this browser. Make sure cookies are enabled for this site, then try signing in again." );
+    }
+
+    $this->send_to_memberful();
+  }
+
+  private function send_to_memberful() {
     $redirect_to = get_home_url();
 
     if ( isset( $_SERVER['HTTP_REFERER'] ) ) {
@@ -114,7 +135,6 @@ class Memberful_Authenticator {
       $redirect_to = wp_sanitize_redirect( $_REQUEST['redirect_to'] );
     }
 
-    // Send the user to Memberful
     wp_redirect( self::oauth_auth_url( $redirect_to ), 302 );
     exit();
   }
@@ -282,6 +302,35 @@ class Memberful_Sync_Verification {
     }
 
     return new WP_Error("could_not_verify_sync_link", "We could not verify that this user wanted to link their accounts together");
+  }
+}
+
+class Memberful_Oauth_State {
+  const COOKIE_KEY = 'memberful_oauth_state';
+
+  public static function issue() {
+    $state = bin2hex( random_bytes( 16 ) );
+
+    setcookie(
+      self::COOKIE_KEY,
+      $state,
+      array(
+        'expires'  => time() + 3600,
+        'path'     => COOKIEPATH,
+        'domain'   => COOKIE_DOMAIN,
+        'secure'   => is_ssl(),
+        'httponly' => true,
+        'samesite' => 'Lax',
+      )
+    );
+
+    return $state;
+  }
+
+  public static function matches( $state ) {
+    $issued_state = isset( $_COOKIE[ self::COOKIE_KEY ] ) ? $_COOKIE[ self::COOKIE_KEY ] : '';
+
+    return is_string( $state ) && is_string( $issued_state ) && $issued_state !== '' && hash_equals( $issued_state, $state );
   }
 }
 

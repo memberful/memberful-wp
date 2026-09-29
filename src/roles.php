@@ -139,18 +139,21 @@ function memberful_wp_set_use_per_plan_roles( $enabled ) {
 
 /**
  * Update all existing users with the new plan role mappings
+ * @param array $previous_plan_roles The roles plans were mapped to before the change
  */
-function memberful_wp_update_all_user_roles_with_plan_mappings() {
+function memberful_wp_update_all_user_roles_with_plan_mappings( array $previous_plan_roles = array() ) {
   $mapped_users = Memberful_User_Mapping_Repository::fetch_user_ids_of_all_mapped_members();
 
   if ( empty( $mapped_users ) ) {
     return;
   }
 
-  $users = get_users( array( 'fields' => 'all', 'include' => $mapped_users ) );
+  $role_decision = Memberful_Wp_User_Role_Decision::build( $previous_plan_roles );
+  $users         = get_users( array( 'fields' => 'all', 'include' => $mapped_users ) );
 
   foreach ( $users as $user ) {
-    Memberful_Wp_User_Role_Decision::ensure_user_role_is_correct( $user );
+    $role_decision->update_user_role( $user );
+    clean_user_cache( $user->ID );
   }
 }
 
@@ -179,4 +182,22 @@ function memberful_wp_user_role_for_user( WP_User $user ) {
    * @return string The user role for the user.
    */
   return apply_filters( 'memberful_wp_user_role_for_user', $user_role, $user );
+}
+
+/**
+ * Whether the user holds a privileged role, such as editor or administrator.
+ * Checks capabilities rather than roles, since plugins like bbPress give
+ * every user a second role.
+ *
+ * @param WP_User $user The user to check.
+ * @return bool
+ */
+function memberful_wp_user_is_privileged( WP_User $user ) {
+  foreach ( array( 'edit_others_posts', 'edit_users', 'manage_options', 'unfiltered_html' ) as $capability ) {
+    if ( $user->has_cap( $capability ) ) {
+      return TRUE;
+    }
+  }
+
+  return FALSE;
 }
