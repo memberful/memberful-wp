@@ -127,6 +127,12 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 * Apply term protections to pages and custom post types in search and comment feeds
 * Improve the private member feed
 
+= 1.81.1 =
+
+* Fix password resets for WordPress administrators
+* Improve security when linking members to existing WordPress users
+* Move members off plan roles when per-plan roles are turned off
+
 = 1.81.0 =
 
 * Add the `memberful_subscriptions_link` shortcode for linking to the subscriptions page
