@@ -98,8 +98,15 @@ function memberful_is_safe_to_delete( $user ) {
   return true;
 }
 
+/**
+ * On multisite only super admins can delete users, so a site's
+ * administrators are recognized by manage_options instead.
+ *
+ * @param WP_User $user The user to check.
+ * @return bool
+ */
 function memberful_is_admin( $user ) {
-  return $user->has_cap( "delete_users" );
+  return $user->has_cap( 'delete_users' ) || $user->has_cap( 'manage_options' );
 }
 
 function memberful_has_content( $user ) {
