@@ -115,7 +115,7 @@ $exclude_intro = __( 'Exclude when', 'memberful' );
             <div class="memberful-metering-field">
               <span class="memberful-metering-field__label"><?php esc_html_e( 'Members-only posts', 'memberful' ); ?></span>
               <div class="memberful-metering-field__control">
-                <span class="description"><?php esc_html_e( "Members-only posts always show the paywall to visitors who can't access them and never use up free reads. Only public posts are metered, so keep members-only posts members-only.", 'memberful' ); ?></span>
+                <span class="description"><?php esc_html_e( "Members-only posts always show the paywall to visitors who can't access them and don't use free reads. Metering applies to public posts only.", 'memberful' ); ?></span>
               </div>
             </div>
           </div>
