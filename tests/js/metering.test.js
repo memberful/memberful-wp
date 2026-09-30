@@ -12,7 +12,7 @@ const makeCountdownNode = (attributes) => ({
   hidden: true,
 });
 
-const runRuntime = async ({ mode = 'free_meter', stored = null, countdownNode = null, countdownNodes = countdownNode ? [countdownNode] : [], limit = 3, freePaywalls = [], prerendering = false }) => {
+const runRuntime = async ({ mode = 'free_meter', stored = null, countdownNode = null, countdownNodes = countdownNode ? [countdownNode] : [], limit = 3, bodies = [], template = null, prerendering = false }) => {
   const values = new Map();
   const listeners = {};
 
@@ -30,11 +30,19 @@ const runRuntime = async ({ mode = 'free_meter', stored = null, countdownNode = 
       (listeners[event] = listeners[event] || []).push({ handler, once: Boolean(options && options.once) });
     },
     documentElement: { classList: { add: () => {} } },
+    getElementById: (id) => (id === 'memberful-metering-paywall' ? template : null),
+    importNode: (node) => ({ clonedFrom: node }),
     querySelectorAll: (selector) => {
       if (selector === '[data-memberful-countdown]') {
         return countdownNodes;
       }
-      return selector === '.memberful-metering__paywall[data-memberful-metering="free"]' ? freePaywalls : [];
+      if (selector === '.memberful-metering__start[data-memberful-metering="free"]') {
+        return bodies.map((body) => body.start);
+      }
+      if (selector === '.memberful-metering__end[data-memberful-metering="free"]') {
+        return bodies.map((body) => body.end);
+      }
+      return [];
     },
   };
   const window = {
@@ -148,41 +156,97 @@ test('leaves the countdown hidden when the free limit is zero', async () => {
   assert.equal(node.hidden, true);
 });
 
-test('hides the body blocks before every free paywall and shows the paywall when the meter trips', async () => {
-  const makeBlock = () => {
-    const block = { styles: {} };
-    block.style = { setProperty: (name, value, priority) => { block.styles[name] = `${value} ${priority}`; } };
-    return block;
+// A minimal element tree: enough for the runtime to walk siblings, move the end marker and insert after it.
+const makeNode = (name) => {
+  const node = { name, styles: {}, parentElement: null, children: [] };
+  node.style = { setProperty: (property, value, priority) => { node.styles[property] = `${value} ${priority}`; } };
+  const siblings = () => (node.parentElement ? node.parentElement.children : []);
+  Object.defineProperty(node, 'nextElementSibling', {
+    get: () => siblings()[siblings().indexOf(node) + 1] || null,
+  });
+  node.append = (child) => {
+    if (child.parentElement) {
+      child.parentElement.children.splice(child.parentElement.children.indexOf(child), 1);
+    }
+    child.parentElement = node;
+    node.children.push(child);
   };
-  const home = {};
-  const makePaywall = (blocks) => {
-    const paywall = { hidden: true, parentElement: home, closest: () => home };
-    paywall.previousElementSibling = blocks[blocks.length - 1];
-    blocks.forEach((block, i) => { block.previousElementSibling = blocks[i - 1] || null; });
-    return paywall;
+  node.after = (child) => {
+    if (child.parentElement) {
+      child.parentElement.children.splice(child.parentElement.children.indexOf(child), 1);
+    }
+    const parent = node.parentElement;
+    child.parentElement = parent;
+    parent.children.splice(parent.children.indexOf(node) + 1, 0, child);
   };
-  const firstBody = [makeBlock(), makeBlock()];
-  const secondBody = [makeBlock()];
-  const paywalls = [makePaywall(firstBody), makePaywall(secondBody)];
+  return node;
+};
 
-  // An unclosed tag in the body folded this paywall into its last block; the runtime moves it back beside the body.
-  const folded = makeBlock();
-  folded.parentElement = home;
-  folded.previousElementSibling = null;
-  const foldedPaywall = { hidden: true, closest: () => home, parentElement: folded, previousElementSibling: null };
-  folded.after = (node) => {
-    node.parentElement = home;
-    node.previousElementSibling = folded;
-  };
-  paywalls.push(foldedPaywall);
+const makeBody = (home, blockCount) => {
+  const start = makeNode('start');
+  const end = makeNode('end');
+  const blocks = Array.from({ length: blockCount }, (_, i) => makeNode(`block-${i}`));
+  [start, ...blocks, end].forEach((node) => home.append(node));
+  return { start, end, blocks };
+};
 
+const trippedViews = () => {
   const now = Math.floor(Date.now() / 1000);
+  return { views: { 1: now, 2: now, 3: now } };
+};
 
-  await runRuntime({ stored: { views: { 1: now, 2: now, 3: now } }, freePaywalls: paywalls });
+test('hides the body between every marker pair and puts the paywall after it when the meter trips', async () => {
+  const home = makeNode('home');
+  const title = makeNode('title');
+  home.append(title);
+  const first = makeBody(home, 2);
+  const trailing = makeNode('share-buttons');
+  home.append(trailing);
+  const secondHome = makeNode('second-home');
+  const second = makeBody(secondHome, 1);
+  const template = { content: 'paywall' };
 
-  paywalls.forEach((paywall) => assert.equal(paywall.hidden, false));
-  [...firstBody, ...secondBody, folded].forEach((block) => assert.equal(block.styles.display, 'none important'));
-  assert.equal(foldedPaywall.parentElement, home);
+  await runRuntime({ stored: trippedViews(), bodies: [first, second], template });
+
+  [...first.blocks, ...second.blocks].forEach((block) => assert.equal(block.styles.display, 'none important'));
+  [title, trailing].forEach((node) => assert.equal(node.styles.display, undefined));
+  assert.deepEqual(home.children.map((node) => node.name), ['title', 'start', 'block-0', 'block-1', 'end', undefined, 'share-buttons']);
+  assert.equal(home.children[5].clonedFrom, 'paywall');
+  assert.equal(secondHome.children[secondHome.children.length - 1].clonedFrom, 'paywall');
+});
+
+test('moves an end marker folded into the last block back beside the start', async () => {
+  const home = makeNode('home');
+  const body = makeBody(home, 2);
+  body.blocks[1].append(body.end);
+
+  await runRuntime({ stored: trippedViews(), bodies: [body], template: { content: 'paywall' } });
+
+  assert.deepEqual(home.children.map((node) => node.name), ['start', 'block-0', 'block-1', 'end', undefined]);
+  body.blocks.forEach((block) => assert.equal(block.styles.display, 'none important'));
+});
+
+test('puts an end marker pushed out of the body container at the end of that container', async () => {
+  const outer = makeNode('outer');
+  const home = makeNode('home');
+  outer.append(home);
+  const body = makeBody(home, 1);
+  outer.append(body.end);
+
+  await runRuntime({ stored: trippedViews(), bodies: [body], template: { content: 'paywall' } });
+
+  assert.deepEqual(home.children.map((node) => node.name), ['start', 'block-0', 'end', undefined]);
+  assert.equal(body.blocks[0].styles.display, 'none important');
+});
+
+test('leaves the body alone when the meter has not tripped', async () => {
+  const home = makeNode('home');
+  const body = makeBody(home, 2);
+
+  await runRuntime({ bodies: [body], template: { content: 'paywall' } });
+
+  body.blocks.forEach((block) => assert.equal(block.styles.display, undefined));
+  assert.equal(home.children.length, 4);
 });
 
 test('does not count a prerendered page until it is shown', async () => {

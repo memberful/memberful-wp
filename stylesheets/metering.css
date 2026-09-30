@@ -1,6 +1,6 @@
 /* Metering: the pre-paint guard adds this class so the swap happens without a flash. Paywall styling is in paywall.css. */
 
-/* Themes style aside directly (padding, float, display: block in resets). Reset the paywall and keep hidden working. */
+/* Themes style aside directly (padding, float, display: block in resets). Reset the paywall. */
 .memberful-metering__paywall[data-memberful-metering] {
   background: none;
   border: 0;
@@ -8,15 +8,25 @@
   padding: 0;
 }
 
-.memberful-metering__paywall[data-memberful-metering][hidden] {
-  display: none;
-}
-
-/* The body blocks before a free paywall; the runtime hides them inline, this covers the moment before it runs. */
-html.memberful-metering-tripped :has(~ .memberful-metering__paywall[data-memberful-metering="free"]) {
+/* The markers only delimit the body; keep them out of the layout even where a theme sets display on its blocks. */
+.memberful-metering__start[data-memberful-metering],
+.memberful-metering__end[data-memberful-metering] {
   display: none !important;
 }
 
-html.memberful-metering-tripped .memberful-metering__paywall[data-memberful-metering="free"] {
-  display: block;
+/* Themes drop the outer margins of the first and last child of the content container, and the markers now take those
+   places. Drop them from the body's first and last block instead. */
+.memberful-metering__start[data-memberful-metering]:first-child + * {
+  margin-block-start: 0;
+}
+
+:has(+ .memberful-metering__end[data-memberful-metering]:last-child) {
+  margin-block-end: 0;
+}
+
+/* The body between the markers; the runtime hides it inline, this covers the moment before it runs. The second
+   selector catches the last block when an unclosed tag folded the end marker into it. */
+html.memberful-metering-tripped .memberful-metering__start[data-memberful-metering="free"] ~ :has(~ .memberful-metering__end[data-memberful-metering="free"]):not(.memberful-metering__paywall),
+html.memberful-metering-tripped .memberful-metering__start[data-memberful-metering="free"] ~ :has(.memberful-metering__end[data-memberful-metering="free"]) {
+  display: none !important;
 }

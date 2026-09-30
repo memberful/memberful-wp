@@ -55,22 +55,40 @@
   const setTripped = () => {
     document.documentElement.classList.add('memberful-metering-tripped');
 
-    // Hide the body's top-level blocks inline, so the swap holds without the stylesheet, and show the paywall. Every
-    // free paywall on the page: a theme may render the queried post's content more than once.
-    document.querySelectorAll('.memberful-metering__paywall[data-memberful-metering="free"]').forEach((paywall) => {
-      // An unclosed tag in the body can fold the paywall into the last block; move it back beside the body.
-      const home = paywall.closest('.wp-block-post-content, .entry-content');
-      if (home && paywall.parentElement !== home) {
-        let top = paywall;
-        while (top.parentElement !== home) {
+    const template = document.getElementById('memberful-metering-paywall');
+    if (!template) {
+      return;
+    }
+
+    // Every marked body on the page: a theme may render the queried post's content more than once. The markers come
+    // in pairs, so the nth start goes with the nth end.
+    const ends = document.querySelectorAll('.memberful-metering__end[data-memberful-metering="free"]');
+    document.querySelectorAll('.memberful-metering__start[data-memberful-metering="free"]').forEach((start, index) => {
+      const end = ends[index];
+      const home = start.parentElement;
+      if (!end || !home) {
+        return;
+      }
+
+      // An unclosed tag in the body can fold the end marker into the last block; move it back beside the start. A
+      // stray closing tag can push it out of the body's container; put it at the end of that container.
+      if (end.parentElement !== home) {
+        let top = end;
+        while (top.parentElement && top.parentElement !== home) {
           top = top.parentElement;
         }
-        top.after(paywall);
+        if (top.parentElement === home) {
+          top.after(end);
+        } else {
+          home.append(end);
+        }
       }
-      for (let node = paywall.previousElementSibling; node; node = node.previousElementSibling) {
+
+      // Hide the body inline, so the swap holds without the stylesheet, and show the paywall after it.
+      for (let node = start.nextElementSibling; node && node !== end; node = node.nextElementSibling) {
         node.style.setProperty('display', 'none', 'important');
       }
-      paywall.hidden = false;
+      end.after(document.importNode(template.content, true));
     });
   };
 
