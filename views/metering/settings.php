@@ -115,14 +115,7 @@ $exclude_intro = __( 'Exclude when', 'memberful' );
             <div class="memberful-metering-field">
               <span class="memberful-metering-field__label"><?php esc_html_e( 'Members-only posts', 'memberful' ); ?></span>
               <div class="memberful-metering-field__control">
-                <label class="memberful-metering-checkline">
-                  <input type="checkbox" id="memberful_metering_apply_to_protected_posts" name="memberful_metering[apply_to_protected_posts]" value="1" <?php checked( ! empty( $config['apply_to_protected_posts'] ) ); ?>>
-                  <span>
-                    <?php esc_html_e( "Also count members-only posts toward a visitor's free allowance", 'memberful' ); ?>
-                    <span class="description"><?php esc_html_e( "When off (recommended), members-only posts always show the paywall and don't use up any of the free reads above. When on, non-members can sample members-only posts — each view uses one free read, and the membership paywall appears once those run out.", 'memberful' ); ?></span>
-                    <span class="description"><?php esc_html_e( 'Sampled members-only pages are served non-cacheable. If your host or CDN caches pages for logged-out visitors regardless, a sampled post could be cached in full and shown to everyone, so leave this off unless your caching setup honours no-store.', 'memberful' ); ?></span>
-                  </span>
-                </label>
+                <span class="description"><?php esc_html_e( "Members-only posts always show the paywall to visitors who can't access them and never use up free reads. Only public posts are metered, so keep members-only posts members-only.", 'memberful' ); ?></span>
               </div>
             </div>
           </div>
@@ -155,9 +148,9 @@ $exclude_intro = __( 'Exclude when', 'memberful' );
               <span><?php esc_html_e( 'Caching & hosting notes', 'memberful' ); ?></span>
             </summary>
             <div class="memberful-metering-notes__body">
-              <p><?php esc_html_e( 'Metered pages vary per visitor, so Memberful serves them as non-cacheable (no-store / DONOTCACHEPAGE). Page-cache plugins such as WP Super Cache, W3 Total Cache, WP Rocket and LiteSpeed honour this automatically. Edge caches such as Cloudflare or Varnish must be configured to bypass metered URLs, or one visitor\'s view could be cached and shown to everyone.', 'memberful' ); ?></p>
-              <p><?php esc_html_e( 'Hosts whose edge cache ignores no-store for logged-out visitors, such as WP Engine\'s Edge Full Page Cache, are not supported for anonymous metering in this release. Metering of signed-in members is unaffected because their pages are never page-cached.', 'memberful' ); ?></p>
-              <p><?php esc_html_e( 'Anonymous visitors are counted with a signed cookie, so clearing cookies or switching browsers starts a fresh allowance. Treat the meter as a conversion tool for public content rather than an access-control boundary: members-only content stays protected by your normal access rules unless you opt in above.', 'memberful' ); ?></p>
+              <p><?php esc_html_e( 'Metered pages stay cacheable for logged-out visitors: Memberful serves everyone the same HTML and applies each visitor\'s remaining free-view count in the browser. Only a signed-in visitor\'s own metered view is served non-cacheable (no-store / DONOTCACHEPAGE), and signed-in pages are not page-cached to begin with.', 'memberful' ); ?></p>
+              <p><?php esc_html_e( 'No cache configuration is needed. Page-cache plugins such as WP Super Cache, W3 Total Cache, WP Rocket and LiteSpeed work as-is, and edge caches such as Cloudflare, Varnish or the full-page cache on hosts like WP Engine and Flywheel are safe because the cached HTML carries no per-visitor data.', 'memberful' ); ?></p>
+              <p><?php esc_html_e( 'Anonymous visitors are counted in their browser, so clearing site data or switching browsers starts a fresh allowance. Treat the meter as a conversion tool for public content rather than an access-control boundary: members-only content stays protected by your normal access rules.', 'memberful' ); ?></p>
             </div>
           </details>
         </div>

@@ -21,8 +21,7 @@ class Memberful_Metering_Sanitizer {
     $input = array_intersect_key( $input, $defaults );
     $clean = $defaults;
 
-    $clean['enabled']                  = ! empty( $input['enabled'] );
-    $clean['apply_to_protected_posts'] = ! empty( $input['apply_to_protected_posts'] );
+    $clean['enabled'] = ! empty( $input['enabled'] );
 
     $period               = absint( $input['period_days'] ?? 0 );
     $clean['period_days'] = $period > 0 ? $period : $defaults['period_days'];

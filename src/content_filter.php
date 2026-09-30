@@ -391,6 +391,15 @@ function memberful_wp_protect_content( $content ) {
   }
 
   if ( $content_split['has_divider'] ) {
+    // Keep the divider marker for the queried post's anonymous free-meter view so the metering render can show the
+    // above-divider content as the teaser once the client meter trips.
+    if (
+      (int) $post->ID === (int) get_queried_object_id()
+      && Memberful_Metering_Access::RENDER_FREE_METER === Memberful_Metering_Access::current_anon_mode( (int) $post->ID )
+    ) {
+      return $content;
+    }
+
     return $content_split['content_above_divider'] . $content_split['content_below_divider'];
   }
 
@@ -398,6 +407,93 @@ function memberful_wp_protect_content( $content ) {
 }
 
 add_filter( 'memberful_wp_protect_content','wptexturize');
+
+/**
+ * Wrap the queried post for the anonymous, cache-safe metering runtime. Runs after the gate (priority 100), so a free
+ * body is intact - we only wrap, never re-gate.
+ *
+ * @param string $content Post content as left by the gate.
+ *
+ * @return string
+ */
+function memberful_metering_render_anonymous( $content ) {
+  global $post;
+
+  if ( ! isset( $post ) || doing_filter( 'memberful_wp_protect_content' ) ) {
+    return $content;
+  }
+
+  if ( (int) $post->ID !== (int) get_queried_object_id() ) {
+    return $content;
+  }
+
+  if ( Memberful_Metering_Access::RENDER_FREE_METER !== Memberful_Metering_Access::current_anon_mode( (int) $post->ID ) ) {
+    return $content;
+  }
+
+  $paywall = memberful_wp_resolve_paywall_content( (int) $post->ID );
+  $split   = memberful_wp_split_post_content_at_paywall_divider( $content );
+
+  if ( $split['has_divider'] ) {
+    $paywall = memberful_wp_format_divider_teaser_content( $split['content_above_divider'] ) . $paywall;
+  }
+
+  return memberful_metering_wrap_free( memberful_wp_strip_paywall_divider_marker( $content ), $paywall );
+}
+add_filter( 'the_content', 'memberful_metering_render_anonymous', 101 );
+
+/**
+ * Markup for a free metered post: full body (visible) plus the paywall (hidden until the client meter trips).
+ *
+ * The body is not wrapped, so wide and full-width blocks stay direct children of the theme's content container. The
+ * paywall is an <aside> so its end tag closes any <div> the teaser leaves open. Tags are not balanced:
+ * force_balance_tags() rewrites "<" in inline scripts.
+ *
+ * @param string $body    Full post body.
+ * @param string $paywall Rendered paywall/marketing markup.
+ *
+ * @return string
+ */
+function memberful_metering_wrap_free( string $body, string $paywall ): string {
+  return $body . sprintf( '<aside class="memberful-metering__paywall" data-memberful-metering="free" hidden>%s</aside>', $paywall );
+}
+
+/**
+ * Resolve the paywall/marketing HTML for a metered post, substituting a default members-only message when nothing is
+ * configured so the metering paywall region is never blank. Only the metering wrappers use this; the ordinary gate
+ * keeps its existing behaviour for non-metered protected posts.
+ *
+ * @param int $post_id Post ID.
+ *
+ * @return string
+ */
+function memberful_wp_resolve_paywall_content( int $post_id ): string {
+  $rendered = apply_filters( 'memberful_wp_protect_content', memberful_marketing_content( $post_id ) );
+
+  if ( '' !== trim( (string) $rendered ) ) {
+    return $rendered;
+  }
+
+  return memberful_wp_default_paywall_content();
+}
+
+/**
+ * Minimal, theme-native fallback shown in place of an unconfigured paywall so readers always see why a metered post is
+ * gated. Configuring marketing content or the paywall replaces it.
+ *
+ * @return string
+ */
+function memberful_wp_default_paywall_content(): string {
+  return sprintf(
+    '<div class="memberful-metering__notice"><p>%1$s</p><p><a href="%2$s">%3$s</a> &middot; <a href="%4$s">%5$s</a></p></div>',
+    esc_html__( 'This content is available to members.', 'memberful' ),
+    esc_url( memberful_registration_page_url() ),
+    esc_html__( 'Subscribe', 'memberful' ),
+    esc_url( memberful_sign_in_url() ),
+    esc_html__( 'Sign in', 'memberful' )
+  );
+}
+
 add_filter( 'memberful_wp_protect_content','convert_smilies');
 add_filter( 'memberful_wp_protect_content','convert_chars');
 add_filter( 'memberful_wp_protect_content','wpautop');

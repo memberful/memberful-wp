@@ -10,6 +10,7 @@ require_once MEMBERFUL_DIR . '/src/metering/sanitizer.php';
 require_once MEMBERFUL_DIR . '/src/metering/storage.php';
 require_once MEMBERFUL_DIR . '/src/metering/access.php';
 require_once MEMBERFUL_DIR . '/src/metering/metabox.php';
+require_once MEMBERFUL_DIR . '/src/metering/frontend.php';
 
 Memberful_Metering_Access::register();
 Memberful_Metering_Metabox::register();
