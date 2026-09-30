@@ -391,6 +391,15 @@ function memberful_wp_protect_content( $content ) {
   }
 
   if ( $content_split['has_divider'] ) {
+    // Keep the divider marker for the queried post's anonymous free-meter view so the metering render can show the
+    // above-divider content as the teaser once the client meter trips.
+    if (
+      (int) $post->ID === (int) get_queried_object_id()
+      && Memberful_Metering_Access::RENDER_FREE_METER === Memberful_Metering_Access::current_anon_mode( (int) $post->ID )
+    ) {
+      return $content;
+    }
+
     return $content_split['content_above_divider'] . $content_split['content_below_divider'];
   }
 
@@ -398,6 +407,141 @@ function memberful_wp_protect_content( $content ) {
 }
 
 add_filter( 'memberful_wp_protect_content','wptexturize');
+
+/**
+ * Wrap the queried post for the anonymous, cache-safe metering runtime. Runs after the gate (priority 100), so a free
+ * body is intact - we only wrap, never re-gate.
+ *
+ * @param string $content Post content as left by the gate.
+ *
+ * @return string
+ */
+function memberful_metering_render_anonymous( $content ) {
+  global $post;
+
+  if ( ! isset( $post ) || doing_filter( 'memberful_wp_protect_content' ) ) {
+    return $content;
+  }
+
+  if ( (int) $post->ID !== (int) get_queried_object_id() ) {
+    return $content;
+  }
+
+  if ( Memberful_Metering_Access::RENDER_FREE_METER !== Memberful_Metering_Access::current_anon_mode( (int) $post->ID ) ) {
+    return $content;
+  }
+
+  $split = memberful_wp_split_post_content_at_paywall_divider( $content );
+
+  memberful_metering_hold_teaser( $split['has_divider'] ? memberful_wp_format_divider_teaser_content( $split['content_above_divider'] ) : '' );
+
+  return memberful_metering_wrap_free( memberful_wp_strip_paywall_divider_marker( $content ) );
+}
+add_filter( 'the_content', 'memberful_metering_render_anonymous', 101 );
+add_action( 'wp_footer', 'memberful_metering_print_paywall_template', 5 );
+
+/**
+ * Markup for a free metered post: the full body between two empty markers. metering.js hides what lies between them
+ * and puts the paywall after the end marker once the client meter trips.
+ *
+ * The paywall is not part of the_content, so excerpts, og:description and page builders that render the content again
+ * never pick up its text. The body is not wrapped, so wide and full-width blocks stay direct children of the theme's
+ * content container. Tags are not balanced: force_balance_tags() rewrites "<" in inline scripts.
+ *
+ * @param string $body Full post body.
+ *
+ * @return string
+ */
+function memberful_metering_wrap_free( string $body ): string {
+  return '<div class="memberful-metering__start" data-memberful-metering="free" hidden></div>'
+    . $body
+    . '<div class="memberful-metering__end" data-memberful-metering="free" hidden></div>';
+}
+
+/**
+ * Keep the teaser of the queried metered post until wp_footer prints the paywall. the_content can run several times on
+ * one page (excerpts, page builders), so the first teaser found is kept. An excerpt renders with blocks stripped and
+ * so without the divider, e.g. Yoast's og:description in wp_head; a later render that finds the divider replaces its
+ * empty teaser.
+ *
+ * @param string $teaser Rendered content above the paywall divider, or '' without a divider.
+ */
+function memberful_metering_hold_teaser( string $teaser ): void {
+  global $memberful_metering_teaser;
+
+  if ( ! isset( $memberful_metering_teaser ) || '' === $memberful_metering_teaser ) {
+    $memberful_metering_teaser = $teaser;
+  }
+}
+
+/**
+ * Print the paywall of a metered post the page rendered as an inert template for metering.js. Runs before the footer
+ * scripts (priority 20), so the template is in the page when the runtime looks for it.
+ *
+ * The paywall is built here rather than in the_content: building it marks the post as paywalled for integrations such
+ * as Beaver Builder, which would then render the post's plain fallback text the next time its content renders.
+ */
+function memberful_metering_print_paywall_template(): void {
+  global $memberful_metering_teaser, $post;
+
+  if ( ! isset( $memberful_metering_teaser ) ) {
+    return;
+  }
+
+  // Global snippets read the post from $post, which a loop in the page may have left pointing elsewhere.
+  $previous_post = $post;
+  $post          = get_post( get_queried_object_id() ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Restored below.
+  setup_postdata( $post );
+
+  $paywall = memberful_wp_resolve_paywall_content( (int) $post->ID );
+
+  $post = $previous_post; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Restoring the value saved above.
+  if ( $post instanceof WP_Post ) {
+    setup_postdata( $post );
+  }
+
+  // The <aside> end tag closes any <div> the teaser leaves open.
+  $template = '<template id="memberful-metering-paywall"><aside class="memberful-metering__paywall" data-memberful-metering="free">%s</aside></template>';
+
+  printf( $template, $memberful_metering_teaser . $paywall ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Rendered post and paywall markup, as the_content prints it.
+}
+
+/**
+ * Resolve the paywall/marketing HTML for a metered post, substituting a default members-only message when nothing is
+ * configured so the metering paywall region is never blank. Only the metering wrappers use this; the ordinary gate
+ * keeps its existing behaviour for non-metered protected posts.
+ *
+ * @param int $post_id Post ID.
+ *
+ * @return string
+ */
+function memberful_wp_resolve_paywall_content( int $post_id ): string {
+  $rendered = apply_filters( 'memberful_wp_protect_content', memberful_marketing_content( $post_id ) );
+
+  if ( '' !== trim( (string) $rendered ) ) {
+    return $rendered;
+  }
+
+  return memberful_wp_default_paywall_content();
+}
+
+/**
+ * Minimal, theme-native fallback shown in place of an unconfigured paywall so readers always see why a metered post is
+ * gated. Configuring marketing content or the paywall replaces it.
+ *
+ * @return string
+ */
+function memberful_wp_default_paywall_content(): string {
+  return sprintf(
+    '<div class="memberful-metering__notice"><p>%1$s</p><p><a href="%2$s">%3$s</a> &middot; <a href="%4$s">%5$s</a></p></div>',
+    esc_html__( 'This content is available to members.', 'memberful' ),
+    esc_url( memberful_registration_page_url() ),
+    esc_html__( 'Subscribe', 'memberful' ),
+    esc_url( memberful_sign_in_url() ),
+    esc_html__( 'Sign in', 'memberful' )
+  );
+}
+
 add_filter( 'memberful_wp_protect_content','convert_smilies');
 add_filter( 'memberful_wp_protect_content','convert_chars');
 add_filter( 'memberful_wp_protect_content','wpautop');

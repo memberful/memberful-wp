@@ -29,13 +29,12 @@ class Memberful_Metering_Config {
    */
   public static function defaults(): array {
     return array(
-      'enabled'                  => false,
-      'period_days'              => 30,
-      'anonymous_limit'          => 3,
-      'registered_limit'         => 5,
-      'apply_to_protected_posts' => false,
-      'rules'                    => array(),
-      'exclude_rules'            => array(),
+      'enabled'          => false,
+      'period_days'      => 30,
+      'anonymous_limit'  => 3,
+      'registered_limit' => 5,
+      'rules'            => array(),
+      'exclude_rules'    => array(),
     );
   }
 
