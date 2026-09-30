@@ -125,7 +125,7 @@ Filters:
 
 Settings and meta:
 
-* Option `memberful_metering_config` - the metering configuration: `enabled`, `period_days`, `anonymous_limit`, `registered_limit`, `apply_to_protected_posts`, `rules` and `exclude_rules`.
+* Option `memberful_metering_config` - the metering configuration: `enabled`, `period_days`, `anonymous_limit`, `registered_limit`, `rules` and `exclude_rules`.
 * Post meta `memberful_metering_exempt` - set to a truthy value to exclude an individual post from metering.
 
 Anonymous and registered visitors have independent allowances: signing up grants the full registered allowance rather than the remainder of the anonymous one, so three anonymous views followed by registration with a limit of five leaves five more, not two.
@@ -144,7 +144,7 @@ Blocks:
 * Add a metered paywall with per-tier free reading limits and a rule builder for choosing which posts count
 * Add a countdown block showing how many free articles a visitor has left
 * Show an optional free-view count and a free-registration button in the paywall
-* Count logged-out metered views in the browser and release members-only samples through an uncached request, so metered posts stay cacheable on any host
+* Count logged-out metered views in the browser, so metered posts stay cacheable on any host. Members-only posts always show the paywall and are not metered
 * Add Memberful visibility settings to Beaver Builder rows, columns, and modules
 * Fix Beaver Builder layouts not rendering after a protected post in the same request
 * Fix the comments feed on sites with no protected posts

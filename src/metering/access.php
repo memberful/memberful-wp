@@ -144,21 +144,9 @@ class Memberful_Metering_Access {
       return self::RENDER_NONE;
     }
 
-    $post_is_protected = ! memberful_can_user_access_post( 0, $post->ID );
-
-    if ( $post_is_protected ) {
-      // Visitors already entitled to the post read it in full and are never metered.
-      if ( $user_id && memberful_can_user_access_post( $user_id, $post->ID ) ) {
-        return self::RENDER_NONE;
-      }
-
-      // Otherwise the post only enters the meter when the publisher opted in; by default the existing hard paywall
-      // handles it.
-      if ( empty( $config['apply_to_protected_posts'] ) ) {
-        return self::RENDER_NONE;
-      }
-
-      return self::RENDER_PROTECTED_SAMPLE;
+    // Members-only posts are never metered: the access rules show the paywall to anyone not entitled to them.
+    if ( ! memberful_can_user_access_post( 0, $post->ID ) ) {
+      return self::RENDER_NONE;
     }
 
     return self::RENDER_FREE_METER;
