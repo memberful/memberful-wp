@@ -15,7 +15,6 @@ class Memberful_Metering_Access {
 
   const RENDER_NONE             = 'none';
   const RENDER_FREE_METER       = 'free_meter';
-  const RENDER_PROTECTED_SAMPLE = 'protected_sample';
 
   /**
    * Per-request decision cache keyed by post ID.
@@ -47,8 +46,7 @@ class Memberful_Metering_Access {
    *
    * Logged-in visitors are decided server-side here (their page is never edge-cached). Anonymous visitors only get a
    * count-agnostic render mode cached for the render layer; their per-visitor enforcement happens client-side
-   * (localStorage, free posts) or via the uncacheable sample endpoint (protected posts), so the page stays cacheable
-   * even on hosts that strip cookies before PHP.
+   * (localStorage), so the page stays cacheable even on hosts that strip cookies before PHP.
    */
   public static function on_template_redirect(): void {
     if ( ! self::is_metered_request() ) {
@@ -153,22 +151,17 @@ class Memberful_Metering_Access {
   }
 
   /**
-   * Record a view (when not already counted) and report whether it is allowed plus how many remain in the window.
+   * Record a logged-in visitor's view (when not already counted) and report whether it is allowed plus how many remain
+   * in the window.
    *
-   * Shared by the logged-in page path (user meta) and the anonymous sample endpoint (server-side ledger).
-   *
-   * The anonymous read-modify-write is not transactional: a burst of concurrent same-subject requests can each read the
-   * pre-write count and release. That leak is bounded by the sample endpoint's per-IP rate limit.
-   *
-   * @param int         $user_id     User ID, or 0 for the anonymous ledger store.
-   * @param int         $post_id     Post being viewed.
-   * @param int         $period_days Rolling-window length in days.
-   * @param int         $limit       Views allowed in the window.
-   * @param string|null $subject     Anonymous subject id; ignored when $user_id is set.
+   * @param int $user_id     User ID.
+   * @param int $post_id     Post being viewed.
+   * @param int $period_days Rolling-window length in days.
+   * @param int $limit       Views allowed in the window.
    *
    * @return array{allowed: bool, remaining: int, persisted: bool, recorded: bool}
    */
-  public static function record_and_check( int $user_id, int $post_id, int $period_days, int $limit, ?string $subject = null ): array {
+  public static function record_and_check( int $user_id, int $post_id, int $period_days, int $limit ): array {
     $limit = max( 0, $limit );
 
     if ( 0 === $limit ) {
@@ -180,9 +173,7 @@ class Memberful_Metering_Access {
       );
     }
 
-    $views = $user_id
-      ? Memberful_Metering_Storage::read_user_views( $user_id )
-      : Memberful_Metering_Storage::read_ledger_views( (string) $subject );
+    $views = Memberful_Metering_Storage::read_user_views( $user_id );
     $views = Memberful_Metering_Storage::prune( $views, $period_days );
 
     $already_counted = isset( $views[ $post_id ] );
@@ -199,11 +190,7 @@ class Memberful_Metering_Access {
     if ( ! $already_counted ) {
       $views[ $post_id ] = time();
 
-      $persisted = $user_id
-        ? Memberful_Metering_Storage::write_user_views( $user_id, $views )
-        : Memberful_Metering_Storage::write_ledger_views( (string) $subject, $views, $period_days );
-
-      if ( ! $persisted ) {
+      if ( ! Memberful_Metering_Storage::write_user_views( $user_id, $views ) ) {
         return array(
           'allowed'   => false,
           'remaining' => 0,
@@ -253,8 +240,7 @@ class Memberful_Metering_Access {
    * A logged-in visitor's paywall renders only once the server has tripped the meter, so their registered limit is
    * returned then. An anonymous free-meter page ships its paywall hidden and only reveals it when the client meter
    * trips, so the anonymous limit is returned for that render mode; it is seen by exactly the blocked visitors while
-   * the page stays byte-identical for caching. Protected samples are excluded on purpose: their paywall is served
-   * visible before the endpoint decides, so the counter would show to visitors about to be released.
+   * the page stays byte-identical for caching.
    *
    * Leaves the incoming value untouched for every other paywall render (members-only posts, non-metered posts, the
    * admin preview), so the counter stays hidden there. Untyped on purpose: this is a public filter and an earlier
@@ -295,191 +281,12 @@ class Memberful_Metering_Access {
   }
 
   /**
-   * Whether the singular post under view is an anonymous metered view (free or protected-sample).
+   * Whether the singular post under view is an anonymous metered view.
    *
    * @return bool
    */
   public static function is_anon_metered_view(): bool {
     return self::RENDER_NONE !== self::current_anon_mode( (int) get_queried_object_id() );
-  }
-
-  /**
-   * Mirror validated anonymous public-post views into the shared server ledger.
-   *
-   * Public content remains client-enforced so cached pages render without waiting for this write. The returned IDs were
-   * all processed and can leave the client's retry queue; only posts that currently classify as free meter targets are
-   * actually recorded.
-   *
-   * @param array<int> $post_ids Post IDs from the client's local history, oldest first.
-   *
-   * @return array<int> Processed post IDs.
-   */
-  public static function record_public_views( array $post_ids ): array {
-    $post_ids = array_values(
-      array_unique(
-        array_filter(
-          array_map( 'intval', $post_ids ),
-          function ( $post_id ) {
-            return $post_id > 0;
-          }
-        )
-      )
-    );
-
-    if ( empty( $post_ids ) ) {
-      return array();
-    }
-
-    $config = Memberful_Metering_Config::get();
-    if ( empty( $config['enabled'] ) || empty( $config['rules'] ) || (int) $config['anonymous_limit'] <= 0 ) {
-      return $post_ids;
-    }
-
-    $processed      = array();
-    $refresh_cookie = false;
-    $subject        = Memberful_Metering_Storage::current_subject();
-    $subject_is_new = false;
-
-    foreach ( $post_ids as $post_id ) {
-      $post = get_post( $post_id );
-      if ( ! ( $post instanceof WP_Post ) || 'publish' !== $post->post_status ) {
-        $processed[] = $post_id;
-        continue;
-      }
-
-      if ( ! is_post_publicly_viewable( $post ) || post_password_required( $post ) ) {
-        $processed[] = $post_id;
-        continue;
-      }
-
-      if ( self::RENDER_FREE_METER !== self::classify_post( $post, 0, $config ) ) {
-        $processed[] = $post_id;
-        continue;
-      }
-
-      if ( null === $subject ) {
-        $subject        = Memberful_Metering_Storage::get_or_create_subject( (int) $config['period_days'] );
-        $subject_is_new = true;
-      }
-
-      $result = self::record_and_check(
-        0,
-        $post_id,
-        (int) $config['period_days'],
-        (int) $config['anonymous_limit'],
-        $subject
-      );
-
-      if ( ! empty( $result['persisted'] ) ) {
-        $processed[] = $post_id;
-      }
-
-      if ( ! empty( $result['recorded'] ) ) {
-        $refresh_cookie = true;
-      }
-    }
-
-    if ( $refresh_cookie && ! $subject_is_new ) {
-      Memberful_Metering_Storage::refresh_subject_cookie( (int) $config['period_days'] );
-    }
-
-    return $processed;
-  }
-
-  /**
-   * Whether a post is a protected sample that MAY be released to an anonymous visitor, checked with NO side effect (no
-   * subject minted, no view recorded). Lets the endpoint reject ineligible posts before evaluate_sample() mints a cookie
-   * or records a view. Only a published, publicly viewable, password-free post that classifies as a protected sample
-   * qualifies.
-   *
-   * @param int $post_id Post ID from the request.
-   *
-   * @return bool
-   */
-  public static function is_releasable_sample( int $post_id ): bool {
-    $post = get_post( $post_id );
-    if ( ! ( $post instanceof WP_Post ) || 'publish' !== $post->post_status ) {
-      return false;
-    }
-
-    if ( ! is_post_publicly_viewable( $post ) || post_password_required( $post ) ) {
-      return false;
-    }
-
-    return self::RENDER_PROTECTED_SAMPLE === self::classify_post( $post, 0, Memberful_Metering_Config::get() );
-  }
-
-  /**
-   * Whether a protected sample is within the current subject allowance, without recording it.
-   *
-   * @param int         $post_id Post being requested.
-   * @param string|null $subject Resolved subject id, or null.
-   *
-   * @return bool
-   */
-  public static function sample_within_allowance( int $post_id, ?string $subject ): bool {
-    $config = Memberful_Metering_Config::get();
-    $limit  = max( 0, (int) $config['anonymous_limit'] );
-    if ( 0 === $limit ) {
-      return false;
-    }
-
-    $views = ( null === $subject )
-      ? array()
-      : Memberful_Metering_Storage::read_ledger_views( $subject );
-    $views = Memberful_Metering_Storage::prune( $views, (int) $config['period_days'] );
-
-    return isset( $views[ $post_id ] ) || count( $views ) < $limit;
-  }
-
-  /**
-   * Server-authoritative decision for the sample endpoint: may an anonymous visitor read this protected post now?
-   *
-   * Re-validates and re-classifies the post (never trusting the client), then mints the subject and records the view
-   * against the ledger. Has side effects (subject mint, ledger write); callers that must gate before those side effects
-   * should consult is_releasable_sample() and sample_within_allowance() first.
-   *
-   * @param int $post_id Post ID from the request.
-   *
-   * @return array{released: bool, remaining: int}
-   */
-  public static function evaluate_sample( int $post_id ): array {
-    $deny = array(
-      'released'  => false,
-      'remaining' => 0,
-    );
-
-    $post = get_post( $post_id );
-    if ( ! ( $post instanceof WP_Post ) || 'publish' !== $post->post_status ) {
-      return $deny;
-    }
-
-    if ( ! is_post_publicly_viewable( $post ) || post_password_required( $post ) ) {
-      return $deny;
-    }
-
-    $config = Memberful_Metering_Config::get();
-
-    if ( self::RENDER_PROTECTED_SAMPLE !== self::classify_post( $post, 0, $config ) ) {
-      return $deny;
-    }
-
-    $subject        = Memberful_Metering_Storage::current_subject();
-    $subject_is_new = null === $subject;
-    if ( $subject_is_new ) {
-      $subject = Memberful_Metering_Storage::get_or_create_subject( (int) $config['period_days'] );
-    }
-
-    $result = self::record_and_check( 0, (int) $post_id, (int) $config['period_days'], (int) $config['anonymous_limit'], $subject );
-
-    if ( ! empty( $result['recorded'] ) && ! $subject_is_new ) {
-      Memberful_Metering_Storage::refresh_subject_cookie( (int) $config['period_days'] );
-    }
-
-    return array(
-      'released'  => $result['allowed'],
-      'remaining' => $result['remaining'],
-    );
   }
 
   /**

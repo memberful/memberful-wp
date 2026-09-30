@@ -110,8 +110,7 @@ function memberful_metering_runtime_config(): array {
       'mode'       => Memberful_Metering_Access::current_anon_mode( $post_id ),
       'limit'      => (int) $config['anonymous_limit'],
       'periodDays' => (int) $config['period_days'],
-      'storageKey' => Memberful_Metering_Storage::COOKIE_NAME,
-    ),
-    Memberful_Metering_Sample::script_args()
+      'storageKey' => Memberful_Metering_Storage::STORAGE_KEY,
+    )
   );
 }

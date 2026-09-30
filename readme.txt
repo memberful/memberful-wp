@@ -116,8 +116,6 @@ The metered paywall exposes a small set of filters and settings for customizing 
 
 Filters:
 
-* `memberful_metering_subject_key` - filter the opaque key that identifies an anonymous visitor's meter. Passed the cookie-backed subject id; return a non-empty string to replace it.
-* `memberful_metering_rate_limit_per_ip` - integer per-IP limit on metering endpoint requests per operation per minute (default 300). Return 0 to disable.
 * `memberful_paywall_free_view_limit` - the number shown in the paywall's optional free-view counter (the `{limit}` placeholder). Passed null and the paywall config; return a positive integer to show the counter, or null (or 0) to hide it.
 * `memberful_marketing_content` - the marketing/paywall body shown to non-members.
 * `memberful_paywall_protected_content` - the final HTML of the builder paywall, before output.

@@ -304,8 +304,7 @@ class Memberful_Paywall_Renderer {
    * paywall ships hidden inside the cacheable page and only appears once the client meter trips, so this reaches
    * exactly the blocked visitors while the page stays byte-identical for caching. Anonymous and registered
    * allowances are independent, so registering always grants the full registered limit; only a zero registered
-   * limit would make the upsell pointless. Protected samples are excluded on purpose: their paywall is served
-   * visible before the endpoint decides, so blocked-only messaging would show to visitors about to be released.
+   * limit would make the upsell pointless.
    *
    * @return bool
    */

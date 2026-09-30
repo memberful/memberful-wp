@@ -21,10 +21,7 @@ if ( '' === trim( $template ) && '' === trim( $singular ) && '' === trim( $last_
 
 // Anonymous / cached path: emit a hidden placeholder with every template so the client-side
 // meter can pick the right message once it knows the remaining count.
-if (
-  Memberful_Metering_Access::RENDER_NONE !== Memberful_Metering_Access::current_anon_mode( $post_id )
-  || ( function_exists( 'memberful_metering_is_releasing' ) && memberful_metering_is_releasing( (int) get_the_ID() ) )
-) {
+if ( Memberful_Metering_Access::RENDER_NONE !== Memberful_Metering_Access::current_anon_mode( $post_id ) ) {
   printf(
     '<p %s hidden>%s</p>',
     get_block_wrapper_attributes(
