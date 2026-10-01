@@ -2,7 +2,7 @@
 Contributors: drewstrojny, jakememberful, julianmemberful, lucasmemberful, patrikmemberful
 Tags: membership, subscriptions, paywall, stripe, recurring payments, memberful, oauth, oauth 2.0, members, recurring billing
 Requires at least: 6.3
-Tested up to: 6.9.1
+Tested up to: 7.1
 Requires PHP: 7.4
 Stable tag: 1.81.0
 License: GPLv2 or later
