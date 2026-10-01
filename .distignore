@@ -12,13 +12,15 @@
 /.wp-env.override.json
 /.editorconfig
 /.idea
+/.node-version
+/mise.toml
 /dev
 /node_modules
 /vendor
 /.phpunit.result.cache
 .DS_Store
 
-# Tests, build sources and scripts (js/build IS shipped; js/src is not)
+# Tests, build sources and scripts (js/build and js/src ship; only the block sources in js/src/blocks do not)
 /tests
 /bin
 /js/src/blocks
@@ -28,6 +30,7 @@
 /composer.lock
 /package.json
 /package-lock.json
+/webpack.config.js
 
 # Coding standards & test configuration
 /phpcs.xml

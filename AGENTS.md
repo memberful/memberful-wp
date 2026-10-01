@@ -14,6 +14,8 @@ This repository develops the Memberful WordPress plugin.
 - `bin/install-wp-tests.sh`: installs the WordPress core test suite for PHPUnit in CI.
 - `.wordpress-org`: WordPress.org banner, icon, and screenshot assets.
 
+When you add a top-level file or directory, decide whether it ships with the plugin; if it doesn't, add it to `.distignore`.
+
 ## Build, Test, and Development Commands
 
 The local environment uses [`@wordpress/env`](https://developer.wordpress.org/block-editor/reference-guides/packages/packages-env/) (Docker required).
