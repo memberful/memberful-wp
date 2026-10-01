@@ -285,11 +285,11 @@
     }
 
     const taxonomy = field === 'tag' ? 'tags' : 'categories';
-    const path = `/wp/v2/${taxonomy}?search=${encodeURIComponent(query)}&per_page=${REST_PER_PAGE}&_fields=id,name,slug`;
+    const path = `/wp/v2/${taxonomy}?search=${encodeURIComponent(query)}&per_page=${REST_PER_PAGE}&_fields=id,name`;
 
     return apiFetch({ path }).then((terms) =>
       (Array.isArray(terms) ? terms : []).map((term) => ({
-        value: String(term.slug || '').toLowerCase(),
+        value: String(term.id || ''),
         label: term.name || '',
       }))
     );

@@ -444,8 +444,8 @@ class Memberful_Metering_Access {
       case 'category':
       case 'tag':
         $taxonomy   = 'tag' === $field ? 'post_tag' : 'category';
-        $post_terms = self::term_slugs_for_post( $post->ID, $taxonomy );
-        $matches    = ! empty( array_intersect( $values, $post_terms ) );
+        $post_terms = self::term_ids_for_post( $post->ID, $taxonomy );
+        $matches    = ! empty( array_intersect( array_map( 'intval', $values ), $post_terms ) );
         break;
 
       case 'url':
@@ -469,25 +469,19 @@ class Memberful_Metering_Access {
   }
 
   /**
-   * Gather the lowercased slugs and names of all terms attached to a post in a taxonomy.
+   * Gather the IDs of all terms attached to a post in a taxonomy.
    *
    * @param int    $post_id  Post ID.
    * @param string $taxonomy Taxonomy slug ('category' or 'post_tag').
    *
-   * @return array<int, string>
+   * @return array<int, int>
    */
-  private static function term_slugs_for_post( int $post_id, string $taxonomy ): array {
-    $terms = wp_get_post_terms( $post_id, $taxonomy, array( 'fields' => 'all' ) );
-    if ( is_wp_error( $terms ) || empty( $terms ) ) {
+  private static function term_ids_for_post( int $post_id, string $taxonomy ): array {
+    $term_ids = wp_get_post_terms( $post_id, $taxonomy, array( 'fields' => 'ids' ) );
+    if ( is_wp_error( $term_ids ) ) {
       return array();
     }
 
-    $result = array();
-    foreach ( $terms as $term ) {
-      $result[] = strtolower( $term->slug );
-      $result[] = strtolower( $term->name );
-    }
-
-    return $result;
+    return array_map( 'intval', $term_ids );
   }
 }

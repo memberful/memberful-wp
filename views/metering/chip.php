@@ -8,7 +8,7 @@
  * @package memberful-wp
  *
  * @var string $label Display label (empty for the template).
- * @var string $value Stored slug/value (empty for the template).
+ * @var string $value Stored value: post type slug or term ID (empty for the template).
  * @var string $name  Hidden input name, e.g. "…[values][]" (empty for the template).
  */
 
