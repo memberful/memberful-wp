@@ -351,9 +351,10 @@ class Memberful_Paywall_Renderer {
   }
 
   /**
-   * "Already a subscriber? Sign in" text prompt shown under every layout's CTA.
+   * "Already a subscriber? Sign in" text prompt shown under every layout's CTA, except to logged-in users.
    *
-   * @param array $config Sanitized config.
+   * @param array $config      Sanitized config.
+   * @param bool  $interactive Whether the link should navigate; false for the admin preview.
    *
    * @return string
    */
@@ -364,6 +365,11 @@ class Memberful_Paywall_Renderer {
         esc_html__( 'Already a subscriber?', 'memberful' ),
         esc_html__( 'Sign in', 'memberful' )
       );
+    }
+
+    // Logged-in users without access are already signed in, so the prompt would only send them back to this paywall.
+    if ( is_user_logged_in() ) {
+      return '';
     }
 
     return sprintf(
