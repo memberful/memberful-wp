@@ -32,22 +32,22 @@ class Memberful_Paywall_Renderer {
   /**
    * Suppress the legacy inline teaser fade when the builder paywall owns the fade via paywall.css.
    *
-   * @param string $css Legacy inline teaser CSS block.
+   * @param mixed $css Legacy inline teaser CSS block.
    *
-   * @return string
+   * @return mixed
    */
-  public static function filter_teaser_css( string $css ): string {
+  public static function filter_teaser_css( $css ) {
     return self::is_builder_mode() ? '' : $css;
   }
 
   /**
    * Conditionally flag paywall loading.
    *
-   * @param string $content Content.
+   * @param mixed $content Content.
    *
-   * @return string
+   * @return mixed
    */
-  public static function protect_content( string $content ): string {
+  public static function protect_content( $content ) {
     // The builder paywall only renders through global marketing, so other paywalls don't need its styles.
     if ( self::is_builder_mode() && get_option( 'memberful_use_global_marketing' ) ) {
       self::$should_print_styles = true;
