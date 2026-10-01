@@ -1,7 +1,7 @@
 === Memberful - Membership Plugin ===
 Contributors: drewstrojny, jakememberful, julianmemberful, lucasmemberful, patrikmemberful
 Tags: membership, subscriptions, paywall, stripe, recurring payments, memberful, oauth, oauth 2.0, members, recurring billing
-Requires at least: 6.3
+Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 7.4
 Stable tag: 1.81.0
@@ -125,6 +125,7 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 * Fix the comments feed on sites with no protected posts
 * Hide comments on term-protected posts from comment feeds
 * Hide term-protected pages and custom post types from search results
+* Require WordPress 6.6 or later
 
 = 1.81.2 =
 
