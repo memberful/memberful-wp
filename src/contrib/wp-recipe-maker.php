@@ -66,11 +66,15 @@ class Memberful_Wp_Integration_WP_Recipe_Maker {
   /**
    * Add WP Recipe Maker fields to the Memberful metabox view variables.
    *
-   * @param array   $view_vars The metabox view variables.
-   * @param WP_Post $post      The post being edited.
-   * @return array The filtered metabox view variables.
+   * @param mixed $view_vars The metabox view variables.
+   * @param mixed $post      The post being edited.
+   * @return mixed The filtered metabox view variables.
    */
-  public function add_metabox_view_vars( array $view_vars, WP_Post $post ): array {
+  public function add_metabox_view_vars( $view_vars, $post ) {
+    if ( ! is_array( $view_vars ) || ! $post instanceof WP_Post ) {
+      return $view_vars;
+    }
+
     if ( $this->should_show_recipe_card_lock_option( $post ) ) {
       $view_vars['wprm_recipe_cards_locked'] = $this->recipe_cards_locked_for_post( $post->ID );
     }
@@ -413,12 +417,12 @@ class Memberful_Wp_Integration_WP_Recipe_Maker {
   /**
    * Add locked recipe previews to Memberful teaser content.
    *
-   * @param string       $content The teaser content.
-   * @param WP_Post|null $post    The protected post.
-   * @return string The teaser content with recipe previews.
+   * @param mixed $content The teaser content.
+   * @param mixed $post    The protected post.
+   * @return mixed The teaser content with recipe previews.
    */
-  public function add_locked_recipe_preview_to_teaser( string $content, ?WP_Post $post ): string {
-    if ( ! $post instanceof WP_Post ) {
+  public function add_locked_recipe_preview_to_teaser( $content, $post = null ) {
+    if ( ! is_string( $content ) || ! $post instanceof WP_Post ) {
       return $content;
     }
 
@@ -438,14 +442,14 @@ class Memberful_Wp_Integration_WP_Recipe_Maker {
   /**
    * Add locked recipe previews to protected post marketing content.
    *
-   * @param string $content The protected marketing content.
-   * @return string The filtered protected marketing content.
+   * @param mixed $content The protected marketing content.
+   * @return mixed The filtered protected marketing content.
    */
-  public function add_locked_recipe_preview_to_protected_content( string $content ): string {
+  public function add_locked_recipe_preview_to_protected_content( $content ) {
     static $adding_preview = false;
     global $post;
 
-    if ( $adding_preview || ! $post instanceof WP_Post || memberful_can_user_access_post( get_current_user_id(), $post->ID ) ) {
+    if ( ! is_string( $content ) || $adding_preview || ! $post instanceof WP_Post || memberful_can_user_access_post( get_current_user_id(), $post->ID ) ) {
       return $content;
     }
 

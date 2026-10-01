@@ -46,8 +46,10 @@ $name_prefix     = 'memberful_metering[' . $scope . '][' . $group_index . '][con
           if ( 'post_type' === $field ) {
             $label = isset( $post_type_options[ $value ] ) ? $post_type_options[ $value ] : $value;
           } else {
-            $term  = $taxonomy ? get_term_by( 'slug', $value, $taxonomy ) : false;
-            $label = ( $term && ! is_wp_error( $term ) ) ? $term->name : $value;
+            // Values are term IDs. A deleted term keeps its chip so the condition stays visible until it's removed.
+            $saved_term = $taxonomy ? get_term( (int) $value, $taxonomy ) : null;
+            /* translators: %d: ID of a category or tag that no longer exists. */
+            $label = $saved_term instanceof WP_Term ? $saved_term->name : sprintf( __( 'Deleted term (#%d)', 'memberful' ), (int) $value );
           }
           memberful_wp_render(
             'metering/chip',

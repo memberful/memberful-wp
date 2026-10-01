@@ -145,7 +145,7 @@ class Memberful_Metering_Sanitizer {
         break;
       case 'category':
       case 'tag':
-        $values = array_map( 'strtolower', array_map( 'sanitize_text_field', $values ) );
+        $values = self::term_ids( $values );
         break;
       case 'url':
         $values = array_map( 'sanitize_text_field', $values );
@@ -155,5 +155,29 @@ class Memberful_Metering_Sanitizer {
     }
 
     return array_values( array_unique( $values ) );
+  }
+
+  /**
+   * Keep positive integer term IDs. Non-numeric and zero values are dropped.
+   *
+   * IDs of deleted terms are kept on purpose: they never match, so a rule narrows when its term is deleted. Dropping
+   * them would remove the condition and widen the rule, e.g. meter every post instead of one category's.
+   *
+   * @param array $values Raw term IDs.
+   *
+   * @return array<int, int>
+   */
+  private static function term_ids( array $values ): array {
+    $ids = array();
+
+    foreach ( $values as $value ) {
+      $id = preg_match( '/^\d+$/', $value ) ? absint( $value ) : 0;
+
+      if ( $id ) {
+        $ids[] = $id;
+      }
+    }
+
+    return $ids;
   }
 }

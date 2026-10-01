@@ -32,23 +32,24 @@ class Memberful_Paywall_Renderer {
   /**
    * Suppress the legacy inline teaser fade when the builder paywall owns the fade via paywall.css.
    *
-   * @param string $css Legacy inline teaser CSS block.
+   * @param mixed $css Legacy inline teaser CSS block.
    *
-   * @return string
+   * @return mixed
    */
-  public static function filter_teaser_css( string $css ): string {
+  public static function filter_teaser_css( $css ) {
     return self::is_builder_mode() ? '' : $css;
   }
 
   /**
    * Conditionally flag paywall loading.
    *
-   * @param string $content Content.
+   * @param mixed $content Content.
    *
-   * @return string
+   * @return mixed
    */
-  public static function protect_content( string $content ): string {
-    if ( self::is_builder_mode() ) {
+  public static function protect_content( $content ) {
+    // The builder paywall only renders through global marketing, so other paywalls don't need its styles.
+    if ( self::is_builder_mode() && get_option( 'memberful_use_global_marketing' ) ) {
       self::$should_print_styles = true;
     }
 
@@ -351,9 +352,10 @@ class Memberful_Paywall_Renderer {
   }
 
   /**
-   * "Already a subscriber? Sign in" text prompt shown under every layout's CTA.
+   * "Already a subscriber? Sign in" text prompt shown under every layout's CTA, except to logged-in users.
    *
-   * @param array $config Sanitized config.
+   * @param array $config      Sanitized config.
+   * @param bool  $interactive Whether the link should navigate; false for the admin preview.
    *
    * @return string
    */
@@ -364,6 +366,11 @@ class Memberful_Paywall_Renderer {
         esc_html__( 'Already a subscriber?', 'memberful' ),
         esc_html__( 'Sign in', 'memberful' )
       );
+    }
+
+    // Logged-in users without access are already signed in, so the prompt would only send them back to this paywall.
+    if ( is_user_logged_in() ) {
+      return '';
     }
 
     return sprintf(

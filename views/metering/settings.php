@@ -145,12 +145,22 @@ $exclude_intro = __( 'Exclude when', 'memberful' );
           <details class="memberful-metering-notes">
             <summary class="memberful-metering-notes__summary">
               <svg class="memberful-metering-notes__chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
-              <span><?php esc_html_e( 'Caching & hosting notes', 'memberful' ); ?></span>
+              <span><?php esc_html_e( 'How metering works', 'memberful' ); ?></span>
             </summary>
             <div class="memberful-metering-notes__body">
+              <p><?php esc_html_e( 'Metering is a soft paywall for public posts. It only applies to a post\'s own page, so feeds, archive pages that show full posts, and the REST API can still show metered posts in full.', 'memberful' ); ?></p>
+              <p>
+                <?php
+                printf(
+                  /* translators: %s: URL of the Reading settings screen. */
+                  wp_kses_post( __( 'To keep metered posts out of feeds and archive pages, set <a href="%s">Settings → Reading</a> → "For each post in a feed, include" to Excerpt, and use a theme that shows excerpts on archive pages or add a More block to metered posts. The REST API always returns the full text.', 'memberful' ) ),
+                  esc_url( admin_url( 'options-reading.php' ) )
+                );
+                ?>
+              </p>
+              <p><?php esc_html_e( 'Anonymous visitors are counted in their browser, so clearing site data or switching browsers starts a fresh allowance. Treat the meter as a conversion tool for public content rather than an access-control boundary: members-only content stays protected by your normal access rules.', 'memberful' ); ?></p>
               <p><?php esc_html_e( 'Metered pages stay cacheable for logged-out visitors: Memberful serves everyone the same HTML and applies each visitor\'s remaining free-view count in the browser. Only a signed-in visitor\'s own metered view is served non-cacheable (no-store / DONOTCACHEPAGE), and signed-in pages are not page-cached to begin with.', 'memberful' ); ?></p>
               <p><?php esc_html_e( 'No cache configuration is needed. Page-cache plugins such as WP Super Cache, W3 Total Cache, WP Rocket and LiteSpeed work as-is, and edge caches such as Cloudflare, Varnish or the full-page cache on hosts like WP Engine and Flywheel are safe because the cached HTML carries no per-visitor data.', 'memberful' ); ?></p>
-              <p><?php esc_html_e( 'Anonymous visitors are counted in their browser, so clearing site data or switching browsers starts a fresh allowance. Treat the meter as a conversion tool for public content rather than an access-control boundary: members-only content stays protected by your normal access rules.', 'memberful' ); ?></p>
             </div>
           </details>
         </div>

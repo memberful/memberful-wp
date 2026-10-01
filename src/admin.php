@@ -166,7 +166,7 @@ function memberful_wp_admin_enqueue_scripts() {
     wp_enqueue_script(
       'memberful-metering-admin',
       MEMBERFUL_URL . '/js/build/metering-admin.js',
-      array( 'wp-api-fetch', 'wp-dom-ready' ),
+      array( 'wp-api-fetch', 'wp-dom-ready', 'wp-html-entities' ),
       MEMBERFUL_VERSION,
       true
     );

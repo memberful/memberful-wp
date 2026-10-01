@@ -10,6 +10,8 @@
   }
 
   const apiFetch = window.wp && window.wp.apiFetch;
+  // REST returns term names HTML-encoded ("Arts &amp; Culture"), and labels are set as text.
+  const decodeEntities = (window.wp && window.wp.htmlEntities && window.wp.htmlEntities.decodeEntities) || ((text) => text);
   const operators = ns.operators || {};
   const postTypes = ns.postTypes || {};
   const labels = ns.labels || {};
@@ -285,12 +287,12 @@
     }
 
     const taxonomy = field === 'tag' ? 'tags' : 'categories';
-    const path = `/wp/v2/${taxonomy}?search=${encodeURIComponent(query)}&per_page=${REST_PER_PAGE}&_fields=id,name,slug`;
+    const path = `/wp/v2/${taxonomy}?search=${encodeURIComponent(query)}&per_page=${REST_PER_PAGE}&_fields=id,name`;
 
     return apiFetch({ path }).then((terms) =>
       (Array.isArray(terms) ? terms : []).map((term) => ({
-        value: String(term.slug || '').toLowerCase(),
-        label: term.name || '',
+        value: String(term.id || ''),
+        label: decodeEntities(term.name || ''),
       }))
     );
   };
