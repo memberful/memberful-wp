@@ -125,6 +125,7 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 * Fix the comments feed on sites with no protected posts
 * Hide comments on term-protected posts from comment feeds
 * Hide term-protected pages and custom post types from search results
+* Stop passing Memberful connection settings to the block editor
 * Require WordPress 6.6 or later
 
 = 1.81.2 =
