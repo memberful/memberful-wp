@@ -10,6 +10,8 @@
   }
 
   const apiFetch = window.wp && window.wp.apiFetch;
+  // REST returns term names HTML-encoded ("Arts &amp; Culture"), and labels are set as text.
+  const decodeEntities = (window.wp && window.wp.htmlEntities && window.wp.htmlEntities.decodeEntities) || ((text) => text);
   const operators = ns.operators || {};
   const postTypes = ns.postTypes || {};
   const labels = ns.labels || {};
@@ -290,7 +292,7 @@
     return apiFetch({ path }).then((terms) =>
       (Array.isArray(terms) ? terms : []).map((term) => ({
         value: String(term.id || ''),
-        label: term.name || '',
+        label: decodeEntities(term.name || ''),
       }))
     );
   };
