@@ -16,6 +16,8 @@ jobs:
       url: https://wordpress.org/plugins/memberful-wp/
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       - name: Check release tag matches plugin version
         run: |
           stable=$(grep -oP '^Stable tag:\s*\K\S+' readme.txt)
