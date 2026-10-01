@@ -202,7 +202,8 @@ Metering
   font-weight: 400;
   margin-top: 4px;
 }
-.memberful-metering-section + .memberful-metering-section {
+.memberful-metering-section + .memberful-metering-section,
+#memberful_metering_options > .memberful-metering-section:first-child {
   border-top: 1px solid #dcdcde;
   margin-top: 2rem;
   padding-top: 1.5rem;
