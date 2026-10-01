@@ -11,6 +11,10 @@
  * visibility and post-level protection, so site search still matches it. Beaver Builder drops nodes with its native
  * rules from that fallback; Memberful rules deliberately do not.
  *
+ * Beaver Builder only renders the layout inside the loop, so generated excerpts, REST responses, and the global snippets
+ * teaser would serve that fallback through `the_content`. For layouts with a node hidden from the current viewer, those
+ * get the real layout, or nothing, instead. Code reading `post_content` directly still sees the fallback.
+ *
  * Hook callbacks leave the filtered value untyped on purpose: a wrong type returned by another plugin's callback on the
  * same hook should fail in that plugin, not as a TypeError here.
  */
@@ -25,6 +29,9 @@ function memberful_wp_beaver_builder_init() {
   add_filter( 'fl_builder_register_settings_form', 'memberful_wp_beaver_builder_add_visibility_section', 10, 2 );
   add_filter( 'fl_builder_is_node_visible', 'memberful_wp_beaver_builder_is_node_visible', 10, 2 );
   add_filter( 'fl_builder_do_render_content', 'memberful_wp_beaver_builder_do_render_content', 10, 2 );
+  add_filter( 'the_content', 'memberful_wp_beaver_builder_filter_fallback_content' );
+  add_filter( 'get_the_excerpt', 'memberful_wp_beaver_builder_start_excerpt', 9, 2 );
+  add_filter( 'get_the_excerpt', 'memberful_wp_beaver_builder_end_excerpt', 11 );
 
   // The `memberful_wp_protect_content` filter only runs while a paywall is being built, so it doubles as the
   // "this post is paywalled" signal.
@@ -225,8 +232,7 @@ function memberful_wp_beaver_builder_remember_paywalled_post( $content ) {
  * @return mixed
  */
 function memberful_wp_beaver_builder_do_render_content( $do_render, $post_id ) {
-  // Nested `the_content` runs while the paywall is being built, e.g. global snippets reading the post body.
-  if ( doing_filter( 'memberful_wp_protect_content' ) || doing_filter( 'memberful_marketing_content' ) ) {
+  if ( memberful_wp_beaver_builder_building_paywall() ) {
     return FALSE;
   }
 
@@ -237,4 +243,153 @@ function memberful_wp_beaver_builder_do_render_content( $do_render, $post_id ) {
   }
 
   return $do_render;
+}
+
+/**
+ * Track the post whose excerpt is being generated.
+ *
+ * The excerpt's post needn't be the global post: wp_trim_excerpt() runs `the_content` for the post it was given,
+ * e.g. get_the_excerpt( $id ) in a related-posts widget.
+ *
+ * @param mixed $excerpt The excerpt, as filtered so far.
+ * @param mixed $post    The post the excerpt belongs to.
+ * @return mixed The excerpt, unchanged.
+ */
+function memberful_wp_beaver_builder_start_excerpt( $excerpt, $post = null ) {
+  $post = get_post( $post );
+
+  memberful_wp_beaver_builder_excerpt_post_ids( 'push', $post ? $post->ID : 0 );
+
+  return $excerpt;
+}
+
+/**
+ * Stop tracking the post whose excerpt was generated.
+ *
+ * @param mixed $excerpt The generated excerpt.
+ * @return mixed The excerpt, unchanged.
+ */
+function memberful_wp_beaver_builder_end_excerpt( $excerpt ) {
+  memberful_wp_beaver_builder_excerpt_post_ids( 'pop' );
+
+  return $excerpt;
+}
+
+/**
+ * The stack of posts whose excerpts are being generated, innermost first.
+ *
+ * @param string $action  "push", "pop", or "get".
+ * @param int    $post_id The post ID to push.
+ * @return int[]
+ */
+function memberful_wp_beaver_builder_excerpt_post_ids( string $action = 'get', int $post_id = 0 ): array {
+  static $ids = array();
+
+  if ( 'push' === $action ) {
+    array_unshift( $ids, $post_id );
+  } elseif ( 'pop' === $action ) {
+    array_shift( $ids );
+  }
+
+  return $ids;
+}
+
+/**
+ * Keep restricted modules in Beaver Builder's plain-text fallback away from viewers they're hidden from.
+ *
+ * Beaver Builder only renders the layout inside the loop, so `the_content` gets the fallback saved to `post_content`,
+ * restricted modules included, in three places this filter handles:
+ *
+ * - Generated excerpts (og:description, related posts widgets), for the post the excerpt belongs to.
+ * - REST requests, for the post being prepared, which the controller sets as the global post.
+ * - The global snippets teaser, read while the paywall is being built. Beaver Builder rendering is off there, so
+ *   layouts with a hidden node get no teaser at all.
+ *
+ * Anywhere else `the_content` may be filtering text that isn't the post's content, e.g. an author bio, so it's left
+ * alone. In these places the real layout is rendered instead, or nothing when Beaver Builder rendering is turned off
+ * for the post: while the paywall is being built, after Sensei's lesson paywall, by WooCommerce Memberships, or inside
+ * another layout's render. Runs after FLBuilder::render_content at the same priority.
+ *
+ * @param mixed $content The content, as filtered so far.
+ * @return mixed The content.
+ */
+function memberful_wp_beaver_builder_filter_fallback_content( $content ) {
+  static $rendering = array();
+
+  $excerpt_post_ids = memberful_wp_beaver_builder_excerpt_post_ids();
+  $building_paywall = memberful_wp_beaver_builder_building_paywall();
+  $rest_request     = defined( 'REST_REQUEST' ) && REST_REQUEST;
+
+  if ( ! $excerpt_post_ids && ! $building_paywall && ! $rest_request ) {
+    return $content;
+  }
+
+  $global_post_id = (int) FLBuilderModel::get_post_id( true );
+  $post_id        = $excerpt_post_ids ? $excerpt_post_ids[0] : $global_post_id;
+
+  if ( ! $post_id || isset( $rendering[ $post_id ] ) || FLBuilder::$post_rendering === $post_id ) {
+    return $content;
+  }
+
+  if ( ! FLBuilderModel::is_builder_enabled( $post_id ) || ! memberful_wp_beaver_builder_layout_hides_nodes( $post_id ) ) {
+    return $content;
+  }
+
+  if ( $building_paywall ) {
+    return '';
+  }
+
+  $do_render = apply_filters( 'fl_builder_do_render_content', true, $post_id );
+
+  // Beaver Builder rendered the layout itself, applying node visibility. It only renders the global post.
+  $rendered_by_beaver_builder = $post_id === $global_post_id
+    && ( in_the_loop() || in_array( $post_id, array_map( 'intval', (array) FLBuilderModel::get_global_posts() ), true ) );
+
+  if ( $do_render && $rendered_by_beaver_builder ) {
+    return $content;
+  }
+
+  // Rendering here would undo the reason it's off; inside another layout's render, the inner render's cleanup would
+  // also turn rendering back on for the rest of the outer one.
+  if ( ! $do_render ) {
+    return '';
+  }
+
+  $rendering[ $post_id ] = true;
+
+  ob_start();
+  FLBuilder::render_content_by_id( $post_id );
+  $layout = ob_get_clean();
+
+  unset( $rendering[ $post_id ] );
+
+  return $layout;
+}
+
+/**
+ * Whether a Memberful paywall is being built, which runs nested `the_content` calls, e.g. global snippets reading the
+ * post body.
+ *
+ * @return bool
+ */
+function memberful_wp_beaver_builder_building_paywall(): bool {
+  return doing_filter( 'memberful_wp_protect_content' ) || doing_filter( 'memberful_marketing_content' );
+}
+
+/**
+ * Whether the post's published layout has a row, column, or module the current viewer can't see.
+ *
+ * Nodes nested inside a hidden node don't need checking: the hidden ancestor already makes this true.
+ *
+ * @param int $post_id The post ID.
+ * @return bool
+ */
+function memberful_wp_beaver_builder_layout_hides_nodes( int $post_id ): bool {
+  foreach ( (array) FLBuilderModel::get_layout_data( 'published', $post_id ) as $node ) {
+    if ( is_object( $node ) && isset( $node->settings ) && is_object( $node->settings ) && ! memberful_wp_beaver_builder_is_node_visible( true, $node ) ) {
+      return true;
+    }
+  }
+
+  return false;
 }
