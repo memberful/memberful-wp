@@ -48,7 +48,8 @@ class Memberful_Paywall_Renderer {
    * @return string
    */
   public static function protect_content( string $content ): string {
-    if ( self::is_builder_mode() ) {
+    // The builder paywall only renders through global marketing, so other paywalls don't need its styles.
+    if ( self::is_builder_mode() && get_option( 'memberful_use_global_marketing' ) ) {
       self::$should_print_styles = true;
     }
 
