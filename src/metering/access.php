@@ -326,7 +326,7 @@ class Memberful_Metering_Access {
    * @return bool
    */
   private static function is_metered_request(): bool {
-    if ( is_admin() || is_feed() || is_preview() || is_embed() || wp_doing_cron() || wp_doing_ajax() || ! is_singular() ) {
+    if ( is_admin() || is_feed() || is_embed() || wp_doing_cron() || wp_doing_ajax() || ! is_singular() ) {
       return false;
     }
 
