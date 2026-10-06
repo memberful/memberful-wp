@@ -131,14 +131,15 @@ function memberful_wp_format_divider_teaser_content( $content ) {
 }
 
 /**
- * Whether the current render prints the whole post body.
+ * Whether the paywall renders for the protected post being filtered.
  *
- * The paywall belongs only where the full post would otherwise appear: the requested post, feeds, and REST.
- * Listings render one entry per post, so a paywall there stacks up once per result.
+ * The requested post, feeds, and REST always get it. Other posts (front page and archive listings, Query Loops, related
+ * posts) get it too, unless the content is being built for an excerpt. WordPress strips the markup from excerpts, which
+ * would leave the paywall as plain text, so they get the listing teaser instead.
  *
  * @return bool
  */
-function memberful_wp_rendering_full_post(): bool {
+function memberful_wp_should_render_paywall(): bool {
   global $post;
 
   if ( is_feed() ) {
@@ -151,12 +152,29 @@ function memberful_wp_rendering_full_post(): bool {
 
   $is_queried_post = is_singular() && isset( $post ) && get_queried_object_id() === (int) $post->ID;
 
+  $should_render_paywall = $is_queried_post || ! doing_filter( 'get_the_excerpt' );
+
   /**
-   * Filter whether the paywall should render for the post being filtered.
+   * Filter whether the paywall renders for the post being filtered.
    *
-   * @param bool $is_queried_post Whether the post being filtered is the requested one.
+   * @deprecated 1.82.1 Use memberful_wp_should_render_paywall.
+   *
+   * @param bool $should_render_paywall Whether the paywall renders.
    */
-  return (bool) apply_filters( 'memberful_wp_rendering_full_post', $is_queried_post );
+  $should_render_paywall = (bool) apply_filters_deprecated(
+    'memberful_wp_rendering_full_post',
+    array( $should_render_paywall ),
+    '1.82.1',
+    'memberful_wp_should_render_paywall'
+  );
+
+  /**
+   * Filter whether the paywall renders for the post being filtered.
+   *
+   * @param bool $should_render_paywall Whether the paywall renders: always for the requested post, otherwise unless
+   *                                    the content is being built for an excerpt.
+   */
+  return (bool) apply_filters( 'memberful_wp_should_render_paywall', $should_render_paywall );
 }
 
 /**
@@ -359,8 +377,8 @@ function memberful_wp_protect_content( $content ) {
   $force_metering_gate = ( Memberful_Metering_Access::DECISION_TRIP_METER === $metering_decision );
 
   if ( $force_metering_gate || ! memberful_can_user_access_post( wp_get_current_user()->ID, $post->ID ) ) {
-    // Returning before the paywall filters also keeps paywall.css off listing pages.
-    if ( ! memberful_wp_rendering_full_post() ) {
+    // Returning before the paywall filters also keeps paywall.css off listings that leave the paywall out.
+    if ( ! memberful_wp_should_render_paywall() ) {
       return memberful_wp_listing_excerpt( $content, $content_split );
     }
 

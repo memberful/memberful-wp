@@ -102,11 +102,11 @@ class Memberful_Wp_Integration_WooThemes_Sensei {
     $post      = get_post( get_post_meta( $post_copy->ID, '_lesson_course', true ) );
 
     // The swap above points $post at the course, so the queried post check cannot recognise the lesson we are rendering in full.
-    add_filter( 'memberful_wp_rendering_full_post', '__return_true' );
+    add_filter( 'memberful_wp_should_render_paywall', '__return_true' );
 
     $content = memberful_wp_protect_content( $content );
 
-    remove_filter( 'memberful_wp_rendering_full_post', '__return_true' );
+    remove_filter( 'memberful_wp_should_render_paywall', '__return_true' );
 
     $post = $post_copy;
 
