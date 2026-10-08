@@ -3,7 +3,7 @@
 Plugin Name: Memberful - Membership Plugin
 Plugin URI: http://github.com/memberful/memberful-wp
 Description: Sell memberships and restrict access to content with WordPress and Memberful.
-Version: 1.82.0
+Version: 1.82.1
 Requires at least: 6.6
 Requires PHP: 7.4
 Author: Memberful
@@ -12,7 +12,7 @@ License: GPLv2 or later
  */
 
 if ( ! defined( 'MEMBERFUL_VERSION' ) )
-  define( 'MEMBERFUL_VERSION', '1.82.0' );
+  define( 'MEMBERFUL_VERSION', '1.82.1' );
 
 if ( ! defined( 'MEMBERFUL_PLUGIN_FILE' ) )
   define( 'MEMBERFUL_PLUGIN_FILE', __FILE__ );
