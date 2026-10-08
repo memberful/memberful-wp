@@ -31,12 +31,37 @@
     <exclude name="Generic.WhiteSpace.DisallowSpaceIndent.SpacesUsed" />
     <exclude name="Squiz.Functions.FunctionDeclarationArgumentSpacing" />
     <exclude name="WordPress.Files.FileName.InvalidClassFileName" />
+    <exclude name="WordPress.Arrays.ArrayIndentation" />
   </rule>
 
   <rule ref="Generic.WhiteSpace.ScopeIndent">
     <properties>
       <property name="indent" value="2"/>
       <property name="tabIndent" value="false"/>
+    </properties>
+  </rule>
+
+  <!-- Multi-line arrays and function calls use the same 2-space indent as the rest of the code.
+       WordPress.Arrays.ArrayIndentation reads its width from tab-width, which WordPress-Core locks at 4,
+       so Generic.Arrays.ArrayIndent checks arrays instead. -->
+  <rule ref="Generic.Arrays.ArrayIndent">
+    <properties>
+      <property name="indent" value="2"/>
+    </properties>
+  </rule>
+
+  <rule ref="PEAR.Functions.FunctionCallSignature">
+    <properties>
+      <property name="indent" value="2"/>
+    </properties>
+  </rule>
+
+  <!-- memberful_wp_valid_nonce() wraps wp_verify_nonce(). -->
+  <rule ref="WordPress.Security.NonceVerification">
+    <properties>
+      <property name="customNonceVerificationFunctions" type="array">
+        <element value="memberful_wp_valid_nonce"/>
+      </property>
     </properties>
   </rule>
 
