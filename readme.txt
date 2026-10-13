@@ -112,6 +112,10 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 == Changelog ==
 
+= unreleased =
+
+* Improve content protection on sites with WooCommerce
+
 = 1.82.1 =
 
 * Fix the missing paywall on the front page and archives that show full post content
