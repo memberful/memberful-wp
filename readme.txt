@@ -112,6 +112,10 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 == Changelog ==
 
+= unreleased =
+
+* Fix members keeping their per-plan role after their subscription ends
+
 = 1.82.1 =
 
 * Fix the missing paywall on the front page and archives that show full post content
