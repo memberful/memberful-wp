@@ -114,6 +114,7 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 = unreleased =
 
+* Fix members keeping their per-plan role after their subscription ends
 * Improve content protection on sites with WooCommerce
 
 = 1.82.1 =

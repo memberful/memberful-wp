@@ -63,4 +63,22 @@ class Tests_Role_Decision extends WP_UnitTestCase {
 
     $this->assertSame( array( 'author' ), get_user_by( 'id', $user->ID )->roles );
   }
+
+  /**
+   * A member whose subscription ended loses the role their plan gave them.
+   */
+  public function test_moves_a_member_whose_subscription_ended_off_their_plans_role() {
+    $plan_roles = array(
+      self::AUTHOR_PLAN_ID => 'author',
+      'inactive'           => 'contributor',
+    );
+
+    update_option( 'memberful_plan_role_mappings', $plan_roles );
+
+    $user = $this->factory->user->create_and_get( array( 'role' => 'author' ) );
+
+    Memberful_Wp_User_Role_Decision::ensure_user_role_is_correct( $user );
+
+    $this->assertSame( array( 'contributor' ), get_user_by( 'id', $user->ID )->roles );
+  }
 }

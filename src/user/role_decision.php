@@ -45,6 +45,7 @@ class Memberful_Wp_User_Role_Decision {
 
     $this->roles_memberful_is_allowed_to_change_from = array_merge(
       array( $this->active_role, $this->inactive_role, $default_role ),
+      $this->plan_roles(),
       $extra_roles_memberful_is_allowed_to_change_from
     );
   }
@@ -164,6 +165,18 @@ class Memberful_Wp_User_Role_Decision {
     }
 
     return $default_inactive_role;
+  }
+
+  /**
+   * The roles plans are mapped to, when per-plan roles are enabled
+   * @return array The mapped roles
+   */
+  private function plan_roles() {
+    if ( ! memberful_wp_use_per_plan_roles() ) {
+      return array();
+    }
+
+    return array_values( memberful_wp_get_all_plan_role_mappings() );
   }
 
   /**
