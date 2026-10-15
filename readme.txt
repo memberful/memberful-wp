@@ -4,7 +4,7 @@ Tags: membership, subscriptions, paywall, stripe, recurring payments, memberful,
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.82.1
+Stable tag: 1.82.2
 License: GPLv2 or later
 
 Sell memberships and restrict access to content with WordPress and Memberful.
@@ -112,7 +112,7 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 == Changelog ==
 
-= unreleased =
+= 1.82.2 =
 
 * Fix members keeping their per-plan role after their subscription ends
 * Improve content protection on sites with WooCommerce
