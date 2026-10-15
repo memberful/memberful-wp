@@ -358,6 +358,22 @@ function memberful_wp_protect_content( $content ) {
     return memberful_wp_strip_paywall_divider_marker( $content );
   }
 
+  /**
+   * Filter the post types whose content is never protected.
+   *
+   * Integrations use this instead of removing this filter, which would leave every post rendered later in the request
+   * unprotected. Content built with Elementor, which runs this filter on its own hook, stays protected. The content
+   * is returned untouched, divider marker included, so the metering filter after this one still sees it.
+   *
+   * @param string[] $post_types Post types to skip.
+   */
+  if (
+    ! doing_filter( 'elementor/frontend/the_content' )
+    && in_array( get_post_type( $post ), (array) apply_filters( 'memberful_wp_unprotected_post_types', array() ), true )
+  ) {
+    return $content;
+  }
+
   // Do not filter content for admins
   if ( current_user_can( 'publish_posts' ) ) {
     return memberful_wp_strip_paywall_divider_marker( $content );
