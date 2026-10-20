@@ -114,6 +114,7 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 = unreleased =
 
+* Improve content protection on sites with Elementor
 * Improve content protection in the private member feed
 * Fix hiding ads for members of specific plans
 * Fix accessibility errors caused by invalid ARIA roles on link shortcodes
