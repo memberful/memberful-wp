@@ -112,6 +112,10 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 == Changelog ==
 
+= unreleased =
+
+* Improve content protection in the private member feed
+
 = 1.82.2 =
 
 * Fix members keeping their per-plan role after their subscription ends
