@@ -115,6 +115,7 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 = unreleased =
 
 * Improve content protection in the private member feed
+* Fix accessibility errors caused by invalid ARIA roles on link shortcodes
 
 = 1.82.2 =
 
