@@ -12,6 +12,10 @@
 add_action('init', 'memberful_private_user_feed_init');
 
 function memberful_private_user_feed_init() {
+  if ( is_admin() ) {
+    return;
+  }
+
   // In case this is not available, just don't carry on with the logic, it should always be here.
   if(!isset($_SERVER['REQUEST_URI']))
     return;
