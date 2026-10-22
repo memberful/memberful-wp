@@ -112,6 +112,10 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 == Changelog ==
 
+= unreleased =
+
+* Fix accessibility errors caused by invalid ARIA roles on link shortcodes
+
 = 1.82.2 =
 
 * Fix members keeping their per-plan role after their subscription ends
