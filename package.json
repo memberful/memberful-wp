@@ -38,7 +38,7 @@
     "*.php": "vendor/bin/phpcs-changed --git --standard phpcs.xml -s --warning-severity 0"
   },
   "devDependencies": {
-    "@wordpress/env": "^11.15.0",
+    "@wordpress/env": "^12.0.0",
     "@wordpress/scripts": "^37.0.0",
     "husky": "^9.1.7",
     "lint-staged": "^17.5.1"
