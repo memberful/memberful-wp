@@ -107,24 +107,24 @@ abstract class Memberful_Wp_Integration_Ad_Provider_Base {
      */
     $should_disable = apply_filters( 'memberful_ad_provider_should_disable_ads_for_user', null, $user_id, $this->get_identifier() );
 
-    if ( $should_disable !== null ) {
+    if ( null !== $should_disable ) {
       return (bool) $should_disable;
     }
 
     $settings = $this->get_ad_provider_settings();
 
     // Provider is not enabled.
-    if ( empty( $settings ) || ! isset( $settings['enabled'] ) || $settings['enabled'] !== true ) {
+    if ( empty( $settings ) || ! isset( $settings['enabled'] ) || true !== $settings['enabled'] ) {
       return false;
     }
 
     // Disable for logged in users.
-    if ( isset( $settings['disable_for_logged_in'] ) && $settings['disable_for_logged_in'] === true && is_user_logged_in() ) {
+    if ( isset( $settings['disable_for_logged_in'] ) && true === $settings['disable_for_logged_in'] && is_user_logged_in() ) {
       return true;
     }
 
     // Disable for all subscribers.
-    if ( isset( $settings['disable_for_all_subscribers'] ) && $settings['disable_for_all_subscribers'] === true && is_subscribed_to_any_memberful_plan( $user_id ) ) {
+    if ( isset( $settings['disable_for_all_subscribers'] ) && true === $settings['disable_for_all_subscribers'] && is_subscribed_to_any_memberful_plan( $user_id ) ) {
       return true;
     }
 
@@ -139,13 +139,13 @@ abstract class Memberful_Wp_Integration_Ad_Provider_Base {
   /**
    * Get the settings for the ad provider.
    *
-   * e.g. what plans should ads be disabled for, etc.
+   * For example, which plans ads should be disabled for.
    *
    * @return array The settings for the ad provider.
    */
   public function get_ad_provider_settings() {
     $stored_settings = get_option( 'memberful_ad_provider_settings', array() );
-    $settings = isset( $stored_settings[ $this->get_identifier() ] ) && is_array( $stored_settings[ $this->get_identifier() ] )
+    $settings        = isset( $stored_settings[ $this->get_identifier() ] ) && is_array( $stored_settings[ $this->get_identifier() ] )
       ? $stored_settings[ $this->get_identifier() ]
       : array();
 
