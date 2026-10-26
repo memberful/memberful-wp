@@ -115,6 +115,7 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 = unreleased =
 
 * Fix accessibility errors caused by invalid ARIA roles on link shortcodes
+* Fix hiding ads for members of specific plans
 
 = 1.82.2 =
 
