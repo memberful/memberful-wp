@@ -130,12 +130,7 @@ abstract class Memberful_Wp_Integration_Ad_Provider_Base {
 
     // Disable for specific plans.
     if ( isset( $settings['disabled_plans'] ) && ! empty( $settings['disabled_plans'] ) ) {
-      static $user_plans_by_user = array();
-      if ( ! isset( $user_plans_by_user[ $user_id ] ) ) {
-        $user_plans_by_user[ $user_id ] = memberful_wp_user_plans_subscribed_to( $user_id );
-      }
-      $user_plans = $user_plans_by_user[ $user_id ];
-      return count( array_intersect( $user_plans, $settings['disabled_plans'] ) ) > 0;
+      return memberful_wp_user_has_subscription_to_plans( $user_id, $settings['disabled_plans'] );
     }
 
     return false;
