@@ -113,4 +113,67 @@ class Tests_Private_User_Feed extends WP_UnitTestCase {
     // Reaching this assertion is itself the check: delivering the feed exits.
     $this->assertSame( '', $output );
   }
+
+  /**
+   * The request handler serves nothing under /wp-admin/, even for a valid token.
+   */
+  public function test_the_feed_is_not_served_in_an_admin_request() {
+    $this->member_with_token( self::TOKEN );
+
+    $_SERVER['REQUEST_URI'] = '/wp-admin/?member-feed=' . self::TOKEN;
+    $_GET['member-feed']    = self::TOKEN;
+
+    set_current_screen( 'dashboard' );
+
+    ob_start();
+    memberful_private_user_feed_init();
+    $output = ob_get_clean();
+
+    set_current_screen( 'front' );
+
+    // Reaching this assertion is itself the check: delivering the feed exits.
+    $this->assertSame( '', $output );
+  }
+
+  /**
+   * Requested under /wp-admin/, the feed still lists only published posts.
+   */
+  public function test_the_feed_lists_only_published_posts_in_an_admin_request() {
+    $user_id = $this->member_with_token( self::TOKEN );
+
+    $statuses = array(
+      'publish' => 'Published',
+      'draft'   => 'Draft',
+      'pending' => 'Pending',
+    );
+
+    foreach ( $statuses as $status => $label ) {
+      $this->factory->post->create(
+        array(
+          'post_title'  => "$label marker",
+          'post_status' => $status,
+        )
+      );
+    }
+    $this->factory->post->create(
+      array(
+        'post_title'  => 'Scheduled marker',
+        'post_status' => 'future',
+        'post_date'   => gmdate( 'Y-m-d H:i:s', strtotime( '+1 year' ) ),
+      )
+    );
+
+    set_current_screen( 'dashboard' );
+
+    ob_start();
+    memberful_wp_render( 'private_user_feed_content', array( 'user_id' => $user_id ) );
+    $output = ob_get_clean();
+
+    set_current_screen( 'front' );
+
+    $this->assertStringContainsString( 'Published marker', $output );
+    $this->assertStringNotContainsString( 'Draft marker', $output );
+    $this->assertStringNotContainsString( 'Pending marker', $output );
+    $this->assertStringNotContainsString( 'Scheduled marker', $output );
+  }
 }

@@ -16,6 +16,7 @@ query_posts(array(
   'category__in'    => apply_filters( 'memberful_private_rss_category_ids', array() ),
   'category_name'   => $category,
   'post_type'       => apply_filters( 'memberful_private_rss_post_types', $post_types ),
+  'post_status'     => get_post_stati( array( 'public' => true ) ),
   'posts_per_page'  => get_option( 'posts_per_rss', 10 )
 ));
 
