@@ -398,11 +398,6 @@ function memberful_wp_protect_content( $content ) {
       return memberful_wp_listing_excerpt( $content, $content_split );
     }
 
-    // Remove Elementor action hook
-    if (get_queried_object_id() === $post->ID) {
-      remove_action("elementor/frontend/the_content", "memberful_wp_protect_content");
-    }
-
     // Remove media enclosures from the RSS feed
     add_filter("rss_enclosure", "__return_empty_string");
 
