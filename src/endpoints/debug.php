@@ -15,15 +15,9 @@ class Memberful_Wp_Endpoint_Debug implements Memberful_Wp_Endpoint {
     if( empty( $memberful_api_key ) )
       return false;
 
-    $headers = getallheaders();
+    $api_key = wp_unslash( $_SERVER['HTTP_X_MEMBERFUL_API_KEY'] ?? '' ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Compared as-is against the stored key.
 
-    if(!isset( $headers["X-Memberful-Api-Key"] ))
-      return false;
-
-    if($headers["X-Memberful-Api-Key"] != $memberful_api_key)
-      return false;
-
-    return true;
+    return hash_equals( (string) $memberful_api_key, $api_key );
   }
 
   public function process() {

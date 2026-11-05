@@ -70,4 +70,61 @@ class Tests_Debug_Endpoint extends WP_UnitTestCase {
     $this->assertSame( 'no-store', $headers['Cloudflare-CDN-Cache-Control'] );
     $this->assertSame( 'no-cache', $headers['X-LiteSpeed-Cache-Control'] );
   }
+
+  /**
+   * A request with the site's API key is accepted.
+   */
+  public function test_accepts_the_api_key_header() {
+    $_SERVER['HTTP_X_MEMBERFUL_API_KEY'] = self::API_KEY;
+
+    $this->assertTrue( $this->verify() );
+  }
+
+  /**
+   * A request with a wrong API key is rejected.
+   */
+  public function test_rejects_a_wrong_api_key() {
+    $_SERVER['HTTP_X_MEMBERFUL_API_KEY'] = 'wrong';
+
+    $this->assertFalse( $this->verify() );
+  }
+
+  /**
+   * A request without the API key is rejected.
+   */
+  public function test_rejects_a_request_without_the_api_key() {
+    unset( $_SERVER['HTTP_X_MEMBERFUL_API_KEY'] );
+
+    $this->assertFalse( $this->verify() );
+  }
+
+  /**
+   * An empty key doesn't match a site that has none configured.
+   */
+  public function test_rejects_an_empty_key_when_none_is_configured() {
+    delete_option( 'memberful_api_key' );
+    $_SERVER['HTTP_X_MEMBERFUL_API_KEY'] = '';
+
+    $this->assertFalse( $this->verify() );
+  }
+
+  /**
+   * The key is only accepted over HTTPS.
+   */
+  public function test_rejects_a_request_over_http() {
+    unset( $_SERVER['HTTPS'] );
+    $_SERVER['HTTP_X_MEMBERFUL_API_KEY'] = self::API_KEY;
+
+    $this->assertFalse( $this->verify() );
+  }
+
+  /**
+   * A POST request is rejected.
+   */
+  public function test_rejects_a_post_request() {
+    $_SERVER['REQUEST_METHOD']           = 'POST';
+    $_SERVER['HTTP_X_MEMBERFUL_API_KEY'] = self::API_KEY;
+
+    $this->assertFalse( $this->verify() );
+  }
 }
