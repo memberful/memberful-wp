@@ -114,6 +114,7 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 = unreleased =
 
+* Fix linking existing WordPress accounts on hosts that strip cookies
 * Improve the debug tool
 
 = 1.82.3 =
