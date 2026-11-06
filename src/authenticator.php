@@ -78,6 +78,8 @@ class Memberful_Authenticator {
 
     // This is the OAuth response
     if ( isset( $_GET['code'] ) ) {
+      Memberful_Oauth_State::forget();
+
       $tokens = $this->get_oauth_tokens( $_GET['code'] );
 
       $account = $this->get_member_data( $tokens->access_token );
@@ -306,16 +308,33 @@ class Memberful_Sync_Verification {
 }
 
 class Memberful_Oauth_State {
-  const COOKIE_KEY = 'memberful_oauth_state';
+  const COOKIE_KEY = 'wordpress_memberful_oauth_state';
 
   public static function issue() {
     $state = bin2hex( random_bytes( 16 ) );
 
+    self::set_cookie( $state, time() + 3600 );
+
+    return $state;
+  }
+
+  /** Delete the state cookie. */
+  public static function forget() {
+    self::set_cookie( '', time() - 3600 );
+  }
+
+  /**
+   * Set the state cookie.
+   *
+   * @param string $value   Cookie value.
+   * @param int    $expires Expiry as a Unix timestamp.
+   */
+  private static function set_cookie( $value, $expires ) {
     setcookie(
       self::COOKIE_KEY,
-      $state,
+      $value,
       array(
-        'expires'  => time() + 3600,
+        'expires'  => $expires,
         'path'     => COOKIEPATH,
         'domain'   => COOKIE_DOMAIN,
         'secure'   => is_ssl(),
@@ -323,8 +342,6 @@ class Memberful_Oauth_State {
         'samesite' => 'Lax',
       )
     );
-
-    return $state;
   }
 
   public static function matches( $state ) {
