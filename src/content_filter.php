@@ -306,12 +306,38 @@ function memberful_wp_inner_content_for_blocks( array $inner_content, int $count
 }
 
 /**
+ * Render the marketing content written for a post, or for the term that restricts it, for use as its excerpt.
+ *
+ * This text is written per post or per term, and sites use it as the preview their excerpt listings show. The
+ * site-wide paywall is left out: it is the same under every post, and WordPress strips its markup from excerpts.
+ *
+ * @param WP_Post $post Post being rendered.
+ * @return string Rendered marketing content, or '' when the post shows the site-wide paywall instead.
+ */
+function memberful_wp_excerpt_marketing_content( WP_Post $post ): string {
+  if ( memberful_global_marketing_overrides_post_content() ) {
+    return '';
+  }
+
+  $marketing_content = memberful_marketing_content( $post->ID );
+
+  if ( '' === trim( (string) $marketing_content ) ) {
+    return '';
+  }
+
+  return (string) apply_filters( 'memberful_wp_protect_content', $marketing_content );
+}
+
+/**
  * Build the preview a protected post shows in listings.
  *
  * Bounded by the teaser the single post already shows above the paywall, so a listing can never expose more of a post
  * than the post's own page does. That ceiling is the teaser itself rather than a word count, which is why nothing is
  * trimmed here - WordPress trims this to excerpt_length on the excerpt path, and a theme widening excerpt_length still
  * cannot reach past the teaser.
+ *
+ * A post with neither a paywall divider nor an automatic excerpt falls back, in excerpts, to the marketing content
+ * written for it, which its own page shows in place of the body.
  *
  * @param string $content       Rendered post content.
  * @param array  $content_split Output of memberful_wp_split_post_content_at_paywall_divider().
@@ -327,6 +353,8 @@ function memberful_wp_listing_excerpt( string $content, array $content_split ): 
     return memberful_wp_content_above_divider_block( $post );
   } elseif ( get_option( 'memberful_use_global_marketing' ) && get_option( 'memberful_use_global_snippets' ) ) {
     $teaser = memberful_wp_first_paragraphs( $content, MEMBERFUL_PARAGRAPH_COUNT );
+  } elseif ( isset( $post ) && doing_filter( 'get_the_excerpt' ) ) {
+    $teaser = memberful_wp_excerpt_marketing_content( $post );
   } else {
     $teaser = '';
   }
@@ -337,7 +365,8 @@ function memberful_wp_listing_excerpt( string $content, array $content_split ): 
    * Return a truncation of $content to get WordPress style excerpts built from the post body. Doing so publishes body
    * text the single post keeps behind the paywall, so it is opt in.
    *
-   * @param string $teaser  Teaser the single post shows above the paywall.
+   * @param string $teaser  Teaser the single post shows above the paywall. In excerpts, a post with neither a paywall
+   *                        divider nor an automatic excerpt gets its marketing content instead.
    * @param string $content Full rendered post content.
    */
   return (string) apply_filters( 'memberful_wp_listing_excerpt', $teaser, $content );
