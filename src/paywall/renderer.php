@@ -48,8 +48,9 @@ class Memberful_Paywall_Renderer {
    * @return mixed
    */
   public static function protect_content( $content ) {
-    // The builder paywall only renders through global marketing, so other paywalls don't need its styles.
-    if ( self::is_builder_mode() && get_option( 'memberful_use_global_marketing' ) ) {
+    // The builder paywall only renders through global marketing, so other paywalls don't need its styles. Neither do
+    // excerpts, where WordPress strips the markup the styles apply to.
+    if ( self::is_builder_mode() && get_option( 'memberful_use_global_marketing' ) && ! doing_filter( 'get_the_excerpt' ) ) {
       self::$should_print_styles = true;
     }
 

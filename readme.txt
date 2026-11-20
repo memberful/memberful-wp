@@ -112,6 +112,10 @@ Glad you asked! We manage development of the plugin over at the [Memberful WP Gi
 
 == Changelog ==
 
+= unreleased =
+
+* Fix the missing marketing content in excerpts of protected posts
+
 = 1.82.4 =
 
 * Fix linking existing WordPress accounts on hosts that strip cookies
